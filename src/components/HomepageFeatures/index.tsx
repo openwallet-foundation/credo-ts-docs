@@ -14,8 +14,8 @@ const FeatureList: FeatureItem[] = [
     Svg: require("@site/static/img/easy-to-use.svg").default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Aries JavaScript was designed with the mindset that building
+        self-sovereign identity solutions should be easy and straightforward.
       </>
     ),
   },
@@ -24,8 +24,9 @@ const FeatureList: FeatureItem[] = [
     Svg: require("@site/static/img/multiplatform.svg").default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        With support for Node.JS, React Native and the browser, Aries JavaScript
+        allows you to reuse the same code base in different environments. There
+        is no need to implement the same functionality multiple times.
       </>
     ),
   },
@@ -34,8 +35,8 @@ const FeatureList: FeatureItem[] = [
     Svg: require("@site/static/img/standards.svg").default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        By keeping up with the latest standards, we ensure Aries JavaScript is
+        secure and interoperable.
       </>
     ),
   },
