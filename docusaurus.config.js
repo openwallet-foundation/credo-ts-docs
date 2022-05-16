@@ -6,9 +6,9 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "My Site",
-  tagline: "Dinosaurs are cool",
-  url: "https://your-docusaurus-test-site.com",
+  title: "Aries JavaScript Documentation",
+  tagline: "Documentation",
+  url: "aries.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
@@ -16,8 +16,8 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "facebook", // Usually your GitHub org/user name.
-  projectName: "docusaurus", // Usually your repo name.
+  organizationName: "hyperledger", // Usually your GitHub org/user name.
+  projectName: "aries-javascript-docs", // Usually your repo name.
 
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
@@ -59,20 +59,19 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: "My Site",
+        title: "Aries JavaScript Docs",
         logo: {
-          alt: "My Site Logo",
-          src: "img/logo.svg",
+          alt: "Hyperledger Aries Logo",
+          src: "img/aries-logo.png",
         },
         items: [
           {
             to: "/guide",
             type: "doc",
-            docId: "intro",
+            docId: "index",
             position: "left",
             label: "Guide",
           },
-          { to: "/blog", label: "Blog", position: "left" },
           {
             href: "https://github.com/facebook/docusaurus",
             label: "GitHub",
