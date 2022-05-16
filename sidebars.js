@@ -22,6 +22,26 @@ const sidebars = {
     "index",
     {
       type: "category",
+      label: "Getting started",
+      link: { type: "doc", id: "getting-started/index" },
+      items: [
+        {
+          type: "category",
+          label: "Installation",
+          link: { type: "doc", id: "getting-started/installation/index" },
+          items: [
+            "getting-started/installation/nodejs",
+            "getting-started/installation/react-native",
+            // "concepts/did-and-didcomm",
+            // "concepts/platform-and-environment",
+          ],
+        },
+        // "concepts/did-and-didcomm",
+        // "concepts/platform-and-environment",
+      ],
+    },
+    {
+      type: "category",
       label: "Concepts",
       link: { type: "doc", id: "concepts/index" },
       items: [
