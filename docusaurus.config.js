@@ -7,7 +7,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Aries JavaScript Documentation",
-  tagline: "Documentation",
+  tagline: "Everything you need to know about the Aries JavaScript ecosystem.",
   url: "aries.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
