@@ -36,17 +36,6 @@ const config = {
           path: "guide",
           routeBasePath: "guide",
           sidebarPath: require.resolve("./sidebars.js"),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
-        },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
@@ -72,22 +61,21 @@ const config = {
             position: "left",
             label: "Guide",
           },
-          {
-            href: "https://github.com/facebook/docusaurus",
-            label: "GitHub",
-            position: "right",
-          },
         ],
       },
       footer: {
         style: "dark",
         links: [
           {
-            title: "Docs",
+            title: "Guide",
             items: [
               {
-                label: "Tutorial",
-                to: "/docs/intro",
+                label: "Concepts",
+                to: "/guide/concepts/index",
+              },
+              {
+                label: "Tutorials",
+                to: "/guide/tutorials/index",
               },
             ],
           },
@@ -95,34 +83,42 @@ const config = {
             title: "Community",
             items: [
               {
-                label: "Stack Overflow",
-                href: "https://stackoverflow.com/questions/tagged/docusaurus",
-              },
-              {
                 label: "Discord",
-                href: "https://discordapp.com/invite/docusaurus",
+                href: "https://discord.com/channels/905194001349627914/941708033434738768",
               },
               {
-                label: "Twitter",
-                href: "https://twitter.com/docusaurus",
+                label: "Hyperledger Aries Mailing List",
+                href: "https://lists.hyperledger.org/g/aries",
+              },
+              {
+                label: "Working Group Call Notes",
+                href: "https://wiki.hyperledger.org/display/ARIES/Framework+JS+Meetings",
+              },
+              {
+                label: "Working Group Call Calendar",
+                href: "https://lists.hyperledger.org/login?r=https%3A%2F%2Flists.hyperledger.org%2Fg%2Faries%2Fcalendar",
               },
             ],
           },
           {
-            title: "More",
+            title: "Repositories",
             items: [
               {
-                label: "Blog",
-                to: "/blog",
+                label: "Aries Framework JavaScript",
+                href: "https://github.com/hyperledger/aries-framework-javascript",
               },
               {
-                label: "GitHub",
-                href: "https://github.com/facebook/docusaurus",
+                label: "Aries Framework JavaScript Extensions",
+                href: "https://github.com/hyperledger/aries-framework-javascript-ext",
+              },
+              {
+                label: "Aries JavaScript Docs (this site)",
+                href: "https://github.com/hyperledger/aries-javascript-docs",
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        // copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,

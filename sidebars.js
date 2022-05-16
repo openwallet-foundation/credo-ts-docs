@@ -24,13 +24,17 @@ const sidebars = {
       type: "category",
       label: "Concepts",
       link: { type: "doc", id: "concepts/index" },
-      items: ["concepts/agent"],
+      items: [
+        "concepts/agents",
+        "concepts/did-and-didcomm",
+        "concepts/platform-and-environment",
+      ],
     },
     {
       type: "category",
       label: "Tutorials",
       link: { type: "doc", id: "tutorials/index" },
-      items: ["concepts/agent"],
+      items: ["concepts/agents"],
     },
   ],
 };
