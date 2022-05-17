@@ -56,6 +56,16 @@ const sidebars = {
       link: { type: "doc", id: "tutorials/index" },
       items: ["concepts/agents"],
     },
+    {
+      type: "category",
+      label: "Ecosystem",
+      link: { type: "doc", id: "ecosystem/index" },
+      items: [
+        "ecosystem/framework",
+        "ecosystem/extensions",
+        "ecosystem/bifold",
+      ],
+    },
   ],
 };
 
