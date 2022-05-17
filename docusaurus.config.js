@@ -35,6 +35,7 @@ const config = {
         docs: {
           path: "guides",
           routeBasePath: "guide",
+
           sidebarPath: require.resolve("./sidebars.js"),
         },
         theme: {
