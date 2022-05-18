@@ -54,7 +54,7 @@ const sidebars = {
       type: "category",
       label: "Tutorials",
       link: { type: "doc", id: "tutorials/index" },
-      items: ["concepts/agents"],
+      items: ["tutorials/agent-setup"],
     },
     {
       type: "category",
@@ -67,6 +67,6 @@ const sidebars = {
       ],
     },
   ],
-};
+}
 
-module.exports = sidebars;
+module.exports = sidebars
