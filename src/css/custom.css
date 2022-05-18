@@ -28,3 +28,15 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+.admonition-holder {
+  --ifm-alert-background-color: #a29bff;
+}
+
+.admonition-issuer {
+  --ifm-alert-background-color: #00ba2b;
+}
+
+.admonition-verifier {
+  --ifm-alert-background-color: #fd029d;
+}
