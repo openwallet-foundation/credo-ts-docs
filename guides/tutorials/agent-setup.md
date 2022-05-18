@@ -1,10 +1,10 @@
 # Agent setup
 
-In order to gain access to all the functionality that the Aries JavaScript
-ecosystem has to offer, we have to initialize an agent. The agent is highly
-configurable and depending on your use case, it might be different from the
-configuration as shown below. We will use a very generic configuration that
-allows for the most features and will fit most use cases.
+To gain access to all the Aries JavaScript ecosystem's functionality, we have
+to initialize an agent. The agent is highly configurable, and depending on your
+use case, it might be different from the configuration as shown below. We will
+use a very generic configuration that allows for the most features and will fit
+most use cases.
 
 ### Prerequisites
 
@@ -31,7 +31,7 @@ yarn add @aries-framework/core @aries-framework/react-native react-native-fs rea
 # yarn add @aries-framework/core @aries-framework/node
 ```
 
-At the top of the entrypoint of your application add the following line:
+At the top of the entry point of your application, add the following line:
 
 ```diff
 + import 'react-native-get-random-values'
@@ -59,7 +59,7 @@ const agentConfig: InitConfig = {
 const agent = new Agent(agentConfig, agentDependencies)
 ```
 
-This might be enough already for some use cases, such as one-to-one messaging.
+This configuration might be enough for some use cases, such as one-to-one messaging.
 Below is another configuration that sets some sensible options for development:
 
 ```ts
