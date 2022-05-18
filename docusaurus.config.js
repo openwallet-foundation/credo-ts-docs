@@ -1,9 +1,9 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require("prism-react-renderer/themes/github")
-const darkCodeTheme = require("prism-react-renderer/themes/dracula")
-
+const lightCodeTheme = require("prism-react-renderer/themes/github");
+const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+const admonitions = require("remark-admonitions");
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Aries JavaScript Documentation",
@@ -31,17 +31,42 @@ const config = {
     [
       "classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
-      ({
+      {
         docs: {
           path: "guides",
           routeBasePath: "guide",
-
           sidebarPath: require.resolve("./sidebars.js"),
+          remarkPlugins: [
+            [
+              admonitions,
+              {
+                infima: true,
+                icons: "emoji",
+                customTypes: {
+                  holder: {
+                    keyword: "issuer",
+                    emoji: "🗄",
+                    ifmClass: "alert alert--holder",
+                  },
+                  issuer: {
+                    keyword: "issuer",
+                    emoji: "📄",
+                    ifmClass: "alert alert--issuer",
+                  },
+                  verifier: {
+                    keyword: "verifier",
+                    emoji: "👮",
+                    ifmClass: "alert alert--verifier",
+                  },
+                },
+              },
+            ],
+          ],
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
         },
-      }),
+      },
     ],
   ],
 
@@ -126,6 +151,6 @@ const config = {
         darkTheme: darkCodeTheme,
       },
     }),
-}
+};
 
-module.exports = config
+module.exports = config;
