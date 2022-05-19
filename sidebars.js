@@ -27,23 +27,29 @@ const sidebars = {
       items: [
         {
           type: "category",
-          label: "Installation",
-          link: { type: "doc", id: "getting-started/installation/index" },
+          label: "prerequisites",
+          link: { type: "doc", id: "getting-started/prerequisites/index" },
           items: [
             {
               type: "category",
               label: "NodeJS",
-              link: { type: "doc", id: "getting-started/installation/nodejs/index" },
+              link: { type: "doc", id: "getting-started/prerequisites/nodejs/index" },
               items: [
-                "getting-started/installation/nodejs/linux",
-                "getting-started/installation/nodejs/windows",
-                "getting-started/installation/nodejs/apple-intel",
-                "getting-started/installation/nodejs/apple-arm",
+                "getting-started/prerequisites/nodejs/linux",
+                "getting-started/prerequisites/nodejs/windows",
+                "getting-started/prerequisites/nodejs/apple-intel",
+                "getting-started/prerequisites/nodejs/apple-arm",
               ],
             },
-            "getting-started/installation/react-native",
-            // "concepts/did-and-didcomm",
-            // "concepts/platform-and-environment",
+            {
+              type: "category",
+              label: "React Native",
+              link: { type: "doc", id: "getting-started/prerequisites/react-native/index" },
+              items: [
+                "getting-started/prerequisites/react-native/ios",
+                "getting-started/prerequisites/react-native/android",
+              ],
+            },
           ],
         },
         // "concepts/did-and-didcomm",
