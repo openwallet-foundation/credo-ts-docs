@@ -123,3 +123,12 @@ Lastly, move the library to the correct location
 ```console
 sudo mv target/release/libindy.so /usr/lib/libindy.so
 ```
+
+### Confirm installation
+
+To see whether the [indy-sdk](https://github.com/hyperledger/indy-sdk) is
+properly installed, run the following command and it should not error.
+
+```console
+npx -p @aries-framework/node is-indy-installed
+```
