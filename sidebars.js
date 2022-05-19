@@ -27,7 +27,7 @@ const sidebars = {
       items: [
         {
           type: "category",
-          label: "prerequisites",
+          label: "Prerequisites",
           link: { type: "doc", id: "getting-started/prerequisites/index" },
           items: [
             {
