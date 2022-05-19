@@ -30,7 +30,17 @@ const sidebars = {
           label: "Installation",
           link: { type: "doc", id: "getting-started/installation/index" },
           items: [
-            "getting-started/installation/nodejs",
+            {
+              type: "category",
+              label: "NodeJS",
+              link: { type: "doc", id: "getting-started/installation/nodejs/index" },
+              items: [
+                "getting-started/installation/nodejs/linux",
+                "getting-started/installation/nodejs/windows",
+                "getting-started/installation/nodejs/apple-intel",
+                "getting-started/installation/nodejs/apple-arm",
+              ],
+            },
             "getting-started/installation/react-native",
             // "concepts/did-and-didcomm",
             // "concepts/platform-and-environment",
@@ -44,11 +54,7 @@ const sidebars = {
       type: "category",
       label: "Concepts",
       link: { type: "doc", id: "concepts/index" },
-      items: [
-        "concepts/agents",
-        "concepts/did-and-didcomm",
-        "concepts/platform-and-environment",
-      ],
+      items: ["concepts/agents", "concepts/did-and-didcomm", "concepts/platform-and-environment"],
     },
     {
       type: "category",
@@ -60,11 +66,7 @@ const sidebars = {
       type: "category",
       label: "Ecosystem",
       link: { type: "doc", id: "ecosystem/index" },
-      items: [
-        "ecosystem/framework",
-        "ecosystem/extensions",
-        "ecosystem/bifold",
-      ],
+      items: ["ecosystem/framework", "ecosystem/extensions", "ecosystem/bifold"],
     },
   ],
 }
