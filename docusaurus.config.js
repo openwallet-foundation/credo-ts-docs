@@ -10,7 +10,7 @@ const config = {
   title: "Aries JavaScript Documentation",
   tagline: "Everything you need to know about the Aries JavaScript ecosystem.",
   url: "https://animo.github.io",
-  baseUrl: "/",
+  baseUrl: "/aries-javascript-docs/",
   onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
