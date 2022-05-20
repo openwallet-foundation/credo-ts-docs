@@ -4,6 +4,7 @@
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 const admonitions = require("remark-admonitions");
+const remarkTabs = require("remark-docusaurus-tabs");
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Aries JavaScript Documentation",
@@ -37,6 +38,7 @@ const config = {
           routeBasePath: "guide",
           sidebarPath: require.resolve("./sidebars.js"),
           remarkPlugins: [
+            remarkTabs,
             [
               admonitions,
               {
