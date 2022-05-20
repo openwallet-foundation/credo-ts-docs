@@ -9,9 +9,9 @@ const remarkTabs = require("remark-docusaurus-tabs");
 const config = {
   title: "Aries JavaScript Documentation",
   tagline: "Everything you need to know about the Aries JavaScript ecosystem.",
-  url: "aries.com",
+  url: "http://google.com",
   baseUrl: "/",
-  onBrokenLinks: "throw",
+  onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
 
@@ -23,10 +23,10 @@ const config = {
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
   // to replace "en" with "zh-Hans".
-  i18n: {
-    defaultLocale: "en",
-    locales: ["en"],
-  },
+  // i18n: {
+  //   defaultLocale: "en",
+  //   locales: ["en"],
+  // },
 
   presets: [
     [
@@ -35,7 +35,7 @@ const config = {
       {
         docs: {
           path: "guides",
-          routeBasePath: "guide",
+          routeBasePath: "guides",
           sidebarPath: require.resolve("./sidebars.js"),
           remarkPlugins: [
             remarkTabs,
@@ -153,6 +153,15 @@ const config = {
         darkTheme: darkCodeTheme,
       },
     }),
+  plugins: [
+    [
+      require.resolve("@cmfcmf/docusaurus-search-local"),
+      {
+        indexDocs: true,
+        indexDocSidebarParentCategories: 7,
+      },
+    ],
+  ],
 };
 
 module.exports = config;
