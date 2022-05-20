@@ -24,9 +24,9 @@ const FeatureList: FeatureItem[] = [
     Svg: require("@site/static/img/multiplatform.svg").default,
     description: (
       <>
-        With support for Node.JS, React Native and the browser, Aries JavaScript
-        allows you to reuse the same code base in different environments. There
-        is no need to implement the same functionality multiple times.
+        With support for Node.js and React Native, Aries JavaScript allows you
+        to reuse the same code base in different environments. There is no need
+        to implement the same functionality multiple times.
       </>
     ),
   },
