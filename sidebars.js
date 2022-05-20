@@ -52,8 +52,7 @@ const sidebars = {
             },
           ],
         },
-        // "concepts/did-and-didcomm",
-        // "concepts/platform-and-environment",
+        "getting-started/installation/index",
       ],
     },
     {
@@ -66,7 +65,7 @@ const sidebars = {
       type: "category",
       label: "Tutorials",
       link: { type: "doc", id: "tutorials/index" },
-      items: ["tutorials/agent-setup"],
+      items: ["tutorials/agent-config"],
     },
     {
       type: "category",
