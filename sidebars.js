@@ -52,8 +52,7 @@ const sidebars = {
             },
           ],
         },
-        // "concepts/did-and-didcomm",
-        // "concepts/platform-and-environment",
+        "getting-started/installation/index",
       ],
     },
     {
