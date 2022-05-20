@@ -9,9 +9,9 @@ const remarkTabs = require("remark-docusaurus-tabs");
 const config = {
   title: "Aries JavaScript Documentation",
   tagline: "Everything you need to know about the Aries JavaScript ecosystem.",
-  url: "aries.com",
+  url: "http://google.com",
   baseUrl: "/",
-  onBrokenLinks: "throw",
+  onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
 
@@ -23,10 +23,10 @@ const config = {
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
   // to replace "en" with "zh-Hans".
-  i18n: {
-    defaultLocale: "en",
-    locales: ["en"],
-  },
+  // i18n: {
+  //   defaultLocale: "en",
+  //   locales: ["en"],
+  // },
 
   presets: [
     [
@@ -35,7 +35,7 @@ const config = {
       {
         docs: {
           path: "guides",
-          routeBasePath: "guide",
+          routeBasePath: "guides",
           sidebarPath: require.resolve("./sidebars.js"),
           remarkPlugins: [
             remarkTabs,
@@ -153,6 +153,43 @@ const config = {
         darkTheme: darkCodeTheme,
       },
     }),
+  plugins: [
+    [
+      require.resolve("@cmfcmf/docusaurus-search-local"),
+      {
+        indexDocs: true,
+        indexDocSidebarParentCategories: 3,
+        lunr: {
+          // When indexing your documents, their content is split into "tokens".
+          // Text entered into the search box is also tokenized.
+          // This setting configures the separator used to determine where to split the text into tokens.
+          // By default, it splits the text at whitespace and dashes.
+          //
+          // Note: Does not work for "ja" and "th" languages, since these use a different tokenizer.
+          tokenizerSeparator: /[\s\-]+/,
+          // https://lunrjs.com/guides/customising.html#similarity-tuning
+          //
+          // This parameter controls the importance given to the length of a document and its fields. This
+          // value must be between 0 and 1, and by default it has a value of 0.75. Reducing this value
+          // reduces the effect of different length documents on a term’s importance to that document.
+          b: 0.75,
+          // This controls how quickly the boost given by a common word reaches saturation. Increasing it
+          // will slow down the rate of saturation and lower values result in quicker saturation. The
+          // default value is 1.2. If the collection of documents being indexed have high occurrences
+          // of words that are not covered by a stop word filter, these words can quickly dominate any
+          // similarity calculation. In these cases, this value can be reduced to get more balanced results.
+          k1: 1.2,
+          // By default, we rank pages where the search term appears in the title higher than pages where
+          // the search term appears in just the text. This is done by "boosting" title matches with a
+          // higher value than content matches. The concrete boosting behavior can be controlled by changing
+          // the following settings.
+          titleBoost: 10,
+          contentBoost: 1,
+          parentCategoriesBoost: 2, // Only used when indexDocSidebarParentCategories > 0
+        },
+      },
+    ],
+  ],
 };
 
 module.exports = config;
