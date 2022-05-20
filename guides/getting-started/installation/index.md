@@ -9,13 +9,22 @@
 First we have to install the minimal amount of dependencies that are required
 for using the Aries Ecosystem.
 
-```console title="Node.js"
+
+<!--tabs-->
+
+# Node.js
+
+```cli
 yarn add @aries-framework/core @aries-framework/node
 ```
 
-```console title="React Native"
+# React Native
+
+```
 yarn add @aries-framework/core @aries-framework/react-native react-native-fs react-native-get-random-values
 ```
+
+<!--/tabs-->
 
 ### Additional setup
 
