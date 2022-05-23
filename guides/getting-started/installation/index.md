@@ -114,12 +114,9 @@ Sets up an HTTP outbound and inbound transport.
 
 ```typescript showLineNumbers
 import { HttpOutboundTransport, WsOutboundTransport, HttpInboundTransport } from "@aries-framework/core"
-import express from "express"
-
-const app = express()
 
 agent.registerOutboundTransport(new HttpOuboundTransport())
-agent.registerInboundtransport(new HttpInboundTransport({ app, port: 3000 }))
+agent.registerInboundtransport(new HttpInboundTransport({ port: 3000 }))
 ```
 
 # React Native
