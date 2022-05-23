@@ -171,9 +171,9 @@ A logger instance that implements the `Logger` interface.
 **Type**: `Logger`
 
 ```typescript title="example"
-import { ConsoleLogger, LogLevel } from '@aries-framework/core'
+import { ConsoleLogger, LogLevel } from "@aries-framework/core"
 
-logger: new ConsoleLogger(LogLevel.Test),
+logger: new ConsoleLogger(LogLevel.Test)
 ```
 
 ---
@@ -227,6 +227,12 @@ content is not allowed to be changed in the following steps
 
 &nbsp;&nbsp;&nbsp; Always auto accept every incoming credential
 
+```typescript title="example"
+import { AutoAcceptCredential } from "@aries-framework/core"
+
+autoAcceptCredentials: AutoAcceptCredential.ContentApproved
+```
+
 ---
 
 ## `autoAcceptProofs`
@@ -251,6 +257,12 @@ content is not allowed to be changed in the following steps
 **`AutoAcceptProofs.Always`**
 
 &nbsp;&nbsp;&nbsp; Always auto accept every incoming proof
+
+```typescript title="example"
+import { AutoAcceptProof } from "@aries-framework/core"
+
+autoAcceptProofs: AutoAcceptProof.ContentApproved
+```
 
 ---
 
