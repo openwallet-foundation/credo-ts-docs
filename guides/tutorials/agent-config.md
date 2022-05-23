@@ -1,16 +1,13 @@
 # Agent Config
 
-temp file to keep the config, but not have it inside the `agent-setup` (we can
-move this somewhere else, I just did not know where right now)
-
 The Aries agent provided by [Aries Framework
 JavaScript](https://github.com/hyperledger/aries-framework-javascript) is very
 extensible. These are all the configuration options with a short description:
 
 ## `label`\*
 
-The label as seen by other users when creating a connection. This should not
-be used to as a base for authenticity, as it is completely up to the user to
+The label is seen by other users when creating a connection. This should not
+be used as a base for authenticity, as it is entirely up to the user to
 set this.
 
 **Type**: `string`
@@ -54,7 +51,7 @@ Identifier string. Using another value here will open a new wallet.
 ### `walletConfig.key`\*
 
 Key to unlock the wallet with. This value MUST be kept as a secret and should
-be seem as a password.
+be seem like a password.
 
 **Type**: `string`
 
@@ -64,7 +61,7 @@ The method used for key derivation of the
 [`walletConfig.key`](./agent-config#walletconfigkey). When using
 `KeyDerivationMethod.Raw`, it is strongly recommended to use your own key
 derivation method to increase the security. This could be a simple salt + hash,
-but using either `Argon2IMod` or `Argon2Int`, is recommended if you do not have
+but using either `Argon2IMod` or `Argon2Int` is recommended if you do not have
 a custom derivation method.
 
 > For the advanced readers
@@ -92,8 +89,8 @@ It is recommended with this option to use your own derivation before
 
 ### `walletConfig.storage`
 
-Specify which storage is being used for the wallet. The default is a sqllite
-database, but a postgres database could be used aswell. Please refer to [TODO:
+Specify which storage is being used for the wallet. The default is an SQLite
+database, but a Postgres database could be used as well. Please refer to [TODO:
 storage ](https://example.org)
 
 **Type**: `object`
@@ -106,7 +103,7 @@ storage ](https://example.org)
 
 A list of endpoints (schema + host + port) used for invitations and where other
 agents might reach you. This could be used to host a website that would
-redirect, for example with deeplinking, to a wallet where the invitation can be
+redirect, for example with deep linking, to a wallet where the invitation can be
 accepted.
 
 **Type**: `string`
@@ -167,14 +164,14 @@ is unique.
 
 **Type**: `boolean`
 
-Whether the ledger is a production ledger. This is used for the pick algorithm
+Whether the ledger is a production ledger. This is used for the pick-up algorithm
 as production ledgers have priority.
 
 ### `indyLedgers.genesisPath`
 
 **Type**: `string`
 
-Filesystem path of the genesis transaction. At this location there will just be
+Filesystem path of the genesis transaction. At this location, there will just be
 a JSON object like the
 [`indyLedgers.genesisTransaction`](./agent-config#indyledgersgenesistransactions).
 
@@ -188,8 +185,8 @@ Stringified JSON object of the transaction.
 
 ## `connectToIndyLedgerOnStartup`
 
-Whether to connect to the all the Indy ledgers on startup. This might lead to a
-slightly lower startup, but will make the following ledger interaction slightly
+Whether to connect to all the Indy ledgers on startup. This might lead to a
+slightly lower startup, but will make the following ledger interactions
 quicker.
 
 **Type**: `boolean`
@@ -221,7 +218,7 @@ logger: new ConsoleLogger(LogLevel.Test)
 ## `didCommMimeType`
 
 The mime-type used for sending and receiving messages. `application/jwe` and
-`application/json` are used as fallback, but are less desirable as they are
+`application/json` are used as fallback but are less desirable as they are
 much more ambiguous in their specification.
 
 **Type**: `enum DidCommMimeType`
@@ -248,10 +245,10 @@ didCommMimeType: DidCommMimeType.v0
 
 ## `autoAcceptCredentials`
 
-Whether to auto accept incoming credentials and with which strategy.
+Whether to auto-accept incoming credentials and with which strategy.
 `AutoAcceptCredential.Always` SHOULD not be used in production. If your
 application requires custom validation before automatically accepting a
-credential, like accept every credential from a specific DID, it can easily
+credential, like accepting every credential from a specific DID, it can easily
 build atop of it via the `agent events`, more information can be found [TODO:
 agent events](https://example.org).
 
@@ -263,7 +260,7 @@ agent events](https://example.org).
 
 **`AutoAcceptCredential.Never`**
 
-&nbsp;&nbsp;&nbsp; Never auto accept any incoming credential
+&nbsp;&nbsp;&nbsp; Never auto-accept any incoming credential
 
 **`AutoAcceptCredential.ContentApproved`**
 
@@ -272,7 +269,7 @@ content is not allowed to be changed in the following steps
 
 **`AutoAcceptCredential.Always`**
 
-&nbsp;&nbsp;&nbsp; Always auto accept every incoming credential
+&nbsp;&nbsp;&nbsp; Always auto-accept every incoming credential
 
 ```typescript title="example"
 import { AutoAcceptCredential } from "@aries-framework/core"
@@ -284,10 +281,10 @@ autoAcceptCredentials: AutoAcceptCredential.ContentApproved
 
 ## `autoAcceptProofs`
 
-Whether to auto accept incoming proofs and with which strategy.
+Whether to auto-accept incoming proofs and with which strategy.
 `AutoAcceptProof.Always` SHOULD not be used in production. If your
 application requires custom validation before automatically accepting a
-credential, like accept every credential from a specific DID, it can easily
+credential, like accepting every proof request from a specific DID, it can easily
 build atop of it via the `agent events`, more information can be found [TODO:
 agent events](https://example.org).
 
@@ -299,16 +296,16 @@ agent events](https://example.org).
 
 **`AutoAcceptProof.Never`**
 
-&nbsp;&nbsp;&nbsp; Never auto accept any incoming proof
+&nbsp;&nbsp;&nbsp; Never auto-accept any incoming proof
 
 **`AutoAcceptProof.ContentApproved`**
 
-&nbsp;&nbsp;&nbsp; Incoming proofs needs one step of acceptance and the
+&nbsp;&nbsp;&nbsp; Incoming proofs need one step of acceptance and the
 content is not allowed to be changed in the following steps
 
 **`AutoAcceptProofs.Always`**
 
-&nbsp;&nbsp;&nbsp; Always auto accept every incoming proof
+&nbsp;&nbsp;&nbsp; Always auto-accept every incoming proof
 
 ```typescript title="example"
 import { AutoAcceptProof } from "@aries-framework/core"
@@ -388,7 +385,7 @@ clearDefaultMediator: true
 
 ## `mediatorPollingInterval`
 
-Set the default interval to poll the mediator in miliseconds.
+Set the default interval to poll the mediator in milliseconds.
 
 **Type**: `number`
 
@@ -402,33 +399,33 @@ mediatorPollingInterval: 10000
 
 ## `mediatorPickupStratery`
 
-The pickup strategy to get the messages form the mediator. If none is specified
+The pickup strategy to get the messages from the mediator. If none is specified
 we will use
-[`discover-features`](https://github.com/hyperledger/aries-rfcs/blob/main/features/0557-discover-features-v2/README.md)
+[`discover features](https://github.com/hyperledger/aries-rfcs/blob/main/features/0557-discover-features-v2/README.md)
 to get the preferred strategy.
 
 **Type**: `enum MediatorPickupStrategy`
 
-**Default**: `infer the stategy with feature discovery of the mediator`
+**Default**: `infer the strategy with feature discovery of the mediator`
 
 **Members**:
 
 **`MediatorPickupStrategy.PickUpV1`**
 
-&nbsp;&nbsp;&nbsp; explicity pickup messages from the mediator according to
+&nbsp;&nbsp;&nbsp; explicitly pick up messages from the mediator according to
 [RFC: 0212 Pickup
 Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0212-pickup/README.md)
 
 **`MediatorPickupStrategy.PickUpV2`**
 
-&nbsp;&nbsp;&nbsp; Explicitly pickup messages from the mediator according to
+&nbsp;&nbsp;&nbsp; Explicitly pick up messages from the mediator according to
 [RFC: 0212 Pickup V2
 Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0685-pickup-v2/README.md)
 
 **`MediatorPickupStrategy.Implicit`**
 
-&nbsp;&nbsp;&nbsp; Open a websocket with the mediator to implicitly receive
-messages. (currently used by [aries cloudagent
+&nbsp;&nbsp;&nbsp; Open a WebSocket with the mediator to implicitly receive
+messages. (currently used by [aries cloud agent
 python](https://github.com/hyperedger/aries-cloudagent-python))
 
 ```typescript title="example"
@@ -470,7 +467,7 @@ useLegacyDidSovPrefix: true
 
 ## `connectionImageUrl`
 
-A url to an image used so that other agents can display this. Like the
+A URL to an image used so that other agents can display this. Like the
 [`Label`](./agent-config#label) this is completely up to the user to define
 this. It MUST not be used got any base of authenticity.
 
