@@ -12,7 +12,7 @@ start with setting up both their agents with the minimal configuration required
 to follow this tutorial. After the initialization we will then create an
 invitation as _Acme Corp_ and send it over to _Bob_. _Bob_ will then accept
 this invitation and at that point they have established a connection and they
-know how to reach eachother for sending a basic message, issuing a credential,
+know how to reach each other for sending a basic message, issuing a credential,
 verifying a proof, etc.
 
 ### 1. Setting up the agents
@@ -34,7 +34,7 @@ transport.
 :::bob
 
 ```typescript showLineNumbers
-import { Agent, InitConfig, WsOutboundTransport } from "@aries-framework/core"
+import { Agent, InitConfig, HttpOutboundTransport, WsOutboundTransport } from "@aries-framework/core"
 import { agentDependencies } from "@aries-framework/react-native"
 
 const config: InitConfig = {
@@ -43,16 +43,16 @@ const config: InitConfig = {
     id: "main",
     key: "demoagentbob00000000000000000000",
   },
-  mediatorConnectionsInvite:
-    "https://didcomm.agent.community.animo.id?c_i=eyJAdHlwZSI6ICJkaWQ6c292OkJ6Q2JzTlloTXJqSGlxWkRUVUFTSGc7c3BlYy9jb25uZWN0aW9ucy8xLjAvaW52aXRhdGlvbiIsICJAaWQiOiAiYjVkYWRkNDgtODFmNi00NzJjLWExODAtYzY3MDUzNjQwMjlhIiwgImxhYmVsIjogIkFuaW1vIENvbW11bml0eSBBZ2VudCIsICJzZXJ2aWNlRW5kcG9pbnQiOiAiaHR0cHM6Ly9kaWRjb21tLmFnZW50LmNvbW11bml0eS5hbmltby5pZCIsICJyZWNpcGllbnRLZXlzIjogWyJBZ3g0cVhhWk5laHRzYWdDSk5mbW9VQjJlbldHYmN2bkRlcU5KZGdQTlZlUyJdfQ==",
+  mediatorConnectionsInvite: "https://didcomm.agent.community.animo.id?c_i=ey...(many bytes omitted)...Q==",
   autoAcceptConnections: true,
 }
 
 const agent = new Agent(config, agentDependencies)
 
 agent.registerOutboundTransport(new WsOutboundTransport())
+agent.registerOutboundTransport(new HttpOutboundTransport())
 
-await agent.initialize().catch((e) => console.error(e))
+await agent.initialize()
 ```
 
 :::
@@ -80,9 +80,10 @@ const config: InitConfig = {
 const agent = new Agent(config, agentDependencies)
 
 agent.registerOutboundTransport(new WsOutboundTransport())
+agent.registerOutboundTransport(new HttpOutboundTransport())
 agent.registerInboundTransport(new HttpInboundTransport({ port: 3000 }))
 
-await agent.initialize().catch((e) => console.error(e))
+await agent.initialize()
 ```
 
 :::
@@ -91,15 +92,37 @@ await agent.initialize().catch((e) => console.error(e))
 
 Now that we have setup both agents, we can create an invitation from _Acme Corp_.
 
+<!-- tabs -->
+
+# Legacy
+
+This method will create an invitation using the legacy method according to [0160: Connection Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0160-connection-protocol/README.md).
+
 :::acme
 
 ```typescript showLineNumbers
-const invitation = await agent.oob.createInvitation()
+const { invitation } = await agent.oob.createLegacyInvitation()
 
-const serializedInvitation = invitation.outOfBandInvitation.toUrl({ domain: "https://example.org" })
+const serializedInvitation = invitation.toUrl({ domain: "https://example.org" })
 ```
 
 :::
+
+# New
+
+This method will create an invitation using the legacy method according to [0434: Out-of-Band Protocol 1.1](https://github.com/hyperledger/aries-rfcs/blob/main/features/0434-outofband/README.md).
+
+:::acme
+
+```typescript showLineNumbers
+const outOfBandRecord = await agent.oob.createInvitation()
+
+const serializedInvitation = outOfBandRecord.outOfBandInvitation.toUrl({ domain: "https://example.org" })
+```
+
+:::
+
+<!-- /tabs -->
 
 ### 3. Receiving the invitation
 
@@ -112,7 +135,7 @@ connection is established.
 :::bob
 
 ```typescript showLineNumbers
-const { oobRecord } = await agent.receiveInvitationFromUrl(url)
+const { outOfBandRecord } = await agent.receiveInvitationFromUrl(url)
 ```
 
 :::
@@ -126,10 +149,14 @@ listener](https://example.org).
 :::acme
 
 ```typescript showLineNumbers
-import { ConnectionEventTypes, ConnectionStateChangedEvent } from "@aries-framework/node"
+import { ConnectionEventTypes, ConnectionStateChangedEvent, DidExchangeState } from "@aries-framework/node"
 
 agent.events.on<ConnectionStateChangedEvent>(ConnectionEventTypes.ConnectionStateChanged, ({ payload, type }) => {
-  if (payload.connectionRecord.outOfBandId !== oobRecord.id) return
+  if (payload.connectionRecord.outOfBandId !== outOfBandRecord.id) return
+  if (payload.connectionRecord.state === DidExchangeState.Completed) {
+    // the connection is now ready for usage in other protocols!
+    console.log(`Connection for out of band id ${outOfBandRecord.id} completed`)
+  }
   // custom business logic
 })
 ```
@@ -156,47 +183,55 @@ import {
 } from "@aries-framework/core"
 import { agentDependencies } from "@aries-framework/node"
 
-// Simple agent configuration. This sets some basic fields like the wallet
-// configuration and the label.
-const config: InitConfig = {
-  label: "demo-agent-acme",
-  walletConfig: {
-    id: "main",
-    key: "demoagentacme0000000000000000000",
-  },
-  autoAcceptConnections: true,
+const run = async () => {
+  // Simple agent configuration. This sets some basic fields like the wallet
+  // configuration and the label.
+  const config: InitConfig = {
+    label: "demo-agent-acme",
+    walletConfig: {
+      id: "main",
+      key: "demoagentacme0000000000000000000",
+    },
+    autoAcceptConnections: true,
+  }
+
+  // A new instance of an agent is created here
+  const agent = new Agent(config, agentDependencies)
+
+  // Register a simple `WebSocket` outbound transport
+  agent.registerOutboundTransport(new WsOutboundTransport())
+
+  // Register a simple `Http` inbound transport
+  agent.registerInboundTransport(new HttpInboundTransport({ port: 3000 }))
+
+  // Initialize the agent
+  await agent.initialize()
+
+  // Create an `out-of-band` invitation that we can send to another agent
+  const outOfBandRecord = await agent.oob.createInvitation()
+
+  // Start an optional event listener to see if a connection event has happened
+  // with the specific `outOfBandId`.
+  agent.events.on<ConnectionStateChangedEvent>(ConnectionEventTypes.ConnectionStateChanged, ({ payload, type }) => {
+    if (payload.connectionRecord.outOfBandId !== outOfBandRecord.id) return
+    if (payload.connectionRecord.state === DidExchangeState.Completed) {
+      // the connection is now ready for usage in other protocols!
+      console.log(`Connection for out of band id ${outOfBandRecord.id} completed`)
+    }
+    // custom business logic
+  })
+
+  // Serialize the invitation to a url so that we can easily transfer it over
+  // HTTP or embed it in a QR code and scan it as another agent
+  const serializedInvitation = outOfBandRecord.outOfBandInvitation.toUrl({ domain: "https://example.org" })
+
+  // The last step will be a mocked function that creates a QR code from a
+  // string, this is not handled by the Aries JavaScript Ecosystem, but a
+  // third-party library should be used
+  const QR = mockEmbedInQR(serializedInvitation)
 }
 
-// A new instance of an agent is created here
-const agent = new Agent(config, agentDependencies)
-
-// Register a simple `WebSocket` outbound transport
-agent.registerOutboundTransport(new WsOutboundTransport())
-
-// Register a simple `Http` inbound transport
-agent.registerInboundTransport(new HttpInboundTransport({ port: 3000 }))
-
-// Initialize the agent and `console.error` if an error occurs
-await agent.initialize().catch((e) => console.error(e))
-
-// Create an `out-of-band` invitation that we can send to another agent
-const invitation = await agent.oob.createInvitation()
-
-// Start an optional event listener to see if a connection event has happened
-// with the specific `outOfBandId`.
-agent.events.on<ConnectionStateChangedEvent>(ConnectionEventTypes.ConnectionStateChanged, ({ payload, type }) => {
-  if (payload.connectionRecord.outOfBandId !== oobRecord.id) return
-  // custom business logic
-})
-
-// Serialize the invitation to a url so that we can easily transfer it over
-// HTTP or embed it in a QR code and scan it as another agent
-const serializedInvitation = invitation.outOfBandInvitation.toUrl({ domain: "https://example.org" })
-
-// The last step will be a mocked function that creates a QR code from a
-// string, this is not handled by the Aries JavaScript Ecosystem, but a
-// third-party library should be used
-const QR = mockEmbedInQR(serializedInvitation)
+void run()
 ```
 
 :::
@@ -207,37 +242,41 @@ const QR = mockEmbedInQR(serializedInvitation)
 import { Agent, InitConfig, WsOutboundTransport } from "@aries-framework/core"
 import { agentDependencies } from "@aries-framework/react-native"
 
-// Simple agent configuration. This sets some basic fields like the wallet
-// configuration and the label. It also sets the mediator invitation url,
-// because this is most likely required in a mobile environment.
-const config: InitConfig = {
-  label: "demo-agent-bob",
-  walletConfig: {
-    id: "main",
-    key: "demoagentbob00000000000000000000",
-  },
-  // An example of a mediator invitation url. This MUST be changed when
-  // creating your own agent.
-  mediatorConnectionsInvite:
-    "https://didcomm.agent.community.animo.id?c_i=eyJAdHlwZSI6ICJkaWQ6c292OkJ6Q2JzTlloTXJqSGlxWkRUVUFTSGc7c3BlYy9jb25uZWN0aW9ucy8xLjAvaW52aXRhdGlvbiIsICJAaWQiOiAiYjVkYWRkNDgtODFmNi00NzJjLWExODAtYzY3MDUzNjQwMjlhIiwgImxhYmVsIjogIkFuaW1vIENvbW11bml0eSBBZ2VudCIsICJzZXJ2aWNlRW5kcG9pbnQiOiAiaHR0cHM6Ly9kaWRjb21tLmFnZW50LmNvbW11bml0eS5hbmltby5pZCIsICJyZWNpcGllbnRLZXlzIjogWyJBZ3g0cVhhWk5laHRzYWdDSk5mbW9VQjJlbldHYmN2bkRlcU5KZGdQTlZlUyJdfQ==",
-  autoAcceptConnections: true,
+const run = async () => {
+  // Simple agent configuration. This sets some basic fields like the wallet
+  // configuration and the label. It also sets the mediator invitation url,
+  // because this is most likely required in a mobile environment.
+  const config: InitConfig = {
+    label: "demo-agent-bob",
+    walletConfig: {
+      id: "main",
+      key: "demoagentbob00000000000000000000",
+    },
+    // An example of a mediator invitation url. This MUST be changed when
+    // creating your own agent.
+    mediatorConnectionsInvite:
+      "https://didcomm.agent.community.animo.id?c_i=eyJAdHlwZSI6ICJkaWQ6c292OkJ6Q2JzTlloTXJqSGlxWkRUVUFTSGc7c3BlYy9jb25uZWN0aW9ucy8xLjAvaW52aXRhdGlvbiIsICJAaWQiOiAiYjVkYWRkNDgtODFmNi00NzJjLWExODAtYzY3MDUzNjQwMjlhIiwgImxhYmVsIjogIkFuaW1vIENvbW11bml0eSBBZ2VudCIsICJzZXJ2aWNlRW5kcG9pbnQiOiAiaHR0cHM6Ly9kaWRjb21tLmFnZW50LmNvbW11bml0eS5hbmltby5pZCIsICJyZWNpcGllbnRLZXlzIjogWyJBZ3g0cVhhWk5laHRzYWdDSk5mbW9VQjJlbldHYmN2bkRlcU5KZGdQTlZlUyJdfQ==",
+    autoAcceptConnections: true,
+  }
+
+  // A new instance of an agent is created here
+  const agent = new Agent(config, agentDependencies)
+
+  // Register a simple `WebSocket` outbound transport
+  agent.registerOutboundTransport(new WsOutboundTransport())
+
+  // Initialize the agent
+  await agent.initialize()
+
+  // Here we mock the scanning of the QR code created by Acme Corp
+  const url = mockScanQR()
+
+  // With the url extracted from the QR code, the agent can accept it and this
+  // will return an oobRecord and an optional connectionRecord
+  const { oobRecord, connectionRecord } = await agent.receiveInvitationFromUrl(url)
 }
 
-// A new instance of an agent is created here
-const agent = new Agent(config, agentDependencies)
-
-// Register a simple `WebSocket` outbound transport
-agent.registerOutboundTransport(new WsOutboundTransport())
-
-// Initialize the agent and `console.error` if an error occurs
-await agent.initialize().catch((e) => console.error(e))
-
-// Here we mock the scanning of the QR code created by Acme Corp
-const url = mockScanQR()
-
-// With the url extracted from the QR code, the agent can accept it and this
-// will return an oobRecord and an optional connectionRecord
-const { oobRecord, connectionRecord } = await agent.receiveInvitationFromUrl(url)
+void run()
 ```
 
 :::
