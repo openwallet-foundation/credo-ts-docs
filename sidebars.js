@@ -65,7 +65,7 @@ const sidebars = {
       type: "category",
       label: "Tutorials",
       link: { type: "doc", id: "tutorials/index" },
-      items: ["tutorials/agent-config"],
+      items: ["tutorials/agent-config", "tutorials/issue-a-credential"],
     },
     {
       type: "category",
