@@ -1,10 +1,10 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require("prism-react-renderer/themes/github");
-const darkCodeTheme = require("prism-react-renderer/themes/dracula");
-const admonitions = require("remark-admonitions");
-const remarkTabs = require("remark-docusaurus-tabs");
+const lightCodeTheme = require("prism-react-renderer/themes/github")
+const darkCodeTheme = require("prism-react-renderer/themes/dracula")
+const admonitions = require("remark-admonitions")
+const remarkTabs = require("remark-docusaurus-tabs")
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Aries JavaScript Documentation",
@@ -60,6 +60,16 @@ const config = {
                     keyword: "verifier",
                     emoji: "👮",
                     ifmClass: "alert alert--verifier",
+                  },
+                  acme: {
+                    keyword: "Acme Corp",
+                    emoji: "🏢",
+                    ifmClass: "alert alert--acme",
+                  },
+                  bob: {
+                    keyword: "Bob",
+                    emoji: "🧔",
+                    ifmClass: "alert alert--bob",
                   },
                 },
               },
@@ -191,6 +201,6 @@ const config = {
       },
     ],
   ],
-};
+}
 
-module.exports = config;
+module.exports = config
