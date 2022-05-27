@@ -114,8 +114,10 @@ endpoint: ["https://example.org:3000"]
 
 ---
 
-## `publicDidSeed` (soon to be deprecated)
+## `publicDidSeed`
 
+> Soon to be deprecated
+>
 > Reason for deprecation: this will be generalized
 
 The seed used for initializing the public indy DID of the agent. This does not
@@ -136,7 +138,7 @@ object and it must include either the
 [`genesisPath`](./agent-config.md#indyledgersgenesispath) or
 [`genesisTransactions`](./agent-config#indyledgersgenesistransactions).
 
-An example of a [`genesisTransactions`](./agent-config#indyledgersgenesistransactions) can be found
+An example of the [`genesisTransactions`](./agent-config#indyledgersgenesistransactions) can be found
 [here](https://raw.githubusercontent.com/Indicio-tech/indicio-network/main/genesis_files/domain_transactions_testnet_genesis).
 
 **Type**: `IndyPoolConfig[]`
