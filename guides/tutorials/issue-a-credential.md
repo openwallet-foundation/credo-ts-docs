@@ -14,12 +14,12 @@ Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0036-issu
 >    config](./agent-config)
 > 1. A [connection between the _Holder_ and _Issuer_](https://example.org)
 
-In this tutorial we will issue a credential from the _issuer_ to a _holder_. We
+In this tutorial we will issue a credential from the _Issuer_ to a _Holder_. We
 will start with setting up both their agents with the minimal configuration
 required to follow this tutorial. After the initialization we will then create
-a schema , credential definition and a credential as the _issuer_ and send the
-credential over to the _holder_. The _holder_ will then accept this credential
-automatically stores it in their wallet.
+a schema , credential definition and a credential as the _Issuer_ and send the
+credential over to the _Holder_. The _holder_ will then accept this credential
+and automatically store it in their wallet.
 
 ### 1. Setting up the agents
 
@@ -90,11 +90,12 @@ For the _Issuer_ the setup is almost the same as the _Holder_. The difference
 is, is that the _Issuer_ does not need a mediator but an
 `HttpInboundTransport`.
 
-It is very important for the issuer to have a public DID, for the binding with
-a credential definition. For this demo we will use [BCovrin
+It is also very important for the _Issuer_ to have a public DID, for the binding
+with a credential definition, amongst other things. For this demo we will use [BCovrin
 Test](http://test.bcovrin.vonx.io). If you want to follow this tutorial, you
 have to register a public DID [here](http://test.bcovrin.vonx.io) via the
-`Wallet Seed` field (this must be the same as the seed inside the config).
+`Wallet seed` field (this must be the same as the seed inside the config under
+the key [`publicDidSeed`](./agent-config#publicdidseed)).
 
 :::issuer
 
@@ -422,7 +423,7 @@ const run = async () => {
   })
 
   // Register the credential definition on the ledger, this is required as it
-  // is a binding between the issuer and the schema
+  // is a binding between the _Issuer_ and the schema
   const credentialDefinition = await agent.ledger.registerCredentialDefinition({
     schema,
     supportRevocation: false,
@@ -531,7 +532,7 @@ const run = async () => {
   })
 
   // Register the credential definition on the ledger, this is required as it
-  // is a binding between the issuer and the schema
+  // is a binding between the _Issuer_ and the schema
   const credentialDefinition = await agent.ledger.registerCredentialDefinition({
     schema,
     supportRevocation: false,
