@@ -12,7 +12,7 @@ Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0036-issu
 >
 > 1. Basic knowledge of the required fields in the [agent
 >    config](./agent-config)
-> 1. A [connection between the _Holder_ and _Issuer_](https://example.org)
+> 1. A [connection between the _Holder_ and _Issuer_](./create-a-connection)
 
 In this tutorial we will issue a credential from the _Issuer_ to a _Holder_. We
 will start with setting up both their agents with the minimal configuration
@@ -196,8 +196,8 @@ Now that everything is setup on both sides, the _Issuer_ can now offer a
 credential to the _Holder_.
 
 > In this example we do not instantiate a connection and assume that there is
-> one. Please refer to this guide [TODO: here](https://example.org) to get a
-> connection and connectionId
+> one. Please refer to this guide [Create a connection](./create-a-connection)
+> to get a connection and connectionId
 
 <!-- tabs -->
 
@@ -565,4 +565,14 @@ const run = async () => {
 void run()
 ```
 
+:::
+
 <!-- /tabs -->
+
+### Useful resources
+
+- [AnonCreds](https://anoncreds-wg.github.io/anoncreds-spec/)
+- [Issue Credential V1
+  Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0036-issue-credential/README.md)
+- [Issue Credential V2
+  Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0453-issue-credential-v2/README.md)
