@@ -94,20 +94,6 @@ Now that we have setup both agents, we can create an invitation from _Acme Corp_
 
 <!-- tabs -->
 
-# Legacy
-
-This method will create an invitation using the legacy method according to [0160: Connection Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0160-connection-protocol/README.md).
-
-:::acme
-
-```typescript showLineNumbers
-const { invitation } = await agent.oob.createLegacyInvitation()
-
-const serializedInvitation = invitation.toUrl({ domain: "https://example.org" })
-```
-
-:::
-
 # New
 
 This method will create an invitation using the legacy method according to [0434: Out-of-Band Protocol 1.1](https://github.com/hyperledger/aries-rfcs/blob/main/features/0434-outofband/README.md).
@@ -118,6 +104,20 @@ This method will create an invitation using the legacy method according to [0434
 const outOfBandRecord = await agent.oob.createInvitation()
 
 const serializedInvitation = outOfBandRecord.outOfBandInvitation.toUrl({ domain: "https://example.org" })
+```
+
+:::
+
+# Legacy
+
+This method will create an invitation using the legacy method according to [0160: Connection Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0160-connection-protocol/README.md).
+
+:::acme
+
+```typescript showLineNumbers
+const { invitation } = await agent.oob.createLegacyInvitation()
+
+const serializedInvitation = invitation.toUrl({ domain: "https://example.org" })
 ```
 
 :::
@@ -135,7 +135,7 @@ connection is established.
 :::bob
 
 ```typescript showLineNumbers
-const { outOfBandRecord } = await agent.receiveInvitationFromUrl(url)
+const { outOfBandRecord } = await agent.oob.receiveInvitationFromUrl(url)
 ```
 
 :::
@@ -180,6 +180,7 @@ import {
   ConnectionStateChangedEvent,
   WsOutboundTransport,
   HttpInboundTransport,
+  HttpOutboundTransport,
 } from "@aries-framework/core"
 import { agentDependencies } from "@aries-framework/node"
 
@@ -200,6 +201,9 @@ const run = async () => {
 
   // Register a simple `WebSocket` outbound transport
   agent.registerOutboundTransport(new WsOutboundTransport())
+
+  // Register a simple `Http` outbound transport
+  agent.registerOutboundTransport(new HttpOutboundTransport())
 
   // Register a simple `Http` inbound transport
   agent.registerInboundTransport(new HttpInboundTransport({ port: 3000 }))
@@ -239,7 +243,7 @@ void run()
 :::bob
 
 ```typescript showLineNumbers
-import { Agent, InitConfig, WsOutboundTransport } from "@aries-framework/core"
+import { Agent, InitConfig, WsOutboundTransport, HttpOutboundTransport } from "@aries-framework/core"
 import { agentDependencies } from "@aries-framework/react-native"
 
 const run = async () => {
@@ -252,10 +256,7 @@ const run = async () => {
       id: "main",
       key: "demoagentbob00000000000000000000",
     },
-    // An example of a mediator invitation url. This MUST be changed when
-    // creating your own agent.
-    mediatorConnectionsInvite:
-      "https://didcomm.agent.community.animo.id?c_i=eyJAdHlwZSI6ICJkaWQ6c292OkJ6Q2JzTlloTXJqSGlxWkRUVUFTSGc7c3BlYy9jb25uZWN0aW9ucy8xLjAvaW52aXRhdGlvbiIsICJAaWQiOiAiYjVkYWRkNDgtODFmNi00NzJjLWExODAtYzY3MDUzNjQwMjlhIiwgImxhYmVsIjogIkFuaW1vIENvbW11bml0eSBBZ2VudCIsICJzZXJ2aWNlRW5kcG9pbnQiOiAiaHR0cHM6Ly9kaWRjb21tLmFnZW50LmNvbW11bml0eS5hbmltby5pZCIsICJyZWNpcGllbnRLZXlzIjogWyJBZ3g0cVhhWk5laHRzYWdDSk5mbW9VQjJlbldHYmN2bkRlcU5KZGdQTlZlUyJdfQ==",
+    mediatorConnectionsInvite: "https://didcomm.agent.community.animo.id?c_i=ey...(many bytes omitted)...Q==",
     autoAcceptConnections: true,
   }
 
@@ -264,6 +265,9 @@ const run = async () => {
 
   // Register a simple `WebSocket` outbound transport
   agent.registerOutboundTransport(new WsOutboundTransport())
+
+  // Register a simple `Http` outbound transport
+  agent.registerOutboundTransport(new HttpOutboundTransport())
 
   // Initialize the agent
   await agent.initialize()
