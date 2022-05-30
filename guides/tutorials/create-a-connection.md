@@ -146,6 +146,16 @@ When you quickly want to use the event or the data of a response to a
 connection request, you can start an [TODO: agent event
 listener](https://example.org).
 
+Another use case for this would be to get the `connectionRecord` of the
+connection as it is only created when the invitation has been received by the
+other agent. The `connectionRecord` is very essential in processes like [TODO:
+issuing a credential](https://example.org) or [TODO: verifying a
+proof](https://example.org).
+
+The `connectionRecord` can also be retrieved with
+`agent.connections.findAllByOutOfBandId(id)`, but with this method there is no
+way of knowing if the invitation has been received.
+
 :::acme
 
 ```typescript showLineNumbers
@@ -156,8 +166,12 @@ agent.events.on<ConnectionStateChangedEvent>(ConnectionEventTypes.ConnectionStat
   if (payload.connectionRecord.state === DidExchangeState.Completed) {
     // the connection is now ready for usage in other protocols!
     console.log(`Connection for out of band id ${outOfBandRecord.id} completed`)
+
+    // Custom business logic can be included here
+    // In this example we can send a basic message to the connection, but
+    // anything is possible
+    agent.basicMessages.sendMessage(payload.connectionRecord.id, "Hi, we are now contacts!")
   }
-  // custom business logic
 })
 ```
 
@@ -221,8 +235,12 @@ const run = async () => {
     if (payload.connectionRecord.state === DidExchangeState.Completed) {
       // the connection is now ready for usage in other protocols!
       console.log(`Connection for out of band id ${outOfBandRecord.id} completed`)
+
+      // Custom business logic can be included here
+      // In this example we can send a basic message to the connection, but
+      // anything is possible
+      agent.basicMessages.sendMessage(payload.connectionRecord.id, "Hi, we are now contacts!")
     }
-    // custom business logic
   })
 
   // Serialize the invitation to a url so that we can easily transfer it over
@@ -284,3 +302,8 @@ void run()
 ```
 
 :::
+
+### Useful resources
+
+- [0160: Connection Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0160-connection-protocol/README.md)
+- [0434: Out-of-Band Protocol 1.1](https://github.com/hyperledger/aries-rfcs/blob/main/features/0434-outofband/README.md)
