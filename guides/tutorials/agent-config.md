@@ -114,8 +114,10 @@ endpoint: ["https://example.org:3000"]
 
 ---
 
-## `publicDidSeed` (soon to be deprecated)
+## `publicDidSeed`
 
+> Soon to be deprecated
+>
 > Reason for deprecation: this will be generalized
 
 The seed used for initializing the public indy DID of the agent. This does not
@@ -136,7 +138,7 @@ object and it must include either the
 [`genesisPath`](./agent-config.md#indyledgersgenesispath) or
 [`genesisTransactions`](./agent-config#indyledgersgenesistransactions).
 
-An example of a [`genesisTransactions`](./agent-config#indyledgersgenesistransactions) can be found
+An example of the [`genesisTransactions`](./agent-config#indyledgersgenesistransactions) can be found
 [here](https://raw.githubusercontent.com/Indicio-tech/indicio-network/main/genesis_files/domain_transactions_testnet_genesis).
 
 **Type**: `IndyPoolConfig[]`
@@ -343,7 +345,7 @@ default for all connections.
 **Type**: `string`
 
 ```typescript title="example"
-mediationConnectionInvite: "https://didcomm.agent.community.animo.id?c_i=eyJAdHlwZSI6ICJkaWQ6c292OkJ6Q2JzTlloTXJqSGlxWkRUVUFTSGc7c3BlYy9jb25uZWN0aW9ucy8xLjAvaW52aXRhdGlvbiIsICJAaWQiOiAiYTEwYTYzNGEtNGEyNy00OTA3LWJlZGYtOWFiOTJiMTcwOTQ5IiwgInJlY2lwaWVudEtleXMiOiBbIjN5dVB6QmduNW95dmVpNUNvTWlHbnJVR3QzSjl5VW5VZlV1Y1ZITTZCOEV5Il0sICJzZXJ2aWNlRW5kcG9pbnQiOiAiaHR0cHM6Ly9kaWRjb21tLmFnZW50LmNvbW11bml0eS5hbmltby5pZCIsICJsYWJlbCI6ICJBbmltbyBDb21tdW5pdHkgQWdlbnQifQ=="
+mediationConnectionInvite: "https://didcomm.agent.community.animo.id?c_i=ey....(many bytes omitted)...Q=="
 ```
 
 ---
