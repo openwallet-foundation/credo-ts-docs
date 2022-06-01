@@ -37,6 +37,13 @@ a [Node.js environment](../getting-started/prerequisites/nodejs).
 For the _Holder_ we need to setup a basic agent with a wallet, mediator,
 outbound transport and a ledger.
 
+It is very important to note that mobile agents do not support HTTP by default.
+It is recommended to do everything over HTTPS, but for development HTTP can be
+enabled for
+[iOS](https://stackoverflow.com/questions/30731785/how-do-i-load-an-http-url-with-app-transport-security-enabled-in-ios-9)
+and
+[Android](https://stackoverflow.com/questions/51902629/how-to-allow-all-network-connection-types-http-and-https-in-android-9-pie).
+
 :::holder
 
 ```typescript showLineNumbers
@@ -90,12 +97,41 @@ For the _Issuer_ the setup is almost the same as the _Holder_. The difference
 is, is that the _Issuer_ does not need a mediator but an
 `HttpInboundTransport`.
 
-It is also very important for the _Issuer_ to have a public DID, for the binding
-with a credential definition, amongst other things. For this demo we will use [BCovrin
-Test](http://test.bcovrin.vonx.io). If you want to follow this tutorial, you
-have to register a public DID [here](http://test.bcovrin.vonx.io) via the
-`Wallet seed` field (this must be the same as the seed inside the config under
-the key [`publicDidSeed`](./agent-config#publicdidseed)).
+It is also very important for the _Issuer_ to have a public DID, for the
+binding with a credential definition, amongst other things. For this demo we
+will use [BCovrin Test](http://test.bcovrin.vonx.io). If you want to follow
+this tutorial, you have to register a public DID
+[here](http://test.bcovrin.vonx.io) via the `Wallet seed` field (this must be
+the same as the seed inside the config under the key
+[`publicDidSeed`](./agent-config#publicdidseed)).
+
+In order to reach the _Issuer_ we have to add an `endpoint` of the agent that
+exposes the `inboundTransport` to the public. In the example below we add an
+`inboundTransport` and use port `3000`. For development purposes it is
+recommended to use a tunneling service for this, like
+[`ngrok`](https://ngrok.com).
+
+To install and expose the port to the public the following commands can be used:
+
+<!-- tabs -->
+
+# yarn
+
+```console
+yarn global add ngrok
+
+ngrok http 3000
+```
+
+# npm
+
+```console
+npm install --global ngrok
+
+ngrok http 3000
+```
+
+<!-- /tabs -->
 
 :::issuer
 
@@ -134,6 +170,7 @@ const config: InitConfig = {
     },
   ],
   autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
+  endpoints: ["https://<ID>.ngrok.io"],
 }
 
 const agent = new Agent(config, agentDependencies)
@@ -173,6 +210,13 @@ const credentialDefinition = await agent.ledger.registerCredentialDefinition({
 :::
 
 ### 3. Listening for incoming credentials
+
+When we want to accept a credential, we have to listen to incoming credentials
+and handle accordingly. In this example we do not have any user interaction,
+but is likely that your application would have a user-interface which would
+display the credential. When receiving a credential offer you can get the
+values, which you want to show to the user, in
+`credentialExchangeRecord.credentialAttributes`.
 
 :::holder
 
@@ -240,6 +284,7 @@ import { CredentialProtocolVersion, CredentialPreviewAttribute } form '@aries-fr
 const credentialExchangeRecord = agent.credentials.offerCredential({
   connectionId,
   protocolVersion: CredentialProtocolVersion.V2,
+  credentialDefinitionId: credentialDefinition.id,
   credentialFormats: {
     indy: {
       attributes: [
@@ -436,6 +481,7 @@ const run = async () => {
   const credentialExchangeRecord = agent.credentials.offerCredential({
     connectionId,
     protocolVersion: CredentialProtocolVersion.V1,
+    credentialDefinitionId: credentialDefinition.id,
     credentialFormats: {
       indy: {
         attributes: [
