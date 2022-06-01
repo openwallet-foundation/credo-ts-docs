@@ -136,7 +136,9 @@ publicDidSeed: "testseed000000000000000000000000"
 An array of indy ledgers to connect to. The list can contain the following
 object and it must include either the
 [`genesisPath`](./agent-config.md#indyledgersgenesispath) or
-[`genesisTransactions`](./agent-config#indyledgersgenesistransactions).
+[`genesisTransactions`](./agent-config#indyledgersgenesistransactions). It is
+important to know that the first ledger in the list ledgers will be used for
+registering the schema, credential definition, etc.
 
 An example of the [`genesisTransactions`](./agent-config#indyledgersgenesistransactions) can be found
 [here](https://raw.githubusercontent.com/Indicio-tech/indicio-network/main/genesis_files/domain_transactions_testnet_genesis).
