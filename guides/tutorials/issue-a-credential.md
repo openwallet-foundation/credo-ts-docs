@@ -101,17 +101,22 @@ It is also very important for the _Issuer_ to have a public DID, for the
 binding with a credential definition, amongst other things. For this demo we
 will use [BCovrin Test](http://test.bcovrin.vonx.io). If you want to follow
 this tutorial, you have to register a public DID
-[here](http://test.bcovrin.vonx.io) via the `Wallet seed` field (this must be
+[here](http://test.bcovrin.vonx.io) via the Wallet seed field (this must be
 the same as the seed inside the config under the key
 [`publicDidSeed`](./agent-config#publicdidseed)).
 
-In order to reach the _Issuer_ we have to add an `endpoint` of the agent that
-exposes the `inboundTransport` to the public. In the example below we add an
+In order to reach the _Issuer_ we have to add a list of
+[`endpoints`](./agent-config#endpoints) of the agent that exposes the
+`inboundTransport` to the public. In the example below we add an
 `inboundTransport` and use port `3000`. For development purposes it is
 recommended to use a tunneling service for this, like
-[`ngrok`](https://ngrok.com).
+[Ngrok](https://ngrok.com). Ngrok will allow you to reach your locally
+exposed endpoint from the public. If a tunneling service is used, make sure to
+use the `HTTPS` variant as mobile environments, by default, do not accept
+`HTTP` anymore.
 
-To install and expose the port to the public the following commands can be used:
+To install [Ngrok](https://ngrok.com) and expose the port to the public the
+following commands can be used:
 
 <!-- tabs -->
 
@@ -215,8 +220,7 @@ When we want to accept a credential, we have to listen to incoming credentials
 and handle accordingly. In this example we do not have any user interaction,
 but is likely that your application would have a user-interface which would
 display the credential. When receiving a credential offer you can get the
-values, which you want to show to the user, in
-`credentialExchangeRecord.credentialAttributes`.
+values from `credentialExchangeRecord.credentialAttributes`.
 
 :::holder
 
@@ -255,17 +259,12 @@ import { CredentialProtocolVersion, CredentialPreviewAttribute } form '@aries-fr
 const credentialExchangeRecord = agent.credentials.offerCredential({
   connectionId,
   protocolVersion: CredentialProtocolVersion.V1,
+  credentialDefinitionId: credentialDefinition.id,
   credentialFormats: {
     indy: {
       attributes: [
-        new CredentialPreviewAttribute({
-          name: "Name",
-          value: "Jane Holder",
-        }),
-        new CredentialPreviewAttribute({
-          name: "Date of birth",
-          value: "10-08-1990",
-        }),
+        { name: "Name", value: "Jane Holder" },
+        { name: "Date of birth", value: "10-08-1990" },
       ],
     },
   },
@@ -288,14 +287,8 @@ const credentialExchangeRecord = agent.credentials.offerCredential({
   credentialFormats: {
     indy: {
       attributes: [
-        new CredentialPreviewAttribute({
-          name: "Name",
-          value: "Jane Holder",
-        }),
-        new CredentialPreviewAttribute({
-          name: "Date of birth",
-          value: "10-08-1990",
-        }),
+        { name: "Name", value: "Jane Holder" },
+        { name: "Date of birth", value: "10-08-1990" },
       ],
     },
   },
@@ -440,6 +433,7 @@ const run = async () => {
       },
     ],
     autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
+    endpoints: ["https://<ID>.ngrok.io"],
   }
 
   // A new instance of an agent is created here
@@ -485,14 +479,8 @@ const run = async () => {
     credentialFormats: {
       indy: {
         attributes: [
-          new CredentialPreviewAttribute({
-            name: "Name",
-            value: "Jane Holder",
-          }),
-          new CredentialPreviewAttribute({
-            name: "Date of birth",
-            value: "10-08-1990",
-          }),
+          { name: "Name", value: "Jane Holder" },
+          { name: "Date of birth", value: "10-08-1990" },
         ],
       },
     },
@@ -550,6 +538,7 @@ const run = async () => {
       },
     ],
     autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
+    endpoints: ["https://<ID>.ngrok.io"],
   }
 
   // A new instance of an agent is created here
@@ -591,17 +580,12 @@ const run = async () => {
   const credentialExchangeRecord = agent.credentials.offerCredential({
     connectionId,
     protocolVersion: CredentialProtocolVersion.V2,
+    credentialDefinitionId: credentialDefinition.Id,
     credentialFormats: {
       indy: {
         attributes: [
-          new CredentialPreviewAttribute({
-            name: "Name",
-            value: "Jane Holder",
-          }),
-          new CredentialPreviewAttribute({
-            name: "Date of birth",
-            value: "10-08-1990",
-          }),
+          { name: "Name", value: "Jane Holder" },
+          { name: "Date of birth", value: "10-08-1990" },
         ],
       },
     },
