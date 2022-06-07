@@ -63,6 +63,17 @@ export default function CodeBlock({ children: rawChildren, ...props }) {
   const isBrowser = useIsBrowser();
   const children = maybeStringifyChildren(rawChildren);
 
+  const CodeBlockComp =
+    typeof children === "string" ? StringContent : ElementContent;
+
+  if (!props.metastring) {
+    return (
+      <CodeBlockComp key={String(isBrowser)} {...props}>
+        {children}
+      </CodeBlockComp>
+    );
+  }
+
   let snippetContent;
 
   try {
@@ -70,8 +81,6 @@ export default function CodeBlock({ children: rawChildren, ...props }) {
       props.metastring
     )}`).default;
   } catch {}
-  const CodeBlockComp =
-    typeof children === "string" ? StringContent : ElementContent;
 
   const sectionNumber = parseSectionNumber(props.metastring);
 
