@@ -37,8 +37,6 @@ transport.
 
 ```
 
-<!-- xxx -->
-
 :::
 
 #### Acme
@@ -137,9 +135,9 @@ lead to other people knowing your "password" to your wallet.
 
 ```typescript showLineNumbers create-a-connection.ts
 
+```
 
 ### Useful resources
 
 - [0160: Connection Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0160-connection-protocol/README.md)
 - [0434: Out-of-Band Protocol 1.1](https://github.com/hyperledger/aries-rfcs/blob/main/features/0434-outofband/README.md)
-```
