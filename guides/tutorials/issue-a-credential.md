@@ -46,7 +46,7 @@ and
 
 :::holder
 
-```typescript showLineNumbers
+```typescript showLineNumbers issue-a-credential.ts section-1
 
 ```
 
@@ -97,7 +97,7 @@ following commands can be used:
 
 :::issuer
 
-```typescript showLineNumbers
+```typescript showLineNumbers issue-a-credential.ts section-2
 
 ```
 
@@ -112,7 +112,11 @@ credential, you can request that it must be issued from a specific party.
 
 :::issuer
 
-```typescript showLineNumbers
+```typescript showLineNumbers issue-a-credential.ts section-3
+
+```
+
+```typescript showLineNumbers issue-a-credential.ts section-4
 
 ```
 
@@ -128,7 +132,7 @@ values from `credentialExchangeRecord.credentialAttributes`.
 
 :::holder
 
-```typescript showLineNumbers
+```typescript showLineNumbers issue-a-credential.ts section-5
 
 ```
 
@@ -143,29 +147,13 @@ credential to the _Holder_.
 > one. Please refer to this guide [Create a connection](./create-a-connection)
 > to get a connection and connectionId
 
-<!-- tabs -->
-
-# V1
-
 :::issuer
 
-```typescript showLineNumbers
+```typescript showLineNumbers issue-a-credential.ts section-6
 
 ```
 
 :::
-
-# V2
-
-:::issuer
-
-```typescript showLineNumbers
-
-```
-
-:::
-
-<!-- /tabs -->
 
 ### 5. Full code snippets
 
@@ -174,37 +162,9 @@ should be editted to fit your use case. The
 [`walletConfig.key`](./agent-config#walletconfigkey) must be changed as it can
 lead to other people knowing your "password" to your wallet.
 
-:::holder
-
-```typescript showLineNumbers
+```typescript showLineNumbers issue-a-credential.ts
 
 ```
-
-:::
-
-<!-- tabs -->
-
-# V1
-
-:::issuer
-
-```typescript showLineNumbers
-
-```
-
-:::
-
-# V2
-
-:::issuer
-
-```typescript showLineNumbers
-
-```
-
-:::
-
-<!-- /tabs -->
 
 ### Useful resources
 
