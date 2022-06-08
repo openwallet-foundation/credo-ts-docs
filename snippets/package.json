@@ -1,0 +1,19 @@
+{
+  "name": "snippets",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "dev:connection": "ts-node src/create-a-connection.ts",
+    "dev:credential": "ts-node src/issue-a-credential.ts"
+  },
+  "devDependencies": {
+    "@types/indy-sdk": "^1.16.17",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.3"
+  },
+  "dependencies": {
+    "@aries-framework/core": "^0.2.0-alpha.108",
+    "@aries-framework/node": "^0.2.0-alpha.108",
+    "node-fetch": "2"
+  }
+}
