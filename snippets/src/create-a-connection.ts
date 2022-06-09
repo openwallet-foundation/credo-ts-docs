@@ -122,14 +122,21 @@ const setupConnectionListener = (agent: Agent, outOfBandRecord: OutOfBandRecord,
 // end-section-6
 
 const run = async () => {
+  console.log("Initializing Bob agent...")
   const bobAgent = await initializeBobAgent()
+  console.log("Initializing Acme agent...")
   const acmeAgent = await initializeAcmeAgent()
 
+  console.log("Creating the invitation as Acme...")
   const { outOfBandRecord, invitationUrl } = await createNewInvitation(acmeAgent)
 
-  setupConnectionListener(acmeAgent, outOfBandRecord, () => console.log("Custom business logic"))
+  console.log("Listening for connection changes...")
+  setupConnectionListener(acmeAgent, outOfBandRecord, () =>
+    console.log("We now have an active connection to use in the following tutorials")
+  )
 
-  void receiveInvitation(bobAgent, invitationUrl)
+  console.log("Accepting the invitation as Bob...")
+  await receiveInvitation(bobAgent, invitationUrl)
 }
 
 void run()
