@@ -11,8 +11,8 @@ import {
   CredentialEventTypes,
   CredentialState,
   CredentialStateChangedEvent,
+  OutOfBandRecord,
 } from "@aries-framework/core"
-import { OutOfBandRecord } from "@aries-framework/core/build/modules/oob/repository"
 import { agentDependencies, HttpInboundTransport } from "@aries-framework/node"
 import { Schema } from "indy-sdk"
 import fetch from "node-fetch"

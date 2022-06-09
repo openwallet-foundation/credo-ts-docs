@@ -6,8 +6,8 @@ import {
   WsOutboundTransport,
   HttpOutboundTransport,
   DidExchangeState,
+  OutOfBandRecord,
 } from "@aries-framework/core"
-import { OutOfBandRecord } from "@aries-framework/core/build/modules/oob/repository"
 import { agentDependencies, HttpInboundTransport } from "@aries-framework/node"
 
 // start-section-1
