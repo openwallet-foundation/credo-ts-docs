@@ -107,7 +107,7 @@ const initializeIssuerAgent = async () => {
 
 // start-section-3
 const registerSchema = async (issuer: Agent) =>
-  issuer.ledger.registerSchema({ attributes: ["name", "age"], name: "Identity", version: "6.0" })
+  issuer.ledger.registerSchema({ attributes: ["name", "age"], name: "Identity", version: "1.0" })
 // end-section-3
 
 // start-section-4
@@ -131,7 +131,7 @@ const setupCredentialListener = (holder: Agent) => {
 // start-section-6
 const issueCredential = async (issuer: Agent, credentialDefinitionId: string, connectionId: string) =>
   issuer.credentials.offerCredential({
-    protocolVersion: CredentialProtocolVersion.V2,
+    protocolVersion: CredentialProtocolVersion.V1,
     connectionId,
     credentialFormats: {
       indy: {
@@ -145,8 +145,8 @@ const issueCredential = async (issuer: Agent, credentialDefinitionId: string, co
   })
 // end-section-6
 
-const createNewInvitation = async (agent: Agent) => {
-  const outOfBandRecord = await agent.oob.createInvitation()
+const createNewInvitation = async (issuer: Agent) => {
+  const outOfBandRecord = await issuer.oob.createInvitation()
 
   return {
     invitationUrl: outOfBandRecord.outOfBandInvitation.toUrl({ domain: "https://example.org" }),
@@ -154,14 +154,18 @@ const createNewInvitation = async (agent: Agent) => {
   }
 }
 
-const receiveInvitation = async (agent: Agent, invitationUrl: string) => {
-  const { outOfBandRecord } = await agent.oob.receiveInvitationFromUrl(invitationUrl)
+const receiveInvitation = async (holder: Agent, invitationUrl: string) => {
+  const { outOfBandRecord } = await holder.oob.receiveInvitationFromUrl(invitationUrl)
 
   return outOfBandRecord
 }
 
-const setupConnectionListener = (issuer: Agent, outOfBandRecord: OutOfBandRecord, cb: (...args: any) => void) => {
-  issuer.events.on<ConnectionStateChangedEvent>(ConnectionEventTypes.ConnectionStateChanged, ({ payload }) => {
+const setupConnectionListener = (
+  issuer: Agent,
+  outOfBandRecord: OutOfBandRecord,
+  cb: (...args: any) => Promise<unknown>
+) => {
+  issuer.events.on<ConnectionStateChangedEvent>(ConnectionEventTypes.ConnectionStateChanged, async ({ payload }) => {
     console.log("Incoming connection event!")
     if (payload.connectionRecord.outOfBandId !== outOfBandRecord.id) return
     if (payload.connectionRecord.state === DidExchangeState.Completed) {
@@ -171,7 +175,7 @@ const setupConnectionListener = (issuer: Agent, outOfBandRecord: OutOfBandRecord
       // Custom business logic can be included here
       // In this example we can send a basic message to the connection, but
       // anything is possible
-      cb(payload.connectionRecord.id)
+      await cb(payload.connectionRecord.id)
     }
   })
 }
