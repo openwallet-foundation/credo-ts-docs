@@ -58,13 +58,6 @@ be seem like a password.
 ### `walletConfig.keyDerviationMethod`
 
 The method used for key derivation of the
-[`walletConfig.key`](./agent-config#walletconfigkey). When using
-`KeyDerivationMethod.Raw`, it is strongly recommended to use your own key
-derivation method to increase the security. This could be a simple salt + hash,
-but using either `Argon2IMod` or `Argon2Int` is recommended if you do not have
-a custom derivation method.
-
-The method used for key derivation of the
 [`walletConfig.key`](./agent-config#walletconfigkey).
 
 When using `KeyDerivationMethod.Raw`, it is strongly recommended to get the raw
