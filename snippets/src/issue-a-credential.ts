@@ -111,7 +111,7 @@ const initializeIssuerAgent = async () => {
 
 // start-section-3
 const registerSchema = async (issuer: Agent) =>
-  issuer.ledger.registerSchema({ attributes: ["name", "age"], name: "Identity", version: "103.0" })
+  issuer.ledger.registerSchema({ attributes: ["name", "age"], name: "Identity", version: "1.0" })
 // end-section-2
 
 // start-section-4
