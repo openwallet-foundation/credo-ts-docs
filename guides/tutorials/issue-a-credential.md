@@ -39,12 +39,13 @@ outbound transport and a ledger.
 
 > If you want to follow this tutorial in a mobile environment:
 >
-> It is very important to note that mobile agents do not support HTTP by default.
-> It is recommended to do everything over HTTPS, but for development HTTP can be
-> enabled for
-> [iOS](https://stackoverflow.com/questions/30731785/how-do-i-load-an-http-url-with-app-transport-security-enabled-in-ios-9)
-> and
-> [Android](https://stackoverflow.com/questions/51902629/how-to-allow-all-network-connection-types-http-and-https-in-android-9-pie).
+> 1. Use the `agentDependencies` from `@aries-framework/react-native`
+> 1. It is very important to note that mobile agents do not support HTTP by default.
+>    It is recommended to do everything over HTTPS, but for development HTTP can be
+>    enabled for
+>    [iOS](https://stackoverflow.com/questions/30731785/how-do-i-load-an-http-url-with-app-transport-security-enabled-in-ios-9)
+>    and
+>    [Android](https://stackoverflow.com/questions/51902629/how-to-allow-all-network-connection-types-http-and-https-in-android-9-pie).
 
 :::holder
 
