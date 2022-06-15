@@ -112,7 +112,7 @@ const initializeIssuerAgent = async () => {
 // start-section-3
 const registerSchema = async (issuer: Agent) =>
   issuer.ledger.registerSchema({ attributes: ["name", "age"], name: "Identity", version: "1.0" })
-// end-section-2
+// end-section-3
 
 // start-section-4
 const registerCredentialDefinition = async (issuer: Agent, schema: Schema) =>
@@ -129,6 +129,7 @@ const setupCredentialListener = (holder: Agent) => {
         await holder.credentials.acceptOffer({ credentialRecordId: payload.credentialRecord.id })
       case CredentialState.Done:
         console.log(`Credential for credential id ${payload.credentialRecord.id} is accepted`)
+        // For demo purposes we exit the program here.
         process.exit(0)
     }
   })
