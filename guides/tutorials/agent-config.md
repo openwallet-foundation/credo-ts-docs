@@ -64,6 +64,16 @@ derivation method to increase the security. This could be a simple salt + hash,
 but using either `Argon2IMod` or `Argon2Int` is recommended if you do not have
 a custom derivation method.
 
+The method used for key derivation of the
+[`walletConfig.key`](./agent-config#walletconfigkey).
+
+When using `KeyDerivationMethod.Raw`, it is strongly recommended to get the raw
+key via
+[indy_generate_wallet_key](https://github.com/hyperledger/indy-sdk/blob/1c7096dd95d0fd53881070f66907df4b9e61b874/libindy/src/api/wallet.rs#L560).
+If you really must implement your own key generation, it is required to be a
+base58-encoded
+[ChaCha20-Poly1305](https://en.wikipedia.org/wiki/ChaCha20-Poly1305) key.
+
 > For the advanced readers
 > [here](https://www.password-hashing.net/argon2-specs.pdf) is the
 > specification of Argon2.
