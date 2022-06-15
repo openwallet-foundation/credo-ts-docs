@@ -84,17 +84,20 @@ following commands can be used:
 # yarn
 
 ```console
+yarn global add ngrok
 
+ngrok http <PORT>
 ```
 
 # npm
 
 ```console
+npm install --global ngrok
 
+ngrok http <PORT>
 ```
 
 <!-- /tabs -->
-
 
 :::issuer
 
@@ -116,6 +119,8 @@ credential, you can request that it must be issued from a specific party.
 ```typescript showLineNumbers issue-a-credential.ts section-3
 
 ```
+
+---
 
 ```typescript showLineNumbers issue-a-credential.ts section-4
 
