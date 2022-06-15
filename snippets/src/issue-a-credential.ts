@@ -42,8 +42,9 @@ const initializeHolderAgent = async () => {
         genesisTransactions: genesisTransactionsBCovrinTestNet,
       },
     ],
-    autoAcceptCredentials: AutoAcceptCredential.Always,
+    autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
     autoAcceptConnections: true,
+    endpoints: ["http://localhost:3002"],
   }
 
   // A new instance of an agent is created here
@@ -54,6 +55,9 @@ const initializeHolderAgent = async () => {
 
   // Register a simple `Http` outbound transport
   agent.registerOutboundTransport(new HttpOutboundTransport())
+
+  // Register a simple `Http` inbound transport
+  agent.registerInboundTransport(new HttpInboundTransport({ port: 3002 }))
 
   // Initialize the agent
   await agent.initialize()
@@ -81,7 +85,7 @@ const initializeIssuerAgent = async () => {
         genesisTransactions: genesisTransactionsBCovrinTestNet,
       },
     ],
-    autoAcceptCredentials: AutoAcceptCredential.Always,
+    autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
     autoAcceptConnections: true,
     endpoints: ["http://localhost:3001"],
   }
@@ -107,8 +111,8 @@ const initializeIssuerAgent = async () => {
 
 // start-section-3
 const registerSchema = async (issuer: Agent) =>
-  issuer.ledger.registerSchema({ attributes: ["name", "age"], name: "Identity", version: "1.0" })
-// end-section-3
+  issuer.ledger.registerSchema({ attributes: ["name", "age"], name: "Identity", version: "103.0" })
+// end-section-2
 
 // start-section-4
 const registerCredentialDefinition = async (issuer: Agent, schema: Schema) =>
@@ -123,6 +127,9 @@ const setupCredentialListener = (holder: Agent) => {
         console.log("received a credential")
         // custom logic here
         await holder.credentials.acceptOffer({ credentialRecordId: payload.credentialRecord.id })
+      case CredentialState.Done:
+        console.log(`Credential for credential id ${payload.credentialRecord.id} is accepted`)
+        process.exit(0)
     }
   })
 }
@@ -166,7 +173,6 @@ const setupConnectionListener = (
   cb: (...args: any) => Promise<unknown>
 ) => {
   issuer.events.on<ConnectionStateChangedEvent>(ConnectionEventTypes.ConnectionStateChanged, async ({ payload }) => {
-    console.log("Incoming connection event!")
     if (payload.connectionRecord.outOfBandId !== outOfBandRecord.id) return
     if (payload.connectionRecord.state === DidExchangeState.Completed) {
       // the connection is now ready for usage in other protocols!
