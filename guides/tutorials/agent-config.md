@@ -13,7 +13,7 @@ set this.
 **Type**: `string`
 
 ```typescript title="example"
-label: "my-demo-agent";
+label: "my-demo-agent"
 ```
 
 ---
@@ -114,7 +114,7 @@ accepted.
 **Type**: `string`
 
 ```typescript title="example"
-endpoint: ["https://example.org:3000"];
+endpoint: ["https://example.org:3000"]
 ```
 
 ---
@@ -131,7 +131,7 @@ register the DID on the ledger. This value MUST be 32 characters long.
 **Type**: `string`
 
 ```typescript title="example"
-publicDidSeed: "testseed000000000000000000000000";
+publicDidSeed: "testseed000000000000000000000000"
 ```
 
 ---
@@ -163,7 +163,7 @@ indyLedgers: [
       acceptanceMechanism: "EULA",
     },
   },
-];
+]
 ```
 
 ### `indyLedgers.id`\*
@@ -213,7 +213,7 @@ quicker.
 **Default**: `true`
 
 ```typescript title="example"
-connectToIndyledgerOnStartup: false;
+connectToIndyledgerOnStartup: false
 ```
 
 ---
@@ -227,9 +227,9 @@ that can be used for simple logs.
 **Type**: `Logger`
 
 ```typescript title="example"
-import { ConsoleLogger, LogLevel } from "@aries-framework/core";
+import { ConsoleLogger, LogLevel } from "@aries-framework/core"
 
-logger: new ConsoleLogger(LogLevel.Test);
+logger: new ConsoleLogger(LogLevel.Test)
 ```
 
 ---
@@ -255,9 +255,9 @@ much more ambiguous in their specification.
 &nbsp;&nbsp;&nbsp; "application/didcomm-envelope-enc"
 
 ```typescript title="example"
-import { DidCommMimeType } from "@aries-framework/core";
+import { DidCommMimeType } from "@aries-framework/core"
 
-didCommMimeType: DidCommMimeType.v0;
+didCommMimeType: DidCommMimeType.v0
 ```
 
 ---
@@ -291,9 +291,9 @@ content is not allowed to be changed in the following steps
 &nbsp;&nbsp;&nbsp; Always auto-accept every incoming credential
 
 ```typescript title="example"
-import { AutoAcceptCredential } from "@aries-framework/core";
+import { AutoAcceptCredential } from "@aries-framework/core"
 
-autoAcceptCredentials: AutoAcceptCredential.ContentApproved;
+autoAcceptCredentials: AutoAcceptCredential.ContentApproved
 ```
 
 ---
@@ -327,9 +327,9 @@ content is not allowed to be changed in the following steps
 &nbsp;&nbsp;&nbsp; Always auto-accept every incoming proof
 
 ```typescript title="example"
-import { AutoAcceptProof } from "@aries-framework/core";
+import { AutoAcceptProof } from "@aries-framework/core"
 
-autoAcceptProofs: AutoAcceptProof.ContentApproved;
+autoAcceptProofs: AutoAcceptProof.ContentApproved
 ```
 
 ---
@@ -344,7 +344,7 @@ the request should be manually accepted via the `mediatorModule`.
 **Default**: `false`
 
 ```typescript title="example"
-autoAcceptMediationRequests: true;
+autoAcceptMediationRequests: true
 ```
 
 ---
@@ -362,7 +362,7 @@ default for all connections.
 **Type**: `string`
 
 ```typescript title="example"
-mediationConnectionInvite: "https://didcomm.agent.community.animo.id?c_i=ey....(many bytes omitted)...Q==";
+mediationConnectionInvite: "https://didcomm.agent.community.animo.id?c_i=ey....(many bytes omitted)...Q=="
 ```
 
 ---
@@ -379,7 +379,7 @@ mediator.
 **Type**: `string`
 
 ```typescript title="example"
-defaultMediatorId: "c475bd3e-4baf-40c4-b98b-3b6f131af5ee";
+defaultMediatorId: "c475bd3e-4baf-40c4-b98b-3b6f131af5ee"
 ```
 
 ---
@@ -397,7 +397,7 @@ Whether to clear the default mediator.
 **Default**: `false`
 
 ```typescript title="example"
-clearDefaultMediator: true;
+clearDefaultMediator: true
 ```
 
 ---
@@ -411,7 +411,7 @@ Set the default interval to poll the mediator in milliseconds.
 **Default**: `5000`
 
 ```typescript title="example"
-mediatorPollingInterval: 10000;
+mediatorPollingInterval: 10000
 ```
 
 ---
@@ -448,9 +448,9 @@ messages. (currently used by [aries cloud agent
 python](https://github.com/hyperedger/aries-cloudagent-python))
 
 ```typescript title="example"
-import { MediatorPickupStrategy } from "@aries-framework/core";
+import { MediatorPickupStrategy } from "@aries-framework/core"
 
-mediatorPickupStrategy: MediatorPickupStrategy.PickUpV2;
+mediatorPickupStrategy: MediatorPickupStrategy.PickUpV2
 ```
 
 ---
@@ -464,7 +464,7 @@ How many the mediator will give back in batches when using `MediatorPickupStrate
 **Default**: `10`
 
 ```typescript title="example"
-maximumMessagePickup: 20;
+maximumMessagePickup: 20
 ```
 
 ---
@@ -479,7 +479,7 @@ or the new didComm prefix `https://didcomm.org`.
 **Defaul**: `false`
 
 ```typescript title="example"
-useLegacyDidSovPrefix: true;
+useLegacyDidSovPrefix: true
 ```
 
 ---
@@ -493,7 +493,7 @@ this. It MUST not be used got any base of authenticity.
 **Type**: `string`
 
 ```typescript title="example"
-connectionImageUrl: "https://picsum.photos/200";
+connectionImageUrl: "https://picsum.photos/200"
 ```
 
 ---
@@ -509,7 +509,7 @@ JavaScript](https://github.com/hyperledger/aries-framework-javascript) is used.
 **Default**: `false`
 
 ```typescript title="example"
-autoUpdateStorageOnStartup: true;
+autoUpdateStorageOnStartup: true
 ```
 
 ---
