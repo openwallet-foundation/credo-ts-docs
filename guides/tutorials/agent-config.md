@@ -198,7 +198,7 @@ Stringified JSON object of the transaction.
 
 **Type**: `TransactionAuthorAgreement`
 
-JSON representation specifying the version and acceptance mechanism.
+JSON representation specifying the version and acceptance mechanism. The version is the unique version of the transaction author agreement acceptance mechanism list (AML). The acceptance mechanism refers to the acceptance mechanism label of the item in the AML. For more details you may consult the [indy-node docs on AML](https://github.com/hyperledger/indy-node/blob/master/docs/source/transactions.md#transaction_author_agreement_aml)
 
 ---
 
