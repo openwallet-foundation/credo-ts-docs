@@ -200,6 +200,18 @@ Stringified JSON object of the transaction.
 
 JSON representation specifying the version and acceptance mechanism. The version is the unique version of the transaction author agreement acceptance mechanism list (AML). The acceptance mechanism refers to the acceptance mechanism label of the item in the AML. For more details you may consult the [indy-node docs on AML](https://github.com/hyperledger/indy-node/blob/master/docs/source/transactions.md#transaction_author_agreement_aml)
 
+### `indyLedgers.transactionAuthorAgreement.version`
+
+**Type**: `string`
+
+The version of the AML acceptance mechanism. This is a string representation of a version number e.g. '1' or '1.4'
+
+### `indyLedgers.transactionAuthorAgreement.acceptanceMechanism`
+
+**Type**: `string`
+
+The acceptance mechanism to choose. This *must* be *one* of the available labels of the acceptance mechanisms key-value pairs in the AML e.g. 'EULA'. 
+
 ---
 
 ## `connectToIndyLedgerOnStartup`
