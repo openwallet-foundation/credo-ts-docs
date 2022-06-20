@@ -71,7 +71,22 @@ const sidebars = {
       type: 'category',
       label: 'Tutorials',
       link: { type: 'doc', id: 'tutorials/index' },
-      items: ['tutorials/agent-config', 'tutorials/create-a-connection', 'tutorials/issue-a-credential'],
+      items: [
+        {
+          type: 'category',
+          label: 'Agent Config',
+          link: { type: 'doc', id: 'tutorials/agent-config/index' },
+          items: ['tutorials/agent-config/logging'],
+        },
+        'tutorials/create-a-connection',
+        'tutorials/issue-a-credential',
+        {
+          type: 'category',
+          label: 'Postgres Database',
+          link: { type: 'doc', id: 'tutorials/postgres-database-nodejs/index' },
+          items: ['tutorials/postgres-database-nodejs/linux', 'tutorials/postgres-database-nodejs/macos'],
+        },
+      ],
     },
     {
       type: 'category',

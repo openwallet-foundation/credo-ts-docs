@@ -58,7 +58,7 @@ be seem like a password.
 ### `walletConfig.keyDerviationMethod`
 
 The method used for key derivation of the
-[`walletConfig.key`](./agent-config#walletconfigkey).
+[`walletConfig.key`](#walletconfigkey).
 
 When using `KeyDerivationMethod.Raw`, it is strongly recommended to get the raw
 key via
@@ -114,7 +114,7 @@ accepted.
 **Type**: `string`
 
 ```typescript title="example"
-endpoint: ['https://example.org:3000']
+endpoints: ['https://example.org:3000']
 ```
 
 ---
@@ -140,12 +140,12 @@ publicDidSeed: 'testseed000000000000000000000000'
 
 An array of indy ledgers to connect to. The list can contain the following
 object and it must include either the
-[`genesisPath`](./agent-config.md#indyledgersgenesispath) or
-[`genesisTransactions`](./agent-config#indyledgersgenesistransactions). It is
+[`genesisPath`](.md#indyledgersgenesispath) or
+[`genesisTransactions`](#indyledgersgenesistransactions). It is
 important to know that the first ledger in the list ledgers will be used for
 registering the schema, credential definition, etc.
 
-An example of the [`genesisTransactions`](./agent-config#indyledgersgenesistransactions) can be found
+An example of the [`genesisTransactions`](#indyledgersgenesistransactions) can be found
 [here](https://raw.githubusercontent.com/Indicio-tech/indicio-network/main/genesis_files/domain_transactions_testnet_genesis).
 
 **Type**: `IndyPoolConfig[]`
@@ -186,7 +186,7 @@ as production ledgers have priority.
 
 Filesystem path of the genesis transaction. At this location, there will just be
 a JSON object like the
-[`indyLedgers.genesisTransaction`](./agent-config#indyledgersgenesistransactions).
+[`indyLedgers.genesisTransaction`](#indyledgersgenesistransactions).
 
 ### `indyLedgers.genesisTransactions`
 
@@ -234,7 +234,7 @@ connectToIndyledgerOnStartup: false
 
 A logger instance that implements the `Logger` interface. This can be extremely
 helpful for debugging. Aries Framework JavaScript exposes a `ConsoleLogger`
-that can be used for simple logs.
+that can be used for simple logs. See [Logging](./logging) for more details on creating your own logger instance.
 
 **Type**: `Logger`
 
@@ -364,8 +364,8 @@ autoAcceptMediationRequests: true
 ## `mediationConnectionsInvitation`
 
 > This property collides with
-> [`defaultMediatorId`](./agent-config#defaultmediatorid)
-> and [`clearDefaultMediator`](./agent-config#cleardefaultmediator)
+> [`defaultMediatorId`](#defaultmediatorid)
+> and [`clearDefaultMediator`](#cleardefaultmediator)
 
 Connection invitation used for the default mediator. If specified, the agent
 will create a connection, request mediation and store the mediator as the
@@ -382,8 +382,8 @@ mediationConnectionInvite: 'https://didcomm.agent.community.animo.id?c_i=ey....(
 ## `defaultMediatorId`
 
 > This property collides with
-> [`mediatorConnectionsInvitation`](./agent-config#mediationconnectionsinvitation)
-> and [`clearDefaultMediator`](./agent-config#cleardefaultmediator)
+> [`mediatorConnectionsInvitation`](#mediationconnectionsinvitation)
+> and [`clearDefaultMediator`](#cleardefaultmediator)
 
 The mediator id used as the default mediator. This will override the default
 mediator.
@@ -399,8 +399,8 @@ defaultMediatorId: 'c475bd3e-4baf-40c4-b98b-3b6f131af5ee'
 ## `clearDefaultMediator`
 
 > This property collides with
-> [`mediatorConnectionsInvitation`](./agent-config#mediationconnectionsinvitation)
-> and [`defaultMediatorId`](./agent-config#defaultmediatorid)
+> [`mediatorConnectionsInvitation`](#mediationconnectionsinvitation)
+> and [`defaultMediatorId`](#defaultmediatorid)
 
 Whether to clear the default mediator.
 
@@ -499,7 +499,7 @@ useLegacyDidSovPrefix: true
 ## `connectionImageUrl`
 
 A URL to an image used so that other agents can display this. Like the
-[`Label`](./agent-config#label) this is completely up to the user to define
+[`Label`](#label) this is completely up to the user to define
 this. It MUST not be used got any base of authenticity.
 
 **Type**: `string`
