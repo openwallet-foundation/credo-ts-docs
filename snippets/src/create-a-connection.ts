@@ -7,8 +7,8 @@ import {
   HttpOutboundTransport,
   DidExchangeState,
   OutOfBandRecord,
-} from "@aries-framework/core"
-import { agentDependencies, HttpInboundTransport } from "@aries-framework/node"
+} from '@aries-framework/core'
+import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
 
 // start-section-1
 const initializeBobAgent = async () => {
@@ -16,10 +16,10 @@ const initializeBobAgent = async () => {
   // configuration and the label. It also sets the mediator invitation url,
   // because this is most likely required in a mobile environment.
   const config: InitConfig = {
-    label: "demo-agent-bob",
+    label: 'demo-agent-bob',
     walletConfig: {
-      id: "mainBob",
-      key: "demoagentbob00000000000000000000",
+      id: 'mainBob',
+      key: 'demoagentbob00000000000000000000',
     },
     autoAcceptConnections: true,
   }
@@ -45,13 +45,13 @@ const initializeAcmeAgent = async () => {
   // Simple agent configuration. This sets some basic fields like the wallet
   // configuration and the label.
   const config: InitConfig = {
-    label: "demo-agent-acme",
+    label: 'demo-agent-acme',
     walletConfig: {
-      id: "mainAcme",
-      key: "demoagentacme0000000000000000000",
+      id: 'mainAcme',
+      key: 'demoagentacme0000000000000000000',
     },
     autoAcceptConnections: true,
-    endpoints: ["http://localhost:3001"],
+    endpoints: ['http://localhost:3001'],
   }
 
   // A new instance of an agent is created here
@@ -78,7 +78,7 @@ const createNewInvitation = async (agent: Agent) => {
   const outOfBandRecord = await agent.oob.createInvitation()
 
   return {
-    invitationUrl: outOfBandRecord.outOfBandInvitation.toUrl({ domain: "https://example.org" }),
+    invitationUrl: outOfBandRecord.outOfBandInvitation.toUrl({ domain: 'https://example.org' }),
     outOfBandRecord,
   }
 }
@@ -88,7 +88,7 @@ const createNewInvitation = async (agent: Agent) => {
 const createLegacyInvitation = async (agent: Agent) => {
   const { invitation } = await agent.oob.createLegacyInvitation()
 
-  return invitation.toUrl({ domain: "https://example.org" })
+  return invitation.toUrl({ domain: 'https://example.org' })
 }
 // end-section-4
 
@@ -122,21 +122,23 @@ const setupConnectionListener = (agent: Agent, outOfBandRecord: OutOfBandRecord,
 // end-section-6
 
 const run = async () => {
-  console.log("Initializing Bob agent...")
+  console.log('Initializing Bob agent...')
   const bobAgent = await initializeBobAgent()
-  console.log("Initializing Acme agent...")
+  console.log('Initializing Acme agent...')
   const acmeAgent = await initializeAcmeAgent()
 
-  console.log("Creating the invitation as Acme...")
+  console.log('Creating the invitation as Acme...')
   const { outOfBandRecord, invitationUrl } = await createNewInvitation(acmeAgent)
 
-  console.log("Listening for connection changes...")
+  console.log('Listening for connection changes...')
   setupConnectionListener(acmeAgent, outOfBandRecord, () =>
-    console.log("We now have an active connection to use in the following tutorials")
+    console.log('We now have an active connection to use in the following tutorials')
   )
 
-  console.log("Accepting the invitation as Bob...")
+  console.log('Accepting the invitation as Bob...')
   await receiveInvitation(bobAgent, invitationUrl)
 }
+
+export default run
 
 void run()

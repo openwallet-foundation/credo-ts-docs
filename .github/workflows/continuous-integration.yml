@@ -1,0 +1,26 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  format:
+    name: Check format with prettier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Check prettier
+        run: yarn check-format
+
+      - name: Check types
+        run: yarn check-types

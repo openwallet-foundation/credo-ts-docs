@@ -2,18 +2,19 @@
   "name": "snippets",
   "version": "1.0.0",
   "license": "Apache-2.0",
+  "private": true,
   "scripts": {
     "dev:connection": "ts-node src/create-a-connection.ts",
     "dev:credential": "ts-node src/issue-a-credential.ts"
   },
   "devDependencies": {
-    "@types/indy-sdk": "^1.16.17",
+    "@types/node": "18",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "@aries-framework/core": "^0.2.0-alpha.111",
-    "@aries-framework/node": "^0.2.0-alpha.111",
+    "@aries-framework/core": "^0.2.0-alpha.135",
+    "@aries-framework/node": "^0.2.0-alpha.135",
     "node-fetch": "2"
   }
 }

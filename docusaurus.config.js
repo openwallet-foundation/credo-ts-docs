@@ -1,24 +1,24 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require("prism-react-renderer/themes/github")
-const darkCodeTheme = require("prism-react-renderer/themes/dracula")
-const admonitions = require("remark-admonitions")
-const remarkTabs = require("remark-docusaurus-tabs")
+const lightCodeTheme = require('prism-react-renderer/themes/github')
+const darkCodeTheme = require('prism-react-renderer/themes/dracula')
+const admonitions = require('remark-admonitions')
+const remarkTabs = require('remark-docusaurus-tabs')
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Aries JavaScript Documentation",
-  tagline: "Everything you need to know about the Aries JavaScript ecosystem.",
-  url: "https://animo.github.io",
-  baseUrl: "/aries-javascript-docs/",
-  onBrokenLinks: "warn",
-  onBrokenMarkdownLinks: "warn",
-  favicon: "img/favicon.ico",
+  title: 'Aries JavaScript Documentation',
+  tagline: 'Everything you need to know about the Aries JavaScript ecosystem.',
+  url: 'https://animo.github.io',
+  baseUrl: '/aries-javascript-docs/',
+  onBrokenLinks: 'warn',
+  onBrokenMarkdownLinks: 'warn',
+  favicon: 'img/favicon.ico',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "animo", // Usually your GitHub org/user name.
-  projectName: "aries-javascript-docs", // Usually your repo name.
+  organizationName: 'animo', // Usually your GitHub org/user name.
+  projectName: 'aries-javascript-docs', // Usually your repo name.
   trailingSlash: false,
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -31,45 +31,45 @@ const config = {
 
   presets: [
     [
-      "classic",
+      'classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       {
         docs: {
-          path: "guides",
-          routeBasePath: "guides",
-          sidebarPath: require.resolve("./sidebars.js"),
+          path: 'guides',
+          routeBasePath: 'guides',
+          sidebarPath: require.resolve('./sidebars.js'),
           remarkPlugins: [
             remarkTabs,
             [
               admonitions,
               {
                 infima: true,
-                icons: "emoji",
+                icons: 'emoji',
                 customTypes: {
                   holder: {
-                    keyword: "issuer",
-                    emoji: "🗄",
-                    ifmClass: "alert alert--holder",
+                    keyword: 'issuer',
+                    emoji: '🗄',
+                    ifmClass: 'alert alert--holder',
                   },
                   issuer: {
-                    keyword: "issuer",
-                    emoji: "📄",
-                    ifmClass: "alert alert--issuer",
+                    keyword: 'issuer',
+                    emoji: '📄',
+                    ifmClass: 'alert alert--issuer',
                   },
                   verifier: {
-                    keyword: "verifier",
-                    emoji: "👮",
-                    ifmClass: "alert alert--verifier",
+                    keyword: 'verifier',
+                    emoji: '👮',
+                    ifmClass: 'alert alert--verifier',
                   },
                   acme: {
-                    keyword: "Acme Corp",
-                    emoji: "🏢",
-                    ifmClass: "alert alert--acme",
+                    keyword: 'Acme Corp',
+                    emoji: '🏢',
+                    ifmClass: 'alert alert--acme',
                   },
                   bob: {
-                    keyword: "Bob",
-                    emoji: "🧔",
-                    ifmClass: "alert alert--bob",
+                    keyword: 'Bob',
+                    emoji: '🧔',
+                    ifmClass: 'alert alert--bob',
                   },
                 },
               },
@@ -77,7 +77,7 @@ const config = {
           ],
         },
         theme: {
-          customCss: require.resolve("./src/css/custom.css"),
+          customCss: require.resolve('./src/css/custom.css'),
         },
       },
     ],
@@ -87,72 +87,72 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: "Aries JavaScript Docs",
+        title: 'Aries JavaScript Docs',
         logo: {
-          alt: "Hyperledger Aries Logo",
-          src: "img/aries-logo.png",
+          alt: 'Hyperledger Aries Logo',
+          src: 'img/aries-logo.png',
         },
         items: [
           {
-            to: "/guides",
-            type: "doc",
-            docId: "index",
-            position: "left",
-            label: "Guides",
+            to: '/guides',
+            type: 'doc',
+            docId: 'index',
+            position: 'left',
+            label: 'Guides',
           },
         ],
       },
       footer: {
-        style: "dark",
+        style: 'dark',
         links: [
           {
-            title: "Guides",
+            title: 'Guides',
             items: [
               {
-                label: "Concepts",
-                to: "/guides/concepts/index",
+                label: 'Concepts',
+                to: '/guides/concepts/index',
               },
               {
-                label: "Tutorials",
-                to: "/guide/tutorials/index",
+                label: 'Tutorials',
+                to: '/guide/tutorials/index',
               },
             ],
           },
           {
-            title: "Community",
+            title: 'Community',
             items: [
               {
-                label: "Discord",
-                href: "https://discord.com/channels/905194001349627914/941708033434738768",
+                label: 'Discord',
+                href: 'https://discord.com/channels/905194001349627914/941708033434738768',
               },
               {
-                label: "Hyperledger Aries Mailing List",
-                href: "https://lists.hyperledger.org/g/aries",
+                label: 'Hyperledger Aries Mailing List',
+                href: 'https://lists.hyperledger.org/g/aries',
               },
               {
-                label: "Working Group Call Notes",
-                href: "https://wiki.hyperledger.org/display/ARIES/Framework+JS+Meetings",
+                label: 'Working Group Call Notes',
+                href: 'https://wiki.hyperledger.org/display/ARIES/Framework+JS+Meetings',
               },
               {
-                label: "Working Group Call Calendar",
-                href: "https://lists.hyperledger.org/login?r=https%3A%2F%2Flists.hyperledger.org%2Fg%2Faries%2Fcalendar",
+                label: 'Working Group Call Calendar',
+                href: 'https://lists.hyperledger.org/login?r=https%3A%2F%2Flists.hyperledger.org%2Fg%2Faries%2Fcalendar',
               },
             ],
           },
           {
-            title: "Repositories",
+            title: 'Repositories',
             items: [
               {
-                label: "Aries Framework JavaScript",
-                href: "https://github.com/hyperledger/aries-framework-javascript",
+                label: 'Aries Framework JavaScript',
+                href: 'https://github.com/hyperledger/aries-framework-javascript',
               },
               {
-                label: "Aries Framework JavaScript Extensions",
-                href: "https://github.com/hyperledger/aries-framework-javascript-ext",
+                label: 'Aries Framework JavaScript Extensions',
+                href: 'https://github.com/hyperledger/aries-framework-javascript-ext',
               },
               {
-                label: "Aries JavaScript Docs (this site)",
-                href: "https://github.com/hyperledger/aries-javascript-docs",
+                label: 'Aries JavaScript Docs (this site)',
+                href: 'https://github.com/hyperledger/aries-javascript-docs',
               },
             ],
           },
@@ -166,7 +166,7 @@ const config = {
     }),
   plugins: [
     [
-      require.resolve("@cmfcmf/docusaurus-search-local"),
+      require.resolve('@cmfcmf/docusaurus-search-local'),
       {
         indexDocs: true,
         indexDocSidebarParentCategories: 3,
