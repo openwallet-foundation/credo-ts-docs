@@ -28,25 +28,28 @@ Depending on your target, [React
 Native](../getting-started/prerequisites/react-native) or
 [Node.js](../getting-started/prerequisites/react-native), it might vary.
 
-In this tutorial the _Holder_ will be in a [React Native
-environment](../getting-started/prerequisites/react-native) and the _Issuer_ in
-a [Node.js environment](../getting-started/prerequisites/nodejs).
+In this tutorial the _Holder_ will be in a [Node.js
+environment](../getting-started/prerequisites/nodejs) and the _Issuer_
+also in a [Node.js environment](../getting-started/prerequisites/nodejs).
 
 #### Holder
 
 For the _Holder_ we need to setup a basic agent with a wallet, mediator,
 outbound transport and a ledger.
 
-It is very important to note that mobile agents do not support HTTP by default.
-It is recommended to do everything over HTTPS, but for development HTTP can be
-enabled for
-[iOS](https://stackoverflow.com/questions/30731785/how-do-i-load-an-http-url-with-app-transport-security-enabled-in-ios-9)
-and
-[Android](https://stackoverflow.com/questions/51902629/how-to-allow-all-network-connection-types-http-and-https-in-android-9-pie).
+> If you want to follow this tutorial in a mobile environment:
+>
+> 1. Use the `agentDependencies` from `@aries-framework/react-native`
+> 1. It is very important to note that mobile agents do not support HTTP by default.
+>    It is recommended to do everything over HTTPS, but for development HTTP can be
+>    enabled for
+>    [iOS](https://stackoverflow.com/questions/30731785/how-do-i-load-an-http-url-with-app-transport-security-enabled-in-ios-9)
+>    and
+>    [Android](https://stackoverflow.com/questions/51902629/how-to-allow-all-network-connection-types-http-and-https-in-android-9-pie).
 
 :::holder
 
-```typescript showLineNumbers
+```typescript showLineNumbers issue-a-credential.ts section-1
 
 ```
 
@@ -84,20 +87,24 @@ following commands can be used:
 # yarn
 
 ```console
+yarn global add ngrok
 
+ngrok http <PORT>
 ```
 
 # npm
 
 ```console
+npm install --global ngrok
 
+ngrok http <PORT>
 ```
 
 <!-- /tabs -->
 
 :::issuer
 
-```typescript showLineNumbers
+```typescript showLineNumbers issue-a-credential.ts section-2
 
 ```
 
@@ -112,7 +119,13 @@ credential, you can request that it must be issued from a specific party.
 
 :::issuer
 
-```typescript showLineNumbers
+```typescript showLineNumbers issue-a-credential.ts section-3
+
+```
+
+---
+
+```typescript showLineNumbers issue-a-credential.ts section-4
 
 ```
 
@@ -128,7 +141,7 @@ values from `credentialExchangeRecord.credentialAttributes`.
 
 :::holder
 
-```typescript showLineNumbers
+```typescript showLineNumbers issue-a-credential.ts section-5
 
 ```
 
@@ -143,29 +156,13 @@ credential to the _Holder_.
 > one. Please refer to this guide [Create a connection](./create-a-connection)
 > to get a connection and connectionId
 
-<!-- tabs -->
-
-# V1
-
 :::issuer
 
-```typescript showLineNumbers
+```typescript showLineNumbers issue-a-credential.ts section-6
 
 ```
 
 :::
-
-# V2
-
-:::issuer
-
-```typescript showLineNumbers
-
-```
-
-:::
-
-<!-- /tabs -->
 
 ### 5. Full code snippets
 
@@ -174,37 +171,9 @@ should be editted to fit your use case. The
 [`walletConfig.key`](./agent-config#walletconfigkey) must be changed as it can
 lead to other people knowing your "password" to your wallet.
 
-:::holder
-
-```typescript showLineNumbers
+```typescript showLineNumbers issue-a-credential.ts
 
 ```
-
-:::
-
-<!-- tabs -->
-
-# V1
-
-:::issuer
-
-```typescript showLineNumbers
-
-```
-
-:::
-
-# V2
-
-:::issuer
-
-```typescript showLineNumbers
-
-```
-
-:::
-
-<!-- /tabs -->
 
 ### Useful resources
 
