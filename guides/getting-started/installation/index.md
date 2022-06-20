@@ -14,7 +14,7 @@ for using the Aries Ecosystem.
 # Node.js
 
 ```console
-yarn add @aries-framework/core @aries-framework/node express
+yarn add @aries-framework/core @aries-framework/node
 ```
 
 # React Native
