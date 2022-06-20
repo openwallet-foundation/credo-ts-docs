@@ -64,15 +64,15 @@ enough for your specific use cases. Please refer to the
 # Node.js
 
 ```typescript showLineNumbers
-import type { InitConfig } from "@aries-framework/core"
-import { Agent } from "@aries-framework/core"
-import { AgentDependencies } from "@aries-framework/node"
+import type { InitConfig } from '@aries-framework/core'
+import { Agent } from '@aries-framework/core'
+import { AgentDependencies } from '@aries-framework/node'
 
 const config: InitConfig = {
-  label: "docs-nodejs-agent",
+  label: 'docs-nodejs-agent',
   walletConfig: {
-    id: "wallet-id",
-    key: "testkey0000000000000000000000000",
+    id: 'wallet-id',
+    key: 'testkey0000000000000000000000000',
   },
 }
 
@@ -82,15 +82,15 @@ const agent = new Agent(config, AgentDependencies)
 # React Native
 
 ```typescript showLineNumbers
-import type { InitConfig } from "@aries-framework/core"
-import { Agent } from "@aries-framework/core"
-import { AgentDependencies } from "@aries-framework/react-native"
+import type { InitConfig } from '@aries-framework/core'
+import { Agent } from '@aries-framework/core'
+import { AgentDependencies } from '@aries-framework/react-native'
 
 const config: InitConfig = {
-  label: "docs-rn-agent",
+  label: 'docs-rn-agent',
   walletConfig: {
-    id: "wallet-id",
-    key: "testkey0000000000000000000000000",
+    id: 'wallet-id',
+    key: 'testkey0000000000000000000000000',
   },
 }
 
@@ -113,7 +113,7 @@ required.
 Sets up an HTTP outbound and inbound transport.
 
 ```typescript showLineNumbers
-import { HttpOutboundTransport, WsOutboundTransport, HttpInboundTransport } from "@aries-framework/core"
+import { HttpOutboundTransport, WsOutboundTransport, HttpInboundTransport } from '@aries-framework/core'
 
 agent.registerOutboundTransport(new HttpOuboundTransport())
 agent.registerInboundtransport(new HttpInboundTransport({ port: 3000 }))
@@ -126,7 +126,7 @@ more depth about the reasons for this in the mediation section [TODO: mediator
 section](https://example.org)
 
 ```typescript showLineNumbers
-import { WsOutboundTransport } from "@aries-framework/core"
+import { WsOutboundTransport } from '@aries-framework/core'
 
 agent.registerOutboundTransport(new WsOutboundTransport())
 ```
@@ -150,20 +150,20 @@ const initialize = async () => await agent.initialize().catch(console.error)
 # Node.js
 
 ```typescript showLineNumbers
-import type { InitConfig } from "@aries-framework/core"
-import { Agent } from "@aries-framework/core"
-import { AgentDependencies } from "@aries-framework/node"
-import express from "express"
+import type { InitConfig } from '@aries-framework/core'
+import { Agent } from '@aries-framework/core'
+import { AgentDependencies } from '@aries-framework/node'
+import express from 'express'
 
 // Simple express app required for the inbound transport
 const app = express()
 
 // The agent initialization configuration
 const config: InitConfig = {
-  label: "docs-nodejs-agent",
+  label: 'docs-nodejs-agent',
   walletConfig: {
-    id: "wallet-id",
-    key: "testkey0000000000000000000000000",
+    id: 'wallet-id',
+    key: 'testkey0000000000000000000000000',
   },
 }
 
@@ -181,16 +181,16 @@ const initialize = async () => await agent.initialize().catch(console.error)
 # React Native
 
 ```typescript showLineNumbers
-import type { InitConfig } from "@aries-framework/core"
-import { Agent, WsOutboundTransport } from "@aries-framework/core"
-import { AgentDependencies } from "@aries-framework/react-native"
+import type { InitConfig } from '@aries-framework/core'
+import { Agent, WsOutboundTransport } from '@aries-framework/core'
+import { AgentDependencies } from '@aries-framework/react-native'
 
 // The agent initialization configuration
 const config: InitConfig = {
-  label: "docs-rn-agent",
+  label: 'docs-rn-agent',
   walletConfig: {
-    id: "wallet-id",
-    key: "testkey0000000000000000000000000",
+    id: 'wallet-id',
+    key: 'testkey0000000000000000000000000',
   },
 }
 

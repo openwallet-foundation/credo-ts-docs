@@ -13,7 +13,7 @@ set this.
 **Type**: `string`
 
 ```typescript title="example"
-label: "my-demo-agent"
+label: 'my-demo-agent'
 ```
 
 ---
@@ -114,7 +114,7 @@ accepted.
 **Type**: `string`
 
 ```typescript title="example"
-endpoint: ["https://example.org:3000"]
+endpoint: ['https://example.org:3000']
 ```
 
 ---
@@ -131,7 +131,7 @@ register the DID on the ledger. This value MUST be 32 characters long.
 **Type**: `string`
 
 ```typescript title="example"
-publicDidSeed: "testseed000000000000000000000000"
+publicDidSeed: 'testseed000000000000000000000000'
 ```
 
 ---
@@ -155,12 +155,12 @@ An example of the [`genesisTransactions`](./agent-config#indyledgersgenesistrans
 ```typescript title="example"
 indyLedgers: [
   {
-    id: "indicio-test-net",
+    id: 'indicio-test-net',
     isProduction: false,
-    genesisPath: "./constants/indicio-test-net.txn",
+    genesisPath: './constants/indicio-test-net.txn',
     transactionAuthorAgreement: {
-      version: "1",
-      acceptanceMechanism: "EULA",
+      version: '1',
+      acceptanceMechanism: 'EULA',
     },
   },
 ]
@@ -210,7 +210,7 @@ The version of the AML acceptance mechanism. This is a string representation of 
 
 **Type**: `string`
 
-The acceptance mechanism to choose. This *must* be *one* of the available labels of the acceptance mechanisms key-value pairs in the AML e.g. 'EULA'. 
+The acceptance mechanism to choose. This _must_ be _one_ of the available labels of the acceptance mechanisms key-value pairs in the AML e.g. 'EULA'.
 
 ---
 
@@ -239,7 +239,7 @@ that can be used for simple logs.
 **Type**: `Logger`
 
 ```typescript title="example"
-import { ConsoleLogger, LogLevel } from "@aries-framework/core"
+import { ConsoleLogger, LogLevel } from '@aries-framework/core'
 
 logger: new ConsoleLogger(LogLevel.Test)
 ```
@@ -267,7 +267,7 @@ much more ambiguous in their specification.
 &nbsp;&nbsp;&nbsp; "application/didcomm-envelope-enc"
 
 ```typescript title="example"
-import { DidCommMimeType } from "@aries-framework/core"
+import { DidCommMimeType } from '@aries-framework/core'
 
 didCommMimeType: DidCommMimeType.v0
 ```
@@ -303,7 +303,7 @@ content is not allowed to be changed in the following steps
 &nbsp;&nbsp;&nbsp; Always auto-accept every incoming credential
 
 ```typescript title="example"
-import { AutoAcceptCredential } from "@aries-framework/core"
+import { AutoAcceptCredential } from '@aries-framework/core'
 
 autoAcceptCredentials: AutoAcceptCredential.ContentApproved
 ```
@@ -339,7 +339,7 @@ content is not allowed to be changed in the following steps
 &nbsp;&nbsp;&nbsp; Always auto-accept every incoming proof
 
 ```typescript title="example"
-import { AutoAcceptProof } from "@aries-framework/core"
+import { AutoAcceptProof } from '@aries-framework/core'
 
 autoAcceptProofs: AutoAcceptProof.ContentApproved
 ```
@@ -374,7 +374,7 @@ default for all connections.
 **Type**: `string`
 
 ```typescript title="example"
-mediationConnectionInvite: "https://didcomm.agent.community.animo.id?c_i=ey....(many bytes omitted)...Q=="
+mediationConnectionInvite: 'https://didcomm.agent.community.animo.id?c_i=ey....(many bytes omitted)...Q=='
 ```
 
 ---
@@ -391,7 +391,7 @@ mediator.
 **Type**: `string`
 
 ```typescript title="example"
-defaultMediatorId: "c475bd3e-4baf-40c4-b98b-3b6f131af5ee"
+defaultMediatorId: 'c475bd3e-4baf-40c4-b98b-3b6f131af5ee'
 ```
 
 ---
@@ -460,7 +460,7 @@ messages. (currently used by [aries cloud agent
 python](https://github.com/hyperedger/aries-cloudagent-python))
 
 ```typescript title="example"
-import { MediatorPickupStrategy } from "@aries-framework/core"
+import { MediatorPickupStrategy } from '@aries-framework/core'
 
 mediatorPickupStrategy: MediatorPickupStrategy.PickUpV2
 ```
@@ -505,7 +505,7 @@ this. It MUST not be used got any base of authenticity.
 **Type**: `string`
 
 ```typescript title="example"
-connectionImageUrl: "https://picsum.photos/200"
+connectionImageUrl: 'https://picsum.photos/200'
 ```
 
 ---

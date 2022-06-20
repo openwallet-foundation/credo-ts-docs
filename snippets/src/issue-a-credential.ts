@@ -6,16 +6,15 @@ import {
   ConnectionEventTypes,
   ConnectionStateChangedEvent,
   DidExchangeState,
-  CredentialProtocolVersion,
   AutoAcceptCredential,
   CredentialEventTypes,
   CredentialState,
   CredentialStateChangedEvent,
   OutOfBandRecord,
-} from "@aries-framework/core"
-import { agentDependencies, HttpInboundTransport } from "@aries-framework/node"
-import { Schema } from "indy-sdk"
-import fetch from "node-fetch"
+} from '@aries-framework/core'
+import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
+import { Schema } from 'indy-sdk'
+import fetch from 'node-fetch'
 
 const getGenesisTransaction = async (url: string) => {
   const response = await fetch(url)
@@ -25,26 +24,26 @@ const getGenesisTransaction = async (url: string) => {
 
 // start-section-1
 const initializeHolderAgent = async () => {
-  const genesisTransactionsBCovrinTestNet = await getGenesisTransaction("http://test.bcovrin.vonx.io/genesis")
+  const genesisTransactionsBCovrinTestNet = await getGenesisTransaction('http://test.bcovrin.vonx.io/genesis')
   // Simple agent configuration. This sets some basic fields like the wallet
   // configuration and the label. It also sets the mediator invitation url,
   // because this is most likely required in a mobile environment.
   const config: InitConfig = {
-    label: "demo-agent-holder",
+    label: 'demo-agent-holder',
     walletConfig: {
-      id: "demo-agent-holder",
-      key: "demoagentholder00000000000000000",
+      id: 'demo-agent-holder',
+      key: 'demoagentholder00000000000000000',
     },
     indyLedgers: [
       {
-        id: "bcovin-test-net",
+        id: 'bcovin-test-net',
         isProduction: false,
         genesisTransactions: genesisTransactionsBCovrinTestNet,
       },
     ],
     autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
     autoAcceptConnections: true,
-    endpoints: ["http://localhost:3002"],
+    endpoints: ['http://localhost:3002'],
   }
 
   // A new instance of an agent is created here
@@ -68,26 +67,26 @@ const initializeHolderAgent = async () => {
 
 // start-section-2
 const initializeIssuerAgent = async () => {
-  const genesisTransactionsBCovrinTestNet = await getGenesisTransaction("http://test.bcovrin.vonx.io/genesis")
+  const genesisTransactionsBCovrinTestNet = await getGenesisTransaction('http://test.bcovrin.vonx.io/genesis')
   // Simple agent configuration. This sets some basic fields like the wallet
   // configuration and the label.
   const config: InitConfig = {
-    label: "demo-agent-issuer",
+    label: 'demo-agent-issuer',
     walletConfig: {
-      id: "demo-agent-issuer",
-      key: "demoagentissuer00000000000000000",
+      id: 'demo-agent-issuer',
+      key: 'demoagentissuer00000000000000000',
     },
-    publicDidSeed: "demoissuerdidseed000000000000000",
+    publicDidSeed: 'demoissuerdidseed000000000000000',
     indyLedgers: [
       {
-        id: "bcovrin-test-net",
+        id: 'bcovrin-test-net',
         isProduction: false,
         genesisTransactions: genesisTransactionsBCovrinTestNet,
       },
     ],
     autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
     autoAcceptConnections: true,
-    endpoints: ["http://localhost:3001"],
+    endpoints: ['http://localhost:3001'],
   }
 
   // A new instance of an agent is created here
@@ -111,12 +110,12 @@ const initializeIssuerAgent = async () => {
 
 // start-section-3
 const registerSchema = async (issuer: Agent) =>
-  issuer.ledger.registerSchema({ attributes: ["name", "age"], name: "Identity", version: "1.0" })
+  issuer.ledger.registerSchema({ attributes: ['name', 'age'], name: 'Identity', version: '1.0' })
 // end-section-3
 
 // start-section-4
 const registerCredentialDefinition = async (issuer: Agent, schema: Schema) =>
-  issuer.ledger.registerCredentialDefinition({ schema, supportRevocation: false, tag: "default" })
+  issuer.ledger.registerCredentialDefinition({ schema, supportRevocation: false, tag: 'default' })
 // end-section-4
 
 // start-section-5
@@ -124,7 +123,7 @@ const setupCredentialListener = (holder: Agent) => {
   holder.events.on<CredentialStateChangedEvent>(CredentialEventTypes.CredentialStateChanged, async ({ payload }) => {
     switch (payload.credentialRecord.state) {
       case CredentialState.OfferReceived:
-        console.log("received a credential")
+        console.log('received a credential')
         // custom logic here
         await holder.credentials.acceptOffer({ credentialRecordId: payload.credentialRecord.id })
       case CredentialState.Done:
@@ -139,14 +138,14 @@ const setupCredentialListener = (holder: Agent) => {
 // start-section-6
 const issueCredential = async (issuer: Agent, credentialDefinitionId: string, connectionId: string) =>
   issuer.credentials.offerCredential({
-    protocolVersion: CredentialProtocolVersion.V1,
+    protocolVersion: 'v1',
     connectionId,
     credentialFormats: {
       indy: {
         credentialDefinitionId,
         attributes: [
-          { name: "name", value: "Jane Doe" },
-          { name: "age", value: "23" },
+          { name: 'name', value: 'Jane Doe' },
+          { name: 'age', value: '23' },
         ],
       },
     },
@@ -157,7 +156,7 @@ const createNewInvitation = async (issuer: Agent) => {
   const outOfBandRecord = await issuer.oob.createInvitation()
 
   return {
-    invitationUrl: outOfBandRecord.outOfBandInvitation.toUrl({ domain: "https://example.org" }),
+    invitationUrl: outOfBandRecord.outOfBandInvitation.toUrl({ domain: 'https://example.org' }),
     outOfBandRecord,
   }
 }
@@ -188,27 +187,29 @@ const setupConnectionListener = (
 }
 
 const flow = (issuer: Agent) => async (connectionId: string) => {
-  console.log("Registering the schema...")
+  console.log('Registering the schema...')
   const schema = await registerSchema(issuer)
-  console.log("Registering the credential definition...")
+  console.log('Registering the credential definition...')
   const credentialDefinition = await registerCredentialDefinition(issuer, schema)
-  console.log("Issuing the credential...")
+  console.log('Issuing the credential...')
   await issueCredential(issuer, credentialDefinition.id, connectionId)
 }
 
 const run = async () => {
-  console.log("Initializing the holder...")
+  console.log('Initializing the holder...')
   const holder = await initializeHolderAgent()
-  console.log("Initializing the issuer...")
+  console.log('Initializing the issuer...')
   const issuer = await initializeIssuerAgent()
 
-  console.log("Initializing the credential listener...")
+  console.log('Initializing the credential listener...')
   setupCredentialListener(holder)
 
-  console.log("Initializing the connection...")
+  console.log('Initializing the connection...')
   const { outOfBandRecord, invitationUrl } = await createNewInvitation(issuer)
   setupConnectionListener(issuer, outOfBandRecord, flow(issuer))
   await receiveInvitation(holder, invitationUrl)
 }
+
+export default run
 
 void run()
