@@ -1,4 +1,4 @@
-# Updating
+# Updating AFJ
 
 This section will cover everything you need to know about updating Aries Framework JavaScript to a newer version.
 
