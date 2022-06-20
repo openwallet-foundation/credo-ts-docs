@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  format:
-    name: Check format with prettier
+  test:
+    name: Check format, types and build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
