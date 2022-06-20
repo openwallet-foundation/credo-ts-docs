@@ -15,42 +15,37 @@ For installation of the Postgres plugin, please refer to the platform specific g
 ## Using the Postgres Plugin in AFJ
 
 ```ts
-import { Agent, InitConfig } from "@aries-framework/core";
-import {
-  agentDependencies,
-  IndyPostgresStorageConfig,
-  loadPostgresPlugin,
-  WalletScheme,
-} from "@aries-framework/node";
+import { Agent, InitConfig } from '@aries-framework/core'
+import { agentDependencies, IndyPostgresStorageConfig, loadPostgresPlugin, WalletScheme } from '@aries-framework/node'
 
 // IndyPostgresStorageConfig defines interface for the Postgres plugin configuration.
 const storageConfig: IndyPostgresStorageConfig = {
-  type: "postgres_storage",
+  type: 'postgres_storage',
   config: {
-    url: "localhost:5432",
+    url: 'localhost:5432',
     wallet_scheme: WalletScheme.DatabasePerWallet,
   },
   credentials: {
-    account: "postgres",
-    password: "postgres",
-    admin_account: "postgres",
-    admin_password: "postgres",
+    account: 'postgres',
+    password: 'postgres',
+    admin_account: 'postgres',
+    admin_password: 'postgres',
   },
-};
+}
 
 // load the postgres wallet plugin before agent initialization
-loadPostgresPlugin(storageConfig.config, storageConfig.credentials);
+loadPostgresPlugin(storageConfig.config, storageConfig.credentials)
 
 const agentConfig: InitConfig = {
-  label: "My Agent",
+  label: 'My Agent',
   // walletConfig.id and walletConfig.key are still required
   walletConfig: {
-    id: "walletId",
-    key: "testKey0000000000000000000000000",
+    id: 'walletId',
+    key: 'testKey0000000000000000000000000',
     // storage is added and defines the postgres plugin configuration
     storage: storageConfig,
   },
-};
+}
 
-const agent = new Agent(agentConfig, agentDependencies);
+const agent = new Agent(agentConfig, agentDependencies)
 ```
