@@ -18,8 +18,9 @@ jobs:
           node-version: 16.x
           cache: yarn
 
+      # ignore scripts as indy-sdk will try to build and we don't have libindy
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-scripts
       - name: Build website
         run: yarn build
 
