@@ -33,7 +33,10 @@ const sidebars = {
             {
               type: "category",
               label: "NodeJS",
-              link: { type: "doc", id: "getting-started/prerequisites/nodejs/index" },
+              link: {
+                type: "doc",
+                id: "getting-started/prerequisites/nodejs/index",
+              },
               items: [
                 "getting-started/prerequisites/nodejs/linux",
                 "getting-started/prerequisites/nodejs/windows",
@@ -44,7 +47,10 @@ const sidebars = {
             {
               type: "category",
               label: "React Native",
-              link: { type: "doc", id: "getting-started/prerequisites/react-native/index" },
+              link: {
+                type: "doc",
+                id: "getting-started/prerequisites/react-native/index",
+              },
               items: [
                 "getting-started/prerequisites/react-native/ios",
                 "getting-started/prerequisites/react-native/android",
@@ -59,21 +65,39 @@ const sidebars = {
       type: "category",
       label: "Concepts",
       link: { type: "doc", id: "concepts/index" },
-      items: ["concepts/agents", "concepts/did-and-didcomm", "concepts/platform-and-environment"],
+      items: [
+        "concepts/agents",
+        "concepts/did-and-didcomm",
+        "concepts/platform-and-environment",
+      ],
     },
     {
       type: "category",
       label: "Tutorials",
       link: { type: "doc", id: "tutorials/index" },
-      items: ["tutorials/agent-config", "tutorials/create-a-connection", "tutorials/issue-a-credential"],
+      items: [
+        "tutorials/agent-config",
+        "tutorials/create-a-connection",
+        "tutorials/issue-a-credential",
+      ],
+    },
+    {
+      type: "category",
+      label: "Updating",
+      link: { type: "doc", id: "updating/index" },
+      items: ["updating/update-assistant", "updating/versions/0.1-to-0.2"],
     },
     {
       type: "category",
       label: "Ecosystem",
       link: { type: "doc", id: "ecosystem/index" },
-      items: ["ecosystem/framework", "ecosystem/extensions", "ecosystem/bifold"],
+      items: [
+        "ecosystem/framework",
+        "ecosystem/extensions",
+        "ecosystem/bifold",
+      ],
     },
   ],
-}
+};
 
-module.exports = sidebars
+module.exports = sidebars;
