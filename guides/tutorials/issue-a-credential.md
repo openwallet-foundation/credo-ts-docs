@@ -133,6 +133,12 @@ credential, you can request that it must be issued from a specific party.
 
 ### 3. Listening for incoming credentials
 
+When we want to accept a credential, we have to listen to incoming credentials
+and handle accordingly. In this example we do not have any user interaction,
+but is likely that your application would have a user-interface which would
+display the credential. When receiving a credential offer you can get the
+values from `credentialExchangeRecord.credentialAttributes`.
+
 :::holder
 
 ```typescript showLineNumbers issue-a-credential.ts section-5
