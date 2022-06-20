@@ -67,7 +67,7 @@ This method will create an invitation using the legacy method according to [0434
 ```typescript showLineNumbers create-a-connection.ts section-3
 const outOfBandRecord = await agent.oob.createInvitation()
 
-const serializedInvitation = outOfBandRecord.outOfBandInvitation.toUrl({ domain: "https://example.org" })
+const serializedInvitation = outOfBandRecord.outOfBandInvitation.toUrl({ domain: 'https://example.org' })
 ```
 
 :::
