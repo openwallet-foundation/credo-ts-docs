@@ -19,99 +19,88 @@ const sidebars = {
   // But you can create a sidebar manually
 
   tutorialSidebar: [
-    "index",
+    'index',
     {
-      type: "category",
-      label: "Getting started",
-      link: { type: "doc", id: "getting-started/index" },
+      type: 'category',
+      label: 'Getting started',
+      link: { type: 'doc', id: 'getting-started/index' },
       items: [
         {
-          type: "category",
-          label: "Prerequisites",
-          link: { type: "doc", id: "getting-started/prerequisites/index" },
+          type: 'category',
+          label: 'Prerequisites',
+          link: { type: 'doc', id: 'getting-started/prerequisites/index' },
           items: [
             {
-              type: "category",
-              label: "NodeJS",
+              type: 'category',
+              label: 'NodeJS',
               link: {
-                type: "doc",
-                id: "getting-started/prerequisites/nodejs/index",
+                type: 'doc',
+                id: 'getting-started/prerequisites/nodejs/index',
               },
               items: [
-                "getting-started/prerequisites/nodejs/linux",
-                "getting-started/prerequisites/nodejs/windows",
-                "getting-started/prerequisites/nodejs/apple-intel",
-                "getting-started/prerequisites/nodejs/apple-arm",
+                'getting-started/prerequisites/nodejs/linux',
+                'getting-started/prerequisites/nodejs/windows',
+                'getting-started/prerequisites/nodejs/apple-intel',
+                'getting-started/prerequisites/nodejs/apple-arm',
               ],
             },
             {
-              type: "category",
-              label: "React Native",
+              type: 'category',
+              label: 'React Native',
               link: {
-                type: "doc",
-                id: "getting-started/prerequisites/react-native/index",
+                type: 'doc',
+                id: 'getting-started/prerequisites/react-native/index',
               },
               items: [
-                "getting-started/prerequisites/react-native/ios",
-                "getting-started/prerequisites/react-native/android",
+                'getting-started/prerequisites/react-native/ios',
+                'getting-started/prerequisites/react-native/android',
               ],
             },
           ],
         },
-        "getting-started/installation/index",
+        'getting-started/installation/index',
       ],
     },
     {
-      type: "category",
-      label: "Concepts",
-      link: { type: "doc", id: "concepts/index" },
-      items: [
-        "concepts/agents",
-        "concepts/did-and-didcomm",
-        "concepts/platform-and-environment",
-      ],
+      type: 'category',
+      label: 'Concepts',
+      link: { type: 'doc', id: 'concepts/index' },
+      items: ['concepts/agents', 'concepts/did-and-didcomm', 'concepts/platform-and-environment'],
     },
     {
-      type: "category",
-      label: "Tutorials",
-      link: { type: "doc", id: "tutorials/index" },
+      type: 'category',
+      label: 'Tutorials',
+      link: { type: 'doc', id: 'tutorials/index' },
       items: [
         {
-          type: "category",
-          label: "Agent Config",
-          link: { type: "doc", id: "tutorials/agent-config/index" },
-          items: ["tutorials/agent-config/logging"],
+          type: 'category',
+          label: 'Agent Config',
+          link: { type: 'doc', id: 'tutorials/agent-config/index' },
+          items: ['tutorials/agent-config/logging'],
         },
-        "tutorials/create-a-connection",
-        "tutorials/issue-a-credential",
+        'tutorials/create-a-connection',
+        'tutorials/issue-a-credential',
         {
-          type: "category",
-          label: "Postgres Database",
-          link: { type: "doc", id: "tutorials/postgres-database-nodejs/index" },
-          items: [
-            "tutorials/postgres-database-nodejs/linux",
-            "tutorials/postgres-database-nodejs/macos",
-          ],
+          type: 'category',
+          label: 'Postgres Database',
+          link: { type: 'doc', id: 'tutorials/postgres-database-nodejs/index' },
+          items: ['tutorials/postgres-database-nodejs/linux', 'tutorials/postgres-database-nodejs/macos'],
         },
       ],
     },
     {
-      type: "category",
-      label: "Updating",
-      link: { type: "doc", id: "updating/index" },
-      items: ["updating/update-assistant", "updating/versions/0.1-to-0.2"],
+      type: 'category',
+      label: 'Updating',
+      link: { type: 'doc', id: 'updating/index' },
+      items: ['updating/update-assistant', 'updating/versions/0.1-to-0.2'],
     },
     {
-      type: "category",
-      label: "Ecosystem",
-      link: { type: "doc", id: "ecosystem/index" },
-      items: [
-        "ecosystem/framework",
-        "ecosystem/extensions",
-        "ecosystem/bifold",
-      ],
+      type: 'category',
+      label: 'Ecosystem',
+      link: { type: 'doc', id: 'ecosystem/index' },
+      items: ['ecosystem/framework', 'ecosystem/extensions', 'ecosystem/bifold'],
     },
   ],
-};
+}
 
-module.exports = sidebars;
+module.exports = sidebars
