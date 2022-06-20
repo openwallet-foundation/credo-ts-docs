@@ -66,7 +66,7 @@ enough for your specific use cases. Please refer to the
 ```typescript showLineNumbers
 import type { InitConfig } from "@aries-framework/core"
 import { Agent } from "@aries-framework/core"
-import { AgentDependencies } from "@aries-framework/node"
+import { agentDependencies } from "@aries-framework/node"
 
 const config: InitConfig = {
   label: "docs-nodejs-agent",
@@ -76,7 +76,7 @@ const config: InitConfig = {
   },
 }
 
-const agent = new Agent(config, AgentDependencies)
+const agent = new Agent(config, agentDependencies)
 ```
 
 # React Native
@@ -84,7 +84,7 @@ const agent = new Agent(config, AgentDependencies)
 ```typescript showLineNumbers
 import type { InitConfig } from "@aries-framework/core"
 import { Agent } from "@aries-framework/core"
-import { AgentDependencies } from "@aries-framework/react-native"
+import { agentDependencies } from "@aries-framework/react-native"
 
 const config: InitConfig = {
   label: "docs-rn-agent",
@@ -94,7 +94,7 @@ const config: InitConfig = {
   },
 }
 
-const agent = new Agent(config, AgentDependencies)
+const agent = new Agent(config, agentDependencies)
 ```
 
 <!--/tabs-->
@@ -115,8 +115,8 @@ Sets up an HTTP outbound and inbound transport.
 ```typescript showLineNumbers
 import { HttpOutboundTransport, WsOutboundTransport, HttpInboundTransport } from "@aries-framework/core"
 
-agent.registerOutboundTransport(new HttpOuboundTransport())
-agent.registerInboundtransport(new HttpInboundTransport({ port: 3000 }))
+agent.registerOutboundTransport(new HttpOutboundTransport())
+agent.registerInboundTransport(new HttpInboundTransport({ port: 3000 }))
 ```
 
 # React Native
@@ -126,9 +126,10 @@ more depth about the reasons for this in the mediation section [TODO: mediator
 section](https://example.org)
 
 ```typescript showLineNumbers
-import { WsOutboundTransport } from "@aries-framework/core"
+import { WsOutboundTransport, HttpOutboundTransport } from "@aries-framework/core"
 
 agent.registerOutboundTransport(new WsOutboundTransport())
+agent.registerOutboundTransport(new HttpOutboundTransport())
 ```
 
 <!--/tabs-->
@@ -138,7 +139,7 @@ agent.registerOutboundTransport(new WsOutboundTransport())
 ```typescript showLineNumbers
 // ...
 
-const agent = new Agent(config, AgentDependencies)
+const agent = new Agent(config, agentDependencies)
 
 const initialize = async () => await agent.initialize().catch(console.error)
 ```
@@ -152,11 +153,7 @@ const initialize = async () => await agent.initialize().catch(console.error)
 ```typescript showLineNumbers
 import type { InitConfig } from "@aries-framework/core"
 import { Agent } from "@aries-framework/core"
-import { AgentDependencies } from "@aries-framework/node"
-import express from "express"
-
-// Simple express app required for the inbound transport
-const app = express()
+import { agentDependencies } from "@aries-framework/node"
 
 // The agent initialization configuration
 const config: InitConfig = {
@@ -168,11 +165,11 @@ const config: InitConfig = {
 }
 
 // Creating an agent instance
-const agent = new Agent(config, AgentDependencies)
+const agent = new Agent(config, agentDependencies)
 
 // Registering the required in- and outbound transports
-agent.registerOutboundTransport(new HttpOuboundTransport())
-agent.registerInboundtransport(new HttpInboundTransport({ app, port: 3000 }))
+agent.registerOutboundTransport(new HttpOutboundTransport())
+agent.registerInboundTransport(new HttpInboundTransport({ port: 3000 }))
 
 // Function to initialize the agent
 const initialize = async () => await agent.initialize().catch(console.error)
@@ -182,8 +179,8 @@ const initialize = async () => await agent.initialize().catch(console.error)
 
 ```typescript showLineNumbers
 import type { InitConfig } from "@aries-framework/core"
-import { Agent, WsOutboundTransport } from "@aries-framework/core"
-import { AgentDependencies } from "@aries-framework/react-native"
+import { Agent, WsOutboundTransport, HttpOutboundTransport } from "@aries-framework/core"
+import { agentDependencies } from "@aries-framework/react-native"
 
 // The agent initialization configuration
 const config: InitConfig = {
@@ -195,9 +192,10 @@ const config: InitConfig = {
 }
 
 // Creating an agent instance
-const agent = new Agent(config, AgentDependencies)
+const agent = new Agent(config, agentDependencies)
 
 // Registering the required outbound transport
+agent.registerOutboundTransport(new HttpOutboundTransport())
 agent.registerOutboundTransport(new WsOutboundTransport())
 
 // Function to initialize the agent
