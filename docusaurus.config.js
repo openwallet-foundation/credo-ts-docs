@@ -9,15 +9,15 @@ const remarkTabs = require('remark-docusaurus-tabs')
 const config = {
   title: 'Aries JavaScript Documentation',
   tagline: 'Everything you need to know about the Aries JavaScript ecosystem.',
-  url: 'https://animo.github.io',
-  baseUrl: '/aries-javascript-docs/',
+  url: 'https://aries.js.org',
+  baseUrl: '/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'animo', // Usually your GitHub org/user name.
+  organizationName: 'hyperledger', // Usually your GitHub org/user name.
   projectName: 'aries-javascript-docs', // Usually your repo name.
   trailingSlash: false,
 
