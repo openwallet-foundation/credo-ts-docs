@@ -13,6 +13,7 @@ If you would like to propose a significant change, please open an issue first to
 Contributions are made pursuant to the Developer's Certificate of Origin, available at https://developercertificate.org, and licensed under the Apache License, version 2.0 (Apache-2.0).
 
 ## Topic specific guides
+
 For more information on how to write a tutorial or how to add content to the 'concepts' section, see these more detailed guides:
 
 - [Concepts](developer-docs/CONCEPTS.md)
