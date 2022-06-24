@@ -6,9 +6,9 @@ The Aries JavaScript ecosystem includes various components that are spread acros
 
 Currently, Aries JavaScript is composed out of three separate repositories:
 
-1. [Aries Framework JavaScript](framework)
-2. [Aries Framework JavaScript Extensions](extensions)
-3. [Aries Mobile Agent React Native (Bifold)](bifold)
+1. [Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript)
+2. [Aries Framework JavaScript Extensions](https://github.com/hyperledger/aries-framework-javascript-ext)
+3. [Aries Mobile Agent React Native (Bifold)](https://github.com/hyperledger/aries-mobile-agent-react-native)
 
 ### Aries Framework JavaScript
 
