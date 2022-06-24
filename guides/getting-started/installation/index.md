@@ -46,6 +46,18 @@ of your application.
 + import 'react-native-get-random-values'
 ```
 
+In addition you need add support for resolving modules with the `.cjs` extension, as this is used by some of AFJ's dependencies and not automatically supported by React Native.
+
+```js title="metro.config.js" showLineNumbers
+module.exports = {
+  // ... other Metro config options ...
+  resolver: {
+    // make sure this includes `cjs` (and other extensions you need)
+    sourceExts: ['js', 'json', 'ts', 'tsx', 'cjs'],
+  },
+}
+```
+
 <!--/tabs-->
 
 ### Setting up the agent
