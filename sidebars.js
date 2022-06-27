@@ -27,21 +27,21 @@ const sidebars = {
       items: [
         {
           type: 'category',
-          label: 'Prerequisites',
-          link: { type: 'doc', id: 'getting-started/prerequisites/index' },
+          label: 'Installation',
+          link: { type: 'doc', id: 'getting-started/installation/index' },
           items: [
             {
               type: 'category',
               label: 'NodeJS',
               link: {
                 type: 'doc',
-                id: 'getting-started/prerequisites/nodejs/index',
+                id: 'getting-started/installation/nodejs/index',
               },
               items: [
-                'getting-started/prerequisites/nodejs/linux',
-                'getting-started/prerequisites/nodejs/windows',
-                'getting-started/prerequisites/nodejs/apple-intel',
-                'getting-started/prerequisites/nodejs/apple-arm',
+                'getting-started/installation/nodejs/linux',
+                'getting-started/installation/nodejs/windows',
+                'getting-started/installation/nodejs/apple-intel',
+                'getting-started/installation/nodejs/apple-arm',
               ],
             },
             {
@@ -49,16 +49,16 @@ const sidebars = {
               label: 'React Native',
               link: {
                 type: 'doc',
-                id: 'getting-started/prerequisites/react-native/index',
+                id: 'getting-started/installation/react-native/index',
               },
               items: [
-                'getting-started/prerequisites/react-native/ios',
-                'getting-started/prerequisites/react-native/android',
+                'getting-started/installation/react-native/ios',
+                'getting-started/installation/react-native/android',
               ],
             },
           ],
         },
-        'getting-started/installation/index',
+        'getting-started/set-up/index',
       ],
     },
     {

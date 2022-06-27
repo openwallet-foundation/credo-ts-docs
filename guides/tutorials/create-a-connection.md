@@ -2,7 +2,7 @@
 
 > This section assumes the following items:
 >
-> 1. A [valid environment](../getting-started/prerequisites) for development
+> 1. A [valid environment](../getting-started/installation) for development
 >
 > 1. basic knowledge of the required fields in the [agent
 >    config](./agent-config)
@@ -19,12 +19,12 @@ verifying a proof, etc.
 
 First for both agents we must setup and initialize an agent to work with.
 Depending on your target, [React
-Native](../getting-started/prerequisites/react-native) or
-[Node.js](../getting-started/prerequisites/react-native), it might vary.
+Native](../getting-started/installation/react-native) or
+[Node.js](../getting-started/installation/react-native), it might vary.
 
 In this tutorial _Bob_ will be in a [React Native
-environment](../getting-started/prerequisites/react-native) and _Acme Corp_ in
-a [Node.js environment](../getting-started/prerequisites/nodejs).
+environment](../getting-started/installation/react-native) and _Acme Corp_ in
+a [Node.js environment](../getting-started/installation/nodejs).
 
 #### Bob
 

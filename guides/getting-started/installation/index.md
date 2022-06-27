@@ -8,11 +8,11 @@ Very simply put:
 
 **Do you want to build a mobile app?**
 
-- Have [NodeJS](https://nodejs.org/en/) installed (but no need to follow the [NodeJS installation](./installation/nodejs/) guide as it pertains to the `@aries-framework/node` package).
-- Follow the [React Native installation](./installation/react-native/) guide.
+- Have [NodeJS](https://nodejs.org/en/) installed (but no need to follow the [NodeJS installation](./installation/nodejs/index.md) guide as it pertains to the `@aries-framework/node` package).
+- Follow the [React Native installation](./installation/react-native/index.md) guide.
 - Follow the [set up](./../set-up/index.md) guide.
 
 **Do you want to build a server-side app?**
 
-- Follow the [NodeJS installation](./installation/nodejs/) guide.
+- Follow the [NodeJS installation](./installation/nodejs/index.md) guide.
 - Follow the [set up](./../set-up/index.md) guide.
