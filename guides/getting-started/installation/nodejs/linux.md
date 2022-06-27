@@ -3,7 +3,6 @@
 In this section, we will discuss the specific installation of the dependencies
 for the more popular Linux distributions.
 
-
 ### NodeJS
 
 NodeJS is the most popular JavaScript runtime environment excluding
@@ -75,7 +74,6 @@ yum install libsodium libsodium-devel
 ```
 
 <!--/tabs-->
-
 
 ### Libzmq
 
