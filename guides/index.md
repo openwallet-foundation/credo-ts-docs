@@ -12,6 +12,6 @@ So what is [Hyperledger Aries Framework JavaScript](https://github.com/hyperledg
 
 There are [several](https://wiki.hyperledger.org/display/ARIES) Aries frameworks that help you build solutions using verifiable credentials. This one is written in TypeScript and is specifically well suited for Multi-Platform development as it supports Node.js and React Native. We, the community, like to view it as the most accessible framework mostly because it is written in TypeScript, and our maintainers and contributors work to keep developer user experience a top priority.
 
-These docs are not just for the main framework, but also all that surround it. So you'll find [general explanations about the concepts used](./concepts/), [specific tutorials for common use cases](./tutorials/) and [relevant projects and related repositories](./ecosystem/). Most of all you'll find solid documentation with lots of code examples and an enthousiastic community that wants to build great stuff together.
+These docs are not just for the main framework, but also all that surround it. So you'll find [general explanations about the concepts used](./concepts/index.md), [specific tutorials for common use cases](./tutorials/index.md) and [relevant projects and related repositories](./ecosystem/index.md). Most of all you'll find solid documentation with lots of code examples and an enthousiastic community that wants to build great stuff together.
 
 Are you ready to get started?
