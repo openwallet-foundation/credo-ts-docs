@@ -8,7 +8,7 @@ Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0036-issu
 
 > This section assumes the following items:
 >
-> 1. A [valid environment](../getting-started/prerequisites) for development
+> 1. A [valid environment](../getting-started/installation) for development
 >
 > 1. Basic knowledge of the required fields in the [agent
 >    config](./agent-config)
@@ -25,12 +25,12 @@ and automatically store it in their wallet.
 
 First for both agents we must setup and initialize an agent to work with.
 Depending on your target, [React
-Native](../getting-started/prerequisites/react-native) or
-[Node.js](../getting-started/prerequisites/react-native), it might vary.
+Native](../getting-started/installation/react-native) or
+[Node.js](../getting-started/installation/react-native), it might vary.
 
 In this tutorial the _Holder_ will be in a [Node.js
-environment](../getting-started/prerequisites/nodejs) and the _Issuer_
-also in a [Node.js environment](../getting-started/prerequisites/nodejs).
+environment](../getting-started/installation/nodejs) and the _Issuer_
+also in a [Node.js environment](../getting-started/installation/nodejs).
 
 #### Holder
 

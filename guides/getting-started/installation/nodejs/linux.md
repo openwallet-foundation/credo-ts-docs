@@ -8,19 +8,29 @@ for the more popular Linux distributions.
 NodeJS is the most popular JavaScript runtime environment excluding
 browsers. It can run on your desktop or even a server.
 
-```console title="Arch Linux"
+<!--tabs-->
+
+#### Arch Linux
+
+```
 pacman -S nodejs npm
 ```
 
-```console title="Debian"
+#### Debian
+
+```
 curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 apt-get install -y nodejs
 ```
 
-```console title="Red Hat"
+#### Red Hat
+
+```
 curl -sL https://rpm.nodesource.com/setup_18.x | bash -
 yum install nodejs
 ```
+
+<!--/tabs-->
 
 ### npm
 
@@ -43,34 +53,54 @@ npm install --global yarn
 [indy-sdk](https://github.com/hyperledger/indy-sdk) for encryption, decryption,
 hashing and signing.
 
-```console title="Arch Linux"
+<!--tabs-->
+
+#### Arch Linux
+
+```
 pacman -S libsodium
 ```
 
-```console title="Debian"
+#### Debian
+
+```
 apt-get install libsodium-dev
 ```
 
-```console title="Red Hat"
+#### Red Hat
+
+```
 yum install libsodium libsodium-devel
 ```
+
+<!--/tabs-->
 
 ### Libzmq
 
 [Libzmq](https://github.com/zeromq/libzmq) is a lightweight messaging queue
 used by the [indy-sdk](https://github.com/hyperledger/indy-sdk).
 
-```console title="Arch Linux"
+<!--tabs-->
+
+#### Arch Linux
+
+```
 pacman -S zeromq
 ```
 
-```console title="Debian"
+#### Debian
+
+```
 apt-get install libzmq3-dev
 ```
 
-```console title="Red Hat"
+#### Red Hat
+
+```
 yum install libsodium zeromq-devel
 ```
+
+<!--/tabs-->
 
 ### Indy-sdk
 
