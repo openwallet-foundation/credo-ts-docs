@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev:connection": "ts-node src/create-a-connection.ts",
-    "dev:credential": "ts-node src/issue-a-credential.ts"
+    "dev:credential": "ts-node src/issue-a-credential.ts",
+    "dev:set-up": "ts-node src/set-up.ts"
   },
   "devDependencies": {
     "@types/node": "18",
@@ -15,6 +16,7 @@
   "dependencies": {
     "@aries-framework/core": "^0.2.0-alpha.135",
     "@aries-framework/node": "^0.2.0-alpha.135",
+    "@aries-framework/react-native": "^0.2.0",
     "node-fetch": "2"
   }
 }

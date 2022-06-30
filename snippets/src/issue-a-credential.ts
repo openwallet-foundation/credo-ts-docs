@@ -210,6 +210,4 @@ const run = async () => {
   await receiveInvitation(holder, invitationUrl)
 }
 
-export default run
-
 void run()
