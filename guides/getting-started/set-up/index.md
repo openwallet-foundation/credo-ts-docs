@@ -20,7 +20,7 @@ yarn add @aries-framework/core @aries-framework/node
 # React Native
 
 ```console
-yarn add @aries-framework/core @aries-framework/react-native react-native-fs react-native-get-random-values
+yarn add @aries-framework/core @aries-framework/react-native react-native-fs react-native-get-random-values indy-sdk-react-native
 ```
 
 <!--/tabs-->
