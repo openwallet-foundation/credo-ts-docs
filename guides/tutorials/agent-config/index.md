@@ -55,7 +55,7 @@ be seem like a password.
 
 **Type**: `string`
 
-### `walletConfig.keyDerviationMethod`
+### `walletConfig.keyDerivationMethod`
 
 The method used for key derivation of the
 [`walletConfig.key`](#walletconfigkey).
