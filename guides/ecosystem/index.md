@@ -13,3 +13,19 @@ Currently, Aries JavaScript is composed out of three separate repositories:
 ### Aries Framework JavaScript
 
 Aries Framework JavaScript (AFJ) is at the core of the Aries JavaScript ecosystem. AFJ provides all the functionality related to cryptography, storage, messaging and more that is required
+
+## Contributing in the Aries JS Ecosystem
+
+Consider attending our in person meetings to become aware of the current development cadence.
+* [Aires Framework JS Meeting](https://wiki.hyperledger.org/display/ARIES/Framework+JS+Meetings)
+* [Aires Bifold Meeting](https://wiki.hyperledger.org/display/ARIES/Aries+Bifold+User+Group)
+* [Aries Working Group Meeting](https://wiki.hyperledger.org/display/ARIES/Aries+Working+Group)
+
+### Developer Contributions
+Each project maintains its own CONTRIBUTING guidance:
+* [AFJ CONTRIBUTING.md](https://github.com/hyperledger/aries-framework-javascript/blob/main/CONTRIBUTING.md)
+* [AFJ-ext CONTRIBUTING.md](https://github.com/hyperledger/aries-framework-javascript-ext/blob/main/CONTRIBUTING.md)
+* [Aries Bifold CONTRIBUTING](https://github.com/hyperledger/aries-mobile-agent-react-native/blob/main/CONTRIBUTING)
+
+Each project has a significant set of developer checklists, templates, and actions to provide guidance and boundaries for a contribution.
+Consider looking at previous issues and their corresponding PRs to get a sense of the latest.
