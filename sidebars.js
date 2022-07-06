@@ -84,7 +84,11 @@ const sidebars = {
           type: 'category',
           label: 'Postgres Database',
           link: { type: 'doc', id: 'tutorials/postgres-database-nodejs/index' },
-          items: ['tutorials/postgres-database-nodejs/linux', 'tutorials/postgres-database-nodejs/macos'],
+          items: [
+            'tutorials/postgres-database-nodejs/linux',
+            'tutorials/postgres-database-nodejs/macos',
+            'tutorials/postgres-database-nodejs/windows',
+          ],
         },
       ],
     },
