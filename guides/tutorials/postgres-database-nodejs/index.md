@@ -10,7 +10,7 @@ For installation of the Postgres plugin, please refer to the platform specific g
 
 - [macOS](./macos.md)
 - [Linux](./linux.md)
-- Windows - No installation documentation yet. PR welcome.
+- [Windows](./windows.md)
 
 ## Using the Postgres Plugin in AFJ
 
