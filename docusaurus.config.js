@@ -85,7 +85,8 @@ const config = {
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    ({
+    (
+      { image : "img/aries-social-preview-layered.png",
       navbar: {
         title: 'Aries JavaScript Docs',
         logo: {
