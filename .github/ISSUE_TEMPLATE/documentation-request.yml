@@ -1,0 +1,41 @@
+name: Documentation Request
+description: File a request to document a specific functionality in the Aries JavaScript ecosystem.
+title: '[Request]: '
+labels: ['request']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to add this documentation request! Please describe what feature
+        you would like to see documentation for. Make sure to be elaborate in what you're trying to do.
+  - type: textarea
+    id: request
+    attributes:
+      label: Documentation Request
+      placeholder: I'm interested in reusing a connection, but I can't find any documentation ...
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Version
+      description: Which version of Aries Framework JavaScript are you using?
+      options:
+        - 0.2.x
+    validations:
+      required: true
+  - type: checkboxes
+    id: platforms
+    attributes:
+      label: Which platform are you most interested in for documentation?
+      description: You may select more than one.
+      options:
+        - label: React Native
+        - label: Node.JS
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contribute (optional)
+      description: If one of the maintainers or contributors can give me a clear example of how this works and a reference on where this should be added to the documentation site, I'd be happy to make a pull request for this.
+      options:
+        - label: Agree
