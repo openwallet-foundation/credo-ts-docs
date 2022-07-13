@@ -241,7 +241,7 @@ that can be used for simple logs. See [Logging](./logging) for more details on c
 ```typescript title="example"
 import { ConsoleLogger, LogLevel } from '@aries-framework/core'
 
-logger: new ConsoleLogger(LogLevel.Test)
+logger: new ConsoleLogger(LogLevel.test)
 ```
 
 ---
@@ -258,18 +258,18 @@ much more ambiguous in their specification.
 
 **Members**:
 
-**`DidCommMimeType.v0`**
+**`DidCommMimeType.V0`**
 
 &nbsp;&nbsp;&nbsp; "application/ssi-agent-wire"
 
-**`DidCommMimeType.v1`**
+**`DidCommMimeType.V1`**
 
 &nbsp;&nbsp;&nbsp; "application/didcomm-envelope-enc"
 
 ```typescript title="example"
 import { DidCommMimeType } from '@aries-framework/core'
 
-didCommMimeType: DidCommMimeType.v0
+didCommMimeType: DidCommMimeType.V0
 ```
 
 ---

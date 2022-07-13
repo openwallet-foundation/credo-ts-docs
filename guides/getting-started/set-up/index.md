@@ -125,9 +125,11 @@ required.
 Sets up an HTTP outbound and inbound transport.
 
 ```typescript showLineNumbers
-import { HttpOutboundTransport, WsOutboundTransport, HttpInboundTransport } from '@aries-framework/core'
+import { WsOutboundTransport, HttpOutboundTransport } from "@aries-framework/core";
+import { HttpInboundTransport } from "@aries-framework/node";
 
 agent.registerOutboundTransport(new HttpOutboundTransport())
+agent.registerOutboundTransport(new WsOutboundTransport())
 agent.registerInboundTransport(new HttpInboundTransport({ port: 3000 }))
 ```
 
@@ -165,7 +167,8 @@ const initialize = async () => await agent.initialize().catch(console.error)
 ```typescript showLineNumbers
 import type { InitConfig } from '@aries-framework/core'
 import { Agent } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/node'
+import { WsOutboundTransport, HttpOutboundTransport } from "@aries-framework/core";
+import { HttpInboundTransport } from "@aries-framework/node";
 
 // The agent initialization configuration
 const config: InitConfig = {
@@ -181,6 +184,7 @@ const agent = new Agent(config, agentDependencies)
 
 // Registering the required in- and outbound transports
 agent.registerOutboundTransport(new HttpOutboundTransport())
+agent.registerOutboundTransport(new WsOutboundTransport())
 agent.registerInboundTransport(new HttpInboundTransport({ port: 3000 }))
 
 // Function to initialize the agent
