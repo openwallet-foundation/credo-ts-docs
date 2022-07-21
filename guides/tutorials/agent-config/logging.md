@@ -57,3 +57,31 @@ class MyCustomLogger implements Logger {
   }
 }
 ```
+
+## Indy Logs
+
+To enable logging in the underlying Rust framework, either `setLogger` or `setDefaultLogger` must be called on the indy dependency, as seen [here](https://github.com/hyperledger/indy-sdk/tree/master/wrappers/nodejs#logger).
+
+:::caution
+
+The `setLogger` and `setDefaultLogger` methods have only been implemented in the Node.JS wrapper of the indy sdk. This won't work when importing from `@aries-framework/react-native`
+
+:::
+
+The easiest way to do this from AFJ is through the `indy` property of `agentDependencies`.
+
+```ts
+import { agentDependencies } from '@aries-framework/node'
+agentDependencies.indy.setDefaultLogger('trace')
+
+// OR
+
+agentDependencies.indy.setLogger((level, target, message, modulePath, file, line) => {
+  console.log('libindy said:', level, target, message, modulePath, file, line)
+})
+```
+
+> WARNING: You can only set the logger once. Call indy_set_default_logger, indy_set_logger, not both. Once it's been set, libindy won't let you change it.
+
+You can also set the environement variable `RUST_LOG` to log at specified log levels.
+See https://crates.io/crates/env_logger for more information.
