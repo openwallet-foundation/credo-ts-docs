@@ -62,6 +62,12 @@ class MyCustomLogger implements Logger {
 
 To enable logging in the underlying Rust framework, either `setLogger` or `setDefaultLogger` must be called on the indy dependency, as seen [here](https://github.com/hyperledger/indy-sdk/tree/master/wrappers/nodejs#logger).
 
+:::caution
+
+The `setLogger` and `setDefaultLogger` methods have only been implemented in the Node.JS wrapper of the indy sdk. This won't work when importing from `@aries-framework/react-native`
+
+:::
+
 The easiest way to do this from AFJ is through the `indy` property of `agentDependencies`.
 
 ```ts
