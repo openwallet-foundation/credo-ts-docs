@@ -29,7 +29,7 @@ cd Indy.Framework
 Secondly, we have to add the framework to your React Native project.
 
 ```console
-mv Indy.Framework <YOUR_PROJECT_DIRECTORY>/ios/Pods/Frameworks/Indy.Framework
+mv Indy.framework <YOUR_PROJECT_DIRECTORY>/ios/Pods/Frameworks/Indy.framework
 ```
 
 Lastly, a command has to be ran, from the root of your project, to include the
@@ -38,3 +38,13 @@ framework.
 ```console
 pod install --project-directory ios
 ```
+
+Additionally, you need to ensure the following:
+
+- `ENABLE_BITCODE` is set to false
+- `Indy.framework` is added to the project as embedded content
+
+You can set both in XCode.app by navigating to your project settings. `ENABLE_BITCODE` should be disabled by default.
+Under the `General` tab in settings you can find `Frameworks, Libraries, and Embedded Content`. Click `+` to open the file selector and add `Indy.Framework` from your Pods.
+
+NOTE: For these steps to work with a react native project do _not_ follow the instructions in the [indy-sdk repo](https://github.com/hyperledger/indy-sdk) unless you know what you are doing or have some customized setup. If your use-case or curiosity wants to dive into the details you can have a look at the [indy-sdk-react-native repo](https://github.com/hyperledger/indy-sdk-react-native).
