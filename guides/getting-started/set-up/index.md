@@ -125,7 +125,8 @@ required.
 Sets up an HTTP outbound and inbound transport.
 
 ```typescript showLineNumbers
-import { HttpOutboundTransport, WsOutboundTransport, HttpInboundTransport } from '@aries-framework/core'
+import { HttpOutboundTransport, WsOutboundTransport } from '@aries-framework/core'
+import { HttpInboundTransport } from '@aries-framework/node'
 
 agent.registerOutboundTransport(new HttpOutboundTransport())
 agent.registerInboundTransport(new HttpInboundTransport({ port: 3000 }))
