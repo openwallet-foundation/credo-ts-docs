@@ -188,6 +188,6 @@ lead to other people knowing your "password" to your wallet.
 As of v0.3.0 you should keep in mind that:
 
 1. When when attempting to register a credential that already exists on the ledger but is not in your wallet, AFJ will throw an error (as opposed to returning the credential definition from the ledger in prior versions)
-2. Attempting to register a new credential definition that is already in the wallet AFJ will return the stored definition _without_ attempting to register it on the ledger.
+2. Attempting to register a new credential definition that is already in the wallet in AFJ will return the stored definition _without_ attempting to register it on the ledger.
 
 These choices are intentional. In case 1, it is assumed that this workflow is a mistake. In case 2. it is assumed that having registered the credential on the ledger is implied.
