@@ -139,8 +139,8 @@ publicDidSeed: 'testseed000000000000000000000000'
 ## `indyLedgers`
 
 An array of indy ledgers to connect to. The list can contain the following
-object and it must include either the
-[`genesisPath`](.md#indyledgersgenesispath) or
+object and it must include _either_ the
+[`genesisPath`](.md#indyledgersgenesispath) _or_
 [`genesisTransactions`](#indyledgersgenesistransactions). It is
 important to know that the first ledger in the list ledgers will be used for
 registering the schema, credential definition, etc.
@@ -156,6 +156,7 @@ An example of the [`genesisTransactions`](#indyledgersgenesistransactions) can b
 indyLedgers: [
   {
     id: 'indicio-test-net',
+    indyNamespace: 'indicio',
     isProduction: false,
     genesisPath: './constants/indicio-test-net.txn',
     transactionAuthorAgreement: {
@@ -172,6 +173,12 @@ indyLedgers: [
 
 Unique identifier of the ledger. This can be picked by the user as long as it
 is unique.
+
+### `indyLedgers.indyNamespace`
+
+**Type**: `string`
+
+The Indy namespace aka the name identifying the name of the network connecting to. [see also](https://hyperledger.github.io/indy-did-method/#indy-did-method-identifiers)
 
 ### `indyLedgers.isProduction`\*
 
