@@ -25,7 +25,7 @@ const initializeBobAgent = async () => {
   }
 
   // A new instance of an agent is created here
-  const agent = new Agent(config, agentDependencies)
+  const agent = new Agent({ config, dependencies: agentDependencies })
 
   // Register a simple `WebSocket` outbound transport
   agent.registerOutboundTransport(new WsOutboundTransport())
@@ -55,7 +55,7 @@ const initializeAcmeAgent = async () => {
   }
 
   // A new instance of an agent is created here
-  const agent = new Agent(config, agentDependencies)
+  const agent = new Agent({ config, dependencies: agentDependencies })
 
   // Register a simple `WebSocket` outbound transport
   agent.registerOutboundTransport(new WsOutboundTransport())
