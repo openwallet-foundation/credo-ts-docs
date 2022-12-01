@@ -18,8 +18,8 @@ Aries Framework JavaScript (AFJ) is at the core of the Aries JavaScript ecosyste
 
 Consider attending our weekly meetings to become aware of the current development cadence.
 
-- [Aires Framework JS Meeting](https://wiki.hyperledger.org/display/ARIES/Framework+JS+Meetings)
-- [Aires Bifold Meeting](https://wiki.hyperledger.org/display/ARIES/Aries+Bifold+User+Group)
+- [Aries Framework JS Meeting](https://wiki.hyperledger.org/display/ARIES/Framework+JS+Meetings)
+- [Aries Bifold Meeting](https://wiki.hyperledger.org/display/ARIES/Aries+Bifold+User+Group)
 - [Aries Working Group Meeting](https://wiki.hyperledger.org/display/ARIES/Aries+Working+Group)
 
 ### Developer Contributions
@@ -27,7 +27,7 @@ Consider attending our weekly meetings to become aware of the current developmen
 Each project maintains its own CONTRIBUTING guidance:
 
 - [AFJ CONTRIBUTING.md](https://github.com/hyperledger/aries-framework-javascript/blob/main/CONTRIBUTING.md)
-- [AFJ-ext CONTRIBUTING.md](https://github.com/hyperledger/aries-framework-javascript-ext/blob/main/CONTRIBUTING.md)
+- [AFJ-Ext CONTRIBUTING.md](https://github.com/hyperledger/aries-framework-javascript-ext/blob/main/CONTRIBUTING.md)
 - [Aries Bifold CONTRIBUTING](https://github.com/hyperledger/aries-mobile-agent-react-native/blob/main/CONTRIBUTING)
 
 Each project has a significant set of developer conventions, checklists, templates, and actions to provide guidance and boundaries for a contribution.
