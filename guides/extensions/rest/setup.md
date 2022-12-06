@@ -1,7 +1,7 @@
 # Setup
 
 > This guide assumes you have followed the install guides for the framework
-> (See `Getting Started` section above) for your platform and a valid [Node.js](https://nodejs.org) project setup.
+> (See `Getting Started` section in the sidebar) for your platform and a valid [Node.js](https://nodejs.org) project setup.
 
 ## Quick Setup
 
@@ -27,3 +27,5 @@ npx -p @aries-framework/rest afj-rest start \
 ```
 
 <!--/tabs-->
+
+The REST API provides an OpenAPI schema that can easily be viewed using the SwaggerUI that is provided with the server. The endpoint documentation can be viewed at the `/docs` endpoint (e.g. <http://localhost:3000/docs>).
