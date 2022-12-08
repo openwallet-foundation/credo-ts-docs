@@ -1,6 +1,6 @@
 # Setup
 
-To use the `redux-store` package, you need to have set up  Aries Framework JavaScript according to the AFJ repository (See `Getting Started` section in the sidebar).
+To use the `redux-store` package, you need to have set up Aries Framework JavaScript according to the AFJ repository (See `Getting Started` section in the sidebar).
 
 ## Installation
 
