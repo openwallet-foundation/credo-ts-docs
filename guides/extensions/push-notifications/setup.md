@@ -1,10 +1,6 @@
 # Setup
 
-Make sure you have set up the correct version of Aries Framework JavaScript according to the AFJ repository. To find out which version of AFJ you need to have installed you can run the following command. This will list the required peer dependency for `@aries-framework/core`.
-
-```sh
-npm info "@aries-framework/push-notifications" peerDependencies
-```
+To use the `push-notifications` package, you need to have set up Aries Framework JavaScript according to the AFJ repository (See `Getting Started` section in the sidebar).
 
 Then add the `push-notifications` plugin to your project.
 
