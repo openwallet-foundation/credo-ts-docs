@@ -11,6 +11,7 @@ Currently, Aries JavaScript is composed out of three separate repositories:
 3. [Aries Mobile Agent React Native (Bifold)](https://github.com/hyperledger/aries-mobile-agent-react-native)
 
 ## Documentation
+
 You can find their documentation here:
 
 1. [Aries Framework JavaScript](https://aries.js.org/guides)
