@@ -99,7 +99,6 @@ const sidebars = {
       items: ['updating/update-assistant', 'updating/versions/0.1-to-0.2'],
     },
     'ecosystem/index',
-    'extensions/index',
     {
       type: 'category',
       label: 'Aries Framework JavaScript Extensions',

@@ -1,9 +1,21 @@
 # Setup
 
-To use the `push-notifications` package, you need to have set up Aries Framework JavaScript according to the AFJ repository (See `Getting Started` section in the sidebar).
+To use the Push Notifications package, you need to have set up Aries Framework JavaScript according to the AFJ repository (See [Getting Started](../../getting-started/index.md) section).
 
-Then add the `push-notifications` plugin to your project.
+Then add the Push Notifications plugin package to your project:
+
+<!--tabs-->
+
+## npm
+
+```sh
+npm i @aries-framework/push-notifications
+```
+
+## Yarn
 
 ```sh
 yarn add @aries-framework/push-notifications
 ```
+
+<!--tabs-->
