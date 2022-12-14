@@ -96,14 +96,10 @@ const sidebars = {
       type: 'category',
       label: 'Updating',
       link: { type: 'doc', id: 'updating/index' },
-      items: ['updating/update-assistant', 'updating/versions/0.1-to-0.2'],
+      items: ['updating/update-assistant', 'updating/versions/0.1-to-0.2', 'updating/versions/0.2-to-0.3'],
     },
-    {
-      type: 'category',
-      label: 'Ecosystem',
-      link: { type: 'doc', id: 'ecosystem/index' },
-      items: ['ecosystem/framework', 'ecosystem/extensions', 'ecosystem/bifold'],
-    },
+    'ecosystem/index',
+    'extensions/index',
   ],
 }
 
