@@ -1,0 +1,9 @@
+# REST API Wrapper for Aries Framework JavaScript
+
+The Aries Framework JavaScript (AFJ) REST API provides simple RESTful endpoints for AFJ methods, to allow you stand up an agent for communication over the internet instantly. You simply provide your agent configuration. The REST endpoints allow you to interact with your agent over HTTP and WebSockets.
+
+The AFJ REST API is the most convenient way for self-sovereign identity (SSI) developers to interact with SSI agents.
+
+- ⭐ **Endpoints** to create connections, issue credentials, and request proofs.
+- 💻 **CLI** that makes it super easy to start an instance of the REST API.
+- 🌐 **Interoperable** with all major Aries implementations.

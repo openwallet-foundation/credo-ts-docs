@@ -99,7 +99,37 @@ const sidebars = {
       items: ['updating/update-assistant', 'updating/versions/0.1-to-0.2', 'updating/versions/0.2-to-0.3'],
     },
     'ecosystem/index',
-    'extensions/index',
+    {
+      type: 'category',
+      label: 'Aries Framework JavaScript Extensions',
+      link: { type: 'doc', id: 'extensions/index' },
+      items: [
+        {
+          type: 'category',
+          label: 'REST API',
+          link: { type: 'doc', id: 'extensions/rest/index' },
+          items: ['extensions/rest/setup'],
+        },
+        {
+          type: 'category',
+          label: 'React Hooks',
+          link: { type: 'doc', id: 'extensions/react-hooks/index' },
+          items: ['extensions/react-hooks/setup'],
+        },
+        {
+          type: 'category',
+          label: 'Redux Store',
+          link: { type: 'doc', id: 'extensions/redux-store/index' },
+          items: ['extensions/redux-store/setup'],
+        },
+        {
+          type: 'category',
+          label: 'Push Notifications',
+          link: { type: 'doc', id: 'extensions/push-notifications/index' },
+          items: ['extensions/push-notifications/setup'],
+        },
+      ],
+    },
   ],
 }
 
