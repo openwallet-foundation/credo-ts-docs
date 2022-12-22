@@ -11,7 +11,7 @@ const config: InitConfig = {
   },
 }
 
-const agent = new Agent(config, agentDependencies)
+const agent = new Agent({ config, dependencies: agentDependencies })
 // end-section-1
 
 // start-section-2

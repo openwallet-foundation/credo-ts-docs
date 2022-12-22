@@ -39,6 +39,7 @@ const initializeHolderAgent = async () => {
         id: 'bcovrin-test-net',
         indyNamespace: 'bcovrin',
         isProduction: false,
+        indyNamespace: 'bcovrin:test',
         genesisTransactions: genesisTransactionsBCovrinTestNet,
       },
     ],
@@ -48,7 +49,7 @@ const initializeHolderAgent = async () => {
   }
 
   // A new instance of an agent is created here
-  const agent = new Agent(config, agentDependencies)
+  const agent = new Agent({ config, dependencies: agentDependencies })
 
   // Register a simple `WebSocket` outbound transport
   agent.registerOutboundTransport(new WsOutboundTransport())
@@ -83,6 +84,7 @@ const initializeIssuerAgent = async () => {
         id: 'bcovrin-test-net',
         indyNamespace: 'bcovrin',
         isProduction: false,
+        indyNamespace: 'bcovrin:test',
         genesisTransactions: genesisTransactionsBCovrinTestNet,
       },
     ],
@@ -92,7 +94,7 @@ const initializeIssuerAgent = async () => {
   }
 
   // A new instance of an agent is created here
-  const agent = new Agent(config, agentDependencies)
+  const agent = new Agent({ config, dependencies: agentDependencies })
 
   // Register a simple `WebSocket` outbound transport
   agent.registerOutboundTransport(new WsOutboundTransport())
