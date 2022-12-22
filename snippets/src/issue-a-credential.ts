@@ -36,7 +36,7 @@ const initializeHolderAgent = async () => {
     },
     indyLedgers: [
       {
-        id: 'bcovin-test-net',
+        id: 'bcovrin-test-net',
         isProduction: false,
         indyNamespace: 'bcovrin:test',
         genesisTransactions: genesisTransactionsBCovrinTestNet,
