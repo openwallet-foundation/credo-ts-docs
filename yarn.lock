@@ -154,10 +154,10 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@aries-framework/core@0.3.0-alpha.12+ef20f1e", "@aries-framework/core@^0.3.0-alpha.12":
-  version "0.3.0-alpha.12"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.3.0-alpha.12.tgz#50853b2ae8db8a7a5ef27c505d72a23e204a5cb1"
-  integrity sha512-vOofC+0iiEGXBZqW1UM7/jT11rlCrieAw2IiijI7NGV0KsMbP55X526+mc23Pm2Po2nWslFVchMXEr+HYEhHBQ==
+"@aries-framework/core@0.3.0", "@aries-framework/core@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.3.0.tgz#b0cadfcb6326afe03fa478b18a56f5c600654713"
+  integrity sha512-oT/lfWl/Tuf+Dqv19oEppZ9waYK4nPzmEKXLxnj0bLvB3it3ap5b8G3NvI/nU0Na379wCrmnpqILV2x2M3yEuQ==
   dependencies:
     "@digitalcredentials/jsonld" "^5.2.1"
     "@digitalcredentials/jsonld-signatures" "^9.3.1"
@@ -188,12 +188,12 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
-"@aries-framework/node@^0.3.0-alpha.12":
-  version "0.3.0-alpha.12"
-  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.3.0-alpha.12.tgz#764de685199d12e59a39c869ef0ac7505b0284ac"
-  integrity sha512-lij+rjXwejaPs1cSXCZDXlwiOYwWtOd7gXrfCitZ0qkNr+eGaazPBDfVpLws7Naz821V19zJHudlm62Th3WHTQ==
+"@aries-framework/node@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.3.0.tgz#b5a580f4f9768db8b138c8bf8f9e0f528922168b"
+  integrity sha512-T9DvqzG4WyuU/F87JbslenOkZS6CsmyadFdvKCjPWyOG4UFIB1fvu/vFPhV5Ao8e2oiUUhk10+fIM2/g8ikvxQ==
   dependencies:
-    "@aries-framework/core" "0.3.0-alpha.12+ef20f1e"
+    "@aries-framework/core" "0.3.0"
     express "^4.17.1"
     ffi-napi "^4.0.3"
     indy-sdk "^1.16.0-dev-1636"
@@ -201,12 +201,12 @@
     ref-napi "^3.0.3"
     ws "^7.5.3"
 
-"@aries-framework/react-native@^0.3.0-alpha.12":
-  version "0.3.0-alpha.12"
-  resolved "https://registry.yarnpkg.com/@aries-framework/react-native/-/react-native-0.3.0-alpha.12.tgz#36941ce039abd3b7458c3904236c8a25bbc6cd63"
-  integrity sha512-68JCW5+j7X4LIkI6SbnA8eOHMuLgKFwgrsl2EEk+HbtgFe/MzTBfF7jQRlD1ShlSN2N4EmjAj5v+/M5S0h9+TA==
+"@aries-framework/react-native@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/react-native/-/react-native-0.3.0.tgz#034df1f279fea36a8fdf25c5176a4f2548089279"
+  integrity sha512-23l1PF/e7suDTJkqoTb0qE2BwDiQ+OQoIzz6MdaYdFBfZChIudAh2ayXFU2CRsaQiE2fLgzaSIT4uuOkOefb9Q==
   dependencies:
-    "@aries-framework/core" "0.3.0-alpha.12+ef20f1e"
+    "@aries-framework/core" "0.3.0"
     "@azure/core-asynciterator-polyfill" "^1.0.0"
     events "^3.3.0"
 
