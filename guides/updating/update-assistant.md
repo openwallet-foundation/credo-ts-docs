@@ -27,7 +27,10 @@ import { UpdateAssistant, Agent } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/react-native'
 
 // First create the agent
-const agent = new Agent(config, agentDependencies)
+const agent = new Agent({
+  config,
+  dependencies: agentDependencies,
+})
 
 // Then initialize the update assistant with the update config
 const updateAssistant = new UpdateAssistant(agent, {
@@ -67,7 +70,10 @@ import { agentDependencies } from '@aries-framework/react-native'
 let currentStorageVersion: VersionString = '0.1'
 
 // First create the agent
-const agent = new Agent(config, agentDependencies)
+const agent = new Agent({
+  config,
+  dependencies: agentDependencies,
+})
 
 // We only initialize the update assistant if our stored version is not equal
 // to the frameworkStorageVersion of the UpdateAssistant. The advantage of this
@@ -106,7 +112,13 @@ import { UpdateAssistant, Agent } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/react-native'
 
 // First create the agent, setting the autoUpdateStorageOnStartup option to true
-const agent = new Agent({ ...config, autoUpdateStorageOnStartup: true }, agentDependencies)
+const agent = new Agent({
+  config: {
+    ...config,
+    autoUpdateStorageOnStartup: true,
+  },
+  dependencies: agentDependencies,
+})
 
 // Then we call initialize, which under the hood will call the update assistant if the storage is not update to date.
 await agent.initialize()
