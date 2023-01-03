@@ -107,7 +107,10 @@ const config: InitConfig = {
   },
 }
 
-const agent = new Agent(config, agentDependencies)
+const agent = new Agent({
+  config,
+  dependencies: agentDependencies,
+})
 ```
 
 # React Native
@@ -125,7 +128,10 @@ const config: InitConfig = {
   },
 }
 
-const agent = new Agent(config, agentDependencies)
+const agent = new Agent({
+  config,
+  dependencies: agentDependencies,
+})
 ```
 
 <!--/tabs-->
@@ -171,7 +177,10 @@ agent.registerOutboundTransport(new HttpOutboundTransport())
 ```typescript showLineNumbers
 // ...
 
-const agent = new Agent(config, agentDependencies)
+const agent = new Agent({
+  config,
+  dependencies: agentDependencies,
+})
 
 const initialize = async () => await agent.initialize().catch(console.error)
 ```
@@ -197,7 +206,10 @@ const config: InitConfig = {
 }
 
 // Creating an agent instance
-const agent = new Agent(config, agentDependencies)
+const agent = new Agent({
+  config,
+  dependencies: agentDependencies,
+})
 
 // Registering the required in- and outbound transports
 agent.registerOutboundTransport(new HttpOutboundTransport())
@@ -224,7 +236,10 @@ const config: InitConfig = {
 }
 
 // Creating an agent instance
-const agent = new Agent(config, agentDependencies)
+const agent = new Agent({
+  config,
+  dependencies: agentDependencies,
+})
 
 // Registering the required outbound transport
 agent.registerOutboundTransport(new HttpOutboundTransport())
