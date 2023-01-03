@@ -58,6 +58,25 @@ module.exports = {
 }
 ```
 
+Finally, if you're using [Expo](https://expo.dev) you need to add a custom resolution 'hack' that removes support for the legacy unimodules.
+
+**Yarn**
+
+For yarn we can replace the `@unimodules/react-native-adapter` dependency with the `expo` package.
+
+```json title="package.json" showLineNumbers
+{
+  // ... other package.json options ...
+  "resolutions": {
+    "@unimodules/react-native-adapter": "./node_modules/expo"
+  }
+}
+```
+
+**NPM**
+
+Not supported at the moment. NPM overrides work different than Yarn resolutions, and thus we can't use the same trick. If you're using NPM, feel free to open a PR with a working solution.
+
 <!--/tabs-->
 
 ### Setting up the agent
