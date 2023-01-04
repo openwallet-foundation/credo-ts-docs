@@ -62,13 +62,14 @@ Finally, if you're using [Expo](https://expo.dev) you need to add a custom resol
 
 **Yarn**
 
-For yarn we can replace the `@unimodules/react-native-adapter` dependency with the `expo` package.
+For yarn we can replace the `@unimodules/react-native-adapter` and `@unimodules/core` dependencies with an empty directory. Make sure to create the `noop` directory in the root of your project and create a `.gitkeep` file in the directory so that the directory is committed to your repository.
 
 ```json title="package.json" showLineNumbers
 {
   // ... other package.json options ...
   "resolutions": {
-    "@unimodules/react-native-adapter": "./node_modules/expo"
+    "@unimodules/react-native-adapter": "./noop",
+    "@unimodules/core": "./noop"
   }
 }
 ```
