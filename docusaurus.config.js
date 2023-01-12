@@ -111,11 +111,11 @@ const config = {
             items: [
               {
                 label: 'Concepts',
-                to: '/guides/concepts/index',
+                to: '/guides/concepts',
               },
               {
                 label: 'Tutorials',
-                to: '/guide/tutorials/index',
+                to: '/guides/tutorials',
               },
             ],
           },
