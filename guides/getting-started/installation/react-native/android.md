@@ -163,6 +163,7 @@ public class MainActivity extends ReactActivity {
   }
 }
 ```
+
 6. Hermes
 
 Hermes is required in order to perform ledger operations using the Indy SDK.

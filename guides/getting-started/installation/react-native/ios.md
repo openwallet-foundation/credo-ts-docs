@@ -37,7 +37,7 @@ Hermes is enabled by default
 
 Add or adjust the following in the `ios/Podfile` to:
 
-```   use_react_native!(
+```use_react_native!(
      :path => config[:reactNativePath],
      # to enable hermes on iOS, change `false` to `true` and then install pods
      # By default, Hermes is disabled on Old Architecture, and enabled on New Architecture.
@@ -50,5 +50,3 @@ Add or adjust the following in the `ios/Podfile` to:
 #### React Native <= 0.64.0
 
 Hermes is not required for older versions of React Native
-
-

@@ -6,7 +6,6 @@ The setup for React Native is rather different than Node.js. We do not have to i
 - [Android](./android.md)
 - [iOS](./ios.md)
 
-
 ## Known Errors
 
 ### Add setup of external storage permissions (Android)
