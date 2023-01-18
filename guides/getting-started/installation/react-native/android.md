@@ -161,3 +161,26 @@ public class MainActivity extends ReactActivity {
   }
 }
 ```
+6. Hermes
+
+Hermes is required in order to perform ledger operations using the Indy SDK.
+
+> For more info, see [this Indy-SDK issue](https://github.com/hyperledger/indy-sdk/issues/2346#issuecomment-841000640).
+
+#### React Native >= 0.70.0
+
+Hermes is enabled by default
+
+#### React Native 0.62.0 - 0.69.5
+
+Add or adjust the following in the `android/app/build.gradle` to:
+
+```gradle
+project.ext.react = [
+    enableHermes: true,  // clean and rebuild if changing
+]
+```
+
+#### React Native <= 0.61.5
+
+Hermes is not required for older versions of React Native
