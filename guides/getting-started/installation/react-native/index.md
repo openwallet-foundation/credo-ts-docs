@@ -11,7 +11,7 @@ The setup for React Native is rather different than Node.js. We do not have to i
 
 ### Add setup of external storage permissions (Android)
 
-I found an error with permission while calling `createWallet` when I was testing this package:
+If you find the following error when using this package:
 
 ```
 2020-01-27 16:25:02.300 9955-10044/com.usereactnativeindysdk E/log_panics: thread 'unnamed' panicked at 'called `Result::unwrap()` on an `Err` value: Os { code: 13, kind: PermissionDenied, message: "Permission denied" }': libcore/result.rs:945
