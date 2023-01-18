@@ -21,6 +21,8 @@ buildscript {
 
 inside the `android/build.gradle` add the url for the Sovrin maven repository.
 
+Note: ensure that the following is added to the correct maven braces as there are other near this location.
+
 ```json title="android/build.gradle"
 allprojects {
     repositories {

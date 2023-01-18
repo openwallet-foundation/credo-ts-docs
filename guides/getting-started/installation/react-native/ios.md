@@ -25,6 +25,32 @@ pod update Indy
 
 5. iOS Simulators are currently not supported and should be disabled
 
+6. Hermes
+
+Hermes is recommended on iOS for application performance improvements
+
+#### React Native >= 0.70.0
+
+Hermes is enabled by default
+
+#### React Native 0.64.0 - 0.69.5
+
+Add or adjust the following in the `ios/Podfile` to:
+
+```   use_react_native!(
+     :path => config[:reactNativePath],
+     # to enable hermes on iOS, change `false` to `true` and then install pods
+     # By default, Hermes is disabled on Old Architecture, and enabled on New Architecture.
+     # You can enable/disable it manually by replacing `flags[:hermes_enabled]` with `true` or `false`.
+-    :hermes_enabled => flags[:hermes_enabled],
++    :hermes_enabled => true
+   )
+```
+
+#### React Native <= 0.64.0
+
+Hermes is not required for older versions of React Native
+
 ## Usage
 
 ```javascript
@@ -37,7 +63,7 @@ You can see example project here https://github.com/jakubkoci/UseReactNativeIndy
 
 
 
-# iOS (old)
+<!-- # iOS (old)
 
 > It is presumed that you have a working [React
 > Native](https://reactnative.dev) as explained
@@ -86,4 +112,4 @@ Additionally, you need to ensure the following:
 You can set both in XCode.app by navigating to your project settings. `ENABLE_BITCODE` should be disabled by default.
 Under the `General` tab in settings you can find `Frameworks, Libraries, and Embedded Content`. Click `+` to open the file selector and add `Indy.Framework` from your Pods.
 
-NOTE: For these steps to work with a react native project do _not_ follow the instructions in the [indy-sdk repo](https://github.com/hyperledger/indy-sdk) unless you know what you are doing or have some customized setup. If your use-case or curiosity wants to dive into the details you can have a look at the [indy-sdk-react-native repo](https://github.com/hyperledger/indy-sdk-react-native).
+NOTE: For these steps to work with a react native project do _not_ follow the instructions in the [indy-sdk repo](https://github.com/hyperledger/indy-sdk) unless you know what you are doing or have some customized setup. If your use-case or curiosity wants to dive into the details you can have a look at the [indy-sdk-react-native repo](https://github.com/hyperledger/indy-sdk-react-native). -->
