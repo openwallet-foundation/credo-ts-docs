@@ -232,7 +232,7 @@ quicker.
 **Default**: `true`
 
 ```typescript title="example"
-connectToIndyledgerOnStartup: false
+connectToIndyLedgersOnStartup: false
 ```
 
 ---
