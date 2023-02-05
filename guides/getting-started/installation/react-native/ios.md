@@ -1,50 +1,52 @@
 # iOS
 
-> It is presumed that you have a working [React
-> Native](https://reactnative.dev) as explained
-> [here](https://reactnative.dev/docs/environment-setup).
+1. Add the following lines to the start of your Podfile (`ios/Podfile`).
 
-### Adding the Indy.Framework to a React Native application
+If a custom `source` is defined we also need to define the default source (which is implicit if no source is specified), explicitly:
 
-> Your iOS target version has to be above 10.0 in order to work
-
-In order for the Aries JavaScript Ecosystem to use the
-[indy-sdk](https://github.com/hyperledger/indy-sdk) on iOS the `Indy.Framework`
-has to be added.
-
-Due to some issues with manually building this library we have decided to host
-a most up-to-date pre-built version. this is located
-[here](https://github.com/animo/Indy.Framework).
-
-Adding this to your application is just three simple steps.
-
-First, the [Indy.Framework](https://github.com/animo/Indy.Framework) has to be
-cloned.
-
-```console
-git clone https://github.com/animo/Indy.Framework
-cd Indy.Framework
+```
+source 'https://github.com/hyperledger/indy-sdk-react-native'
+source 'https://cdn.cocoapods.org'
 ```
 
-Secondly, we have to add the framework to your React Native project.
+2. Install the Latest CocoaPods dependencies:
 
-```console
-mv Indy.framework <YOUR_PROJECT_DIRECTORY>/ios/Pods/Frameworks/Indy.framework
+```
+cd ios
+pod install
+pod update Indy
 ```
 
-Lastly, a command has to be ran, from the root of your project, to include the
-framework.
+3. Configure Bitcode to `no` in both the project and targets
 
-```console
-pod install --project-directory ios
+4. Set `Build Libraries for Distribution` to `yes` in both the project and targets
+
+> This is required due to mismatching Swift versions between the Indy SDK and the application, as described in this [Stackoverflow Answer](https://stackoverflow.com/questions/58654714/module-compiled-with-swift-5-1-cannot-be-imported-by-the-swift-5-1-2-compiler/63305234#63305234)
+
+5. iOS Simulators are currently not supported and should be disabled
+
+6. Hermes
+
+Hermes is recommended on iOS for application performance improvements
+
+#### React Native >= 0.70.0
+
+Hermes is enabled by default
+
+#### React Native 0.64.0 - 0.69.5
+
+Add or adjust the following in the `ios/Podfile` to:
+
+```use_react_native!(
+     :path => config[:reactNativePath],
+     # to enable hermes on iOS, change `false` to `true` and then install pods
+     # By default, Hermes is disabled on Old Architecture, and enabled on New Architecture.
+     # You can enable/disable it manually by replacing `flags[:hermes_enabled]` with `true` or `false`.
+-    :hermes_enabled => flags[:hermes_enabled],
++    :hermes_enabled => true
+   )
 ```
 
-Additionally, you need to ensure the following:
+#### React Native <= 0.64.0
 
-- `ENABLE_BITCODE` is set to false
-- `Indy.framework` is added to the project as embedded content
-
-You can set both in XCode.app by navigating to your project settings. `ENABLE_BITCODE` should be disabled by default.
-Under the `General` tab in settings you can find `Frameworks, Libraries, and Embedded Content`. Click `+` to open the file selector and add `Indy.Framework` from your Pods.
-
-NOTE: For these steps to work with a react native project do _not_ follow the instructions in the [indy-sdk repo](https://github.com/hyperledger/indy-sdk) unless you know what you are doing or have some customized setup. If your use-case or curiosity wants to dive into the details you can have a look at the [indy-sdk-react-native repo](https://github.com/hyperledger/indy-sdk-react-native).
+Hermes is not required for older versions of React Native
