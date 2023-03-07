@@ -3,7 +3,6 @@
 
 const lightCodeTheme = require('prism-react-renderer/themes/github')
 const darkCodeTheme = require('prism-react-renderer/themes/dracula')
-const admonitions = require('remark-admonitions')
 const remarkTabs = require('remark-docusaurus-tabs')
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -31,50 +30,18 @@ const config = {
 
   presets: [
     [
-      'classic',
+      '@docusaurus/preset-classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       {
         docs: {
           path: 'guides',
           routeBasePath: 'guides',
           sidebarPath: require.resolve('./sidebars.js'),
-          remarkPlugins: [
-            remarkTabs,
-            [
-              admonitions,
-              {
-                infima: true,
-                icons: 'emoji',
-                customTypes: {
-                  holder: {
-                    keyword: 'issuer',
-                    emoji: '🗄',
-                    ifmClass: 'alert alert--holder',
-                  },
-                  issuer: {
-                    keyword: 'issuer',
-                    emoji: '📄',
-                    ifmClass: 'alert alert--issuer',
-                  },
-                  verifier: {
-                    keyword: 'verifier',
-                    emoji: '👮',
-                    ifmClass: 'alert alert--verifier',
-                  },
-                  acme: {
-                    keyword: 'Acme Corp',
-                    emoji: '🏢',
-                    ifmClass: 'alert alert--acme',
-                  },
-                  bob: {
-                    keyword: 'Bob',
-                    emoji: '🧔',
-                    ifmClass: 'alert alert--bob',
-                  },
-                },
-              },
-            ],
-          ],
+          remarkPlugins: [remarkTabs],
+          admonitions: {
+            tag: ':::',
+            keywords: ['note', 'tip', 'info', 'caution', 'danger', 'issuer', 'verifier', 'holder', 'bob', 'acme'],
+          },
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
