@@ -96,7 +96,12 @@ const sidebars = {
       type: 'category',
       label: 'Updating',
       link: { type: 'doc', id: 'updating/index' },
-      items: ['updating/update-assistant', 'updating/versions/0.1-to-0.2', 'updating/versions/0.2-to-0.3'],
+      items: [
+        'updating/update-assistant',
+        'updating/versions/0.1-to-0.2',
+        'updating/versions/0.2-to-0.3',
+        'updating/versions/0.3-to-0.4',
+      ],
     },
     'ecosystem/index',
     {
