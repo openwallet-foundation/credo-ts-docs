@@ -98,6 +98,7 @@ const sidebars = {
       link: { type: 'doc', id: 'updating/index' },
       items: [
         'updating/update-assistant',
+        'updating/update-indy-sdk-to-askar',
         'updating/versions/0.1-to-0.2',
         'updating/versions/0.2-to-0.3',
         'updating/versions/0.3-to-0.4',
