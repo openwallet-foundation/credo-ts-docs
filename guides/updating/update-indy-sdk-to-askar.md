@@ -99,7 +99,7 @@ Updating does not require a lot of code, but must be done with caution.
 ### add the required dependencies:
 
 ```sh
-yarn add @hyperledger/aries-askar-react-native @aries-framework/indy-sdk-to-askar-migration react-native-file-system
+yarn add @hyperledger/aries-askar-react-native @aries-framework/indy-sdk-to-askar-migration react-native-fs
 ```
 
 Below is the minimal code required for the migration to work. It is recommended
