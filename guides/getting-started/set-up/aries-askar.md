@@ -1,6 +1,6 @@
 # Aries Askar
 
-[Aries Askar](https://github.com/hyperledger/aries-askar) provides secure, encrypted storage and cryptographic support for encrypting, decrypting, signing and verifiying data. It can provide both the `Wallet` and `StorageService` implementations for the agent.
+[Aries Askar](https://github.com/hyperledger/aries-askar) provides secure, encrypted storage and cryptographic support for encrypting, decrypting, signing and verifiying data. It also provides both the `Wallet` and `StorageService` implementations for the agent.
 
 :::caution
 Although Aries Askar is stable and already used in production in agents such as [Aries Cloud Agent Python](https://github.com/hyperledger/aries-cloudagent-python), support for Aries Askar in Aries Framework JavaScript is currently experimental. We recommend new projects to use Aries Askar from the start, and also to migrate existing projects to Aries Askar. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/hyperledger/aries-framework-javascript/issues/new).
