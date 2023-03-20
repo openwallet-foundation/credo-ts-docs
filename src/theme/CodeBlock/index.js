@@ -1,7 +1,9 @@
 import React, { isValidElement } from 'react'
 import useIsBrowser from '@docusaurus/useIsBrowser'
+import useDocusaurusContext from '@docusaurus/useGlobalData'
 import ElementContent from '@theme/CodeBlock/Content/Element'
 import StringContent from '@theme/CodeBlock/Content/String'
+import { useDocsVersion } from '@docusaurus/theme-common/internal'
 /**
  * Best attempt to make the children a plain string so it is copyable. If there
  * are react elements, we will not be able to copy the content, and it will
@@ -54,11 +56,10 @@ export default function CodeBlock({ children: rawChildren, ...props }) {
   // from SSR. Hence force a re-render after mounting to apply the current
   // relevant styles.
   const isBrowser = useIsBrowser()
+  const versionMetadata = useDocsVersion()
   const children = maybeStringifyChildren(rawChildren)
 
-  // Match the version. If no version is present we're in current version, otherwise we extract the version (either 0.x or next)
-  const match = window.location.href.match(/guides\/(\d\.\d|next)/)
-  const version = match ? match[1] : 'current'
+  const version = versionMetadata.version
 
   const CodeBlockComp = typeof children === 'string' ? StringContent : ElementContent
 
