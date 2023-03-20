@@ -1,6 +1,6 @@
 # macOS (ARM)
 
-To install [Indy SDK](https://github.com/hyperledger/indy-sdk) on macOS a couple of dependencies are required. This guide covers the installation of the Indy SDK for macs with an ARM processor. For installing the Indy SDK on Intel based macs, please refer to the [Indy SDK macOS (Intel)](./macos-intel) guide.
+To install [Indy SDK](https://github.com/hyperledger/indy-sdk) on macOS, a couple of dependencies are required. This guide covers the installation of the Indy SDK for macs with an ARM processor. For installing the Indy SDK on Intel based macs, please refer to the [Indy SDK macOS (Intel)](./macos-intel) guide.
 
 :::info
 
