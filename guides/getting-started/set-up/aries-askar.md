@@ -5,7 +5,7 @@
 :::caution
 Although Aries Askar is stable and already used in production in agents such as [Aries Cloud Agent Python](https://github.com/hyperledger/aries-cloudagent-python), support for Aries Askar in Aries Framework JavaScript is currently experimental. We recommend new projects to use Aries Askar from the start, and also to migrate existing projects to Aries Askar. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/hyperledger/aries-framework-javascript/issues/new).
 
-Currently there's a few limitations to using Aries Askar
+Currently, there are few limitations to using Aries Askar.
 
 - React Native projects leveraging [Expo](https://expo.dev) are not supported at the moment. Support for Expo will be added soon.
 - When running in Node.JS, only Node.JS 18 is suported for now. See [Supported Node.JS versions for Aries Askar](#supported-nodejs-versions-for-aries-askar)
