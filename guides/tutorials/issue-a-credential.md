@@ -1,25 +1,27 @@
 # Issue a credential
 
-Using [AnonCreds](https://anoncreds-wg.github.io/anoncreds-spec/) and the
-[Issue Credential V2
-Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0453-issue-credential-v2/README.md)
-or the [Issue Credential V1
-Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0036-issue-credential/README.md).
-
-> This section assumes the following items:
->
-> 1. A [valid environment](../getting-started/installation) for development
->
-> 1. Basic knowledge of the required fields in the [agent
->    config](./agent-config)
-> 1. A [connection between the _Holder_ and _Issuer_](./create-a-connection)
-
 In this tutorial we will issue a credential from the _Issuer_ to a _Holder_. We
 will start with setting up both their agents with the minimal configuration
 required to follow this tutorial. After the initialization we will then create
 a schema, credential definition and a credential as the _Issuer_ and send the
 credential over to the _Holder_. The _holder_ will then accept this credential
 and automatically store it in their wallet.
+
+_Using [AnonCreds](https://anoncreds-wg.github.io/anoncreds-spec/) and the
+[Issue Credential V2
+Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0453-issue-credential-v2/README.md)
+or the [Issue Credential V1
+Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0036-issue-credential/README.md)._
+
+:::info
+
+This section assumes that
+
+1. You have [set-up your develoment environment](../getting-started).
+2. You have basic knowledge of the required fields in the [Agent Config](./agent-config)
+3. You have completed the [Create a Connection tutorial](./create-a-connection)
+
+:::
 
 ### 1. Setting up the agents
 

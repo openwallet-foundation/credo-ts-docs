@@ -1,12 +1,5 @@
 # Create a connection
 
-> This section assumes the following items:
->
-> 1. A [valid environment](../getting-started/installation) for development
->
-> 1. basic knowledge of the required fields in the [agent
->    config](./agent-config)
-
 In this tutorial we will create a connection as _Acme Corp_ with _Bob_. We will
 start with setting up both their agents with the minimal configuration required
 to follow this tutorial. After the initialization we will then create an
@@ -14,6 +7,15 @@ invitation as _Acme Corp_ and send it over to _Bob_. _Bob_ will then accept
 this invitation and at that point they have established a connection and they
 know how to reach each other for sending a basic message, issuing a credential,
 verifying a proof, etc.
+
+:::info
+
+This section assumes that
+
+1. You have [set-up your develoment environment](../getting-started).
+1. You have basic knowledge of the required fields in the [Agent Config](./agent-config)
+
+:::
 
 ### 1. Setting up the agents
 

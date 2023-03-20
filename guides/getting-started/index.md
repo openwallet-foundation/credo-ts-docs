@@ -2,8 +2,18 @@ import DocCardList from '@theme/DocCardList';
 
 # Getting started
 
-In this section we will go over everything you need to get started on a technical level. First there are specific installation guides for NodeJS and React Native. Aries JavaScript works for creating both serverside application (commonly but not always issuer and verifyer) and mobile applications (commonly holder apps). Depending on your use case you can follow the installation guides for [NodeJS](./installation/nodejs/index.md), [React Native](./installation/react-native/index.md), or both.
+In this section we will go over everything you need to get started on a technical level. First there are some general prequisites for Node.JS and React Native. Aries Framework JavaScript works for creating both server-side applications (commonly but not always for creating issuer and verifier agents) and mobile applications (commonly holder agents).
 
-After the installation of your prerequisites is complete, we'll walk you through the [initial setup](./set-up/index.md) of the framework.
+Based on the platform you want to work on, the installation guides you should follow are the same, but some steps may differ.
 
-<DocCardList />
+**Do you want to build a mobile app?**
+
+- Follow the [Prerequisites](./prerequisites.md).
+- Follow the [Agent Setup](./set-up.md) guide.
+
+**Do you want to build a server-side app?**
+
+- Follow the [Prerequisites](./prerequisites.md).
+- Follow the [Agent Setup](./set-up.md) guide.
+
+<DocCardList  />
