@@ -106,7 +106,7 @@ const sidebars = {
     'ecosystem/index',
     {
       type: 'category',
-      label: 'Aries Framework JavaScript Extensions',
+      label: 'Extensions',
       link: { type: 'doc', id: 'extensions/index' },
       items: [
         {
