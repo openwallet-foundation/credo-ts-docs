@@ -62,6 +62,10 @@ const config = {
         },
         items: [
           {
+            type: 'docsVersionDropdown',
+            position: 'right',
+          },
+          {
             to: '/guides',
             type: 'doc',
             docId: 'index',

@@ -203,9 +203,7 @@ export default function Admonition(props) {
   const typeConfig = getAdmonitionConfig(type)
   const titleLabel = title ?? typeConfig.label
   const { iconComponent: IconComponent, emoji } = typeConfig
-  console.log(emoji)
   const icon = iconProp ?? emoji ?? <IconComponent />
-  console.log(title, type, typeConfig)
   return (
     <div
       className={clsx(

@@ -1,6 +1,10 @@
+import DocCardList from '@theme/DocCardList';
+
 # Updating AFJ
 
 This section will cover everything you need to know about updating Aries Framework JavaScript to a newer version.
+
+<DocCardList />
 
 ## Versioning
 
@@ -37,3 +41,5 @@ Currently the following migration guides are available:
 
 - [Migrating from AFJ 0.1.0 to 0.2.x](./versions/0.1-to-0.2.md)
 - [Migrating from AFJ 0.2.x to 0.3.x](./versions/0.2-to-0.3.md)
+- [Migrating from AFJ 0.3.x to 0.4.x](./versions/0.3-to-0.4.md)
+- [Migrating from an Indy SDK Wallet to Aries Askar](./update-indy-sdk-to-askar.md)

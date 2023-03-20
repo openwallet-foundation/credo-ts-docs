@@ -1,5 +1,5 @@
 {
-  "name": "snippets",
+  "name": "snippets-0.4",
   "version": "1.0.0",
   "license": "Apache-2.0",
   "private": true,
@@ -8,15 +8,10 @@
     "dev:credential": "ts-node src/issue-a-credential.ts",
     "dev:set-up": "ts-node src/set-up.ts"
   },
-  "devDependencies": {
-    "@types/node": "18",
-    "ts-node": "^10.8.1",
-    "typescript": "^4.7.3"
-  },
   "dependencies": {
-    "@aries-framework/core": "^0.3.0",
-    "@aries-framework/node": "^0.3.0",
-    "@aries-framework/react-native": "^0.3.0",
+    "@aries-framework/core": "^0.3.3",
+    "@aries-framework/node": "^0.3.3",
+    "@aries-framework/react-native": "^0.3.3",
     "node-fetch": "2"
   }
 }

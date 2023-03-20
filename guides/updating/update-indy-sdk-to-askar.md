@@ -1,4 +1,4 @@
-# Migrate From an Indy-sdk wallet to Aries Askar
+# Migrating from an Indy SDK Wallet to Aries Askar
 
 This documentation explains the process of migrating your Indy-sdk wallet to
 [Aries Askar](https://github.com/hyperledger/aries-askar).

@@ -1,7 +1,9 @@
 import React, { isValidElement } from 'react'
 import useIsBrowser from '@docusaurus/useIsBrowser'
+import useDocusaurusContext from '@docusaurus/useGlobalData'
 import ElementContent from '@theme/CodeBlock/Content/Element'
 import StringContent from '@theme/CodeBlock/Content/String'
+import { useDocsVersion } from '@docusaurus/theme-common/internal'
 /**
  * Best attempt to make the children a plain string so it is copyable. If there
  * are react elements, we will not be able to copy the content, and it will
@@ -43,11 +45,8 @@ const parseFileName = (metaString) => {
 }
 
 const removeSectionMarkers = (sectionContent) => {
-  console.log(sectionContent)
-
   const sectionContentArr = sectionContent.split('\n')
   const withoutMarkers = sectionContentArr.filter((x) => !x.match(/section-/))
-  console.log(withoutMarkers.join('\r\n'))
   return withoutMarkers.join('\r\n')
 }
 
@@ -57,7 +56,10 @@ export default function CodeBlock({ children: rawChildren, ...props }) {
   // from SSR. Hence force a re-render after mounting to apply the current
   // relevant styles.
   const isBrowser = useIsBrowser()
+  const versionMetadata = useDocsVersion()
   const children = maybeStringifyChildren(rawChildren)
+
+  const version = versionMetadata.version
 
   const CodeBlockComp = typeof children === 'string' ? StringContent : ElementContent
 
@@ -70,10 +72,9 @@ export default function CodeBlock({ children: rawChildren, ...props }) {
   }
 
   let snippetContent
-  console.log(props.metastring)
 
   try {
-    snippetContent = require(`!!raw-loader!../../../snippets/src/${parseFileName(props.metastring)}`).default
+    snippetContent = require(`!!raw-loader!../../../snippets/${version}/src/${parseFileName(props.metastring)}`).default
   } catch {}
 
   const sectionNumber = parseSectionNumber(props.metastring)
