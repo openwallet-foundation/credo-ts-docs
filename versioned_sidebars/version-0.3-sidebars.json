@@ -55,11 +55,7 @@
         "type": "doc",
         "id": "concepts/index"
       },
-      "items": [
-        "concepts/agents",
-        "concepts/did-and-didcomm",
-        "concepts/platform-and-environment"
-      ]
+      "items": ["concepts/agents", "concepts/did-and-didcomm", "concepts/platform-and-environment"]
     },
     {
       "type": "category",
@@ -76,9 +72,7 @@
             "type": "doc",
             "id": "tutorials/agent-config/index"
           },
-          "items": [
-            "tutorials/agent-config/logging"
-          ]
+          "items": ["tutorials/agent-config/logging"]
         },
         "tutorials/create-a-connection",
         "tutorials/issue-a-credential",
@@ -127,9 +121,7 @@
             "type": "doc",
             "id": "extensions/rest/index"
           },
-          "items": [
-            "extensions/rest/setup"
-          ]
+          "items": ["extensions/rest/setup"]
         },
         {
           "type": "category",
@@ -138,9 +130,7 @@
             "type": "doc",
             "id": "extensions/react-hooks/index"
           },
-          "items": [
-            "extensions/react-hooks/setup"
-          ]
+          "items": ["extensions/react-hooks/setup"]
         },
         {
           "type": "category",
@@ -149,9 +139,7 @@
             "type": "doc",
             "id": "extensions/redux-store/index"
           },
-          "items": [
-            "extensions/redux-store/setup"
-          ]
+          "items": ["extensions/redux-store/setup"]
         },
         {
           "type": "category",
@@ -160,9 +148,7 @@
             "type": "doc",
             "id": "extensions/push-notifications/index"
           },
-          "items": [
-            "extensions/push-notifications/setup"
-          ]
+          "items": ["extensions/push-notifications/setup"]
         }
       ]
     }
