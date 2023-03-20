@@ -55,11 +55,22 @@ openend.
 Aries Askar has a specific way to store keys and every key, defined by the
 category of `Indy::Key` will be migrated.
 
+### Update the Dids
+
+:::caution
+
+This update script does not transform did records. This is fine for something
+like `did:peer`, but will cause issues with `indy` and `sov` dids. For more
+information, please check out the [Migrating from AFJ 0.3.x to
+0.4.x](./versions/0.3-to-0.4.md#removal-of-publicdidseed-and-publicdid)
+
+:::
+
 ### Update the credential definitions
 
 :::danger
 
-Migration of credential definitions is not yet supported. This is why it is
+Updating of credential definitions is not yet supported. This is why it is
 strongly advised not to run this script in a node.js environment.
 
 :::
@@ -95,6 +106,15 @@ Indy specific.
 ## How to update
 
 Updating does not require a lot of code, but must be done with caution.
+
+It is very important to note that the migration script only has to be run once.
+If it runs for a second time, it will error saying that the database is already
+migrated. Also, when the migration is finished, it is common practise to store
+this state in your persistent app storage. This script does not provide a way
+to detect if an update has happened, so storing this value will prevent the
+script from running every time. For more information regarding this topic,
+please check out [Update
+Assistant](./update-assistant.md#storing-the-agent-storage-version-outside-of-the-agent-storage).
 
 ### add the required dependencies:
 
@@ -137,7 +157,12 @@ await updater.update()
 
 #### Android
 
-On android, the database is located under the `ExternalDirectoryPath`.
+On android, the database is commonly located under the `ExternalDirectoryPath`.
+
+If you did not follow the default indy-sdk for React Native setup, your path
+might differ. Check out step 5 of [Adding the Android Indy-sdk
+libraries](../getting-started/installation/react-native/android.md#adding-the-android-indy-sdk-libaries)
+for the default behaviour.
 
 ```typescript
 import fs from 'react-native-fs'
@@ -153,7 +178,11 @@ const dbPath = `${base}/${indyClient}/${wallet}/${walletId}/${file}`
 
 #### iOS
 
-On android, the database is located under the `DocumentDirectoryPath`.
+On iOS, the database is commonly located under the `DocumentDirectoryPath`.
+
+For iOS this can only change if your phone does not have the `HOME` environment
+variable set. This is not usual behaviour, and if `HOME` is not set, the `base`
+in the code section below will be `/home/indy/Documents`.
 
 ```typescript
 import fs from 'react-native-fs'
