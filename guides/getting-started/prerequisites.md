@@ -76,4 +76,4 @@ npm install --global yarn
 
 ### Project Setup
 
-Finally, you need to make sure you have a project set-up using Node.JS or React Native. If you're not familair with setting up a project, we suggest following the [Introduction to Node.JS](https://nodejs.dev/en/learn/) or [React Native Quickstart](https://reactnative.dev/docs/environment-setup) guides.
+Finally, you need to make sure you have a project set-up using Node.JS or React Native. If you're not familiar with setting up a project, we suggest following the [Introduction to Node.JS](https://nodejs.dev/en/learn/) or [React Native Quickstart](https://reactnative.dev/docs/environment-setup) guides.
