@@ -1,6 +1,6 @@
 # Linux
 
-To install [Indy SDK](https://github.com/hyperledger/indy-sdk) on Linux a couple of dependencies are required. This guide covers the installation for the more popular Linux distributions.
+To install [Indy SDK](https://github.com/hyperledger/indy-sdk) on Linux, a couple of dependencies are required. This guide covers the installation for the more popular Linux distributions.
 
 ### Libsodium
 
