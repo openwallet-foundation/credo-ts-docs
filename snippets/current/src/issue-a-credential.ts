@@ -34,14 +34,14 @@ const initializeHolderAgent = async () => {
       id: 'demo-agent-holder',
       key: 'demoagentholder00000000000000000',
     },
-    indyLedgers: [
-      {
-        id: 'bcovrin-test-net',
-        isProduction: false,
-        indyNamespace: 'bcovrin:test',
-        genesisTransactions: genesisTransactionsBCovrinTestNet,
-      },
-    ],
+    // indyLedgers: [
+    //   {
+    //     id: 'bcovrin-test-net',
+    //     isProduction: false,
+    //     indyNamespace: 'bcovrin:test',
+    //     genesisTransactions: genesisTransactionsBCovrinTestNet,
+    //   },
+    // ],
     autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
     autoAcceptConnections: true,
     endpoints: ['http://localhost:3002'],
@@ -77,15 +77,15 @@ const initializeIssuerAgent = async () => {
       id: 'demo-agent-issuer',
       key: 'demoagentissuer00000000000000000',
     },
-    publicDidSeed: 'demoissuerdidseed000000000000000',
-    indyLedgers: [
-      {
-        id: 'bcovrin-test-net',
-        isProduction: false,
-        indyNamespace: 'bcovrin:test',
-        genesisTransactions: genesisTransactionsBCovrinTestNet,
-      },
-    ],
+    // publicDidSeed: 'demoissuerdidseed000000000000000',
+    // indyLedgers: [
+    //   {
+    //     id: 'bcovrin-test-net',
+    //     isProduction: false,
+    //     indyNamespace: 'bcovrin:test',
+    //     genesisTransactions: genesisTransactionsBCovrinTestNet,
+    //   },
+    // ],
     autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
     autoAcceptConnections: true,
     endpoints: ['http://localhost:3001'],
@@ -111,13 +111,13 @@ const initializeIssuerAgent = async () => {
 // end-section-2
 
 // start-section-3
-const registerSchema = async (issuer: Agent) =>
-  issuer.ledger.registerSchema({ attributes: ['name', 'age'], name: 'Identity', version: '1.0' })
+// const registerSchema = async (issuer: Agent) =>
+//   issuer.ledger.registerSchema({ attributes: ['name', 'age'], name: 'Identity', version: '1.0' })
 // end-section-3
 
 // start-section-4
-const registerCredentialDefinition = async (issuer: Agent, schema: Schema) =>
-  issuer.ledger.registerCredentialDefinition({ schema, supportRevocation: false, tag: 'default' })
+// const registerCredentialDefinition = async (issuer: Agent, schema: Schema) =>
+//   issuer.ledger.registerCredentialDefinition({ schema, supportRevocation: false, tag: 'default' })
 // end-section-4
 
 // start-section-5
@@ -138,20 +138,20 @@ const setupCredentialListener = (holder: Agent) => {
 // end-section-5
 
 // start-section-6
-const issueCredential = async (issuer: Agent, credentialDefinitionId: string, connectionId: string) =>
-  issuer.credentials.offerCredential({
-    protocolVersion: 'v1',
-    connectionId,
-    credentialFormats: {
-      indy: {
-        credentialDefinitionId,
-        attributes: [
-          { name: 'name', value: 'Jane Doe' },
-          { name: 'age', value: '23' },
-        ],
-      },
-    },
-  })
+// const issueCredential = async (issuer: Agent, credentialDefinitionId: string, connectionId: string) =>
+//   issuer.credentials.offerCredential({
+//     protocolVersion: 'v2',
+//     connectionId,
+//     credentialFormats: {
+//       indy: {
+//         credentialDefinitionId,
+//         attributes: [
+//           { name: 'name', value: 'Jane Doe' },
+//           { name: 'age', value: '23' },
+//         ],
+//       },
+//     },
+//   })
 // end-section-6
 
 const createNewInvitation = async (issuer: Agent) => {
@@ -189,12 +189,12 @@ const setupConnectionListener = (
 }
 
 const flow = (issuer: Agent) => async (connectionId: string) => {
-  console.log('Registering the schema...')
-  const schema = await registerSchema(issuer)
-  console.log('Registering the credential definition...')
-  const credentialDefinition = await registerCredentialDefinition(issuer, schema)
-  console.log('Issuing the credential...')
-  await issueCredential(issuer, credentialDefinition.id, connectionId)
+  // console.log('Registering the schema...')
+  // const schema = await registerSchema(issuer)
+  // console.log('Registering the credential definition...')
+  // const credentialDefinition = await registerCredentialDefinition(issuer, schema)
+  // console.log('Issuing the credential...')
+  // await issueCredential(issuer, credentialDefinition.id, connectionId)
 }
 
 const run = async () => {
