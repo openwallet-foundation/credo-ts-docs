@@ -62,7 +62,7 @@ yum install nodejs
 
 ### NPM
 
-The Node Package Manager comes pre-bundles with the NodeJS installation from above.
+The Node Package Manager comes pre-bundled with the NodeJS installation from above.
 
 ### Yarn
 
