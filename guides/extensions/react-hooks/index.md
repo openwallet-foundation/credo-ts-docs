@@ -1,4 +1,4 @@
-# React Hooks for Aries Framework JavaScript
+# React Hooks
 
 The React Hooks package exposes useful React hooks that allow you to easily interact with AFJ from a React client application.
 

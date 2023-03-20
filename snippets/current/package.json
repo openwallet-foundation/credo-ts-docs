@@ -1,0 +1,17 @@
+{
+  "name": "snippets-0.3",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "dev:connection": "ts-node src/create-a-connection.ts",
+    "dev:credential": "ts-node src/issue-a-credential.ts",
+    "dev:set-up": "ts-node src/set-up.ts"
+  },
+  "dependencies": {
+    "@aries-framework/core": "^0.3.3",
+    "@aries-framework/node": "^0.3.3",
+    "@aries-framework/react-native": "^0.3.3",
+    "node-fetch": "2"
+  }
+}

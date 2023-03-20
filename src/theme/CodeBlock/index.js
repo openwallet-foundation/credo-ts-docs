@@ -43,11 +43,8 @@ const parseFileName = (metaString) => {
 }
 
 const removeSectionMarkers = (sectionContent) => {
-  console.log(sectionContent)
-
   const sectionContentArr = sectionContent.split('\n')
   const withoutMarkers = sectionContentArr.filter((x) => !x.match(/section-/))
-  console.log(withoutMarkers.join('\r\n'))
   return withoutMarkers.join('\r\n')
 }
 
@@ -58,6 +55,10 @@ export default function CodeBlock({ children: rawChildren, ...props }) {
   // relevant styles.
   const isBrowser = useIsBrowser()
   const children = maybeStringifyChildren(rawChildren)
+
+  // Match the version. If no version is present we're in current version, otherwise we extract the version (either 0.x or next)
+  const match = window.location.href.match(/guides\/(\d\.\d|next)/)
+  const version = match ? match[1] : 'current'
 
   const CodeBlockComp = typeof children === 'string' ? StringContent : ElementContent
 
@@ -70,10 +71,9 @@ export default function CodeBlock({ children: rawChildren, ...props }) {
   }
 
   let snippetContent
-  console.log(props.metastring)
 
   try {
-    snippetContent = require(`!!raw-loader!../../../snippets/src/${parseFileName(props.metastring)}`).default
+    snippetContent = require(`!!raw-loader!../../../snippets/${version}/src/${parseFileName(props.metastring)}`).default
   } catch {}
 
   const sectionNumber = parseSectionNumber(props.metastring)

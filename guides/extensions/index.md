@@ -4,7 +4,7 @@ import DocCardList from '@theme/DocCardList';
 
 Aries Framework JavaScript Extensions is an extensions repository to Aries Framework JavaScript (AFJ). It hosts libraries built on top of Aries Framework JavaScript that don't necessarily belong to the core of the project.
 
-Currently, there a four packages in the extension repository. Example extension libraries include React Hooks for AFJ and a REST API wrapper.
+Currently, there are four packages in the extension repository. Example extension libraries include React Hooks for AFJ and a REST API wrapper.
 
 | Package                                                                                                    | Version                                                                                                          | Description                                             |
 | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |

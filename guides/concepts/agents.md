@@ -7,7 +7,7 @@ API](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/pac
 
 ### Characteristics
 
-An Aries agent has three essential characteristics, .
+An Aries agent has three essential characteristics:
 
 1. It acts as a fiduciary on behalf of a single identity owner (or, for agents
    of things like IoT devices, pets, and similar things, a single controller).

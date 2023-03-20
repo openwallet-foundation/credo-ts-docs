@@ -3,15 +3,14 @@
 ### DIDs
 
 [DIDs](https://www.w3.org/TR/did-core/), short for Decentralized identifiers,
-are a type of identifier that enables verifiable, decentrilized identity. A DID
+are a type of identifier that enables verifiable, decentralized identity. A DID
 can refer to any subject, a person, organization, etc. DIDs are decoupled from
 centralized registries, identity providers and certificate authorities.
 
 ### DID Documents
 
 A DID by itself does not contain a lot of information. So in order to get some
-metadata we have to resolve the DID to get a [DID
-Document](https://www.w3.org/TR/did-core/#dfn-did-documents). With this
+metadata we have to resolve the DID to get a [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents). With this
 document we can get data such as their public key, proof mechanisms and their
 service endpoints. This means that we can check the validity, encrypt
 one-to-one messages and send it to their service endpoint.

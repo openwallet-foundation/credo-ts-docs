@@ -63,6 +63,7 @@ const config = {
         items: [
           {
             type: 'docsVersionDropdown',
+            position: 'right',
           },
           {
             to: '/guides',

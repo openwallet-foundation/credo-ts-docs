@@ -1,4 +1,4 @@
-# Redux Store for Aries Framework JavaScript
+# Redux Store
 
 The Redux Store is an implementation of state management that can be used to build React & React Native SSI clients using AFJ.
 

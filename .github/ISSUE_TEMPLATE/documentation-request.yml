@@ -15,13 +15,12 @@ body:
       placeholder: I'm interested in reusing a connection, but I can't find any documentation ...
     validations:
       required: true
-  - type: dropdown
+  - type: input
     id: platform
     attributes:
       label: Version
       description: Which version of Aries Framework JavaScript are you using?
-      options:
-        - 0.2.x
+      placeholder: 0.x.x
     validations:
       required: true
   - type: checkboxes
