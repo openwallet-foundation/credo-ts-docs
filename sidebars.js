@@ -134,6 +134,12 @@ const sidebars = {
           link: { type: 'doc', id: 'extensions/push-notifications/index' },
           items: ['extensions/push-notifications/setup'],
         },
+        {
+          type: 'category',
+          label: 'BLE Transport',
+          link: { type: 'doc', id: 'extensions/transport-ble/index' },
+          items: ['extensions/transport-ble/setup'],
+        },
       ],
     },
   ],
