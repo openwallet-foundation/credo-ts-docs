@@ -1,6 +1,5 @@
 import React, { isValidElement } from 'react'
 import useIsBrowser from '@docusaurus/useIsBrowser'
-import useDocusaurusContext from '@docusaurus/useGlobalData'
 import ElementContent from '@theme/CodeBlock/Content/Element'
 import StringContent from '@theme/CodeBlock/Content/String'
 import { useDocsVersion } from '@docusaurus/theme-common/internal'

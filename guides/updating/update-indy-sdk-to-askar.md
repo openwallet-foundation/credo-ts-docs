@@ -160,8 +160,7 @@ await updater.update()
 On android, the database is commonly located under the `ExternalDirectoryPath`.
 
 If you did not follow the default indy-sdk for React Native setup, your path
-might differ. Check out step 5 of [Adding the Android Indy-sdk
-libraries](../getting-started/installation/react-native/android.md#adding-the-android-indy-sdk-libaries)
+might differ. Check out [step 5 of the Android setup for Indy SDK React Native](https://github.com/hyperledger/indy-sdk-react-native#5-load-indy-library)
 for the default behaviour.
 
 ```typescript

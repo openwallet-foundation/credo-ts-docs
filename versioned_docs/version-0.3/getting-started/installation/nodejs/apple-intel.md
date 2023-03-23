@@ -57,5 +57,5 @@ To see whether the [indy-sdk](https://github.com/hyperledger/indy-sdk) is
 properly installed, run the following command and it should not error.
 
 ```console
-npx -p @aries-framework/node is-indy-installed
+npx -p @aries-framework/node@^0.3 is-indy-installed
 ```
