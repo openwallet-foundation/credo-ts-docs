@@ -1,3 +1,4 @@
+import { AskarModule } from '@aries-framework/askar'
 import {
   Agent,
   InitConfig,
@@ -9,6 +10,7 @@ import {
   OutOfBandRecord,
 } from '@aries-framework/core'
 import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
+import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 
 // start-section-1
 const initializeBobAgent = async () => {
@@ -25,7 +27,12 @@ const initializeBobAgent = async () => {
   }
 
   // A new instance of an agent is created here
-  const agent = new Agent({ config, dependencies: agentDependencies })
+  // Askar can also be replaced by the indy-sdk if required
+  const agent = new Agent({
+    config,
+    modules: { askar: new AskarModule({ ariesAskar }) },
+    dependencies: agentDependencies,
+  })
 
   // Register a simple `WebSocket` outbound transport
   agent.registerOutboundTransport(new WsOutboundTransport())
@@ -55,7 +62,12 @@ const initializeAcmeAgent = async () => {
   }
 
   // A new instance of an agent is created here
-  const agent = new Agent({ config, dependencies: agentDependencies })
+  // Askar can also be replaced by the indy-sdk if required
+  const agent = new Agent({
+    config,
+    modules: { askar: new AskarModule({ ariesAskar }) },
+    dependencies: agentDependencies,
+  })
 
   // Register a simple `WebSocket` outbound transport
   agent.registerOutboundTransport(new WsOutboundTransport())
