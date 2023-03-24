@@ -18,8 +18,8 @@ Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0036-issu
 This section assumes that
 
 1. You have [set-up your develoment environment](../getting-started).
-2. You have basic knowledge of the required fields in the [Agent Config](./agent-config)
-3. You have completed the [Create a Connection tutorial](./create-a-connection)
+1. You have basic knowledge of the required fields in the [Agent Config](./agent-config)
+1. You have completed the [Create a Connection tutorial](./create-a-connection)
 
 :::
 

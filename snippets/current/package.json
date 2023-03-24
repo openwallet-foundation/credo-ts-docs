@@ -6,6 +6,7 @@
   "scripts": {
     "dev:connection": "ts-node src/create-a-connection.ts",
     "dev:credential": "ts-node src/issue-a-credential.ts",
+    "dev:register-with-indy": "ts-node src/register-schema-and-cred-def.ts",
     "dev:set-up": "ts-node src/set-up.ts"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
     "@hyperledger/aries-askar-react-native": "^0.1.0-dev.6",
     "@hyperledger/indy-vdr-nodejs": "^0.1.0-dev.12",
     "@hyperledger/indy-vdr-react-native": "0.1.0-dev.12",
+    "@hyperledger/indy-vdr-shared": "^0.1.0-dev.12",
     "indy-sdk": "^1.16.0-dev-1655",
     "indy-sdk-react-native": "^0.3.1",
     "node-fetch": "2"

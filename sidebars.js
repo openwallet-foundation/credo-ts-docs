@@ -69,6 +69,7 @@ const sidebars = {
         },
         'tutorials/create-a-connection',
         'tutorials/issue-a-credential',
+        'tutorials/registering-schema-and-credential-definition-on-indy',
         {
           type: 'category',
           label: 'Postgres Database',
