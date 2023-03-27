@@ -22,7 +22,6 @@ If you're upgrading from the Indy SDK to Aries Askar, see [Migrating from an Ind
 
 When using Aries Framework JavaScript with Aries Askar, there are a few extra dependencies that need to be installed. We need to install the `@aries-framework/askar` package, which implements the needed interfaces for the agent. Secondly, we need to add native bindings for the specific platform `@hyperledger/aries-askar-<platform>`. Currently there are bindings for Node.JS, as `@hyperledger/aries-askar-nodejs`, and React Native as `@hyperlegder/aries-askar-react-native`.
 
-
 <!--tabs-->
 
 # Node.JS
