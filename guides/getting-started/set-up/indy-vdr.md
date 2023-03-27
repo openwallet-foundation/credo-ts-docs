@@ -109,7 +109,6 @@ The version of the AML acceptance mechanism. This is a string representation of 
 
 The acceptance mechanism to choose. This _must_ be _one_ of the available labels of the acceptance mechanisms key-value pairs in the AML e.g. 'EULA'.
 
-
 ### Adding Indy VDR to the agent
 
 After installing the dependencies, we can register the Indy VDR module on the agent.
