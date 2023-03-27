@@ -1988,7 +1988,7 @@
     ref-napi "^3.0.3"
     ref-struct-di "^1.1.1"
 
-"@hyperledger/indy-vdr-react-native@^0.1.0-dev.12":
+"@hyperledger/indy-vdr-react-native@0.1.0-dev.12":
   version "0.1.0-dev.12"
   resolved "https://registry.yarnpkg.com/@hyperledger/indy-vdr-react-native/-/indy-vdr-react-native-0.1.0-dev.12.tgz#ec4555a645118458e1ee009ae0a850360b7f318b"
   integrity sha512-t7XZfRMZSvHnTxfUddleh9ibWEHW2BNOTikI8mT2s7r1HJ+Is7UOdjJgP+IwurZBgDo1f2uuHUW3hwWdcoIm2w==

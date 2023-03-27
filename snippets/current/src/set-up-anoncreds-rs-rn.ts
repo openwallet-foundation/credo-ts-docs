@@ -13,7 +13,6 @@ import { Agent } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/react-native'
 import { AskarModule } from '@aries-framework/askar'
 import { ariesAskar } from '@hyperledger/aries-askar-react-native'
-import { IndyVdrAnonCredsRegistry } from '@aries-framework/indy-vdr'
 
 import { anoncreds } from '@hyperledger/anoncreds-react-native'
 import { AnonCredsModule } from '@aries-framework/anoncreds'
@@ -32,7 +31,7 @@ const agent = new Agent({
       anoncreds,
     }),
     anoncreds: new AnonCredsModule({
-      registries: [new IndyVdrAnonCredsRegistry()],
+      registries: [],
     }),
   },
 })
