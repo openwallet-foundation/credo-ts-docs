@@ -34,6 +34,82 @@ yarn add @aries-framework/indy-vdr @hyperledger/indy-vdr-react-native
 
 <!--/tabs-->
 
+### Configuration
+
+As you can see below, the Indy VDR module takes the native bindings and a list of networks. This list of networks will be used to resolve and register objects on.
+
+```typescript title="example"
+import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
+import { IndyVdrModule } from '@aries-framework/indy-vdr'
+
+indyVdr: new IndyVdrModule({
+  indyVdr,
+  networks: [
+    {
+      indyNamespace: 'bcovrin:test',
+      isProduction: false,
+      genesisPath: './path/to/genesis.txn',
+      connectOnStartup: true,
+    },
+  ],
+})
+```
+
+#### indyVdr
+
+**Type**: `IndyVdr`
+
+the `indyVdr` key takes a class that implements all the native bindings for Indy VDR. This can be extracted from the `@hyperledger/indy-vdr-nodejs` package or the `@hyperledger/indy-vdr-react-native` package.
+
+#### networks
+
+**Type**: `IndyVdrPoolConfig[]`
+
+An array of indy networks to connect to. The list can contain the following object and it must include _either_ the [`genesisPath`](.md#indyledgersgenesispath) _or_ [`genesisTransactions`](#indyledgersgenesistransactions). It is important to know that the first ledger in the list ledgers will be used for registering the schema, credential definition, etc.
+
+##### indyNamespace
+
+**Type**: `string`
+
+The Indy namespace aka the name identifying the name of the network connecting to. See also [indy did method identifiers](https://hyperledger.github.io/indy-did-method/#indy-did-method-identifiers)
+
+##### `isProduction`
+
+**Type**: `boolean`
+
+Whether the ledger is a production ledger. This is used for the pick-up algorithm as production ledgers have priority.
+
+##### `genesisPath`
+
+**Type**: `string`
+
+Filesystem path of the genesis transaction. At this location, there will just be a JSON object like the [`genesisTransaction`](#genesistransactions).
+
+##### `genesisTransactions`
+
+**Type**: `string`
+
+Stringified JSON object of the transaction.
+
+##### `transactionAuthorAgreement`
+
+**Type**: `TransactionAuthorAgreement`
+
+JSON representation specifying the version and acceptance mechanism. The version is the unique version of the transaction author agreement acceptance mechanism list (AML). The acceptance mechanism refers to the acceptance mechanism label of the item in the AML. For more details you may consult the [indy-node docs on AML](https://github.com/hyperledger/indy-node/blob/master/docs/source/transactions.md#transaction_author_agreement_aml)
+
+##### `transactionAuthorAgreement.version`
+
+**Type**: `string`
+
+The version of the AML acceptance mechanism. This is a string representation of a version number e.g. '1' or '1.4'
+
+##### `indyLedgers.transactionAuthorAgreement.acceptanceMechanism`
+
+**Type**: `string`
+
+The acceptance mechanism to choose. This _must_ be _one_ of the available labels of the acceptance mechanisms key-value pairs in the AML e.g. 'EULA'.
+
+
 ### Adding Indy VDR to the agent
 
 After installing the dependencies, we can register the Indy VDR module on the agent.
@@ -53,8 +129,6 @@ After installing the dependencies, we can register the Indy VDR module on the ag
 ```
 
 <!--/tabs-->
-
-As you can see, the Indy VDR module takes the native bindings and a list of networks. This list of networks will be used to resolve and register objects on. The list of networks is compatible with the older [`indyLedgers`](../../tutorials/agent-config/index.md#indyLedgers).
 
 ### Supported Node.JS versions for Indy VDR
 
