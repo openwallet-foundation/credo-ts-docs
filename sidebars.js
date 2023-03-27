@@ -32,6 +32,8 @@ const sidebars = {
           link: { type: 'doc', id: 'getting-started/set-up/index' },
           items: [
             'getting-started/set-up/aries-askar',
+            'getting-started/set-up/anoncreds-rs',
+            'getting-started/set-up/indy-vdr',
             {
               type: 'category',
               label: 'Indy SDK',
