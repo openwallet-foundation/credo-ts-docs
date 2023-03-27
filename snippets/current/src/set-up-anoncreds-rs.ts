@@ -25,7 +25,6 @@ const agent = new Agent({
   modules: {
     // Register the Askar module on the agent
     // This is included as we need a wallet on our agent
-    // `indySdk` can also be used
     askar: new AskarModule({
       ariesAskar,
     }),
