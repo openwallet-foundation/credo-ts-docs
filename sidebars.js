@@ -68,8 +68,8 @@ const sidebars = {
           items: ['tutorials/agent-config/logging'],
         },
         'tutorials/create-a-connection',
-        'tutorials/issue-a-credential',
         'tutorials/registering-schema-and-credential-definition-on-indy',
+        'tutorials/issue-a-credential',
         {
           type: 'category',
           label: 'Postgres Database',

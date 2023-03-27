@@ -1,4 +1,4 @@
-import { ConsoleLogger, DidsModule, InitConfig, KeyType, LogLevel, TypedArrayEncoder } from '@aries-framework/core'
+import { DidsModule, InitConfig, KeyType, LogLevel, TypedArrayEncoder } from '@aries-framework/core'
 
 const config: InitConfig = {
   label: 'docs-agent-nodejs-register-schema-and-cred-def',
