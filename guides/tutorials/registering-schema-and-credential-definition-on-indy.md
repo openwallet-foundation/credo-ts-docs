@@ -80,5 +80,5 @@ also be specified. This section will not go in-depth about revocation.
 ### Using it
 
 After everything is registered on a Hyperledger Indy ledger, we can use it to
-issue credentials. The next tutorial is all about issuing an Anoncreds
+issue credentials. The next tutorial is all about issuing an AnonCreds
 credential with this setup.
