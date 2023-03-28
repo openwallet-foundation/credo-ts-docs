@@ -146,7 +146,10 @@ Before we can initialize the agent, we need to provide the agent with a wallet a
 - [Aries Askar](./aries-askar) - Recommended.
 - [Indy SDK](./indy-sdk) - Legacy. Will be deprecated in the future.
 
-<DocCardList />
+<DocCardList items={[
+{ type: 'link', label: 'Aries Askar', href: './set-up/aries-askar', docId: 'getting-started/set-up/aries-askar' },
+{ type: 'link', label: 'Indy SDK', href: './set-up/indy-sdk', docId: 'getting-started/set-up/indy-sdk/index' }
+]} />
 
 ### Initializing the agent
 
