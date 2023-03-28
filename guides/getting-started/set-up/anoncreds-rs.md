@@ -53,7 +53,9 @@ After installing the dependencies, we should register both the `AnonCreds` and `
 
 <!--/tabs-->
 
-As you can see, the AnonCreds module takes a list of registry modules. These modules will be used to resolve the AnonCreds objects. We recommend [Indy VDR](./indy-vdr) as an AnonCreds registry for Hyperledger Indy networks, but [Indy SDK](./indy-sdk) also be used.
+### Configuration
+
+As you can see, the AnonCreds module takes a list of registry modules. These modules will be used to resolve the AnonCreds objects. We recommend [Indy VDR](./indy-vdr) as an AnonCreds registry for Hyperledger Indy networks, but [Indy SDK](./indy-sdk) can also be used.
 
 ### Supported Node.JS versions for AnonCreds RS
 

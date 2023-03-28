@@ -37,7 +37,6 @@ const agent = new Agent({
       registries: [new IndyVdrAnonCredsRegistry()],
     }),
     // Indy VDR can optionally be used with Askar as wallet and storage implementation
-    // Register the Askar module on the agent
     askar: new AskarModule({
       ariesAskar,
     }),

@@ -17,6 +17,7 @@ import { ariesAskar } from '@hyperledger/aries-askar-react-native'
 import { anoncreds } from '@hyperledger/anoncreds-react-native'
 import { AnonCredsModule } from '@aries-framework/anoncreds'
 import { AnonCredsRsModule } from '@aries-framework/anoncreds-rs'
+import { IndyVdrAnonCredsRegistry } from '@aries-framework/indy-vdr'
 
 const agent = new Agent({
   config,
@@ -31,7 +32,9 @@ const agent = new Agent({
       anoncreds,
     }),
     anoncreds: new AnonCredsModule({
-      registries: [],
+      // Here we add an Indy VDR registry as an example, any AnonCreds registry
+      // can be used
+      registries: [new IndyVdrAnonCredsRegistry()],
     }),
   },
 })
