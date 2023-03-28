@@ -44,6 +44,8 @@ const sidebars = {
                 'getting-started/set-up/indy-sdk/react-native',
               ],
             },
+            'getting-started/set-up/anoncreds-rs',
+            'getting-started/set-up/indy-vdr',
           ],
         },
       ],
