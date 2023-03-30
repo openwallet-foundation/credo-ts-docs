@@ -5,7 +5,7 @@
 1. Download and install Visual Studio Community Edition 2022
 1. Install git for windows
 1. Download rust for windows [here](https://www.rust-lang.org/en-US/install.html)
-1. Make sure you have already setup a libindy for windows from [here](../../getting-started/installation/nodejs/windows.md)
+1. Make sure you have already setup libindy for windows from [here](../../getting-started/indy-sdk/windows)
 
 ## Step 1: Getting dependencies
 

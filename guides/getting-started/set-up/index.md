@@ -1,17 +1,22 @@
-# Setup
+import DocCardList from '@theme/DocCardList';
 
-> This guide assumes you have followed the install guides from the previous
-> section for your platform and a valid [Node.js](https://nodejs.org) or [React
-> Native](https://reactnative.dev) project setup.
+# Agent Setup
+
+:::info
+
+This guide assumes you have followed the [Prerequisites](./prerequisites), and you have a valid
+[Node.JS](https://nodejs.org) or [React Native](https://reactnative.dev) project setup.
+
+:::
 
 ### Installing the required dependencies
 
 First we have to install the minimal amount of dependencies that are required
-for using the Aries Ecosystem.
+for configuring an Aries Framework JavaScript (AFJ) agent.
 
 <!--tabs-->
 
-# Node.js
+# Node.JS
 
 ```console
 yarn add @aries-framework/core @aries-framework/node
@@ -20,7 +25,7 @@ yarn add @aries-framework/core @aries-framework/node
 # React Native
 
 ```console
-yarn add @aries-framework/core @aries-framework/react-native react-native-fs react-native-get-random-values indy-sdk-react-native
+yarn add @aries-framework/core @aries-framework/react-native react-native-fs react-native-get-random-values
 ```
 
 <!--/tabs-->
@@ -31,7 +36,7 @@ yarn add @aries-framework/core @aries-framework/react-native react-native-fs rea
 
 # Node.js
 
-no additional setup is required
+No additional setup is required for Node.JS
 
 # React Native
 
@@ -83,56 +88,26 @@ Not supported at the moment. NPM overrides work different than Yarn resolutions,
 ### Setting up the agent
 
 > this section does not assume any knowledge of the agent configuration.
-> [Here](../../tutorials/agent-config) we will discuss in-depth what every
+> In the [Agent Config](../tutorials/agent-config) tutorial we will discuss in-depth what every
 > field in the configuration does and when to set it.
 
 In order to use the agent in the application we have to configure and
 initialize it. This following configuration is quite generic and possibly not
 enough for your specific use cases. Please refer to the
-[tutorials](../../tutorials/index) for a more use-case-specific agent setup.
+[tutorials](../tutorials/index) for a more use-case-specific agent setup.
 
 <!--tabs-->
 
-# Node.js
+# Node.JS
 
-```typescript showLineNumbers
-import type { InitConfig } from '@aries-framework/core'
-import { Agent } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/node'
+```typescript showLineNumbers set-up.ts section-1
 
-const config: InitConfig = {
-  label: 'docs-nodejs-agent',
-  walletConfig: {
-    id: 'wallet-id',
-    key: 'testkey0000000000000000000000000',
-  },
-}
-
-const agent = new Agent({
-  config,
-  dependencies: agentDependencies,
-})
 ```
 
 # React Native
 
-```typescript showLineNumbers
-import type { InitConfig } from '@aries-framework/core'
-import { Agent } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/react-native'
+```typescript showLineNumbers set-up-rn.ts section-1
 
-const config: InitConfig = {
-  label: 'docs-rn-agent',
-  walletConfig: {
-    id: 'wallet-id',
-    key: 'testkey0000000000000000000000000',
-  },
-}
-
-const agent = new Agent({
-  config,
-  dependencies: agentDependencies,
-})
 ```
 
 <!--/tabs-->
@@ -141,114 +116,69 @@ const agent = new Agent({
 
 After creating an `Agent` instance, we have to set an outbound transport that
 will handle traffic from the agent. It is also possible to set an inbound
-transport in the same way as the outbound transport, but it is built-in, so not
-required.
+transport in the same way as the outbound transport.
 
 <!--tabs-->
 
 # Node.js
 
-Sets up an HTTP outbound and inbound transport.
+Sets up an WS outbound and HTTP inbound and outbound transport.
 
-```typescript showLineNumbers
-import { HttpOutboundTransport, WsOutboundTransport } from '@aries-framework/core'
-import { HttpInboundTransport } from '@aries-framework/node'
+```typescript showLineNumbers set-up.ts section-2
 
-agent.registerOutboundTransport(new HttpOutboundTransport())
-agent.registerInboundTransport(new HttpInboundTransport({ port: 3000 }))
 ```
 
 # React Native
 
 For mobile agents the WebSocket transport is often required. We will go into
-more depth about the reasons for this in the mediation section [TODO: mediator
-section](https://example.org)
+more depth about the reasons for this in the mediation section (TOOD: add link to mediation section)
 
-```typescript showLineNumbers
-import { WsOutboundTransport, HttpOutboundTransport } from '@aries-framework/core'
+```typescript showLineNumbers set-up-rn.ts section-2
 
-agent.registerOutboundTransport(new WsOutboundTransport())
-agent.registerOutboundTransport(new HttpOutboundTransport())
 ```
 
 <!--/tabs-->
 
+### Adding a wallet and storage implementation
+
+Before we can initialize the agent, we need to provide the agent with a wallet and storage implementation. AFJ provides a few implementations out of the box, but you can also implement your own. Currently the following Wallet and Storage implementations are supported out of the box. Follow the specific guides to set up the wallet and storage implementation of your choice.
+
+- [Aries Askar](./aries-askar) - Recommended.
+- [Indy SDK](./indy-sdk) - Legacy. Will be deprecated in the future.
+
+<DocCardList items={[
+{ type: 'link', label: 'Aries Askar', href: './set-up/aries-askar', docId: 'getting-started/set-up/aries-askar' },
+{ type: 'link', label: 'Indy SDK', href: './set-up/indy-sdk', docId: 'getting-started/set-up/indy-sdk/index' }
+]} />
+
 ### Initializing the agent
 
-```typescript showLineNumbers
-// ...
-
-const agent = new Agent({
-  config,
-  dependencies: agentDependencies,
-})
-
-const initialize = async () => await agent.initialize().catch(console.error)
-```
-
-### Full code snippet
+Finally, we can initialize the agent and it's ready for use.
 
 <!--tabs-->
 
 # Node.js
 
-```typescript showLineNumbers
-import type { InitConfig } from '@aries-framework/core'
-import { Agent } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/node'
+```typescript showLineNumbers set-up.ts section-3
 
-// The agent initialization configuration
-const config: InitConfig = {
-  label: 'docs-nodejs-agent',
-  walletConfig: {
-    id: 'wallet-id',
-    key: 'testkey0000000000000000000000000',
-  },
-}
-
-// Creating an agent instance
-const agent = new Agent({
-  config,
-  dependencies: agentDependencies,
-})
-
-// Registering the required in- and outbound transports
-agent.registerOutboundTransport(new HttpOutboundTransport())
-agent.registerInboundTransport(new HttpInboundTransport({ port: 3000 }))
-
-// Function to initialize the agent
-const initialize = async () => await agent.initialize().catch(console.error)
 ```
 
 # React Native
 
-```typescript showLineNumbers
-import type { InitConfig } from '@aries-framework/core'
-import { Agent, WsOutboundTransport, HttpOutboundTransport } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/react-native'
+```typescript showLineNumbers set-up-rn.ts section-3
 
-// The agent initialization configuration
-const config: InitConfig = {
-  label: 'docs-rn-agent',
-  walletConfig: {
-    id: 'wallet-id',
-    key: 'testkey0000000000000000000000000',
-  },
-}
-
-// Creating an agent instance
-const agent = new Agent({
-  config,
-  dependencies: agentDependencies,
-})
-
-// Registering the required outbound transport
-agent.registerOutboundTransport(new HttpOutboundTransport())
-agent.registerOutboundTransport(new WsOutboundTransport())
-
-// Function to initialize the agent
-const initialize = async () => await agent.initialize().catch(console.error)
 ```
+
+<!--/tabs-->
+
+### Next Steps
+
+Now that you have your agent setup, it's time to start building your application. Head over to the tutorials page to get started.
+
+<DocCardList items={[
+{ type: 'link', label: 'Tutorials', href: '../tutorials/index', docId: 'tutorials/index' },
+{ type: 'link', label: 'Create a Connection', href: '../tutorials/create-a-connection', docId: 'tutorials/create-a-connection' }
+]} />
 
 <!--/tabs-->
 

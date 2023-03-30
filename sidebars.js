@@ -25,40 +25,29 @@ const sidebars = {
       label: 'Getting started',
       link: { type: 'doc', id: 'getting-started/index' },
       items: [
+        'getting-started/prerequisites',
         {
           type: 'category',
-          label: 'Installation',
-          link: { type: 'doc', id: 'getting-started/installation/index' },
+          label: 'Agent Setup',
+          link: { type: 'doc', id: 'getting-started/set-up/index' },
           items: [
+            'getting-started/set-up/aries-askar',
             {
               type: 'category',
-              label: 'NodeJS',
-              link: {
-                type: 'doc',
-                id: 'getting-started/installation/nodejs/index',
-              },
+              label: 'Indy SDK',
+              link: { type: 'doc', id: 'getting-started/set-up/indy-sdk/index' },
               items: [
-                'getting-started/installation/nodejs/linux',
-                'getting-started/installation/nodejs/windows',
-                'getting-started/installation/nodejs/apple-intel',
-                'getting-started/installation/nodejs/apple-arm',
+                'getting-started/set-up/indy-sdk/linux',
+                'getting-started/set-up/indy-sdk/windows',
+                'getting-started/set-up/indy-sdk/macos-intel',
+                'getting-started/set-up/indy-sdk/macos-arm',
+                'getting-started/set-up/indy-sdk/react-native',
               ],
             },
-            {
-              type: 'category',
-              label: 'React Native',
-              link: {
-                type: 'doc',
-                id: 'getting-started/installation/react-native/index',
-              },
-              items: [
-                'getting-started/installation/react-native/ios',
-                'getting-started/installation/react-native/android',
-              ],
-            },
+            'getting-started/set-up/anoncreds-rs',
+            'getting-started/set-up/indy-vdr',
           ],
         },
-        'getting-started/set-up/index',
       ],
     },
     {
