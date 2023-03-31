@@ -1,10 +1,10 @@
-# Anoncreds RS
+# AnonCreds RS
 
 [AnonCreds RS](https://github.com/hyperledger/anoncreds-rs) is a direct implementation of the [AnonCreds V1.0 specification](https://hyperledger.github.io/anoncreds-spec/) that provides functionality like; creating a schema object, creating a credential definition object, creating a credential, verifying a proof presentation and much more.
 
 :::caution
 
-Support for the AnonCreds RS library in Aries Framework JavaScript is currently experimental. We recommend new projects to use AnonCreds RS from the start, and also to migrate existing projects to Anoncreds, from the Indy Sdk. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/hyperledger/aries-framework-javascript/issues/new).
+Support for the AnonCreds RS library in Aries Framework JavaScript is currently experimental. We recommend new projects to use AnonCreds RS from the start, and also to migrate existing projects to AnonCreds, from the Indy Sdk. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/hyperledger/aries-framework-javascript/issues/new).
 
 Currently, there are few limitations to using AnonCreds RS.
 

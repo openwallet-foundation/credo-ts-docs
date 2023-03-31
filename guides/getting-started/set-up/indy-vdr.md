@@ -58,23 +58,8 @@ After installing the dependencies, we can register the Indy VDR module on the ag
 
 As you can see below, the Indy VDR module takes the native bindings and a list of networks. This list of networks will be used to resolve and register objects on.
 
-```typescript title="example"
-import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
-import { IndyVdrModule } from '@aries-framework/indy-vdr'
+```typescript typescript showLineNumbers set-up-indy-vdr-config.ts section-1
 
-const modules = {
-  indyVdr: new IndyVdrModule({
-    indyVdr,
-    networks: [
-      {
-        indyNamespace: 'bcovrin:test',
-        isProduction: false,
-        genesisTransaction: '<GENESIS_TRANSACTION>',
-        connectOnStartup: true,
-      },
-    ],
-  }),
-}
 ```
 
 #### indyVdr

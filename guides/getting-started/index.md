@@ -9,11 +9,11 @@ Based on the platform you want to work on, the installation guides you should fo
 **Do you want to build a mobile app?**
 
 - Follow the [Prerequisites](./prerequisites.md).
-- Follow the [Agent Setup](./set-up.md) guide.
+- Follow the [Agent Setup](./set-up) guide.
 
 **Do you want to build a server-side app?**
 
 - Follow the [Prerequisites](./prerequisites.md).
-- Follow the [Agent Setup](./set-up.md) guide.
+- Follow the [Agent Setup](./set-up) guide.
 
 <DocCardList  />
