@@ -74,61 +74,39 @@ const registerDid = async () => {
 // end-section-2
 
 // start-section-3
-const registerSchema = async () => {
-  const schemaResult = await agent.modules.anoncreds.registerSchema({
-    schema: {
-      attrNames: ['name'],
-      issuerId: 'did:indy:bcovrin:test:MqbfZSYXoeuLfgJne6gQVK',
-      name: 'Example Schema to register',
-      version: '1.0.0',
-    },
-    options: {},
-  })
+const schemaResult = await agent.modules.anoncreds.registerSchema({
+  schema: {
+    attrNames: ['name'],
+    issuerId: 'did:indy:bcovrin:test:MqbfZSYXoeuLfgJne6gQVK',
+    name: 'Example Schema to register',
+    version: '1.0.0',
+  },
+  options: {},
+})
 
-  if (schemaResult.schemaState.state === 'failed') {
-    throw new Error(`Error creating schema: ${schemaResult.schemaState.reason}`)
-  }
-
-  return {
-    schema: schemaResult.schemaState.schema,
-    schemaId: schemaResult.schemaState.schemaId,
-  }
+if (schemaResult.schemaState.state === 'failed') {
+  throw new Error(`Error creating schema: ${schemaResult.schemaState.reason}`)
 }
 // end-section-3
 
 // start-section-4
-const registerCredentialDefinition = async (schemaId: string) => {
-  const credentialDefinitionResult = await agent.modules.anoncreds.registerCredentialDefinition({
-    credentialDefinition: {
-      tag: 'default',
-      issuerId: 'did:indy:bcovrin:test:MqbfZSYXoeuLfgJne6gQVK',
-      schemaId: schemaId,
-    },
-    options: {},
-  })
+const credentialDefinitionResult = await agent.modules.anoncreds.registerCredentialDefinition({
+  credentialDefinition: {
+    tag: 'default',
+    issuerId: 'did:indy:bcovrin:test:MqbfZSYXoeuLfgJne6gQVK',
+    schemaId: schemaResult.schemaState.schemaId,
+  },
+  options: {},
+})
 
-  if (credentialDefinitionResult.credentialDefinitionState.state === 'failed') {
-    throw new Error(
-      `Error creating credential definition: ${credentialDefinitionResult.credentialDefinitionState.reason}`
-    )
-  }
-
-  return {
-    credentialDefinition: credentialDefinitionResult.credentialDefinitionState.credentialDefinition,
-    credentialDefinitionId: credentialDefinitionResult.credentialDefinitionState.credentialDefinitionId,
-  }
+if (credentialDefinitionResult.credentialDefinitionState.state === 'failed') {
+  throw new Error(
+    `Error creating credential definition: ${credentialDefinitionResult.credentialDefinitionState.reason}`
+  )
 }
 // end-section-4
 
-const run = async () => {
-  await agent.initialize()
-  console.log('Agent is initialized')
-  await registerDid()
-  console.log('did has been registered')
-  const { schemaId } = await registerSchema()
-  console.log('Schema has been registered')
-  await registerCredentialDefinition(schemaId)
-  console.log('Credential Definition has been registered')
-}
-
-void run()
+await agent.initialize()
+console.log('Agent is initialized')
+await registerDid()
+console.log('did has been registered')

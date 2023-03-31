@@ -7,6 +7,8 @@ import {
   InitConfig,
   WsOutboundTransport,
   Agent,
+  CredentialsModule,
+  V2CredentialProtocol,
 } from '@aries-framework/core'
 import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
 import { AskarModule } from '@aries-framework/askar'
@@ -18,7 +20,7 @@ import {
   IndyVdrModule,
 } from '@aries-framework/indy-vdr'
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
-import { AnonCredsModule } from '@aries-framework/anoncreds'
+import { AnonCredsModule, LegacyIndyCredentialFormatService } from '@aries-framework/anoncreds'
 import { AnonCredsRsModule } from '@aries-framework/anoncreds-rs'
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
 
@@ -67,6 +69,13 @@ const issuer = new Agent({
       registrars: [new IndyVdrIndyDidRegistrar()],
       resolvers: [new IndyVdrIndyDidResolver()],
     }),
+    credentials: new CredentialsModule({
+      credentialProtocols: [
+        new V2CredentialProtocol({
+          credentialFormats: [new LegacyIndyCredentialFormatService()],
+        }),
+      ],
+    }),
   },
 })
 
@@ -107,6 +116,13 @@ const holder = new Agent({
     }),
     dids: new DidsModule({
       resolvers: [new IndyVdrIndyDidResolver()],
+    }),
+    credentials: new CredentialsModule({
+      credentialProtocols: [
+        new V2CredentialProtocol({
+          credentialFormats: [new LegacyIndyCredentialFormatService()],
+        }),
+      ],
     }),
   },
 })

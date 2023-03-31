@@ -12,7 +12,7 @@ const config: InitConfig = {
 import { Agent } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/node'
 import { IndySdkModule } from '@aries-framework/indy-sdk'
-import * as indySdk from 'indy-sdk'
+import indySdk from 'indy-sdk'
 
 const agent = new Agent({
   config,
@@ -26,7 +26,7 @@ const agent = new Agent({
 })
 // end-section-1
 
-agent
+await agent
   .initialize()
   .then(() => {
     console.log('Agent initialized!')
