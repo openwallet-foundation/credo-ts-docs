@@ -25,7 +25,6 @@ First, an agent must be setup with a wallet and an indy vdr module. For these co
 
 ### 2. Importing a DID (optional)
 
-
 :::info
 
 There are many ledgers which can be used to register DIDs on for development. We recommend [bcovrin test net](http://test.bcovrin.vonx.io/). This network allows very easily to register a DID from a seed which can then be used as the `privateKey` in the snippet below. The seed is used as the private key for legacy compatibility with the Hyperledger Indy-SDK. The [genesis transactions](http://test.bcovrin.vonx.io/genesis) can also be retrieved for easy integration.
