@@ -20,7 +20,11 @@ import {
   IndyVdrModule,
 } from '@aries-framework/indy-vdr'
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
-import { AnonCredsModule, LegacyIndyCredentialFormatService } from '@aries-framework/anoncreds'
+import {
+  AnonCredsCredentialFormatService,
+  AnonCredsModule,
+  LegacyIndyCredentialFormatService,
+} from '@aries-framework/anoncreds'
 import { AnonCredsRsModule } from '@aries-framework/anoncreds-rs'
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
 
@@ -72,7 +76,7 @@ const issuer = new Agent({
     credentials: new CredentialsModule({
       credentialProtocols: [
         new V2CredentialProtocol({
-          credentialFormats: [new LegacyIndyCredentialFormatService()],
+          credentialFormats: [new LegacyIndyCredentialFormatService(), new AnonCredsCredentialFormatService()],
         }),
       ],
     }),
@@ -120,7 +124,7 @@ const holder = new Agent({
     credentials: new CredentialsModule({
       credentialProtocols: [
         new V2CredentialProtocol({
-          credentialFormats: [new LegacyIndyCredentialFormatService()],
+          credentialFormats: [new LegacyIndyCredentialFormatService(), new AnonCredsCredentialFormatService()],
         }),
       ],
     }),
@@ -167,3 +171,19 @@ issuer.credentials.offerCredential({
   },
 })
 // end-section-4
+
+// start-section-5
+issuer.credentials.offerCredential({
+  protocolVersion: 'v2',
+  connectionId: '<connection id>',
+  credentialFormats: {
+    anoncreds: {
+      credentialDefinitionId: '<credential definition id>',
+      attributes: [
+        { name: 'name', value: 'Jane Doe' },
+        { name: 'age', value: '23' },
+      ],
+    },
+  },
+})
+// end-section-5

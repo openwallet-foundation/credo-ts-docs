@@ -11,7 +11,7 @@ This section assumes that
 1. You have [set-up your develoment environment](../getting-started).
 1. You have basic knowledge of the required fields in the [Agent Config](./agent-config)
 1. You have completed the [Create a Connection tutorial](./create-a-connection)
-1. You have a [registered schema and credential definition on an Hyperledger Indy Ledger](./registering-schema-and-credential-definition-on-indy)
+1. You have a registered schema and credential definition. This can be done by following the [Registering on a Hyperledger Indy network](./registering-schema-and-credential-definition-on-indy)
 
 :::
 
@@ -23,7 +23,7 @@ In this tutorial the _Holder_ will be in a [Node.js environment](../getting-star
 
 #### Issuer
 
-For the _Issuer_ the setup is almost the same as the _Holder_. The difference is, is that the _Issuer_ does not need a mediator but an `HttpInboundTransport`.
+For the _Issuer_ the setup is commonly not the same as the _Holder_. In the example they both live in a server environment, meaning they do not need a mediator. More commonly, the _Holder_ is in a mobile environment where a mediator is required for receiving DIDComm messages.
 
 It is also very important for the _Issuer_ to have a public DID, for the binding with a credential definition, amongst other things. For this demo we will use [BCovrin Test](http://test.bcovrin.vonx.io). If you want to follow this tutorial, you have to register a public DID [here](http://test.bcovrin.vonx.io) via the Wallet seed field (this must be the same as the seed inside the config under the key [`publicDidSeed`](./agent-config#publicdidseed)).
 
@@ -94,6 +94,10 @@ Now that everything is setup on both sides, the _Issuer_ can now offer a credent
 
 > In this example we do not instantiate a connection and assume that there is one. Please refer to this guide [Create a connection](./create-a-connection) to get a connection and connectionId.
 
+<!-- tabs -->
+
+# Indy
+
 :::issuer
 
 ```typescript showLineNumbers issue-a-credential.ts section-4
@@ -101,6 +105,18 @@ Now that everything is setup on both sides, the _Issuer_ can now offer a credent
 ```
 
 :::
+
+# AnonCreds
+
+:::issuer
+
+```typescript showLineNumbers issue-a-credential.ts section-5
+
+```
+
+:::
+
+<!-- /tabs -->
 
 ### Useful resources
 

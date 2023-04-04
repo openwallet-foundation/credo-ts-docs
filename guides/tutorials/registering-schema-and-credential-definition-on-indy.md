@@ -25,6 +25,13 @@ First, an agent must be setup with a wallet and an indy vdr module. For these co
 
 ### 2. Importing a DID (optional)
 
+
+:::info
+
+There are many ledgers which can be used to register DIDs on for development. We recommend [bcovrin test net](http://test.bcovrin.vonx.io/). This network allows very easily to register a DID from a seed which can then be used as the `privateKey` in the snippet below. The seed is used as the private key for legacy compatibility with the Hyperledger Indy-SDK. The [genesis transactions](http://test.bcovrin.vonx.io/genesis) can also be retrieved for easy integration.
+
+:::
+
 In order to register a schema and credential definition, a DID must be added to the agent first. This can be done by caling `agent.dids.create()`, but this does require an endorser DID to be present as the `submitterDid`. For this tutorial a DID will already be registered on the ledger, but it will be imported, whith the associated private key, to be used later when registering the schema and credential definition.
 
 This section can be omitted if your agent already has a DID in its wallet.
