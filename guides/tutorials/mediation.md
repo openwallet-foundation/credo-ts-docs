@@ -52,6 +52,8 @@ The second part shows how to use a mediator. Becoming a recipient of a mediator 
 
 The easiest way to set everything up is by configuring the `RecipientModule` to connect to the mediator on agent startup. This can be done by constructing the module with the `mediatorInvitationUrl`. You can get the mediatorInvitationUrl either from [part one](./mediation.md#1-mediator-setup) by running a mediator yourself or from a public mediator such as the animo-mediator. The following snippet uses the latter approach.
 
+The `ConnectionsModule` used in this snippet serves the sole purpose of automatically accepting connections and thus simplifying setup.
+
 ```typescript showLineNumbers mediation-recipient.ts section-1
 
 ```

@@ -1,15 +1,14 @@
 import {
   Agent,
-  ConsoleLogger,
+  ConnectionsModule,
   HttpOutboundTransport,
   InitConfig,
-  LogLevel,
   MediationStateChangedEvent,
   MediatorModule,
   RoutingEventTypes,
 } from '@aries-framework/core'
 import { IndySdkModule } from '@aries-framework/indy-sdk'
-import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
+import { HttpInboundTransport, agentDependencies } from '@aries-framework/node'
 import indySdk from 'indy-sdk'
 
 async function run() {
@@ -24,7 +23,6 @@ async function run() {
       key: name,
     },
     endpoints: [`http://localhost:${port}`],
-    logger: new ConsoleLogger(LogLevel.trace),
   }
 
   const mediator = new Agent({
@@ -32,8 +30,11 @@ async function run() {
     dependencies: agentDependencies,
     modules: {
       indySdk: new IndySdkModule({ indySdk }),
-      MediatorModule: new MediatorModule({
+      mediator: new MediatorModule({
         autoAcceptMediationRequests: true,
+      }),
+      connections: new ConnectionsModule({
+        autoAcceptConnections: true,
       }),
     },
   })
@@ -42,10 +43,7 @@ async function run() {
   mediator.registerInboundTransport(new HttpInboundTransport({ port }))
 
   await mediator.initialize()
-  const mediatorOutOfBandRecord = await mediator.oob.createInvitation({
-    multiUseInvitation: true,
-    autoAcceptConnection: true,
-  })
+  const mediatorOutOfBandRecord = await mediator.oob.createInvitation({ multiUseInvitation: true })
 
   const mediatiorInvitationUrl = mediatorOutOfBandRecord.outOfBandInvitation.toUrl({
     domain: `http://localhost:${port}`,
