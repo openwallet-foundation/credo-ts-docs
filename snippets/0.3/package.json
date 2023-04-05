@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "license": "Apache-2.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev:connection": "ts-node src/create-a-connection.ts",
-    "dev:credential": "ts-node src/issue-a-credential.ts",
-    "dev:set-up": "ts-node src/set-up.ts"
+    "dev:connection": "ts-node --esm src/create-a-connection.ts",
+    "dev:credential": "ts-node --esm src/issue-a-credential.ts",
+    "dev:set-up": "ts-node --esm src/set-up.ts"
   },
   "dependencies": {
     "@aries-framework/core": "^0.3.3",
