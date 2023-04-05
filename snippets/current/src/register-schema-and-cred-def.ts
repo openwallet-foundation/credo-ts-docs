@@ -59,12 +59,16 @@ const agent = new Agent({
 // end-section-1
 
 // start-section-2
+const seed = TypedArrayEncoder.fromString(`<seed>`) // What you input on bcovrin. Should be kept secure in production!
+const unqualifiedIndyDid = `<unqualifiedIndyDid>` // will be returned after registering seed on bcovrin
+const indyDid = `did:indy:bcovrin:test:${unqualifiedIndyDid}`
+
 await agent.dids.import({
   did: '<did>',
   overwrite: true,
   privateKeys: [
     {
-      privateKey: TypedArrayEncoder.fromString('<private key>'),
+      privateKey: seed,
       keyType: KeyType.Ed25519,
     },
   ],
@@ -75,7 +79,7 @@ await agent.dids.import({
 const schemaResult = await agent.modules.anoncreds.registerSchema({
   schema: {
     attrNames: ['name'],
-    issuerId: '<issuer id>',
+    issuerId: indyDid,
     name: 'Example Schema to register',
     version: '1.0.0',
   },
@@ -91,7 +95,7 @@ if (schemaResult.schemaState.state === 'failed') {
 const credentialDefinitionResult = await agent.modules.anoncreds.registerCredentialDefinition({
   credentialDefinition: {
     tag: 'default',
-    issuerId: '<issuer id>',
+    issuerId: indyDid,
     schemaId: schemaResult.schemaState.schemaId,
   },
   options: {},
