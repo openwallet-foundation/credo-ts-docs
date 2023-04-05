@@ -59,25 +59,23 @@ const agent = new Agent({
 // end-section-1
 
 // start-section-2
-const registerDid = async () => {
-  await agent.dids.import({
-    did: 'did:indy:bcovrin:test:MqbfZSYXoeuLfgJne6gQVK',
-    overwrite: true,
-    privateKeys: [
-      {
-        privateKey: TypedArrayEncoder.fromString('secret-docs-seed0000000000000000'),
-        keyType: KeyType.Ed25519,
-      },
-    ],
-  })
-}
+await agent.dids.import({
+  did: '<did>',
+  overwrite: true,
+  privateKeys: [
+    {
+      privateKey: TypedArrayEncoder.fromString('<private key>'),
+      keyType: KeyType.Ed25519,
+    },
+  ],
+})
 // end-section-2
 
 // start-section-3
 const schemaResult = await agent.modules.anoncreds.registerSchema({
   schema: {
     attrNames: ['name'],
-    issuerId: 'did:indy:bcovrin:test:MqbfZSYXoeuLfgJne6gQVK',
+    issuerId: '<issuer id>',
     name: 'Example Schema to register',
     version: '1.0.0',
   },
@@ -93,7 +91,7 @@ if (schemaResult.schemaState.state === 'failed') {
 const credentialDefinitionResult = await agent.modules.anoncreds.registerCredentialDefinition({
   credentialDefinition: {
     tag: 'default',
-    issuerId: 'did:indy:bcovrin:test:MqbfZSYXoeuLfgJne6gQVK',
+    issuerId: '<issuer id>',
     schemaId: schemaResult.schemaState.schemaId,
   },
   options: {},
@@ -105,8 +103,3 @@ if (credentialDefinitionResult.credentialDefinitionState.state === 'failed') {
   )
 }
 // end-section-4
-
-await agent.initialize()
-console.log('Agent is initialized')
-await registerDid()
-console.log('did has been registered')

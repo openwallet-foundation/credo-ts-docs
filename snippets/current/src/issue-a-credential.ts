@@ -157,7 +157,7 @@ holder.events.on<CredentialStateChangedEvent>(CredentialEventTypes.CredentialSta
 // end-section-3
 
 // start-section-4
-issuer.credentials.offerCredential({
+const indyCredentialExchangeRecord = await issuer.credentials.offerCredential({
   protocolVersion: 'v2',
   connectionId: '<connection id>',
   credentialFormats: {
@@ -173,7 +173,7 @@ issuer.credentials.offerCredential({
 // end-section-4
 
 // start-section-5
-issuer.credentials.offerCredential({
+const anonCredsCredentialExchangeRecord = issuer.credentials.offerCredential({
   protocolVersion: 'v2',
   connectionId: '<connection id>',
   credentialFormats: {
