@@ -151,6 +151,12 @@ Before we can initialize the agent, we need to provide the agent with a wallet a
 { type: 'link', label: 'Indy SDK', href: './set-up/indy-sdk', docId: 'getting-started/set-up/indy-sdk/index' }
 ]} />
 
+### Setting up the required ledgers
+
+AFJ is ledger agnostic now, we can select any of the ledger implemntations supported by AFJ
+- [Indy]()
+- [Cheqd](./cheqd)
+
 ### Initializing the agent
 
 Finally, we can initialize the agent and it's ready for use.
