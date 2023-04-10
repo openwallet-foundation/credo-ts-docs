@@ -368,7 +368,7 @@ autoAcceptMediationRequests: true
 
 ---
 
-## `mediationConnectionsInvitation`
+## `mediatorConnectionsInvite`
 
 > This property collides with
 > [`defaultMediatorId`](#defaultmediatorid)
@@ -381,7 +381,7 @@ default for all connections.
 **Type**: `string`
 
 ```typescript title="example"
-mediationConnectionInvite: 'https://didcomm.agent.community.animo.id?c_i=ey....(many bytes omitted)...Q=='
+mediatorConnectionsInvite: 'https://didcomm.agent.community.animo.id?c_i=ey....(many bytes omitted)...Q=='
 ```
 
 ---

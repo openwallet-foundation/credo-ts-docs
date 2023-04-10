@@ -1,7 +1,5 @@
 # Postgres Setup for macOS
 
-> Note: We have tried to build on both intel and apple silicon.
-
 ## Prerequisites
 
 - Homebrew

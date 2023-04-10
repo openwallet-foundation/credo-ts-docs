@@ -72,12 +72,12 @@ const sidebars = {
         'tutorials/issue-a-credential',
         {
           type: 'category',
-          label: 'Postgres Database',
-          link: { type: 'doc', id: 'tutorials/postgres-database-nodejs/index' },
+          label: 'Using PostgreSQL with the Indy SDK',
+          link: { type: 'doc', id: 'tutorials/indy-sdk-postgres-database-nodejs/index' },
           items: [
-            'tutorials/postgres-database-nodejs/linux',
-            'tutorials/postgres-database-nodejs/macos',
-            'tutorials/postgres-database-nodejs/windows',
+            'tutorials/indy-sdk-postgres-database-nodejs/linux',
+            'tutorials/indy-sdk-postgres-database-nodejs/macos',
+            'tutorials/indy-sdk-postgres-database-nodejs/windows',
           ],
         },
       ],
