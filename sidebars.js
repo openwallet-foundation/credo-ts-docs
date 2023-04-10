@@ -68,6 +68,7 @@ const sidebars = {
           items: ['tutorials/agent-config/logging'],
         },
         'tutorials/create-a-connection',
+        'tutorials/registering-schema-and-credential-definition-on-indy',
         'tutorials/issue-a-credential',
         {
           type: 'category',
