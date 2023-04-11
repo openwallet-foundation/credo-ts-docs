@@ -5,11 +5,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev:mediation-recipient": "ts-node src/mediation-recipient.ts",
-    "dev:connection": "ts-node src/create-a-connection.ts",
+    "dev:mediator-setup": "ts-node --esm src/mediator-setup.ts",
+    "dev:mediation-recipient": "ts-node --esm src/mediation-recipient.ts",
+    "dev:connection": "ts-node --esm src/create-a-connection.ts",
+    "dev:credential": "ts-node --esm src/issue-a-credential.ts",
     "dev:register-with-indy": "ts-node --esm src/register-schema-and-cred-def.ts",
-    "dev:credential": "ts-node src/issue-a-credential.ts",
-    "dev:set-up": "ts-node src/set-up.ts"
+    "dev:set-up": "ts-node --esm src/set-up.ts"
   },
   "dependencies": {
     "@aries-framework/anoncreds": "^0.4.0-alpha.104",
