@@ -48,9 +48,9 @@ The mediator is set up on port 3001 and creates an Out-of-Band invitation that a
 
 ### 2. Recipient (Alice) setup
 
-The second part shows how to use a mediator. Becoming a recipient of a mediator requires using the `RecipientModule`. The setup is the same whether you use your own or a third-party mediator.
+The second part shows how to use a mediator. Becoming a recipient of a mediator requires using the `MediationRecipientModule`. The setup is the same whether you use your own or a third-party mediator.
 
-The easiest way to set everything up is by configuring the `RecipientModule` to connect to the mediator on agent startup. This can be done by constructing the module with the `mediatorInvitationUrl`. You can get the mediatorInvitationUrl either from [part one](./mediation.md#1-mediator-setup) by running a mediator yourself or from a public mediator such as the animo-mediator. The following snippet uses the latter approach.
+The easiest way to set everything up is by configuring the `MediationRecipientModule` to connect to the mediator on agent startup. This can be done by constructing the module with the `mediatorInvitationUrl`. You can get the mediatorInvitationUrl either from [part one](./mediation.md#1-mediator-setup) by running a mediator yourself or from a public mediator such as the Animo-mediator. The following snippet uses the latter approach.
 
 The `ConnectionsModule` used in this snippet serves the sole purpose of automatically accepting connections and thus simplifying setup.
 
@@ -64,7 +64,7 @@ In case you are using a third-party mediator and cannot create an invitationUrl,
 
 ### 3. Message exchange
 
-This section explains the message exchange between agents when a mediator is in place. The process is illustrated using the diagram below. Parts [one](./mediation.md#1-mediator-setup) and [two](./mediation.md#2-recipient-alice-setup) of this tutorial showed how to set up and use a mediator. If the `mediatorInvitationUrl` is specified when constructing the `RecipientModule` (as in [Part two](./mediation.md#2-recipient-alice-setup)), the mediation request and grant _(1-2)_ between Alice and the mediator will be performed automatically when Alice's agent is started.
+This section explains the message exchange between agents when a mediator is in place. The process is illustrated using the diagram below. Parts [one](./mediation.md#1-mediator-setup) and [two](./mediation.md#2-recipient-alice-setup) of this tutorial showed how to set up and use a mediator. If the `mediatorInvitationUrl` is specified when constructing the `MediationRecipientModule` (as in [Part two](./mediation.md#2-recipient-alice-setup)), the mediation request and grant _(1-2)_ between Alice and the mediator will be performed automatically when Alice's agent is started.
 
 If Alice establishes a connection with another fictional agent, say, Bob's agent, who is not using any mediators _(3-6)_. (Connection establishment is no different when a mediator is involved). Then, messages from Alice to Bob _(7)_ are routed directly to Bob, while messages from Bob to Alice _(8-9)_ are routed through the intermediary.
 
