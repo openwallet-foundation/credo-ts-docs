@@ -8,6 +8,7 @@ import {
   HttpOutboundTransport,
   DidExchangeState,
   OutOfBandRecord,
+  ConnectionsModule,
 } from '@aries-framework/core'
 import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
@@ -23,14 +24,16 @@ const initializeBobAgent = async () => {
       id: 'mainBob',
       key: 'demoagentbob00000000000000000000',
     },
-    autoAcceptConnections: true,
   }
 
   // A new instance of an agent is created here
   // Askar can also be replaced by the indy-sdk if required
   const agent = new Agent({
     config,
-    modules: { askar: new AskarModule({ ariesAskar }) },
+    modules: {
+      askar: new AskarModule({ ariesAskar }),
+      connections: new ConnectionsModule({ autoAcceptConnections: true }),
+    },
     dependencies: agentDependencies,
   })
 
@@ -57,7 +60,6 @@ const initializeAcmeAgent = async () => {
       id: 'mainAcme',
       key: 'demoagentacme0000000000000000000',
     },
-    autoAcceptConnections: true,
     endpoints: ['http://localhost:3001'],
   }
 
@@ -65,7 +67,10 @@ const initializeAcmeAgent = async () => {
   // Askar can also be replaced by the indy-sdk if required
   const agent = new Agent({
     config,
-    modules: { askar: new AskarModule({ ariesAskar }) },
+    modules: {
+      askar: new AskarModule({ ariesAskar }),
+      connections: new ConnectionsModule({ autoAcceptConnections: true }),
+    },
     dependencies: agentDependencies,
   })
 
