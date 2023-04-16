@@ -4,7 +4,7 @@
 
 - A system package manager (like APT, Pacman, etc.)
 - Cargo (We have to build Postgres plugin from source)
-- git (to clone a repo, could also be done with downloading the zip from the Github page)
+- git (to clone a repo, could also be done with downloading the zip from the GitHub page)
 
 ## Step 1: installing the dependencies using apt
 
