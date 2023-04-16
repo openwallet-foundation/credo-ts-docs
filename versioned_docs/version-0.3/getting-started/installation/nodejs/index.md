@@ -9,7 +9,7 @@ to install some dependencies. We will go over the specific installation process 
 - [Apple (Intel)](./apple-intel.md)
 - [Apple (Arm)](./apple-arm.md)
 
-The specific dependencies that you will install are the following. They will come up in the installlation guides, but are summarized here to give insight into what you will install.
+The specific dependencies that you will install are the following. They will come up in the installation guides, but are summarized here to give insight into what you will install.
 
 - [NodeJS](https://nodejs.org)
 - [yarn](https://classic.yarnpkg.com/lang/en/docs/install) or [npm](https://www.npmjs.com/)

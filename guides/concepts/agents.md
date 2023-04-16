@@ -20,7 +20,7 @@ connections, issue credentials, send messages etc. It also have a cryptographic
 toolkit with which it can uniquely, securely and verifiably operate. And lastly
 it interacts with other entities, this could be another agent, via [DIDComm
 protocols](https://identity.foundation/didcomm-messaging/spec/) later on. The
-Aries agent in the context of the Aries JavaScript ecosystem is your entrypoint
+Aries agent in the context of the Aries JavaScript ecosystem is your entry-point
 to all of the functionality.
 
 ### Categories
@@ -31,7 +31,7 @@ their "location", e.g. a mobile wallet or server. Some other categories are a
 static, thin, thick and rich Aries agents. These agents are grouped based on
 their complexity instead of their "location". The Aries JavaScript ecosystem
 allows you to create a mobile agent and a cloud agent. It also allows any of
-the complexity catogorized agents.
+the complexity categorized agents.
 
 ### Examples
 
