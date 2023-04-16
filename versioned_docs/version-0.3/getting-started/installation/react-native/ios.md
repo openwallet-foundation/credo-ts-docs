@@ -21,7 +21,7 @@ pod update Indy
 
 4. Set `Build Libraries for Distribution` to `yes` in both the project and targets
 
-> This is required due to mismatching Swift versions between the Indy SDK and the application, as described in this [Stackoverflow Answer](https://stackoverflow.com/questions/58654714/module-compiled-with-swift-5-1-cannot-be-imported-by-the-swift-5-1-2-compiler/63305234#63305234)
+> This is required due to mismatching Swift versions between the Indy SDK and the application, as described in this [StackOverflow Answer](https://stackoverflow.com/questions/58654714/module-compiled-with-swift-5-1-cannot-be-imported-by-the-swift-5-1-2-compiler/63305234#63305234)
 
 5. iOS Simulators are currently not supported and should be disabled
 

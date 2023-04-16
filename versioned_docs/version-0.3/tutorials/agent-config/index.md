@@ -495,7 +495,7 @@ or the new didComm prefix `https://didcomm.org`.
 
 **Type**: `boolean`
 
-**Defaul**: `false`
+**Default**: `false`
 
 ```typescript title="example"
 useLegacyDidSovPrefix: true

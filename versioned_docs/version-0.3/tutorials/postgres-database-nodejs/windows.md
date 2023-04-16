@@ -20,9 +20,9 @@
   - `set OPENSSL_DIR=C:\Users\{WINDOWS_USER}\Downloads\indy-sdk-deps`
   - `set PATH=C:\Users\{WINDOWS_USER}\Downloads\indy-sdk-deps\lib`
 
-## Step 2: Build postgres plugin
+## Step 2: Build Postgres plugin
 
-Building postgres plugin from the indy sdk repo with cargo.
+Building Postgres plugin from the indy-sdk repo with cargo.
 
 ### Step 2.1: Cloning the indy-sdk
 
@@ -32,7 +32,7 @@ git clone https://github.com/hyperledger/indy-sdk.git
 cd indy-sdk\experimental\plugins\postgres_storage
 ```
 
-### Step 2.2: Building postgres plugin
+### Step 2.2: Building Postgres plugin
 
 If this step throws any errors, it might be because of the environment. Step 1 of this guide provided the dependencies that are required.
 

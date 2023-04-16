@@ -12,7 +12,7 @@ verifying a proof, etc.
 
 This section assumes that
 
-1. You have [set-up your develoment environment](../getting-started).
+1. You have [set-up your development environment](../getting-started).
 1. You have basic knowledge of the required fields in the [Agent Config](./agent-config)
 
 :::
@@ -131,7 +131,7 @@ way of knowing if the invitation has been received.
 ### 5. Full code snippets
 
 Below are both code snippets for each agent. These can be used as base but
-should be editted to fit your use case. The
+should be edited to fit your use case. The
 [`walletConfig.key`](./agent-config#walletconfigkey) must be changed as it can
 lead to other people knowing your "password" to your wallet.
 
