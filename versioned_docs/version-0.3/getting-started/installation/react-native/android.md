@@ -5,7 +5,7 @@ these steps below it should be possible.
 
 ### Set the minimum SDK version
 
-inside the `android/build.gradle` add the minimum sdk version of 21
+inside the `android/build.gradle` add the minimum SDK version of 21
 
 ```json title="android/build.gradle"
 buildscript {

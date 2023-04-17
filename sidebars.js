@@ -70,6 +70,7 @@ const sidebars = {
         'tutorials/create-a-connection',
         'tutorials/registering-schema-and-credential-definition-on-indy',
         'tutorials/issue-a-credential',
+        'tutorials/mediation',
         {
           type: 'category',
           label: 'Postgres Database',

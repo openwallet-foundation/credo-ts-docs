@@ -131,7 +131,7 @@ Sets up an WS outbound and HTTP inbound and outbound transport.
 # React Native
 
 For mobile agents the WebSocket transport is often required. We will go into
-more depth about the reasons for this in the mediation section (TOOD: add link to mediation section)
+more depth about the reasons for this in the [mediation](./../../tutorials/mediation.md) section.
 
 ```typescript showLineNumbers set-up-rn.ts section-2
 

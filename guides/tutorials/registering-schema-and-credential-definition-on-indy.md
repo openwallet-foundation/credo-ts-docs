@@ -6,14 +6,14 @@ In this tutorial we will register a schema and credential definition on an Hyper
 
 This section assumes that
 
-1. You have [set-up your develoment environment](../getting-started).
+1. You have [set-up your development environment](../getting-started).
 1. You have basic knowledge of the required fields in the [Agent Config](./agent-config)
 
 :::
 
 ### 1. Setting up the agent
 
-First, an agent must be setup with a wallet and an indy vdr module. For these code examples, we will use a Node.js environment.
+First, an agent must be setup with a wallet and an indy-vdr module. For these code examples, we will use a Node.js environment.
 
 :::issuer
 
@@ -31,7 +31,7 @@ There are many ledgers which can be used to register DIDs on for development. We
 
 :::
 
-In order to register a schema and credential definition, a DID must be added to the agent first. This can be done by caling `agent.dids.create()`, but this does require an endorser DID to be present as the `submitterDid`. For this tutorial a DID will already be registered on the ledger, but it will be imported, whith the associated private key, to be used later when registering the schema and credential definition.
+In order to register a schema and credential definition, a DID must be added to the agent first. This can be done by calling `agent.dids.create()`, but this does require an endorser DID to be present as the `submitterDid`. For this tutorial a DID will already be registered on the ledger, but it will be imported, with the associated private key, to be used later when registering the schema and credential definition.
 
 This section can be omitted if your agent already has a DID in its wallet.
 
