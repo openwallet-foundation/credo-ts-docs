@@ -1,8 +1,12 @@
 import DocCardList from '@theme/DocCardList';
 
-# Cheqd
+# cheqd
 
-[cheqd](https://github.com/cheqd/sdk) cheqd is a blockchain network, built in the Cosmos ecosystem for self-sovereign identity. It bridges the DeFi ecosystem with the decentralised identity ecosystem, and provides an implementation of the the new Ledger [Agnostic AnonCreds Specification (v1.0)](https://hyperledger.github.io/anoncreds-spec/).
+[cheqd](https://github.com/cheqd/sdk) is a blockchain network, built in the Cosmos ecosystem for Self-Sovereign Identity (SSI). The cheqd Network leverages the [cheqd DID method](https://docs.cheqd.io/identity/architecture/adr-list/adr-001-cheqd-did-method) and enables [DID-Linked Resources](https://docs.cheqd.io/identity/architecture/adr-list/adr-002-did-linked-resources) to be written to the network, associated with a DID and controlled using the verification methods in the DID Document. 
+
+Through this approach, the cheqd Network is able to natively support the [Ledger Agnostic AnonCreds Specification (v1.0)](https://hyperledger.github.io/anoncreds-spec/) through its [AnonCreds Object Method](https://docs.cheqd.io/identity/guides/anoncreds) (as well as VC-JWT and JSON-LD). 
+
+cheqd also has a dedicated token, $CHEQ, used for identity writes to the network, voting in a decentralised governance framework as well as for various payment flows between verifiers, holders and issuers of Verifiable Credentials.
 
 
 ### Installing cheqd
