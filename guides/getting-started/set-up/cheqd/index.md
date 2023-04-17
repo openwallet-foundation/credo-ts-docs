@@ -20,17 +20,45 @@ To enable react-native support we need to follow the steps below
 # React Native
 
 In the package.json file add the below code snippet, which replaces the cosmjs dependencies witht he cosmjs-rn packages
+
+<!--tabs-->
+
+# NPM
+
+Using [NPM `overrides`](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#overrides) we can point the `cosmjs` packages to `cosmjs-rn`.
+
 ```json
- "resolutions": {
-    "@cosmjs/amino": "npm:@cosmjs-rn/amino@^0.27.1",
-    "@cosmjs/encoding": "npm:@cosmjs-rn/encoding@^0.27.1",
-    "@cosmjs/math": "npm:@cosmjs-rn/math@^0.27.1",
-    "@cosmjs/stargate": "npm:@cosmjs-rn/stargate@^0.27.1",
-    "@cosmjs/tendermint-rpc": "npm:@cosmjs-rn/tendermint-rpc@^0.27.1",
-    "@cosmjs/utils": "npm:@cosmjs-rn/utils@^0.27.1",
-    "@cosmjs/proto-signing": "npm:@cosmjs-rn/proto-signing@^0.27.1",
-    "@cosmjs/crypto": "npm:@cosmjs-rn/crypto@^0.27.1"
-  }
+{
+    "overrides" {
+      "@cosmjs/amino": "npm:@cosmjs-rn/amino@^0.27.1",
+      "@cosmjs/encoding": "npm:@cosmjs-rn/encoding@^0.27.1",
+      "@cosmjs/math": "npm:@cosmjs-rn/math@^0.27.1",
+      "@cosmjs/stargate": "npm:@cosmjs-rn/stargate@^0.27.1",
+      "@cosmjs/tendermint-rpc": "npm:@cosmjs-rn/tendermint-rpc@^0.27.1",
+      "@cosmjs/utils": "npm:@cosmjs-rn/utils@^0.27.1",
+      "@cosmjs/proto-signing": "npm:@cosmjs-rn/proto-signing@^0.27.1",
+      "@cosmjs/crypto": "npm:@cosmjs-rn/crypto@^0.27.1"
+    }
+}
+```
+
+# Yarn
+
+Using [Yarn `resolutions`](https://classic.yarnpkg.com/lang/en/docs/selective-version-resolutions/) we can point the `cosmjs` packages to `cosmjs-rn`.
+
+```json
+{
+    "resolutions" {
+      "@cosmjs/amino": "npm:@cosmjs-rn/amino@^0.27.1",
+      "@cosmjs/encoding": "npm:@cosmjs-rn/encoding@^0.27.1",
+      "@cosmjs/math": "npm:@cosmjs-rn/math@^0.27.1",
+      "@cosmjs/stargate": "npm:@cosmjs-rn/stargate@^0.27.1",
+      "@cosmjs/tendermint-rpc": "npm:@cosmjs-rn/tendermint-rpc@^0.27.1",
+      "@cosmjs/utils": "npm:@cosmjs-rn/utils@^0.27.1",
+      "@cosmjs/proto-signing": "npm:@cosmjs-rn/proto-signing@^0.27.1",
+      "@cosmjs/crypto": "npm:@cosmjs-rn/crypto@^0.27.1"
+    }
+}
 ```
 
 Following that we need to add a buffer polyfill
@@ -55,26 +83,8 @@ After installing the dependencies, we can register the cheqd Module on the agent
 
 <!--tabs-->
 
-```typescript showLineNumbers
-
-    dids: new DidsModule({
-      registrars: [new CheqdDidRegistrar()],
-      resolvers: [new CheqdDidResolver()],
-    }),
-
-    // AnonCreds
-    anoncreds: new AnonCredsModule({
-      registries: [new CheqdAnonCredsRegistry()],
-    }),
-
-    // Add cheqd module
-    cheqd: new CheqdModule(new CheqdModuleConfig({
-        networks: [
-          {
-            network: '<mainnet or testnet>',
-            cosmosPayerSeed: '<cosmos payer seed or mnemonic>',
-          },
-        ],
-      })),
+```typescript showLineNumbers set-up-cheqd.ts section-1
 
 ```
+
+The cosmosPayerSeed can be a 32-bit seed value or a mnemonic 
