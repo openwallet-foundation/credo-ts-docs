@@ -20,6 +20,7 @@ import {
   CheqdDidResolver,
   CheqdModule,
   CheqdModuleConfig,
+  CheqdDidCreateOptions,
 } from '@aries-framework/cheqd'
 import { AnonCredsModule } from '@aries-framework/anoncreds'
 
@@ -76,7 +77,7 @@ const key = await agent.wallet.createKey({
 const ed25519PublicKeyBase58 = key.publicKeyBase58
 
 // Create a DID
-const did = await agent.dids.create({
+const did = await agent.dids.create<CheqdDidCreateOptions>({
   method: 'cheqd',
   options: {
     network: 'testnet',
@@ -118,3 +119,48 @@ await agent.dids.create({
   },
 })
 // end-section-3
+
+// start-section-4
+await agent.dids.update({
+  method: 'cheqd',
+  // Updates DID Document with an additional verification method if provided
+  secret: {
+    verificationMethod: {
+      id: 'key-2',
+      type: 'JsonWebKey2020',
+    },
+  },
+  didDocument: {
+		"id": "did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411",
+		"controller": [
+			"did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411"
+		],
+		"verificationMethod": [{
+			"id": "did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411#key-1",
+			"type": "Ed25519VerificationKey2020",
+			"controller": "did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411",
+			"publicKeyMultibase": "z6MknkzLUEP5cxqqsaysNMWoh8NJRb3YsowTCj2D6yhwyEdj"
+		}],
+		"authentication": [
+			"did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411#key-1"
+		],
+    // updates did document with a service block
+		"service": [{
+			"id": "did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411#rand",
+			"type": "rand",
+			"serviceEndpoint": "https://rand.in"
+		}]
+	}
+})
+// end-section-4
+
+// start-section-5
+await agent.dids.deactivate({
+  method: 'cheqd',
+  did: 'did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411',
+  // an optional versionId parameter
+  options: {
+    versionId: '3.0'
+  },
+})
+// end-section-5
