@@ -78,3 +78,7 @@ After registering a schema, a credential definition can be registered based on t
 ### Using it
 
 After everything is registered on a AnonCredsRegistry, we can use it to issue credentials. The next tutorial is all about issuing an AnonCreds credential with this setup.
+
+### Useful Resources
+
+- [Cheqd AnonCreds Specification](https://docs.cheqd.io/identity/guides/anoncreds)

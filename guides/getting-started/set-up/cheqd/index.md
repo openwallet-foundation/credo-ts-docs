@@ -88,3 +88,9 @@ After installing the dependencies, we can register the cheqd Module on the agent
 ```
 
 The cosmosPayerSeed can be a 32-bit seed value or a mnemonic, which can be managed using Keplr wallet which can be installed on a mobile or as a browser extension in chrome or safari which allows user's to create accounts, exchange tokens etc. To setup keplr wallet for cheqd follow this [tutorial](https://learn.cheqd.io/getting-set-up-on-cheqd/cheqd-supported-wallets/keplr-wallet)
+
+### Tutorials
+
+- [Cheqd DID Module](../../../tutorials/cheqd/index.md)
+- [Register Schema and Credential Definition](../../../tutorials/registering-schema-and-credential-definition.md)
+- [Issue a Credential](../../../tutorials/issue-a-credential.md)
