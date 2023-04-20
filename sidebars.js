@@ -46,6 +46,7 @@ const sidebars = {
             },
             'getting-started/set-up/anoncreds-rs',
             'getting-started/set-up/indy-vdr',
+            'getting-started/set-up/cheqd/index',
           ],
         },
       ],
@@ -68,7 +69,7 @@ const sidebars = {
           items: ['tutorials/agent-config/logging'],
         },
         'tutorials/create-a-connection',
-        'tutorials/registering-schema-and-credential-definition-on-indy',
+        'tutorials/registering-schema-and-credential-definition',
         'tutorials/issue-a-credential',
         'tutorials/mediation',
         {

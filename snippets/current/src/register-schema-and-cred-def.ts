@@ -23,6 +23,13 @@ import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
 import { AnonCredsModule } from '@aries-framework/anoncreds'
 import { AnonCredsRsModule } from '@aries-framework/anoncreds-rs'
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
+import {
+  CheqdAnonCredsRegistry,
+  CheqdDidRegistrar,
+  CheqdDidResolver,
+  CheqdModule,
+  CheqdModuleConfig,
+} from '@aries-framework/cheqd'
 
 const agent = new Agent({
   config,
@@ -47,12 +54,22 @@ const agent = new Agent({
         },
       ],
     }),
+    cheqd: new CheqdModule(
+      new CheqdModuleConfig({
+        networks: [
+          {
+            network: '<mainnet or testnet>',
+            cosmosPayerSeed: '<cosmos payer seed or mnemonic>',
+          },
+        ],
+      })
+    ),
     anoncreds: new AnonCredsModule({
-      registries: [new IndyVdrAnonCredsRegistry()],
+      registries: [new IndyVdrAnonCredsRegistry(), new CheqdAnonCredsRegistry()],
     }),
     dids: new DidsModule({
-      registrars: [new IndyVdrIndyDidRegistrar()],
-      resolvers: [new IndyVdrIndyDidResolver()],
+      registrars: [new IndyVdrIndyDidRegistrar(), new CheqdDidRegistrar()],
+      resolvers: [new IndyVdrIndyDidResolver(), new CheqdDidResolver()],
     }),
   },
 })
@@ -62,6 +79,20 @@ const agent = new Agent({
 const seed = TypedArrayEncoder.fromString(`<seed>`) // What you input on bcovrin. Should be kept secure in production!
 const unqualifiedIndyDid = `<unqualifiedIndyDid>` // will be returned after registering seed on bcovrin
 const indyDid = `did:indy:bcovrin:test:${unqualifiedIndyDid}`
+
+const cheqdDid = await agent.dids.create({
+  method: 'cheqd',
+  secret: {
+    verificationMethod: {
+      id: 'key-1',
+      type: 'Ed25519VerificationKey2020',
+    },
+  },
+  options: {
+    network: 'testnet',
+    methodSpecificIdAlgo: 'uuid',
+  },
+})
 
 await agent.dids.import({
   did: '<did>',
@@ -79,7 +110,7 @@ await agent.dids.import({
 const schemaResult = await agent.modules.anoncreds.registerSchema({
   schema: {
     attrNames: ['name'],
-    issuerId: indyDid,
+    issuerId: '<did>',
     name: 'Example Schema to register',
     version: '1.0.0',
   },
@@ -95,7 +126,7 @@ if (schemaResult.schemaState.state === 'failed') {
 const credentialDefinitionResult = await agent.modules.anoncreds.registerCredentialDefinition({
   credentialDefinition: {
     tag: 'default',
-    issuerId: indyDid,
+    issuerId: '<did>',
     schemaId: schemaResult.schemaState.schemaId,
   },
   options: {},
