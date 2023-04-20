@@ -73,7 +73,7 @@ import { Buffer } from 'buffer'
 global.Buffer = Buffer
 ```
 
-import to shim.js file into your file where the App is imported
+`import shim.js` file into your file where the App is imported
 
 <!--/tabs-->
 

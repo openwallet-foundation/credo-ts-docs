@@ -1,6 +1,6 @@
-# Registering a schema and credential definition on an Hyperledger Indy ledger
+# Registering a schema and credential definition on an AnonCreds Registry
 
-In this tutorial we will register a schema and credential definition on an Hyperledger Indy ledger using [indy-vdr](https://github.com/hyperledger/indy-vdr).
+In this tutorial we will register a schema and credential definition on an AnonCredsRegistry e.g. Hyperledger Indy ledger [indy-vdr](https://github.com/hyperledger/indy-vdr), [cheqd](https://github.com/hyperledger/aries-framework-javascript/packages/cheqd).
 
 :::info
 
@@ -13,7 +13,7 @@ This section assumes that
 
 ### 1. Setting up the agent
 
-First, an agent must be setup with a wallet and an indy-vdr module. For these code examples, we will use a Node.js environment.
+First, an agent must be setup with a wallet and an indy-vdr or cheqd module. For these code examples, we will use a Node.js environment.
 
 :::issuer
 
@@ -27,7 +27,15 @@ First, an agent must be setup with a wallet and an indy-vdr module. For these co
 
 :::info
 
-There are many ledgers which can be used to register DIDs on for development. We recommend [bcovrin test net](http://test.bcovrin.vonx.io/). This network allows very easily to register a DID from a seed which can then be used as the `privateKey` in the snippet below. The seed is used as the private key for legacy compatibility with the Hyperledger Indy-SDK. The [genesis transactions](http://test.bcovrin.vonx.io/genesis) can also be retrieved for easy integration.
+There are many ledgers which can be used to register DIDs on for development.
+
+#### Indy VDR
+
+We recommend [bcovrin test net](http://test.bcovrin.vonx.io/). This network allows very easily to register a DID from a seed which can then be used as the `privateKey` in the snippet below. The seed is used as the private key for legacy compatibility with the Hyperledger Indy-SDK. The [genesis transactions](http://test.bcovrin.vonx.io/genesis) can also be retrieved for easy integration.
+
+#### Cheqd
+
+Follow the [cheqd setup](../getting-started//set-up/cheqd/index.md) and [cheqd DID module](./cheqd/index.md) to setup the network and create a DID. Cheqd supports a mainnet for production and a testnet for development purposes.
 
 :::
 
@@ -69,4 +77,4 @@ After registering a schema, a credential definition can be registered based on t
 
 ### Using it
 
-After everything is registered on a Hyperledger Indy ledger, we can use it to issue credentials. The next tutorial is all about issuing an AnonCreds credential with this setup.
+After everything is registered on a AnonCredsRegistry, we can use it to issue credentials. The next tutorial is all about issuing an AnonCreds credential with this setup.
