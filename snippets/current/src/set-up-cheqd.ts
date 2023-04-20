@@ -1,4 +1,4 @@
-import type { InitConfig } from '@aries-framework/core'
+import { DidDocumentService, InitConfig } from '@aries-framework/core'
 
 const config: InitConfig = {
   label: 'docs-agent-react-native',
@@ -77,28 +77,24 @@ const key = await agent.wallet.createKey({
 const ed25519PublicKeyBase58 = key.publicKeyBase58
 
 // Create a DID
-const did = await agent.dids.create<CheqdDidCreateOptions>({
+await agent.dids.create<CheqdDidCreateOptions>({
   method: 'cheqd',
   options: {
     network: 'testnet',
   },
   didDocument: new DidDocument({
-    id: "did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d",
-    controller: [
-      "did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d"
-    ],
+    id: 'did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d',
+    controller: ['did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d'],
     verificationMethod: [
       {
-        id: "did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d#key-1",
-        type: "Ed25519VerificationKey2018",
-        controller: "did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d",
+        id: 'did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d#key-1',
+        type: 'Ed25519VerificationKey2018',
+        controller: 'did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d',
         publicKeyBase58: ed25519PublicKeyBase58,
-      }
+      },
     ],
-    authentication: [
-      "did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d#key-1"
-    ]
-  })
+    authentication: ['did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d#key-1'],
+  }),
 })
 // end-section-2
 
@@ -122,7 +118,7 @@ await agent.dids.create({
 
 // start-section-4
 await agent.dids.update({
-  method: 'cheqd',
+  did: 'did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411',
   // Updates DID Document with an additional verification method if provided
   secret: {
     verificationMethod: {
@@ -131,36 +127,35 @@ await agent.dids.update({
     },
   },
   didDocument: {
-		"id": "did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411",
-		"controller": [
-			"did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411"
-		],
-		"verificationMethod": [{
-			"id": "did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411#key-1",
-			"type": "Ed25519VerificationKey2020",
-			"controller": "did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411",
-			"publicKeyMultibase": "z6MknkzLUEP5cxqqsaysNMWoh8NJRb3YsowTCj2D6yhwyEdj"
-		}],
-		"authentication": [
-			"did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411#key-1"
-		],
+    id: 'did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411',
+    controller: ['did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411'],
+    verificationMethod: [
+      {
+        id: 'did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411#key-1',
+        type: 'Ed25519VerificationKey2020',
+        controller: 'did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411',
+        publicKeyMultibase: 'z6MknkzLUEP5cxqqsaysNMWoh8NJRb3YsowTCj2D6yhwyEdj',
+      },
+    ],
+    authentication: ['did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411#key-1'],
     // updates did document with a service block
-		"service": [{
-			"id": "did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411#rand",
-			"type": "rand",
-			"serviceEndpoint": "https://rand.in"
-		}]
-	}
+    service: [
+      new DidDocumentService({
+        id: 'did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411#rand',
+        type: 'rand',
+        serviceEndpoint: 'https://rand.in',
+      }),
+    ],
+  },
 })
 // end-section-4
 
 // start-section-5
 await agent.dids.deactivate({
-  method: 'cheqd',
   did: 'did:cheqd:testnet:b84817b8-43ee-4483-98c5-f03760816411',
   // an optional versionId parameter
   options: {
-    versionId: '3.0'
+    versionId: '3.0',
   },
 })
 // end-section-5

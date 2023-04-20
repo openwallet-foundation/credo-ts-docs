@@ -11,58 +11,60 @@ This section assumes that
 
 :::
 
-### DID Module
+## DID Module
 
 The cheqd DID module facilitates the Create, Read, Update, and Delete (CRUD) operations for did:cheqd identifiers. To learn more about "did:cheqd," please refer to the [specification](https://github.com/cheqd/identity-docs/blob/main/architecture/adr-list/adr-001-cheqd-did-method.md)
 
-## Create DID
+### Create DID
 
 The DID can be created in two different ways
 
-### Parameters
+#### Parameters
 
 1. `method`\*: `cheqd`
 2. `secret`
 3. `options`\*
 4. `didDocument`
 
-## Option 1
+##### Option 1
+
 Provide a DID Document payload according to the w3c did core specification in the request body. This is possible when the keys corresponding to the verification methods provided in the DID Document are already created in the wallet
 
 ```typescript showLineNumbers set-up-cheqd.ts section-2
 
 ```
 
-## Option 2
+##### Option 2
+
 If a DID Document is not passed to the registrar, it requires the secret parameter with a verificationMethod to construct the DID Document.
 
 ```typescript showLineNumbers set-up-cheqd.ts section-3
 
 ```
 
-## Update DID
+### Update DID
 
 To update a DID Document, fetch the body of the DID Document you want to change from the DID Resolver, make the relevant updates and pass it as the parameter
 
-### Parameters
+#### Parameters
 
-1. `method`\*: The DID method of the DID `cheqd`
-2. `did`\*
-3. `didDocument`\*: The updated DID Document
-4. `options`
+1. `did`\*
+2. `didDocument`\*: The updated DID Document
+3. `options`
+4. `secret`
 
 ```typescript showLineNumbers set-up-cheqd.ts section-4
 
 ```
 
-## Deactivate DID
+### Deactivate DID
+
 A DID can be deactivated, it can still be resolved
 
-### Parameters
+#### Parameters
 
-1. `method`: The DID method of the DID `cheqd`
-2. `did`\*
-3. `options`
+1. `did`\*
+2. `options`
 
 ```typescript showLineNumbers set-up-cheqd.ts section-5
 
@@ -72,15 +74,15 @@ A DID can be deactivated, it can still be resolved
 
 ---
 
-### `secret.verificationMethod`
+#### `secret.verificationMethod`
 
 **Type**: `verificationMethod`
 
-#### `verificationMethod.id`\*
+##### `verificationMethod.id`\*
 
 **Type**: `string`
 
-#### `verificationMethod.type`\*
+##### `verificationMethod.type`\*
 
 **Type**: `string`
 
@@ -92,14 +94,13 @@ A DID can be deactivated, it can still be resolved
 2. `Ed25519VerificationKey2018`
 3. `JsonWebKey2020`
 
-
-#### `verificationMethod.privateKey`
+##### `verificationMethod.privateKey`
 
 **Type**: `string`
 
 ---
 
-### `options.methodSpecificIdAlgo`
+#### `options.methodSpecificIdAlgo`
 
 Specifies what type of method specific identifier is needed for your DID
 
@@ -114,7 +115,7 @@ Specifies what type of method specific identifier is needed for your DID
 
 ---
 
-### `options.network`\*
+#### `options.network`\*
 
 Specifies the cheqd network name to be published
 
@@ -129,7 +130,7 @@ Specifies the cheqd network name to be published
 
 ---
 
-### `options.versionId`
+#### `options.versionId`
 
 Specifies the version of the DID Document to be published
 
