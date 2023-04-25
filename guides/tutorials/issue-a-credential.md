@@ -11,7 +11,7 @@ This section assumes that
 1. You have [set-up your develoment environment](../getting-started).
 1. You have basic knowledge of the required fields in the [Agent Config](./agent-config)
 1. You have completed the [Create a Connection tutorial](./create-a-connection)
-1. You have a registered schema and credential definition. This can be done by following the [Registering on a Hyperledger Indy network](./registering-schema-and-credential-definition-on-indy)
+1. You have a registered schema and credential definition. This can be done by following the [Registering on a AnonCreds Registry](./registering-schema-and-credential-definition)
 
 :::
 

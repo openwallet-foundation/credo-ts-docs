@@ -1,6 +1,6 @@
 # Indy VDR
 
-[Hyperledger Indy VDR](https://github.com/hyperledger/indy-vdr), Verifiable Data Registry, can be used to connect to one or more Indy Node ledger pools given sets of genesis transactions. Methods are provided to construct ledger requests and send them to the validators, collecting the results and ensuring that there is a consensus between the nodes. In the context of Aries Framework JavaScript, we mainly leverage it to register, and resolve, schemas, credential definitions and dids.
+[Hyperledger Indy VDR](https://github.com/hyperledger/indy-vdr), Verifiable Data Registry, can be used to connect to one or more Indy Node ledger pools given sets of genesis transactions. Methods are provided to construct ledger requests and send them to the validators, collecting the results and ensuring that there is a consensus between the nodes. In the context of Aries Framework JavaScript, we mainly leverage it to register, and resolve, schemas, credential definitions and DIDs.
 
 :::caution
 
@@ -10,7 +10,7 @@ Currently, there are few limitations to using Indy VDR.
 
 - React Native projects leveraging [Expo](https://expo.dev) are not supported at the moment. Support for Expo will be added soon.
 - React Native Android support starts from 11 right now. Work is being done on support for lower versions.
-- When running in Node.JS, only Node.JS 18 is suported for now. See [Supported Node.JS versions for Indy VDR](#supported-nodejs-versions-for-indy-vdr)
+- When running in Node.JS, only Node.JS 18 is supported for now. See [Supported Node.JS versions for Indy VDR](#supported-nodejs-versions-for-indy-vdr)
 
 :::
 
@@ -152,7 +152,7 @@ Using [Yarn `resolutions`](https://classic.yarnpkg.com/lang/en/docs/selective-ve
 
 :::info
 
-See the following issues for more information on the performance botleneck
+See the following issues for more information on the performance bottleneck
 
 - https://github.com/hyperledger/aries-askar/issues/76
 - https://github.com/node-ffi-napi/ref-napi/issues/72

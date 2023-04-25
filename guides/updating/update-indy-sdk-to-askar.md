@@ -4,7 +4,7 @@ This documentation explains the process of migrating your Indy-sdk wallet to [Ar
 
 :::danger
 
-While the migration script techinically works on node.js, it is strongly advised not to use it, yet. The mean reason for this is that the Credential Definition migration is not done yet. When a credential definition is detected it will revert the migration process and no harm is done.
+While the migration script technically works on node.js, it is strongly advised not to use it, yet. The mean reason for this is that the Credential Definition migration is not done yet. When a credential definition is detected it will revert the migration process and no harm is done.
 
 :::
 
@@ -28,7 +28,7 @@ The migration script does the following to make sure everything is migrated prop
 
 ### Create a backup
 
-Because undefined behaviour might occur, we create a backup in the new `tmp` directory from Aries Framework JavaScript. if some error occurs, it will be reverted back to the backed-up state and if no error occurs, it will delete the backup from the temporary directory.
+Because undefined behavior might occur, we create a backup in the new `tmp` directory from Aries Framework JavaScript. if some error occurs, it will be reverted back to the backed-up state and if no error occurs, it will delete the backup from the temporary directory.
 
 ### Migrate the database to an Aries Askar structure
 
@@ -36,17 +36,17 @@ The Indy-sdk and Aries Askar have different database structures. So first of all
 
 ### Try to open the wallet in the new Aries Askar structure
 
-When the wallet is correctly transformed, the wallet will be attempted to be openend.
+When the wallet is correctly transformed, the wallet will be attempted to be opened.
 
 ### Update the keys
 
 Aries Askar has a specific way to store keys and every key, defined by the category of `Indy::Key` will be migrated.
 
-### Update the Dids
+### Update the DIDs
 
 :::caution
 
-This update script does not transform did records. This is fine for something like `did:peer`, but will cause issues with `indy` and `sov` dids. For more information, please check out the [Migrating from AFJ 0.3.x to 0.4.x](./versions/0.3-to-0.4.md#removal-of-publicdidseed-and-publicdid)
+This update script does not transform did records. This is fine for something like `did:peer`, but will cause issues with `indy` and `sov` DIDs. For more information, please check out the [Migrating from AFJ 0.3.x to 0.4.x](./versions/0.3-to-0.4.md#removal-of-publicdidseed-and-publicdid)
 
 :::
 
@@ -60,7 +60,7 @@ Updating of credential definitions is not yet supported. This is why it is stron
 
 ### Update the link secret(s) (master secret)
 
-The link sercets, identified by the category `Indy::MasterSecret`, are updated next. They are stored inside a new `AnonCredsLinkSecretRecord`.
+The link secrets, identified by the category `Indy::MasterSecret`, are updated next. They are stored inside a new `AnonCredsLinkSecretRecord`.
 
 :::caution
 
@@ -82,7 +82,7 @@ All the other records will be transferred without any updates as they are not In
 
 Updating does not require a lot of code, but must be done with caution.
 
-It is very important to note that the migration script only has to be run once. If it runs for a second time, it will error saying that the database is already migrated. Also, when the migration is finished, it is common practise to store this state in your persistent app storage. This script does not provide a way to detect if an update has happened, so storing this value will prevent the script from running every time. For more information regarding this topic, please check out [Update Assistant](./update-assistant.md#storing-the-agent-storage-version-outside-of-the-agent-storage).
+It is very important to note that the migration script only has to be run once. If it runs for a second time, it will error saying that the database is already migrated. Also, when the migration is finished, it is common practice to store this state in your persistent app storage. This script does not provide a way to detect if an update has happened, so storing this value will prevent the script from running every time. For more information regarding this topic, please check out [Update Assistant](./update-assistant.md#storing-the-agent-storage-version-outside-of-the-agent-storage).
 
 ### add the required dependencies:
 
@@ -125,7 +125,7 @@ await updater.update()
 
 On android, the database is commonly located under the `ExternalDirectoryPath`.
 
-If you did not follow the default indy-sdk for React Native setup, your path might differ. Check out [step 5 of the Android setup for Indy SDK React Native](https://github.com/hyperledger/indy-sdk-react-native#5-load-indy-library) for the default behaviour.
+If you did not follow the default indy-sdk for React Native setup, your path might differ. Check out [step 5 of the Android setup for Indy SDK React Native](https://github.com/hyperledger/indy-sdk-react-native#5-load-indy-library) for the default behavior.
 
 ```typescript
 import fs from 'react-native-fs'
@@ -143,7 +143,7 @@ const dbPath = `${base}/${indyClient}/${wallet}/${walletId}/${file}`
 
 On iOS, the database is commonly located under the `DocumentDirectoryPath`.
 
-For iOS this can only change if your phone does not have the `HOME` environment variable set. This is not usual behaviour, and if `HOME` is not set, the `base` in the code section below will be `/home/indy/Documents`.
+For iOS this can only change if your phone does not have the `HOME` environment variable set. This is not usual behavior, and if `HOME` is not set, the `base` in the code section below will be `/home/indy/Documents`.
 
 ```typescript
 import fs from 'react-native-fs'

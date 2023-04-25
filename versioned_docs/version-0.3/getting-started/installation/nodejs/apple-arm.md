@@ -1,7 +1,7 @@
 # Apple (Arm)
 
 In this section, we will discuss the specific installation of the dependencies
-for Apple computers using their in-house sillicon, M1, M1 Pro and the M1 Max.
+for Apple computers using their in-house silicon, M1, M1 Pro and the M1 Max.
 
 > This installation assumes that you have [brew](https://brew.sh) installed. If
 > not, please install it via this command:

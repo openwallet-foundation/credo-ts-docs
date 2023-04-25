@@ -104,7 +104,7 @@ yum install libsodium zeromq-devel
 
 ### Indy-sdk
 
-> All the steps mentioned below are distrobution independent.
+> All the steps mentioned below are distribution independent.
 
 The [indy-sdk](https://github.com/hyperledger/indy-sdk) is used by [Aries
 Framework
