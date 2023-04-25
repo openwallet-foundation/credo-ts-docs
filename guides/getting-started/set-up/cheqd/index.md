@@ -26,16 +26,16 @@ Using [NPM `overrides`](https://docs.npmjs.com/cli/v9/configuring-npm/package-js
 
 ```json
 {
-    "overrides" {
-      "@cosmjs/amino": "npm:@cosmjs-rn/amino@^0.27.1",
-      "@cosmjs/encoding": "npm:@cosmjs-rn/encoding@^0.27.1",
-      "@cosmjs/math": "npm:@cosmjs-rn/math@^0.27.1",
-      "@cosmjs/stargate": "npm:@cosmjs-rn/stargate@^0.27.1",
-      "@cosmjs/tendermint-rpc": "npm:@cosmjs-rn/tendermint-rpc@^0.27.1",
-      "@cosmjs/utils": "npm:@cosmjs-rn/utils@^0.27.1",
-      "@cosmjs/proto-signing": "npm:@cosmjs-rn/proto-signing@^0.27.1",
-      "@cosmjs/crypto": "npm:@cosmjs-rn/crypto@^0.27.1"
-    }
+  "overrides": {
+    "@cosmjs/amino": "npm:@cosmjs-rn/amino@^0.27.1",
+    "@cosmjs/encoding": "npm:@cosmjs-rn/encoding@^0.27.1",
+    "@cosmjs/math": "npm:@cosmjs-rn/math@^0.27.1",
+    "@cosmjs/stargate": "npm:@cosmjs-rn/stargate@^0.27.1",
+    "@cosmjs/tendermint-rpc": "npm:@cosmjs-rn/tendermint-rpc@^0.27.1",
+    "@cosmjs/utils": "npm:@cosmjs-rn/utils@^0.27.1",
+    "@cosmjs/proto-signing": "npm:@cosmjs-rn/proto-signing@^0.27.1",
+    "@cosmjs/crypto": "npm:@cosmjs-rn/crypto@^0.27.1"
+  }
 }
 ```
 
@@ -45,16 +45,16 @@ Using [Yarn `resolutions`](https://classic.yarnpkg.com/lang/en/docs/selective-ve
 
 ```json
 {
-    "resolutions" {
-      "@cosmjs/amino": "npm:@cosmjs-rn/amino@^0.27.1",
-      "@cosmjs/encoding": "npm:@cosmjs-rn/encoding@^0.27.1",
-      "@cosmjs/math": "npm:@cosmjs-rn/math@^0.27.1",
-      "@cosmjs/stargate": "npm:@cosmjs-rn/stargate@^0.27.1",
-      "@cosmjs/tendermint-rpc": "npm:@cosmjs-rn/tendermint-rpc@^0.27.1",
-      "@cosmjs/utils": "npm:@cosmjs-rn/utils@^0.27.1",
-      "@cosmjs/proto-signing": "npm:@cosmjs-rn/proto-signing@^0.27.1",
-      "@cosmjs/crypto": "npm:@cosmjs-rn/crypto@^0.27.1"
-    }
+  "resolutions": {
+    "@cosmjs/amino": "npm:@cosmjs-rn/amino@^0.27.1",
+    "@cosmjs/encoding": "npm:@cosmjs-rn/encoding@^0.27.1",
+    "@cosmjs/math": "npm:@cosmjs-rn/math@^0.27.1",
+    "@cosmjs/stargate": "npm:@cosmjs-rn/stargate@^0.27.1",
+    "@cosmjs/tendermint-rpc": "npm:@cosmjs-rn/tendermint-rpc@^0.27.1",
+    "@cosmjs/utils": "npm:@cosmjs-rn/utils@^0.27.1",
+    "@cosmjs/proto-signing": "npm:@cosmjs-rn/proto-signing@^0.27.1",
+    "@cosmjs/crypto": "npm:@cosmjs-rn/crypto@^0.27.1"
+  }
 }
 ```
 
