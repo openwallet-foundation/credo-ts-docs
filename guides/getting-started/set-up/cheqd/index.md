@@ -12,11 +12,9 @@ cheqd also has a dedicated token, $CHEQ, used for identity writes to the network
 
 When using Aries Framework JavaScript with the cheqd, there's a few extra dependencies that need to be installed. We need to install the `@aries-framework/cheqd` package, which implements the needed interfaces for the agent.
 
+#### React Native
+
 To enable react-native support we need to follow the steps below
-
-<DocCardList />
-
-# React Native
 
 In the package.json file add the below code snippet, which replaces the cosmjs dependencies witht he cosmjs-rn packages
 

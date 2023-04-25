@@ -69,6 +69,7 @@ const sidebars = {
           items: ['tutorials/agent-config/logging'],
         },
         'tutorials/create-a-connection',
+        'tutorials/cheqd/index',
         'tutorials/registering-schema-and-credential-definition',
         'tutorials/issue-a-credential',
         'tutorials/mediation',
