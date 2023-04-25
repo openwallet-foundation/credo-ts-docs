@@ -71,9 +71,9 @@ Using [NPM `overrides`](https://docs.npmjs.com/cli/v9/configuring-npm/package-js
 
 ```json
 {
-    "overrides": {
-        "ref-napi": "npm:@2060.io/ref-napi"
-    }
+  "overrides": {
+    "ref-napi": "npm:@2060.io/ref-napi"
+  }
 }
 ```
 
@@ -83,9 +83,9 @@ Using [Yarn `resolutions`](https://classic.yarnpkg.com/lang/en/docs/selective-ve
 
 ```json
 {
-    "resolutions": {
-        "ref-napi": "npm:@2060.io/ref-napi"
-    }
+  "resolutions": {
+    "ref-napi": "npm:@2060.io/ref-napi"
+  }
 }
 ```
 
