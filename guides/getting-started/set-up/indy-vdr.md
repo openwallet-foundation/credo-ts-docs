@@ -92,6 +92,12 @@ Whether the ledger is a production ledger. This is used for detecting which ledg
 
 Stringified JSON object of the transaction.
 
+##### `connectOnStartup`
+
+**Type**: `boolean`
+
+Whether to connect to the ledger on startup. Defaults to `false`.
+
 ##### `transactionAuthorAgreement`
 
 **Type**: `TransactionAuthorAgreement`
