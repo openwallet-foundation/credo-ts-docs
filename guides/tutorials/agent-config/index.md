@@ -95,12 +95,11 @@ for key generation.
 ### `walletConfig.storage`
 
 Specify which storage is being used for the wallet. The default is an SQLite
-database, but a Postgres database could be used as well. Please refer to [TODO:
-storage ](https://example.org)
+database, but a Postgres database could be used as well.
 
 **Type**: `object`
 
-**Default**: `a sqlite database`
+**Default**: An SQLite database
 
 ---
 
@@ -115,124 +114,6 @@ accepted.
 
 ```typescript title="example"
 endpoints: ['https://example.org:3000']
-```
-
----
-
-## `publicDidSeed`
-
-> Soon to be deprecated
->
-> Reason for deprecation: this will be generalized
-
-The seed used for initializing the public indy DID of the agent. This does not
-register the DID on the ledger. This value MUST be 32 characters long.
-
-**Type**: `string`
-
-```typescript title="example"
-publicDidSeed: 'testseed000000000000000000000000'
-```
-
----
-
-## `indyLedgers`
-
-An array of indy ledgers to connect to. The list can contain the following
-object and it must include _either_ the
-[`genesisPath`](.md#indyledgersgenesispath) _or_
-[`genesisTransactions`](#indyledgersgenesistransactions). It is
-important to know that the first ledger in the list ledgers will be used for
-registering the schema, credential definition, etc.
-
-An example of the [`genesisTransactions`](#indyledgersgenesistransactions) can be found
-[here](https://raw.githubusercontent.com/Indicio-tech/indicio-network/main/genesis_files/domain_transactions_testnet_genesis).
-
-**Type**: `IndyPoolConfig[]`
-
-**Default**: `[]`
-
-```typescript title="example"
-indyLedgers: [
-  {
-    id: 'indicio-test-net',
-    indyNamespace: 'indicio',
-    isProduction: false,
-    genesisPath: './constants/indicio-test-net.txn',
-    transactionAuthorAgreement: {
-      version: '1',
-      acceptanceMechanism: 'EULA',
-    },
-  },
-]
-```
-
-### `indyLedgers.id`\*
-
-**Type**: `string`
-
-Unique identifier of the ledger. This can be picked by the user as long as it
-is unique.
-
-### `indyLedgers.indyNamespace`
-
-**Type**: `string`
-
-The Indy namespace aka the name identifying the name of the network connecting to. [see also](https://hyperledger.github.io/indy-did-method/#indy-did-method-identifiers)
-
-### `indyLedgers.isProduction`\*
-
-**Type**: `boolean`
-
-Whether the ledger is a production ledger. This is used for the pick-up algorithm
-as production ledgers have priority.
-
-### `indyLedgers.genesisPath`
-
-**Type**: `string`
-
-Filesystem path of the genesis transaction. At this location, there will just be
-a JSON object like the
-[`indyLedgers.genesisTransaction`](#indyledgersgenesistransactions).
-
-### `indyLedgers.genesisTransactions`
-
-**Type**: `string`
-
-Stringified JSON object of the transaction.
-
-### `indyLedgers.transactionAuthorAgreement`
-
-**Type**: `TransactionAuthorAgreement`
-
-JSON representation specifying the version and acceptance mechanism. The version is the unique version of the transaction author agreement acceptance mechanism list (AML). The acceptance mechanism refers to the acceptance mechanism label of the item in the AML. For more details you may consult the [indy-node docs on AML](https://github.com/hyperledger/indy-node/blob/master/docs/source/transactions.md#transaction_author_agreement_aml)
-
-### `indyLedgers.transactionAuthorAgreement.version`
-
-**Type**: `string`
-
-The version of the AML acceptance mechanism. This is a string representation of a version number e.g. '1' or '1.4'
-
-### `indyLedgers.transactionAuthorAgreement.acceptanceMechanism`
-
-**Type**: `string`
-
-The acceptance mechanism to choose. This _must_ be _one_ of the available labels of the acceptance mechanisms key-value pairs in the AML e.g. 'EULA'.
-
----
-
-## `connectToIndyLedgerOnStartup`
-
-Whether to connect to all the Indy ledgers on startup. This might lead to a
-slightly lower startup, but will make the following ledger interactions
-quicker.
-
-**Type**: `boolean`
-
-**Default**: `true`
-
-```typescript title="example"
-connectToIndyLedgersOnStartup: false
 ```
 
 ---
@@ -281,224 +162,30 @@ didCommMimeType: DidCommMimeType.v0
 
 ---
 
-## `autoAcceptCredentials`
+## `useDidSovPrefixWhereAllowed`
 
-Whether to auto-accept incoming credentials and with which strategy.
-`AutoAcceptCredential.Always` SHOULD not be used in production. If your
-application requires custom validation before automatically accepting a
-credential, like accepting every credential from a specific DID, it can easily
-build atop of it via the `agent events`, more information can be found [TODO:
-agent events](https://example.org).
-
-**Type**: `AutoAcceptCredential`
-
-**Default**: `AutoAcceptCredential.Never`
-
-**Members**:
-
-**`AutoAcceptCredential.Never`**
-
-&nbsp;&nbsp;&nbsp; Never auto-accept any incoming credential
-
-**`AutoAcceptCredential.ContentApproved`**
-
-&nbsp;&nbsp;&nbsp; Incoming credential needs one step of acceptance and the
-content is not allowed to be changed in the following steps
-
-**`AutoAcceptCredential.Always`**
-
-&nbsp;&nbsp;&nbsp; Always auto-accept every incoming credential
-
-```typescript title="example"
-import { AutoAcceptCredential } from '@aries-framework/core'
-
-autoAcceptCredentials: AutoAcceptCredential.ContentApproved
-```
-
----
-
-## `autoAcceptProofs`
-
-Whether to auto-accept incoming proofs and with which strategy.
-`AutoAcceptProof.Always` SHOULD not be used in production. If your
-application requires custom validation before automatically accepting a
-credential, like accepting every proof request from a specific DID, it can easily
-build atop of it via the `agent events`, more information can be found [TODO:
-agent events](https://example.org).
-
-**Type**: `AutoAcceptProof`
-
-**Default**: `AutoAcceptProof.Never`
-
-**Members**:
-
-**`AutoAcceptProof.Never`**
-
-&nbsp;&nbsp;&nbsp; Never auto-accept any incoming proof
-
-**`AutoAcceptProof.ContentApproved`**
-
-&nbsp;&nbsp;&nbsp; Incoming proofs need one step of acceptance and the
-content is not allowed to be changed in the following steps
-
-**`AutoAcceptProofs.Always`**
-
-&nbsp;&nbsp;&nbsp; Always auto-accept every incoming proof
-
-```typescript title="example"
-import { AutoAcceptProof } from '@aries-framework/core'
-
-autoAcceptProofs: AutoAcceptProof.ContentApproved
-```
-
----
-
-## `autoAcceptMediationRequests`
-
-As a mediator, whether to automatically accept mediation requests. If disabled,
-the request should be manually accepted via the `mediatorModule`.
+Whether to emit the legacy did:sov prefix `did:sov:BzCbsNYhMrjHiqZDTUASHg;spec` in the `@type` of messages for messages that allow it. A message can allow emitting the legacy prefix by setting the `allowDidSovPrefix` on the message class. This is the case for all core messages that have been defined before the [Migration to `https://didcomm.org` message type](https://github.com/hyperledger/aries-rfcs/blob/main/features/0348-transition-msg-type-to-https/README.md), to allow for the best possible interoperability with other agents.
 
 **Type**: `boolean`
 
 **Default**: `false`
 
 ```typescript title="example"
-autoAcceptMediationRequests: true
+useDidSovPrefixWhereAllowed: true
 ```
 
 ---
 
-## `mediationConnectionsInvitation`
+## `useDidKeyInProtocols`
 
-> This property collides with
-> [`defaultMediatorId`](#defaultmediatorid)
-> and [`clearDefaultMediator`](#cleardefaultmediator)
-
-Connection invitation used for the default mediator. If specified, the agent
-will create a connection, request mediation and store the mediator as the
-default for all connections.
-
-**Type**: `string`
-
-```typescript title="example"
-mediationConnectionInvite: 'https://didcomm.agent.community.animo.id?c_i=ey....(many bytes omitted)...Q=='
-```
-
----
-
-## `defaultMediatorId`
-
-> This property collides with
-> [`mediatorConnectionsInvitation`](#mediationconnectionsinvitation)
-> and [`clearDefaultMediator`](#cleardefaultmediator)
-
-The mediator id used as the default mediator. This will override the default
-mediator.
-
-**Type**: `string`
-
-```typescript title="example"
-defaultMediatorId: 'c475bd3e-4baf-40c4-b98b-3b6f131af5ee'
-```
-
----
-
-## `clearDefaultMediator`
-
-> This property collides with
-> [`mediatorConnectionsInvitation`](#mediationconnectionsinvitation)
-> and [`defaultMediatorId`](#defaultmediatorid)
-
-Whether to clear the default mediator.
+Whether to use `did:key` in protocols by default as defined in [RFC 0360: did:key Usage](https://github.com/hyperledger/aries-rfcs/blob/main/features/0360-use-did-key/README.md). Adopting this RFC can break interop with agents that haven't adopted this RFC yet. The framework does it best to automatically detect whether the other agent supports `did:key`, however in some cases we can't determine this. In those cases this parameter can be used to force the framework to use `did:key` or not.
 
 **Type**: `boolean`
 
-**Default**: `false`
+**Default**: `true`
 
 ```typescript title="example"
-clearDefaultMediator: true
-```
-
----
-
-## `mediatorPollingInterval`
-
-Set the default interval to poll the mediator in milliseconds.
-
-**Type**: `number`
-
-**Default**: `5000`
-
-```typescript title="example"
-mediatorPollingInterval: 10000
-```
-
----
-
-## `mediatorPickupStratery`
-
-The pickup strategy to get the messages from the mediator. If none is specified
-we will use
-[`discover features](https://github.com/hyperledger/aries-rfcs/blob/main/features/0557-discover-features-v2/README.md)
-to get the preferred strategy.
-
-**Type**: `enum MediatorPickupStrategy`
-
-**Default**: `infer the strategy with feature discovery of the mediator`
-
-**Members**:
-
-**`MediatorPickupStrategy.PickUpV1`**
-
-&nbsp;&nbsp;&nbsp; explicitly pick up messages from the mediator according to
-[RFC: 0212 Pickup
-Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0212-pickup/README.md)
-
-**`MediatorPickupStrategy.PickUpV2`**
-
-&nbsp;&nbsp;&nbsp; Explicitly pick up messages from the mediator according to
-[RFC: 0212 Pickup V2
-Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0685-pickup-v2/README.md)
-
-**`MediatorPickupStrategy.Implicit`**
-
-&nbsp;&nbsp;&nbsp; Open a WebSocket with the mediator to implicitly receive
-messages. (currently used by [aries cloud agent
-python](https://github.com/hyperedger/aries-cloudagent-python))
-
-```typescript title="example"
-import { MediatorPickupStrategy } from '@aries-framework/core'
-
-mediatorPickupStrategy: MediatorPickupStrategy.PickUpV2
-```
-
----
-
-## `maximumMessagePickup` (subject to change)
-
-How many the mediator will give back in batches when using `MediatorPickupStrategy.PickUpV2`.
-
-**Type**: `number`
-
-**Default**: `10`
-
-```typescript title="example"
-maximumMessagePickup: 20
-```
-
----
-
-## `useLegacyDidSovPrefix`
-
-Whether to use the legacy did:sov prefix `'did:sov:BzCbsNYhMrjHiqZDTUASHg;spec`
-or the new didComm prefix `https://didcomm.org`.
-
-**Type**: `boolean`
-
-**Defaul**: `false`
-
-```typescript title="example"
-useLegacyDidSovPrefix: true
+useDidKeyInProtocols: true
 ```
 
 ---
