@@ -28,7 +28,7 @@ Using [NPM `overrides`](https://docs.npmjs.com/cli/v9/configuring-npm/package-js
 
 ```json
 {
-    "overrides" {
+    "overrides": {
       "@cosmjs/amino": "npm:@cosmjs-rn/amino@^0.27.1",
       "@cosmjs/encoding": "npm:@cosmjs-rn/encoding@^0.27.1",
       "@cosmjs/math": "npm:@cosmjs-rn/math@^0.27.1",
@@ -47,7 +47,7 @@ Using [Yarn `resolutions`](https://classic.yarnpkg.com/lang/en/docs/selective-ve
 
 ```json
 {
-    "resolutions" {
+    "resolutions": {
       "@cosmjs/amino": "npm:@cosmjs-rn/amino@^0.27.1",
       "@cosmjs/encoding": "npm:@cosmjs-rn/encoding@^0.27.1",
       "@cosmjs/math": "npm:@cosmjs-rn/math@^0.27.1",
