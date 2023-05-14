@@ -32,7 +32,7 @@ const alice = new Agent({
   config: agentConfig,
   dependencies: agentDependencies,
   modules: {
-    recipient: new MediationRecipientModule({
+    mediationRecipient: new MediationRecipientModule({
       mediatorInvitationUrl,
     }),
     indySdk: new IndySdkModule({ indySdk }),
