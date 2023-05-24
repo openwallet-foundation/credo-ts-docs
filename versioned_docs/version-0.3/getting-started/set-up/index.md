@@ -14,13 +14,13 @@ for using the Aries Ecosystem.
 # Node.js
 
 ```console
-yarn add @aries-framework/core @aries-framework/node
+yarn add @aries-framework/core@^0.3.0 @aries-framework/node@^0.3.0
 ```
 
 # React Native
 
 ```console
-yarn add @aries-framework/core @aries-framework/react-native react-native-fs react-native-get-random-values indy-sdk-react-native
+yarn add @aries-framework/core@^0.3.0 @aries-framework/react-native@^0.3.0 react-native-fs react-native-get-random-values indy-sdk-react-native@^0.3.1
 ```
 
 <!--/tabs-->

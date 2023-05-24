@@ -19,13 +19,13 @@ for configuring an Aries Framework JavaScript (AFJ) agent.
 # Node.JS
 
 ```console
-yarn add @aries-framework/core @aries-framework/node
+yarn add @aries-framework/core@alpha @aries-framework/node@alpha
 ```
 
 # React Native
 
 ```console
-yarn add @aries-framework/core @aries-framework/react-native react-native-fs react-native-get-random-values
+yarn add @aries-framework/core@alpha @aries-framework/react-native@alpha react-native-fs react-native-get-random-values
 ```
 
 <!--/tabs-->

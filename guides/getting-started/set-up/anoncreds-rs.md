@@ -22,13 +22,13 @@ When using Aries Framework JavaScript with AnonCreds RS, there are a few extra d
 # Node.JS
 
 ```console
-yarn add @aries-framework/anoncreds @aries-framework/anoncreds-rs @hyperledger/anoncreds-nodejs
+yarn add @aries-framework/anoncreds@alpha @aries-framework/anoncreds-rs@alpha @hyperledger/anoncreds-nodejs
 ```
 
 # React Native
 
 ```console
-yarn add @aries-framework/anoncreds @aries-framework/anoncreds-rs @hyperledger/anoncreds-react-native
+yarn add @aries-framework/anoncreds@alpha @aries-framework/anoncreds-rs@alpha @hyperledger/anoncreds-react-native
 ```
 
 <!--/tabs-->
