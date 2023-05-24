@@ -27,7 +27,7 @@ After the native Indy SDK library is installed, we can add the Indy SDK librarie
 # Node.JS
 
 ```console
-yarn add @aries-framework/indy-sdk indy-sdk
+yarn add @aries-framework/indy-sdk@alpha indy-sdk
 ```
 
 And install the needed types
@@ -39,7 +39,7 @@ yarn add --dev @types/indy-sdk
 # React Native
 
 ```console
-yarn add @aries-framework/indy-sdk indy-sdk-react-native
+yarn add @aries-framework/indy-sdk@alpha indy-sdk-react-native
 ```
 
 And then install the needed types

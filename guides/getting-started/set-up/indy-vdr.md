@@ -23,13 +23,13 @@ When using Aries Framework JavaScript with Indy VDR, there are a few extra depen
 # Node.JS
 
 ```console
-yarn add @aries-framework/indy-vdr @hyperledger/indy-vdr-nodejs
+yarn add @aries-framework/indy-vdr@alpha @hyperledger/indy-vdr-nodejs
 ```
 
 # React Native
 
 ```console
-yarn add @aries-framework/indy-vdr @hyperledger/indy-vdr-react-native
+yarn add @aries-framework/indy-vdr@alpha @hyperledger/indy-vdr-react-native
 ```
 
 <!--/tabs-->

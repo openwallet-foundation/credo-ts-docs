@@ -27,13 +27,13 @@ When using Aries Framework JavaScript with Aries Askar, there are a few extra de
 # Node.JS
 
 ```console
-yarn add @aries-framework/askar @hyperledger/aries-askar-nodejs
+yarn add @aries-framework/askar@alpha @hyperledger/aries-askar-nodejs
 ```
 
 # React Native
 
 ```console
-yarn add @aries-framework/askar @hyperledger/aries-askar-react-native
+yarn add @aries-framework/askar@alpha @hyperledger/aries-askar-react-native
 ```
 
 <!--/tabs-->
