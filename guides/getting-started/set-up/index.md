@@ -9,6 +9,21 @@ This guide assumes you have followed the [Prerequisites](./prerequisites), and y
 
 :::
 
+:::caution
+
+Aries Framework JavaScript is still in **active development**, and as such some APIs are still experimental. **When using any experimental features, make sure to use an exact version of AFJ** (`0.4.0`) instead of a range (`^0.4.0`), to prevent accidental breaking changes. If you're not leveraging any experimental features, you can use a range (`^0.4.0`) to get the latest bugfixes and features.
+
+For AFJ `0.4.x`, **the following features are experimental**:
+
+- Implementing your own `AnonCredsRegistry` and AnonCreds service implementation. Using the default implementations (Indy SDK, AnonCreds RS) is fine.
+- Using the shared component libraries from `@aries-framework/aries-askar`, `@aries-framework/indy-vdr` and `@aries-framework/anoncreds-rs`
+- Using OpenID4VC from the `@aries-framework/openid4vc-client` module
+- W3C JWT Verifiable Credentials
+- Using multi-tenancy from the `@aries-framework/tenants` module
+- Using BBS+ Signatures from the `@aries-framework/bbs-signatures` module
+
+:::
+
 ### Installing the required dependencies
 
 First we have to install the minimal amount of dependencies that are required

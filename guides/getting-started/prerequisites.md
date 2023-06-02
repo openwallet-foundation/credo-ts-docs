@@ -4,7 +4,7 @@ To work with [Aries Framework JavaScript](https://github.com/hyperledger/aries-f
 
 The specific items that we set-up:
 
-- [Node.JS](https://nodejs.org)
+- [Node.JS](https://nodejs.org) - v16 or v18
 - [yarn](https://classic.yarnpkg.com/lang/en/docs/install) or [npm](https://www.npmjs.com/)
 - Node.JS or React Native project.
 
