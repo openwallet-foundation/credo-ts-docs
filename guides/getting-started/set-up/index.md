@@ -19,13 +19,13 @@ for configuring an Aries Framework JavaScript (AFJ) agent.
 # Node.JS
 
 ```console
-yarn add @aries-framework/core@alpha @aries-framework/node@alpha
+yarn add @aries-framework/core@^0.4.0 @aries-framework/node@^0.4.0
 ```
 
 # React Native
 
 ```console
-yarn add @aries-framework/core@alpha @aries-framework/react-native@alpha react-native-fs react-native-get-random-values
+yarn add @aries-framework/core@^0.4.0 @aries-framework/react-native@^0.4.0 react-native-fs react-native-get-random-values
 ```
 
 <!--/tabs-->
@@ -112,9 +112,21 @@ enough for your specific use cases. Please refer to the
 
 <!--/tabs-->
 
+### Adding a wallet and storage implementation
+
+After creating the `Agent` instance, we need to provide the agent with a wallet and storage implementation. AFJ provides a few implementations out of the box, but you can also implement your own. Currently the following Wallet and Storage implementations are supported out of the box. Follow the specific guides to set up the wallet and storage implementation of your choice.
+
+- [Aries Askar](./aries-askar) - Recommended.
+- [Indy SDK](./indy-sdk) - Legacy. Will be deprecated in the future.
+
+<DocCardList items={[
+{ type: 'link', label: 'Aries Askar', href: './set-up/aries-askar', docId: 'getting-started/set-up/aries-askar' },
+{ type: 'link', label: 'Indy SDK', href: './set-up/indy-sdk', docId: 'getting-started/set-up/indy-sdk/index' }
+]} />
+
 ### Setting up the transports
 
-After creating an `Agent` instance, we have to set an outbound transport that
+Finally, we have to set an outbound transport that
 will handle traffic from the agent. It is also possible to set an inbound
 transport in the same way as the outbound transport.
 
@@ -138,18 +150,6 @@ more depth about the reasons for this in the [mediation](./../../tutorials/media
 ```
 
 <!--/tabs-->
-
-### Adding a wallet and storage implementation
-
-Before we can initialize the agent, we need to provide the agent with a wallet and storage implementation. AFJ provides a few implementations out of the box, but you can also implement your own. Currently the following Wallet and Storage implementations are supported out of the box. Follow the specific guides to set up the wallet and storage implementation of your choice.
-
-- [Aries Askar](./aries-askar) - Recommended.
-- [Indy SDK](./indy-sdk) - Legacy. Will be deprecated in the future.
-
-<DocCardList items={[
-{ type: 'link', label: 'Aries Askar', href: './set-up/aries-askar', docId: 'getting-started/set-up/aries-askar' },
-{ type: 'link', label: 'Indy SDK', href: './set-up/indy-sdk', docId: 'getting-started/set-up/indy-sdk/index' }
-]} />
 
 ### Initializing the agent
 

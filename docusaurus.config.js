@@ -45,6 +45,16 @@ const config = {
             tag: ':::',
             keywords: ['note', 'tip', 'info', 'caution', 'danger', 'issuer', 'verifier', 'holder', 'bob', 'acme'],
           },
+          lastVersion: 'current',
+          versions: {
+            current: {
+              label: 'v0.4.x',
+              path: '0.4',
+            },
+            0.3: {
+              label: 'v0.3.x',
+            },
+          },
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

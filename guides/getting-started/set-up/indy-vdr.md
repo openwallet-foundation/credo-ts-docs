@@ -8,8 +8,6 @@ Support for Indy VDR in Aries Framework JavaScript is currently experimental. We
 
 Currently, there are few limitations to using Indy VDR.
 
-- React Native projects leveraging [Expo](https://expo.dev) are not supported at the moment. Support for Expo will be added soon.
-- React Native Android support starts from 11 right now. Work is being done on support for lower versions.
 - When running in Node.JS, only Node.JS 18 is supported for now. See [Supported Node.JS versions for Indy VDR](#supported-nodejs-versions-for-indy-vdr)
 
 :::
@@ -23,13 +21,13 @@ When using Aries Framework JavaScript with Indy VDR, there are a few extra depen
 # Node.JS
 
 ```console
-yarn add @aries-framework/indy-vdr@alpha @hyperledger/indy-vdr-nodejs
+yarn add @aries-framework/indy-vdr@^0.4.0 @hyperledger/indy-vdr-nodejs@^0.1.0
 ```
 
 # React Native
 
 ```console
-yarn add @aries-framework/indy-vdr@alpha @hyperledger/indy-vdr-react-native
+yarn add @aries-framework/indy-vdr@^0.4.0 @hyperledger/indy-vdr-react-native@^0.1.0
 ```
 
 <!--/tabs-->

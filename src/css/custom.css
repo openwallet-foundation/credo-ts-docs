@@ -30,15 +30,15 @@
 }
 
 .admonition-holder {
-  --ifm-alert-background-color: #a29bff;
+  --ifm-alert-background-color: #b6b2f5;
 }
 
 .admonition-issuer {
-  --ifm-alert-background-color: #00ba2b;
+  --ifm-alert-background-color: #5dea7e;
 }
 
 .admonition-verifier {
-  --ifm-alert-background-color: #fd029d;
+  --ifm-alert-background-color: #ee90ca;
 }
 
 .admonition-acme {

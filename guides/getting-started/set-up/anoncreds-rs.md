@@ -8,8 +8,7 @@ Support for the AnonCreds RS library in Aries Framework JavaScript is currently 
 
 Currently, there are few limitations to using AnonCreds RS.
 
-- React Native projects leveraging [Expo](https://expo.dev) are not supported at the moment. Support for Expo will be added soon.
-- When running in Node.JS, only Node.JS 18 is suported for now. See [Supported Node.JS versions for AnonCreds RS](#supported-nodejs-versions-for-anoncreds-rs)
+- When running in Node.JS, only Node.JS 18 is supported for now. See [Supported Node.JS versions for AnonCreds RS](#supported-nodejs-versions-for-anoncreds-rs)
 
 :::
 
@@ -22,13 +21,13 @@ When using Aries Framework JavaScript with AnonCreds RS, there are a few extra d
 # Node.JS
 
 ```console
-yarn add @aries-framework/anoncreds@alpha @aries-framework/anoncreds-rs@alpha @hyperledger/anoncreds-nodejs
+yarn add @aries-framework/anoncreds@^0.4.0 @aries-framework/anoncreds-rs@^0.4.0 @hyperledger/anoncreds-nodejs@^0.1.0
 ```
 
 # React Native
 
 ```console
-yarn add @aries-framework/anoncreds@alpha @aries-framework/anoncreds-rs@alpha @hyperledger/anoncreds-react-native
+yarn add @aries-framework/anoncreds@^0.4.0 @aries-framework/anoncreds-rs@^0.4.0 @hyperledger/anoncreds-react-native@^0.1.0
 ```
 
 <!--/tabs-->
