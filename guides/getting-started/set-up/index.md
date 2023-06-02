@@ -15,12 +15,13 @@ Aries Framework JavaScript is still in **active development**, and as such some 
 
 For AFJ `0.4.x`, **the following features are experimental**:
 
-- Implementing your own `AnonCredsRegistry` and AnonCreds service implementation. Using the default implementations (Indy SDK, AnonCreds RS) is fine.
+- Implementing your own `AnonCredsRegistry` and AnonCreds service implementation.
 - Using the shared component libraries from `@aries-framework/aries-askar`, `@aries-framework/indy-vdr` and `@aries-framework/anoncreds-rs`
 - Using OpenID4VC from the `@aries-framework/openid4vc-client` module
 - W3C JWT Verifiable Credentials
 - Using multi-tenancy from the `@aries-framework/tenants` module
 - Using BBS+ Signatures from the `@aries-framework/bbs-signatures` module
+- Using the cheqd module from the `@aries-framework/cheqd` module
 
 :::
 
