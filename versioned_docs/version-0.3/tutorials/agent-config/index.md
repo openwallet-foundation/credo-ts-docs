@@ -248,7 +248,7 @@ that can be used for simple logs. See [Logging](./logging) for more details on c
 ```typescript title="example"
 import { ConsoleLogger, LogLevel } from '@aries-framework/core'
 
-logger: new ConsoleLogger(LogLevel.Test)
+logger: new ConsoleLogger(LogLevel.info)
 ```
 
 ---
