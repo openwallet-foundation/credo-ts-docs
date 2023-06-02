@@ -194,10 +194,8 @@ const initialize = async () => await agent.initialize().catch(console.error)
 
 ```typescript showLineNumbers
 import type { InitConfig } from '@aries-framework/core'
-import { Agent } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/node'
-import { HttpOutboundTransport, WsOutboundTransport } from '@aries-framework/core'
-import { HttpInboundTransport } from '@aries-framework/node'
+import { Agent, HttpOutboundTransport } from '@aries-framework/core'
+import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
 
 // The agent initialization configuration
 const config: InitConfig = {
