@@ -132,8 +132,8 @@ enough for your specific use cases. Please refer to the
 
 After creating the `Agent` instance, we need to provide the agent with a wallet and storage implementation. AFJ provides a few implementations out of the box, but you can also implement your own. Currently the following Wallet and Storage implementations are supported out of the box. Follow the specific guides to set up the wallet and storage implementation of your choice.
 
-- [Aries Askar](./aries-askar) - Recommended.
-- [Indy SDK](./indy-sdk) - Legacy. Will be deprecated in the future.
+- [Aries Askar](./set-up/aries-askar) - Recommended.
+- [Indy SDK](./set-up/indy-sdk) - Legacy. Will be deprecated in the future.
 
 <DocCardList items={[
 { type: 'link', label: 'Aries Askar', href: './set-up/aries-askar', docId: 'getting-started/set-up/aries-askar' },
