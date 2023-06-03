@@ -173,50 +173,48 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@aries-framework/anoncreds-rs@^0.4.0-alpha.115":
-  version "0.4.0-alpha.115"
-  resolved "https://registry.yarnpkg.com/@aries-framework/anoncreds-rs/-/anoncreds-rs-0.4.0-alpha.115.tgz#3eb805a31e8ef73a66258c95788de8d078eb79ff"
-  integrity sha512-cjoR2lBpI1yvJOiFQ2qvHRPGo/04IUGG1Mv1vC5n0MPRxk1j7D5yAAok5bBKMoDWCZcmpTJNJ2RxczpjbGTrtg==
+"@aries-framework/anoncreds-rs@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/anoncreds-rs/-/anoncreds-rs-0.4.0.tgz#9fb00c7b8c1c01439102cb19f689fd74e3e8dbdc"
+  integrity sha512-9tMA4DwuyFg8qqLRBgTXfiA1jijYpAMosFP2CxUv8aGYwXV5xvMd4B/YbecuQh5NyvNZ9h7uR/JF3jIwkhrgxw==
   dependencies:
-    "@aries-framework/anoncreds" "0.4.0-alpha.115+d247b53d"
-    "@aries-framework/core" "0.4.0-alpha.115+d247b53d"
-    "@hyperledger/anoncreds-shared" "^0.1.0-dev.14"
+    "@aries-framework/anoncreds" "0.4.0"
+    "@aries-framework/core" "0.4.0"
     class-transformer "^0.5.1"
     class-validator "0.14.0"
     rxjs "^7.2.0"
     tsyringe "^4.7.0"
 
-"@aries-framework/anoncreds@0.4.0-alpha.115+d247b53d", "@aries-framework/anoncreds@^0.4.0-alpha.115":
-  version "0.4.0-alpha.115"
-  resolved "https://registry.yarnpkg.com/@aries-framework/anoncreds/-/anoncreds-0.4.0-alpha.115.tgz#1bcab93d3689bc22f82b30da18a404988c759a53"
-  integrity sha512-tWGrUn5sk3Y7oskam3hr54MJ/sEltTfma8lsOGvDnVr81weyA0qaXX1Spp+1NRVQCa6tm4hy+uKuDNOkFkFfEQ==
+"@aries-framework/anoncreds@0.4.0", "@aries-framework/anoncreds@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/anoncreds/-/anoncreds-0.4.0.tgz#abf0dd6b316d607fbee9fc5ef5d5709dfa2ded36"
+  integrity sha512-jzZVMXJoTutF5jrATYXHiavUi2APEUbvGiOA8EelP7cabVxCijoWh0DdTEBoGSUv9xuK26iSWVY0MmnAxD7l9g==
   dependencies:
-    "@aries-framework/core" "0.4.0-alpha.115+d247b53d"
+    "@aries-framework/core" "0.4.0"
     bn.js "^5.2.1"
     class-transformer "0.5.1"
     class-validator "0.14.0"
     reflect-metadata "^0.1.13"
 
-"@aries-framework/askar@^0.4.0-alpha.115":
-  version "0.4.0-alpha.115"
-  resolved "https://registry.yarnpkg.com/@aries-framework/askar/-/askar-0.4.0-alpha.115.tgz#fb2c837045b88bfc11c5dffa720027b37f72fa0d"
-  integrity sha512-ICB6XwuR2uu/SCZOi8iVHHQoNTaX5o4tLRTCOB86WTzNkwzdmPiNB6ZD1dm8l3Z+jqV/2znbflZF7aBFsl+hkA==
+"@aries-framework/askar@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/askar/-/askar-0.4.0.tgz#c9c044497e466aab9bd5e5d77b2fb1bd01fdac1c"
+  integrity sha512-FQxT+NVUv/CSnlXY13Idilg7qA7xABEKOO2YGi5xUGiyruJDtqzQ6dWqGsa2odX3KE1baFFrNHgCC9I7N+++Jg==
   dependencies:
-    "@aries-framework/core" "0.4.0-alpha.115+d247b53d"
-    "@hyperledger/aries-askar-shared" "^0.1.0-dev.8"
+    "@aries-framework/core" "0.4.0"
     bn.js "^5.2.1"
     class-transformer "0.5.1"
     class-validator "0.14.0"
     rxjs "^7.2.0"
     tsyringe "^4.7.0"
 
-"@aries-framework/cheqd@^0.4.0-alpha.115":
-  version "0.4.0-alpha.115"
-  resolved "https://registry.yarnpkg.com/@aries-framework/cheqd/-/cheqd-0.4.0-alpha.115.tgz#9ccc2e98a9f8d49b1fa665337a75f94006a3455b"
-  integrity sha512-0wbGWH/vlB+7KfU17nH2MJuhQpoJePeo5+V5KFBEKB+huVkltBlyBtTjgzv9Ypv0STMAeQ2wGI0ZT6qNj+f6Pw==
+"@aries-framework/cheqd@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/cheqd/-/cheqd-0.4.0.tgz#c1193f4d7355cdab3e06ab84ef44628d83dbb9ff"
+  integrity sha512-Hb8jx153zoMWRh881TeCajLr+T5E84Pb2+Rb5ipdjyQ4U2UaHiZ0WIEgLBSmjaECxy+Nhqk1l8+U39Zj+Jtw/Q==
   dependencies:
-    "@aries-framework/anoncreds" "0.4.0-alpha.115+d247b53d"
-    "@aries-framework/core" "0.4.0-alpha.115+d247b53d"
+    "@aries-framework/anoncreds" "0.4.0"
+    "@aries-framework/core" "0.4.0"
     "@cheqd/sdk" cjs
     "@cheqd/ts-proto" cjs
     "@cosmjs/crypto" "^0.29.5"
@@ -261,10 +259,10 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
-"@aries-framework/core@0.4.0-alpha.115+d247b53d", "@aries-framework/core@^0.4.0-alpha.115":
-  version "0.4.0-alpha.115"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.4.0-alpha.115.tgz#177d8a4e4a2c3e80c1349b5949ffaf609fbcde6c"
-  integrity sha512-w/r8cHNVFf0ZKUFiIZoHF28fb68KkwlvQ2zKZ44SXqcavRGSCvns+3bMCIcyfj/yvvDsZg0GZ1DICtYbkfwf4Q==
+"@aries-framework/core@0.4.0", "@aries-framework/core@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.4.0.tgz#6af11446174d8f690aa1bf4abf6f61ad47a05b52"
+  integrity sha512-Z/rTgpJMKTl9iQQd8GnNEV5wCZKdV+kkd+Y4e/KS+j+6yMOxrgaVGcAKlcFIPcHUc6l1iOetJFeVLSwftXW2Kg==
   dependencies:
     "@digitalcredentials/jsonld" "^5.2.1"
     "@digitalcredentials/jsonld-signatures" "^9.3.1"
@@ -275,6 +273,7 @@
     "@stablelib/sha256" "^1.0.1"
     "@types/ws" "^8.5.4"
     abort-controller "^3.0.0"
+    big-integer "^1.6.51"
     borc "^3.0.0"
     buffer "^6.0.3"
     class-transformer "0.5.1"
@@ -293,13 +292,13 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.21"
 
-"@aries-framework/indy-sdk@^0.4.0-alpha.115":
-  version "0.4.0-alpha.115"
-  resolved "https://registry.yarnpkg.com/@aries-framework/indy-sdk/-/indy-sdk-0.4.0-alpha.115.tgz#4011778a1162af90f98c3e02e25c8a703031ae03"
-  integrity sha512-N7vY3jTIYZSaENw7v82/oPu89yIqqtDs2mR9nk8p7oVQa031oipzAbO8q6PqoHZO8LU78xqqKMaRnCcHBpBT9g==
+"@aries-framework/indy-sdk@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/indy-sdk/-/indy-sdk-0.4.0.tgz#d4bb59cf010b2e9166982d4a7a0103325bde9b80"
+  integrity sha512-Z54+a7yxFrynGTgc0vYs0proh+4MnV1e0+1SSwFi+kbi11i9rIpLj8pBN5PN1569qYVtCzSaFz4q6BtvzAHLJw==
   dependencies:
-    "@aries-framework/anoncreds" "0.4.0-alpha.115+d247b53d"
-    "@aries-framework/core" "0.4.0-alpha.115+d247b53d"
+    "@aries-framework/anoncreds" "0.4.0"
+    "@aries-framework/core" "0.4.0"
     "@stablelib/ed25519" "^1.0.3"
     "@types/indy-sdk" "1.16.26"
     class-transformer "0.5.1"
@@ -307,14 +306,13 @@
     rxjs "^7.2.0"
     tsyringe "^4.7.0"
 
-"@aries-framework/indy-vdr@^0.4.0-alpha.115":
-  version "0.4.0-alpha.115"
-  resolved "https://registry.yarnpkg.com/@aries-framework/indy-vdr/-/indy-vdr-0.4.0-alpha.115.tgz#5ca49cd1f5674d5527dc2e6f42320c047d4bc3da"
-  integrity sha512-pUdXsEDnyyd8155Z5O7Swh9VAyZtMdRyXRCCjik30f5E8wunQcLYVuxh9BXgVc27286o9sqppxMPRvpzeIUx+g==
+"@aries-framework/indy-vdr@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/indy-vdr/-/indy-vdr-0.4.0.tgz#990d81bf589a013845165ee5de6a0b72c5105976"
+  integrity sha512-0EshmjaNLLswDJnCHoFVAPZ68W+9KjKMA9aYi05vivdLCYlQDsvPSWOz4V2EB1DEosswqV1JTZOASUxfaIQQlg==
   dependencies:
-    "@aries-framework/anoncreds" "0.4.0-alpha.115+d247b53d"
-    "@aries-framework/core" "0.4.0-alpha.115+d247b53d"
-    "@hyperledger/indy-vdr-shared" "^0.1.0-dev.14"
+    "@aries-framework/anoncreds" "0.4.0"
+    "@aries-framework/core" "0.4.0"
 
 "@aries-framework/node@^0.3.3":
   version "0.3.3"
@@ -330,12 +328,12 @@
     ref-napi "^3.0.3"
     ws "^7.5.3"
 
-"@aries-framework/node@^0.4.0-alpha.115":
-  version "0.4.0-alpha.115"
-  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.4.0-alpha.115.tgz#03af9603b556c50e1bc42d6dec6db617ff4b1197"
-  integrity sha512-YifEY6KbXWwTmeUkrAyIktvTuZmveYfsggHT3jtryTyiIYhlnDT0EF7PbKOgViTf88Zv8JnERf8YWXjGJGn6vg==
+"@aries-framework/node@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.4.0.tgz#2d9f0f58f433c8ef61a5f275e3a1d7a75ecc4dbd"
+  integrity sha512-ydxkD+Hb8XLLUeX2G27baNUtC3BBB3LG2NfZgy2128q6mAg2mqhLnjWocncE7kWFVneZ5copBIoF2MIPQvwYhg==
   dependencies:
-    "@aries-framework/core" "0.4.0-alpha.115+d247b53d"
+    "@aries-framework/core" "0.4.0"
     "@types/express" "^4.17.15"
     express "^4.17.1"
     ffi-napi "^4.0.3"
@@ -352,12 +350,12 @@
     "@azure/core-asynciterator-polyfill" "^1.0.0"
     events "^3.3.0"
 
-"@aries-framework/react-native@^0.4.0-alpha.115":
-  version "0.4.0-alpha.115"
-  resolved "https://registry.yarnpkg.com/@aries-framework/react-native/-/react-native-0.4.0-alpha.115.tgz#f515c349c9378aad95899b5c2ef00c7a911082a1"
-  integrity sha512-NnpOHO60OaeK8ePsAfhucKWQiZ7dKsOR8YBK71otNnjgXdkF1rVbSdm4Yzeh8lGGAZxg15Wd0fzzVI1CfoM7TQ==
+"@aries-framework/react-native@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/react-native/-/react-native-0.4.0.tgz#f4c25c882ca188b4f16d7fcc1c1e5bdba1e73bbf"
+  integrity sha512-lKCpM31eu9yu9/ZPJxxCH6zWw9RnSiFmBUHRQZltAWaIghkXkabEavwG+xykzNCnsPHIUKkJjUheqdeVsFkUiA==
   dependencies:
-    "@aries-framework/core" "0.4.0-alpha.115+d247b53d"
+    "@aries-framework/core" "0.4.0"
     "@azure/core-asynciterator-polyfill" "^1.0.2"
     events "^3.3.0"
 
@@ -2140,12 +2138,12 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@hyperledger/anoncreds-nodejs@0.1.0-dev.14":
-  version "0.1.0-dev.14"
-  resolved "https://registry.yarnpkg.com/@hyperledger/anoncreds-nodejs/-/anoncreds-nodejs-0.1.0-dev.14.tgz#00d4dca419f04a580cc02611d0c803d3d5c04fbf"
-  integrity sha512-N0H89rRBOaLeX+j5NHSibU1m88lWOXWg2t/orZZtY9iTt8op1oFV0IcWHeUJ1lPDJnOiozpn+AF/f5G0kipK7w==
+"@hyperledger/anoncreds-nodejs@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@hyperledger/anoncreds-nodejs/-/anoncreds-nodejs-0.1.0.tgz#925f4004af85e772a3ee55f240b281148cbfb6e6"
+  integrity sha512-5Z0+nRQow7mcaRim4HncB8GzZr9KZl4a1snUfA/0mrK+eVncFCj13vcr9HnIwAfEOWn7OdHsK44Jy7tHRbYJww==
   dependencies:
-    "@hyperledger/anoncreds-shared" "0.1.0-dev.14"
+    "@hyperledger/anoncreds-shared" "0.1.0"
     "@mapbox/node-pre-gyp" "^1.0.10"
     ffi-napi "4.0.3"
     node-cache "5.1.2"
@@ -2153,25 +2151,25 @@
     ref-napi "3.0.3"
     ref-struct-di "1.1.1"
 
-"@hyperledger/anoncreds-react-native@0.1.0-dev.14":
-  version "0.1.0-dev.14"
-  resolved "https://registry.yarnpkg.com/@hyperledger/anoncreds-react-native/-/anoncreds-react-native-0.1.0-dev.14.tgz#db377d7686461f5eb18144c0ade24b6dd24e0f70"
-  integrity sha512-HyPxZ5borXbbwIl20gVh9QnobDfQXes9W+BEjpITjvsS+o6q6UMeqhcD2sgoBLo1g7pkU9LjMCfyoFKylleTEw==
+"@hyperledger/anoncreds-react-native@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@hyperledger/anoncreds-react-native/-/anoncreds-react-native-0.1.0.tgz#1e815cf2b71c2b636b90aaa893bf65b401fb4b40"
+  integrity sha512-o9aBxWynVTgnm61zi21r/EY/3rBaUpsmFc8ZEMHVK/o7g+MkLpxTDiJnb5eomWyxnNmJpPCA2rlHZiZHVtGWVA==
   dependencies:
-    "@hyperledger/anoncreds-shared" "0.1.0-dev.14"
+    "@hyperledger/anoncreds-shared" "0.1.0"
     "@mapbox/node-pre-gyp" "^1.0.10"
 
-"@hyperledger/anoncreds-shared@0.1.0-dev.14", "@hyperledger/anoncreds-shared@^0.1.0-dev.14":
-  version "0.1.0-dev.14"
-  resolved "https://registry.yarnpkg.com/@hyperledger/anoncreds-shared/-/anoncreds-shared-0.1.0-dev.14.tgz#0cdaa18a59b8223bb3eb2116970b1aa56cf5acfc"
-  integrity sha512-4yS7NgZZF9nfE50OquvbLWuZSzjOOiPufC/n2Ywb5lL2VloBblXMI2CezCZU1POmyAl7xnoT99pi2Od1fQaJxQ==
+"@hyperledger/anoncreds-shared@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@hyperledger/anoncreds-shared/-/anoncreds-shared-0.1.0.tgz#947c602c385bfa79b63849c9e48b51cc9d41d820"
+  integrity sha512-DisZFY4YbrugRCCv7AtYFUTsrGigHF1dVaiA36WrhRUgetwDzKgMiYGkxFQmCe0IJ0mDw4M7sbTJBXxfxij/+A==
 
-"@hyperledger/aries-askar-nodejs@^0.1.0-dev.8":
-  version "0.1.0-dev.8"
-  resolved "https://registry.yarnpkg.com/@hyperledger/aries-askar-nodejs/-/aries-askar-nodejs-0.1.0-dev.8.tgz#a8a6b2969a03f6af8610db27f80fcd847384edc3"
-  integrity sha512-HzAJ7yZb+NwadV4P9a5gXRlqbYMPWy+3wFZvEkzfTl7Km2LxZat9WyHkMrcc9i2PXH1NZEK56XchzTmqG2zw3Q==
+"@hyperledger/aries-askar-nodejs@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@hyperledger/aries-askar-nodejs/-/aries-askar-nodejs-0.1.0.tgz#2bb8f19d3f44b67e8aa92e4d45da9ab47ddb0539"
+  integrity sha512-5jc8lNZg9Qxd4BoUWCknJ2YH7iqgO5/kl6KMfry5z9MTXQ5u30ysqPQCtWwryAKt+q55jnlw+pgISsis+zDfgA==
   dependencies:
-    "@hyperledger/aries-askar-shared" "0.1.0-dev.8"
+    "@hyperledger/aries-askar-shared" "0.1.0"
     "@mapbox/node-pre-gyp" "^1.0.10"
     ffi-napi "^4.0.3"
     node-cache "^5.1.2"
@@ -2179,27 +2177,27 @@
     ref-napi "^3.0.3"
     ref-struct-di "^1.1.1"
 
-"@hyperledger/aries-askar-react-native@^0.1.0-dev.8":
-  version "0.1.0-dev.8"
-  resolved "https://registry.yarnpkg.com/@hyperledger/aries-askar-react-native/-/aries-askar-react-native-0.1.0-dev.8.tgz#d6700ec795f31199398431383d4cd4959e815459"
-  integrity sha512-/c8PxUwUm7PkfYu65aaIBRLkOjywXh5JbFTmJp532uuAnLchZdKVJ+njucjrzU6ZR7sN2JXq5ef02BN4KF+g0w==
+"@hyperledger/aries-askar-react-native@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@hyperledger/aries-askar-react-native/-/aries-askar-react-native-0.1.0.tgz#01f1cbf91f98d76b034e9eb4a1b240dc196fc716"
+  integrity sha512-I2qJx5QqKQUILTh8gwJKbZutNgrtYhwWAA733pASe3FJ6FydRNOr+owx/W8Agna0G4HaJStjiJbU2qfZg3POzw==
   dependencies:
-    "@hyperledger/aries-askar-shared" "0.1.0-dev.8"
+    "@hyperledger/aries-askar-shared" "0.1.0"
     "@mapbox/node-pre-gyp" "^1.0.10"
 
-"@hyperledger/aries-askar-shared@0.1.0-dev.8", "@hyperledger/aries-askar-shared@^0.1.0-dev.8":
-  version "0.1.0-dev.8"
-  resolved "https://registry.yarnpkg.com/@hyperledger/aries-askar-shared/-/aries-askar-shared-0.1.0-dev.8.tgz#9cafec424e6390f38c8098b908f6434881217a54"
-  integrity sha512-Zf0njf/4Lx8u12WGdEC0yYlPcczdk38yLCn9w6UdczzK0Lp+4YGDkSvpbvtCP7EXAykuMOQ3/P1iRBWnjygGpg==
+"@hyperledger/aries-askar-shared@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@hyperledger/aries-askar-shared/-/aries-askar-shared-0.1.0.tgz#a2517efb0829cdf6dc08ca6809dbd6daa497e116"
+  integrity sha512-eTq3pQ7qNoEqS3KJOB5OcsKmYJ01aPF4GSOMmNKc44xyifwNi53lBod5fDVyjo401hk/FpVHZ3nRik1BXw1PWA==
   dependencies:
     fast-text-encoding "^1.0.3"
 
-"@hyperledger/indy-vdr-nodejs@^0.1.0-dev.14":
-  version "0.1.0-dev.14"
-  resolved "https://registry.yarnpkg.com/@hyperledger/indy-vdr-nodejs/-/indy-vdr-nodejs-0.1.0-dev.14.tgz#d21590d5464341fb701b654c132c75c96e1cba8f"
-  integrity sha512-iuR4At4Vs2tQhctZH84KlWKFL1JI6BXa+2dnBauQXhMEQj8q2l5kTH8TjJeXPD1PyOnbLB9ry4tfx+/a0A2AKg==
+"@hyperledger/indy-vdr-nodejs@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@hyperledger/indy-vdr-nodejs/-/indy-vdr-nodejs-0.1.0.tgz#a006393e3ecb1a4661bbd52299b796247e8bde47"
+  integrity sha512-XNPy4fygp3vf4cLK36n2Ap8BnIsR5Ic+9sbtHrtQA6tAhrL9Zq8foaYPW8XDeZ6OlEWdViNRYIKGkR1w0zuLJw==
   dependencies:
-    "@hyperledger/indy-vdr-shared" "0.1.0-dev.14"
+    "@hyperledger/indy-vdr-shared" "0.1.0"
     "@mapbox/node-pre-gyp" "^1.0.10"
     "@types/ref-array-di" "^1.2.5"
     ffi-napi "^4.0.3"
@@ -2207,18 +2205,18 @@
     ref-napi "^3.0.3"
     ref-struct-di "^1.1.1"
 
-"@hyperledger/indy-vdr-react-native@0.1.0-dev.14":
-  version "0.1.0-dev.14"
-  resolved "https://registry.yarnpkg.com/@hyperledger/indy-vdr-react-native/-/indy-vdr-react-native-0.1.0-dev.14.tgz#d022959878af56156f8cacdfe3458fc4d8e758c1"
-  integrity sha512-+mR6PzGZRH/T110OC0PvlCeTNB2SnznSTqV3IqaR2ePwprJwqQfTnZUvYAKYveW8mXGB2z5jaJhqli38P88e2w==
+"@hyperledger/indy-vdr-react-native@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@hyperledger/indy-vdr-react-native/-/indy-vdr-react-native-0.1.0.tgz#f0ad5c748438f91e4fe1bf86cf4744910ca24032"
+  integrity sha512-pLcW4utFWQPsbPoaiNoVd/Sv1L/4IY6kG5c0YZBRiLVVn72i0aMkt6UVm0+KC12pj8Q/er+Bo3pEdQgPPpxU0w==
   dependencies:
-    "@hyperledger/indy-vdr-shared" "0.1.0-dev.14"
+    "@hyperledger/indy-vdr-shared" "0.1.0"
     "@mapbox/node-pre-gyp" "^1.0.10"
 
-"@hyperledger/indy-vdr-shared@0.1.0-dev.14", "@hyperledger/indy-vdr-shared@^0.1.0-dev.14":
-  version "0.1.0-dev.14"
-  resolved "https://registry.yarnpkg.com/@hyperledger/indy-vdr-shared/-/indy-vdr-shared-0.1.0-dev.14.tgz#7dc3d61f997c1bcf737b23133ed0d08fec2a901d"
-  integrity sha512-CsZUcqybgtvVEVD1uHHgCGY3tddYcePJKjkEar14pss4w2IxbhRYnzkfp0+lWYUQnAY7rGX8A0MxRxwd7K1Yhw==
+"@hyperledger/indy-vdr-shared@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@hyperledger/indy-vdr-shared/-/indy-vdr-shared-0.1.0.tgz#f8023a2d25ca9395ec2fd0e6a0dfbda6459fab03"
+  integrity sha512-VfGraHX6RMmNcF4WYD5F1anjJzPN7KSrj5GP3g0hCrdXMDXEtO8t1lHQLVfrBgdjhR7gE82Nx+ZAYlGnTxoE+A==
 
 "@jest/schemas@^29.4.3":
   version "29.4.3"
@@ -3690,6 +3688,11 @@ bech32@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/bech32/-/bech32-2.0.0.tgz#078d3686535075c8c79709f054b1b226a133b355"
   integrity sha512-LcknSilhIGatDAsY1ak2I8VtGaHNhgMSYVxFrGLXv+xLHytaKZKcaUJJUE7qmBr7h33o5YQwP55pMI0xmkpJwg==
+
+big-integer@^1.6.51:
+  version "1.6.51"
+  resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.51.tgz#0df92a5d9880560d3ff2d5fd20245c889d130686"
+  integrity sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==
 
 big.js@^5.2.2:
   version "5.2.2"

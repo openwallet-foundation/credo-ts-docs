@@ -5,7 +5,7 @@ import DocCardList from '@theme/DocCardList';
 [Indy SDK](https://github.com/hyperledger/indy-sdk) provides a distributed ledger based foundation for self-sovereign identity. It can provide the `Wallet` and `StorageService` implementations for the agent, as well as a way to interact with Indy ledgers and an implementation of the legacy (v0.1) [AnonCreds Specification](https://hyperledger.github.io/anoncreds-spec/)
 
 :::caution
-The Indy SDK is currently in maintenance mode. We recommend new projects to use [Aries Askar](../aries-askar) from the start, and also to migrate existing projects to Aries Askar.
+The Indy SDK integration in Aries Framework JavaScript is currently in maintenance mode. We recommend new projects to use [Aries Askar](../aries-askar) from the start, and also to migrate existing projects to Aries Askar.
 :::
 
 :::caution
@@ -27,7 +27,7 @@ After the native Indy SDK library is installed, we can add the Indy SDK librarie
 # Node.JS
 
 ```console
-yarn add @aries-framework/indy-sdk@alpha indy-sdk
+yarn add @aries-framework/indy-sdk@^0.4.0 indy-sdk
 ```
 
 And install the needed types
@@ -39,7 +39,7 @@ yarn add --dev @types/indy-sdk
 # React Native
 
 ```console
-yarn add @aries-framework/indy-sdk@alpha indy-sdk-react-native
+yarn add @aries-framework/indy-sdk@^0.4.0 indy-sdk-react-native
 ```
 
 And then install the needed types

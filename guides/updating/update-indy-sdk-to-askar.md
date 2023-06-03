@@ -1,16 +1,16 @@
 # Migrating from an Indy SDK Wallet to Aries Askar
 
-This documentation explains the process of migrating your Indy-sdk wallet to [Aries Askar](https://github.com/hyperledger/aries-askar).
+This documentation explains the process of migrating your Indy SDK wallet to [Aries Askar](https://github.com/hyperledger/aries-askar).
 
 :::danger
 
-While the migration script technically works on node.js, it is strongly advised not to use it, yet. The mean reason for this is that the Credential Definition migration is not done yet. When a credential definition is detected it will revert the migration process and no harm is done.
+While the migration script technically works on node.js, it is strongly advised not to use it, yet. The migration of issuer records (such as Schemas and Credential Definitions) is not implemented yet. When a credential definition is detected it will revert the migration process and no harm is done.
 
 :::
 
 :::caution
 
-Postgres is not supported, yet.
+Postgres is not supported. If you are using postgres with Indy SDK and need to update to Aries Askar, please open an issue on [GitHub](https://github.com/hyperledger/aries-framework-javascript).
 
 :::
 

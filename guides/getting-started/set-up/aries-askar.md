@@ -7,7 +7,6 @@ Although Aries Askar is stable and already used in production in agents such as 
 
 Currently, there are few limitations to using Aries Askar.
 
-- React Native projects leveraging [Expo](https://expo.dev) are not supported at the moment. Support for Expo will be added soon.
 - When running in Node.JS, only Node.JS 18 is supported for now. See [Supported Node.JS versions for Aries Askar](#supported-nodejs-versions-for-aries-askar)
 
 :::
@@ -27,13 +26,13 @@ When using Aries Framework JavaScript with Aries Askar, there are a few extra de
 # Node.JS
 
 ```console
-yarn add @aries-framework/askar@alpha @hyperledger/aries-askar-nodejs
+yarn add @aries-framework/askar@^0.4.0 @hyperledger/aries-askar-nodejs@^0.1.0
 ```
 
 # React Native
 
 ```console
-yarn add @aries-framework/askar@alpha @hyperledger/aries-askar-react-native
+yarn add @aries-framework/askar@^0.4.0 @hyperledger/aries-askar-react-native@^0.1.0
 ```
 
 <!--/tabs-->
