@@ -27,7 +27,7 @@ For the _Issuer_ the setup is commonly not the same as the _Holder_. In the exam
 
 It is also very important for the _Issuer_ to have a public DID, for the binding with a credential definition, amongst other things. For this demo we will use [BCovrin Test](http://test.bcovrin.vonx.io). If you want to follow this tutorial, you have to register a public DID [here](http://test.bcovrin.vonx.io) via the Wallet seed field (this must be the same as the seed inside the config under the key [`publicDidSeed`](./agent-config#publicdidseed)).
 
-In order to reach the _Issuer_ we have to add a list of [`endpoints`](./agent-config#endpoints) of the agent that exposes the `inboundTransport` to the public. In the example below we add an `inboundTransport` and use port `3000`. For development purposes it is recommended to use a tunneling service for this, like [Ngrok](https://ngrok.com). Ngrok will allow you to reach your locally exposed endpoint from the public. If a tunneling service is used, make sure to use the `HTTPS` variant as mobile environments, by default, do not accept `HTTP` anymore.
+In order to reach the _Issuer_ we have to add a list of [`endpoints`](./agent-config#endpoints) of the agent that exposes the `inboundTransport` to the public. In the example below we add an `inboundTransport` and use port `3002`. For development purposes it is recommended to use a tunneling service for this, like [Ngrok](https://ngrok.com). Ngrok will allow you to reach your locally exposed endpoint from the public. If a tunneling service is used, make sure to use the `HTTPS` variant as mobile environments, by default, do not accept `HTTP` anymore.
 
 To install [Ngrok](https://ngrok.com) and expose the port to the public the following commands can be used:
 
