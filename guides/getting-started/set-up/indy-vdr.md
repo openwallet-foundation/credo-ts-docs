@@ -9,6 +9,7 @@ Support for Indy VDR in Aries Framework JavaScript is currently experimental. We
 Currently, there are few limitations to using Indy VDR.
 
 - When running in Node.JS, only Node.JS 18 is supported for now. See [Supported Node.JS versions for Indy VDR](#supported-nodejs-versions-for-indy-vdr)
+- Install scripts rely on bash command substitution to get the proper binaries for each system architecture and platform. Therefore, if you are under Windows, you must configure `npm` or `yarn` to use a bash-compliant shell (e.g. `npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"`)
 
 :::
 

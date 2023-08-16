@@ -8,6 +8,7 @@ Although Aries Askar is stable and already used in production in agents such as 
 Currently, there are few limitations to using Aries Askar.
 
 - When running in Node.JS, only Node.JS 18 is supported for now. See [Supported Node.JS versions for Aries Askar](#supported-nodejs-versions-for-aries-askar)
+- Install scripts rely on bash command substitution to get the proper binaries for each system architecture and platform. Therefore, if you are under Windows, you must configure `npm` or `yarn` to use a bash-compliant shell (e.g. `npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"`)
 
 :::
 
