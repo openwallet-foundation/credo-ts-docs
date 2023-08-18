@@ -58,10 +58,12 @@ Using [Yarn `resolutions`](https://classic.yarnpkg.com/lang/en/docs/selective-ve
 }
 ```
 
+<!--/tabs-->
+
 Following that we need to add a buffer polyfill
 
 ```console
-    yarn add buffer
+yarn add buffer
 ```
 
 create a shim.js file with the below code snippet
@@ -72,8 +74,6 @@ global.Buffer = Buffer
 ```
 
 `import shim.js` file into your file where the App is imported
-
-<!--/tabs-->
 
 ### Adding the cheqd to the Agent
 
