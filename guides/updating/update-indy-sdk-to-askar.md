@@ -109,11 +109,9 @@ const oldAgent = new Agent({
     /* ... */
   },
   modules: {
-    modules: { 
-      ariesAskar: new AskarModule({
-        ariesAskar,
-      }),
-     },
+    ariesAskar: new AskarModule({
+      ariesAskar,
+    }),
   },
   dependencies: agentDependencies,
 })
