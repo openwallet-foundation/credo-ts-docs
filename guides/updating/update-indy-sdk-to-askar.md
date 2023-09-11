@@ -99,16 +99,19 @@ The agent is not allowed to be initialized to run this script. This makes sure n
 :::
 
 ```typescript
-import { IndySdkToAskarMigrationUpdater } from '@hyperledger/indy-sdk-to-askar-migration'
 import { agentDependencies } from '@aries-framework/react-native'
 import { AskarModule } from '@aries-framework/askar'
+import { IndySdkToAskarMigrationUpdater } from '@aries-framework/indy-sdk-to-askar-migration'
+import { ariesAskar } from '@hyperledger/aries-askar-react-native'
 
 const oldAgent = new Agent({
   config: {
     /* ... */
   },
   modules: {
-    modules: { askar: new AskarModule() },
+    ariesAskar: new AskarModule({
+      ariesAskar,
+    }),
   },
   dependencies: agentDependencies,
 })
@@ -133,7 +136,7 @@ import fs from 'react-native-fs'
 const base = fs.ExternalDirectoryPath
 const indyClient = '.indy_client'
 const wallet = 'wallet'
-const walletId = agent.config.walletConfig.walletId
+const walletId = agent.config.walletConfig.id
 const file = 'sqlite.db'
 
 const dbPath = `${base}/${indyClient}/${wallet}/${walletId}/${file}`
@@ -151,7 +154,7 @@ import fs from 'react-native-fs'
 const base = fs.DocumentDirectoryPath
 const indyClient = '.indy_client'
 const wallet = 'wallet'
-const walletId = agent.config.walletConfig.walletId
+const walletId = agent.config.walletConfig.id
 const file = 'sqlite.db'
 
 const dbPath = `${base}/${indyClient}/${wallet}/${walletId}/${file}`
