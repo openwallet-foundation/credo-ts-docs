@@ -93,5 +93,6 @@ sequenceDiagram
 For more information about mediator refer to:
 
 - [Aries Mediator Coordination Protocol](https://github.com/hyperledger/aries-rfcs/tree/main/features/0211-route-coordination)
-- [Indicio Public Mediator](https://indicio-tech.github.io/mediator/)
+- [Indicio Public Mediator](https://indicio-tech.github.io/mediator)
+- [Setup your own AFJ Mediator](https://github.com/animo/animo-mediator)
 - [Aries RFC 0046: Mediators and Relays](https://github.com/hyperledger/aries-rfcs/blob/main/concepts/0046-mediators-and-relays/README.md#aries-rfc-0046-mediators-and-relays)
