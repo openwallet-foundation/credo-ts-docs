@@ -8,7 +8,7 @@ const remarkTabs = require('remark-docusaurus-tabs')
 const config = {
   title: 'Aries JavaScript Documentation',
   tagline: 'Everything you need to know about the Aries JavaScript ecosystem.',
-  url: 'https://aries.js.org',
+  url: 'https://credo.js.org',
   baseUrl: '/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
