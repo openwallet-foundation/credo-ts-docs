@@ -57,5 +57,5 @@ devices these can be used as a more central point for your data.
 
 - [Hyperledger Aries RFC - 004:
   Agents](https://github.com/hyperledger/aries-rfcs/blob/main/concepts/0004-agents/README.md)
-- [Aries Framework JavaScript - Getting
+- [Credo - Getting
   Started](https://github.com/hyperledger/aries-framework-javascript/tree/main/docs/getting-started)

@@ -121,7 +121,7 @@ endpoints: ['https://example.org:3000']
 ## `logger`
 
 A logger instance that implements the `Logger` interface. This can be extremely
-helpful for debugging. Aries Framework JavaScript exposes a `ConsoleLogger`
+helpful for debugging. Credo exposes a `ConsoleLogger`
 that can be used for simple logs. See [Logging](./logging) for more details on creating your own logger instance.
 
 **Type**: `Logger`

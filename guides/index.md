@@ -4,7 +4,7 @@ Welcome, to the Credo community!
 
 There's no way around it. Working with self-sovereign identity can be difficult. Luckily this documentation's main goal is to make it easy for you. Whether you have a lot of experience building with Aries or non-Aries SSI frameworks, or have never heard of terms like Verifiable Credential, [DID](./concepts/did-and-didcomm.md), or [Agent](./concepts/agents.md). This documentation will either help you create a JavaScript based SSI solution yourself, or help you find the right resources in the community to assist you!
 
-So what is [Hyperledger Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript)?
+So what is [Credo](https://github.com/hyperledger/aries-framework-javascript)?
 
 > Hyperledger Aries provides a shared, reusable, interoperable tool kit designed for initiatives and solutions focused on creating, transmitting and storing verifiable digital credentials.
 >

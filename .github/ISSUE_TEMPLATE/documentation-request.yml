@@ -19,7 +19,7 @@ body:
     id: platform
     attributes:
       label: Version
-      description: Which version of Aries Framework JavaScript are you using?
+      description: Which version of Credo are you using?
       placeholder: 0.x.x
     validations:
       required: true

@@ -2,13 +2,13 @@ import DocCardList from '@theme/DocCardList';
 
 # Updating AFJ
 
-This section will cover everything you need to know about updating Aries Framework JavaScript to a newer version.
+This section will cover everything you need to know about updating Credo to a newer version.
 
 <DocCardList />
 
 ## Versioning
 
-Aries Framework JavaScript follows [semantic versioning](https://semver.org/). This means that major version changes (**1**.0.0) are considered breaking changes. When features are added this is a minor version change (0.**1**.0). For bug fixes the patch version change is used (0.0.**1**).
+Credo follows [semantic versioning](https://semver.org/). This means that major version changes (**1**.0.0) are considered breaking changes. When features are added this is a minor version change (0.**1**.0). For bug fixes the patch version change is used (0.0.**1**).
 
 While AFJ is still in pre-1.0.0 version, the version change types are shifted to the right. This means a major version change is now a minor change (0.**1**.0) and a minor change is now a patch change (0.0.**1**). This is done to keep the version below 1.0.0, indicating the framework is still in early development and users can expect more breaking changes that when the version has already reached 1.0.0.
 

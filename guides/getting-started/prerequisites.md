@@ -1,6 +1,6 @@
 # Prerequisites
 
-To work with [Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript) we need to install some dependencies and set-up our Node.JS environment. Even when creating a mobile app in React Native, we need Node.JS installed. We will go over the specific installation process for each platform. Go ahead and pick your system of choice to get started!
+To work with [Credo](https://github.com/hyperledger/aries-framework-javascript) we need to install some dependencies and set-up our Node.JS environment. Even when creating a mobile app in React Native, we need Node.JS installed. We will go over the specific installation process for each platform. Go ahead and pick your system of choice to get started!
 
 The specific items that we set-up:
 

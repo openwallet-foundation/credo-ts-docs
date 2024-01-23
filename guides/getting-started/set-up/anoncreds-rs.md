@@ -4,7 +4,7 @@
 
 :::caution
 
-Support for the AnonCreds RS library in Aries Framework JavaScript is currently experimental. We recommend new projects to use AnonCreds RS from the start, and also to migrate existing projects to AnonCreds, from the Indy Sdk. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/hyperledger/aries-framework-javascript/issues/new).
+Support for the AnonCreds RS library in Credo is currently experimental. We recommend new projects to use AnonCreds RS from the start, and also to migrate existing projects to AnonCreds, from the Indy Sdk. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/hyperledger/aries-framework-javascript/issues/new).
 
 Currently, there are few limitations to using AnonCreds RS.
 
@@ -15,7 +15,7 @@ Currently, there are few limitations to using AnonCreds RS.
 
 ### Installing AnonCreds RS
 
-When using Aries Framework JavaScript with AnonCreds RS, there are a few extra dependencies that need to be installed. We need to install `@hyperledger/anoncreds` package, which contains the interfaces, and `@hyperledger/anoncreds-rs` package which is an implementation which depends on a wrapper of anoncreds-rs. Secondly, we need to add native bindings for the specific platform `@hyperledger/anoncreds-<platform>`. Currently there are bindings for Node.JS, as `@hyperledger/anoncreds-nodejs`, and React Native as `@hyperlegder/anoncreds-react-native`.
+When using Credo with AnonCreds RS, there are a few extra dependencies that need to be installed. We need to install `@hyperledger/anoncreds` package, which contains the interfaces, and `@hyperledger/anoncreds-rs` package which is an implementation which depends on a wrapper of anoncreds-rs. Secondly, we need to add native bindings for the specific platform `@hyperledger/anoncreds-<platform>`. Currently there are bindings for Node.JS, as `@hyperledger/anoncreds-nodejs`, and React Native as `@hyperlegder/anoncreds-react-native`.
 
 <!--tabs-->
 

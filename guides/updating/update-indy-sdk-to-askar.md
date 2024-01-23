@@ -28,7 +28,7 @@ The migration script does the following to make sure everything is migrated prop
 
 ### Create a backup
 
-Because undefined behavior might occur, we create a backup in the new `tmp` directory from Aries Framework JavaScript. if some error occurs, it will be reverted back to the backed-up state and if no error occurs, it will delete the backup from the temporary directory.
+Because undefined behavior might occur, we create a backup in the new `tmp` directory from Credo. if some error occurs, it will be reverted back to the backed-up state and if no error occurs, it will delete the backup from the temporary directory.
 
 ### Migrate the database to an Aries Askar structure
 

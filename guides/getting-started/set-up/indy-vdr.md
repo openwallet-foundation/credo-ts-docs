@@ -1,10 +1,10 @@
 # Indy VDR
 
-[Hyperledger Indy VDR](https://github.com/hyperledger/indy-vdr), Verifiable Data Registry, can be used to connect to one or more Indy Node ledger pools given sets of genesis transactions. Methods are provided to construct ledger requests and send them to the validators, collecting the results and ensuring that there is a consensus between the nodes. In the context of Aries Framework JavaScript, we mainly leverage it to register, and resolve, schemas, credential definitions and DIDs.
+[Hyperledger Indy VDR](https://github.com/hyperledger/indy-vdr), Verifiable Data Registry, can be used to connect to one or more Indy Node ledger pools given sets of genesis transactions. Methods are provided to construct ledger requests and send them to the validators, collecting the results and ensuring that there is a consensus between the nodes. In the context of Credo, we mainly leverage it to register, and resolve, schemas, credential definitions and DIDs.
 
 :::caution
 
-Support for Indy VDR in Aries Framework JavaScript is currently experimental. We recommend new projects to use Indy VDR from the start, and also to migrate existing projects to Indy VDR, from the indy-sdk. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/hyperledger/aries-framework-javascript/issues/new).
+Support for Indy VDR in Credo is currently experimental. We recommend new projects to use Indy VDR from the start, and also to migrate existing projects to Indy VDR, from the indy-sdk. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/hyperledger/aries-framework-javascript/issues/new).
 
 Currently, there are few limitations to using Indy VDR.
 
@@ -15,7 +15,7 @@ Currently, there are few limitations to using Indy VDR.
 
 ### Installing Indy VDR
 
-When using Aries Framework JavaScript with Indy VDR, there are a few extra dependencies that need to be installed. We need to install the `@hyperledger/indy-vdr`, which contains all the functionality to register objects on an Hyperledger Indy VDR. Secondly, we need to add native bindings for the specific platform `@hyperledger/indy-vdr-<platform>`. Currently there are bindings for Node.JS, as `@hyperledger/indy-vdr-nodejs`, and React Native as `@hyperlegder/indy-vdr-react-native`.
+When using Credo with Indy VDR, there are a few extra dependencies that need to be installed. We need to install the `@hyperledger/indy-vdr`, which contains all the functionality to register objects on an Hyperledger Indy VDR. Secondly, we need to add native bindings for the specific platform `@hyperledger/indy-vdr-<platform>`. Currently there are bindings for Node.JS, as `@hyperledger/indy-vdr-nodejs`, and React Native as `@hyperlegder/indy-vdr-react-native`.
 
 <!--tabs-->
 

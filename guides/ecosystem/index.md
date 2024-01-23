@@ -6,19 +6,19 @@ The Credo ecosystem includes various components that are spread across multiple 
 
 Currently, Credo is composed out of three separate repositories:
 
-1. [Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript)
-2. [Aries Framework JavaScript Extensions](https://github.com/hyperledger/aries-framework-javascript-ext)
+1. [Credo](https://github.com/hyperledger/aries-framework-javascript)
+2. [Credo Extensions](https://github.com/hyperledger/aries-framework-javascript-ext)
 3. [Aries Mobile Agent React Native (Bifold)](https://github.com/hyperledger/aries-mobile-agent-react-native)
 
 ## Documentation
 
 You can find their documentation here:
 
-1. [Aries Framework JavaScript](https://credo.js.org/guides)
-2. [Aries Framework JavaScript Extensions](https://credo.js.org/guides/extensions)
+1. [Credo](https://credo.js.org/guides)
+2. [Credo Extensions](https://credo.js.org/guides/extensions)
 3. [Aries Mobile Agent React Native (Bifold)](https://github.com/hyperledger/aries-mobile-agent-react-native/blob/main/README.md)
 
-### Aries Framework JavaScript
+### Credo
 
 Aries Framework JavaScript (AFJ) is at the core of the Credo ecosystem. AFJ provides all the functionality related to cryptography, storage, messaging and more that is required
 
