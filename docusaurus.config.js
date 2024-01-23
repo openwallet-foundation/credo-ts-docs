@@ -6,8 +6,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 const remarkTabs = require('remark-docusaurus-tabs')
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Aries JavaScript Documentation',
-  tagline: 'Everything you need to know about the Aries JavaScript ecosystem.',
+  title: 'Credo TS',
+  tagline: 'Everything you need to know about the Credo TS ecosystem.',
   url: 'https://credo.js.org',
   baseUrl: '/',
   onBrokenLinks: 'warn',
@@ -17,8 +17,8 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'hyperledger', // Usually your GitHub org/user name.
-  projectName: 'aries-javascript-docs', // Usually your repo name.
+  organizationName: 'openwallet-foundation', // Usually your GitHub org/user name.
+  projectName: 'credo-ts-docs', // Usually your repo name.
   trailingSlash: false,
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -71,7 +71,7 @@ const config = {
     ({
       image: 'img/aries-social-preview-layered.png',
       navbar: {
-        title: 'Aries JavaScript Docs',
+        title: 'Credo Docs',
         logo: {
           alt: 'Hyperledger Aries Logo',
           src: 'img/aries-logo.png',
@@ -111,11 +111,7 @@ const config = {
             items: [
               {
                 label: 'Discord',
-                href: 'https://discord.com/channels/905194001349627914/941708033434738768',
-              },
-              {
-                label: 'Hyperledger Aries Mailing List',
-                href: 'https://lists.hyperledger.org/g/aries',
+                href: 'https://discord.com/channels/1022962884864643214/1179453305856991263',
               },
               {
                 label: 'Working Group Call Notes',
@@ -131,16 +127,16 @@ const config = {
             title: 'Repositories',
             items: [
               {
-                label: 'Aries Framework JavaScript',
-                href: 'https://github.com/hyperledger/aries-framework-javascript',
+                label: 'Credo ',
+                href: 'https://github.com/openwallet-foundation/credo-ts',
               },
               {
-                label: 'Aries Framework JavaScript Extensions',
-                href: 'https://github.com/hyperledger/aries-framework-javascript-ext',
+                label: 'Credo Extensions',
+                href: 'https://github.com/openwallet-foundation/credo-ts-ext',
               },
               {
-                label: 'Aries JavaScript Docs (this site)',
-                href: 'https://github.com/hyperledger/aries-javascript-docs',
+                label: 'Credo Docs (this site)',
+                href: 'https://github.com/openwallet-foundation/credo-ts-docs',
               },
             ],
           },
