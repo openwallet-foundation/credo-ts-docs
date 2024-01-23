@@ -6,7 +6,7 @@
     height="250px"
   />
 </p>
-<h1 align="center"><b>Aries JavaScript Documentation</b></h1>
+<h1 align="center"><b>Credo Documentation</b></h1>
 <p align="center">
   <a
     href="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript/main/LICENSE"
@@ -74,4 +74,4 @@ Issues are also welcomed as it gives us a good idea of the work still needing to
 
 ## Licence
 
-Aries JavaScript Documentation is licensed under the [Apache License Version 2.0 (Apache-2.0)](/LICENSE).
+Credo Documentation is licensed under the [Apache License Version 2.0 (Apache-2.0)](/LICENSE).

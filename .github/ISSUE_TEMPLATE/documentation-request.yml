@@ -1,7 +1,7 @@
 name: Documentation Request
-description: File a request to document a specific functionality in the Aries JavaScript ecosystem.
-title: '[Request]: '
-labels: ['request']
+description: File a request to document a specific functionality in the Credo ecosystem.
+title: "[Request]: "
+labels: ["request"]
 body:
   - type: markdown
     attributes:

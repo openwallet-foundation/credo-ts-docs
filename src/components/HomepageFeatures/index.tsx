@@ -14,7 +14,7 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/easy-to-use.svg').default,
     description: (
       <>
-        Aries JavaScript was designed with the mindset that building self-sovereign identity solutions should be easy
+        Credo was designed with the mindset that building self-sovereign identity solutions should be easy
         and straightforward.
       </>
     ),
@@ -24,7 +24,7 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/multiplatform.svg').default,
     description: (
       <>
-        With support for Node.js and React Native, Aries JavaScript allows you to reuse the same code base in different
+        With support for Node.js and React Native, Credo allows you to reuse the same code base in different
         environments. There is no need to implement the same functionality multiple times.
       </>
     ),
@@ -32,7 +32,7 @@ const FeatureList: FeatureItem[] = [
   {
     title: 'Based on the latest standards',
     Svg: require('@site/static/img/standards.svg').default,
-    description: <>By keeping up with the latest standards, we ensure Aries JavaScript is secure and interoperable.</>,
+    description: <>By keeping up with the latest standards, we ensure Credo is secure and interoperable.</>,
   },
 ]
 

@@ -27,7 +27,7 @@ Breaking changes to code means changes to how you interact with AFJ. This includ
 
 :::info
 
-If you encounter any breaking changes that aren't mentioned in the migration docs, please open an issue in the [Aries JavaScript Docs](https://github.com/hyperledger/aries-javascript-docs/issues) repository, or directly create a PR describing the change.
+If you encounter any breaking changes that aren't mentioned in the migration docs, please open an issue in the [Credo Docs](https://github.com/hyperledger/aries-javascript-docs/issues) repository, or directly create a PR describing the change.
 
 :::
 

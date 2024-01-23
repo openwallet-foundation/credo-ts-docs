@@ -1,10 +1,10 @@
-# The Aries JavaScript Ecosystem
+# The Credo Ecosystem
 
-The Aries JavaScript ecosystem includes various components that are spread across multiple repositories. In this section we'll go over what these components are and how the relate to one another.
+The Credo ecosystem includes various components that are spread across multiple repositories. In this section we'll go over what these components are and how the relate to one another.
 
 ## Repositories
 
-Currently, Aries JavaScript is composed out of three separate repositories:
+Currently, Credo is composed out of three separate repositories:
 
 1. [Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript)
 2. [Aries Framework JavaScript Extensions](https://github.com/hyperledger/aries-framework-javascript-ext)
@@ -20,7 +20,7 @@ You can find their documentation here:
 
 ### Aries Framework JavaScript
 
-Aries Framework JavaScript (AFJ) is at the core of the Aries JavaScript ecosystem. AFJ provides all the functionality related to cryptography, storage, messaging and more that is required
+Aries Framework JavaScript (AFJ) is at the core of the Credo ecosystem. AFJ provides all the functionality related to cryptography, storage, messaging and more that is required
 
 ## Contributing in the Aries JS Ecosystem
 
