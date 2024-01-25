@@ -6,7 +6,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 const remarkTabs = require('remark-docusaurus-tabs')
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Credo TS',
+  title: 'Credo',
   tagline: 'Everything you need to know about the Credo TS ecosystem.',
   url: 'https://credo.js.org',
   baseUrl: '/',
