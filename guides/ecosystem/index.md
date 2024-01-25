@@ -22,7 +22,7 @@ You can find their documentation here:
 
 Aries Framework JavaScript (AFJ) is at the core of the Credo ecosystem. AFJ provides all the functionality related to cryptography, storage, messaging and more that is required
 
-## Contributing in the Aries JS Ecosystem
+## Contributing in the Credo Ecosystem
 
 Consider attending our weekly meetings to become aware of the current development cadence.
 
