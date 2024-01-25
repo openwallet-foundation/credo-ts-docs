@@ -127,7 +127,7 @@ const config = {
             title: 'Repositories',
             items: [
               {
-                label: 'Credo ',
+                label: 'Credo',
                 href: 'https://github.com/openwallet-foundation/credo-ts',
               },
               {
