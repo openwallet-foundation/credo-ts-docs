@@ -11,7 +11,7 @@ This guide assumes you have followed the [Prerequisites](./prerequisites), and y
 
 :::caution
 
-Credo is still in **active development**, and as such some APIs are still experimental. **When using any experimental features, make sure to use an exact version of AFJ** (`0.4.0`) instead of a range (`^0.4.0`), to prevent accidental breaking changes. If you're not leveraging any experimental features, you can use a range (`^0.4.0`) to get the latest bugfixes and features.
+Credo is still in **active development**, and as such some APIs are still experimental. **When using any experimental features, make sure to use an exact version of Credo** (`0.4.0`) instead of a range (`^0.4.0`), to prevent accidental breaking changes. If you're not leveraging any experimental features, you can use a range (`^0.4.0`) to get the latest bugfixes and features.
 
 For AFJ `0.4.x`, **the following features are experimental**:
 
