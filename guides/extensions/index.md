@@ -4,7 +4,7 @@ import DocCardList from '@theme/DocCardList';
 
 Credo Extensions is an extensions repository to Credo. It hosts libraries built on top of Credo that don't necessarily belong to the core of the project.
 
-Currently, there are four packages in the extension repository. Example extension libraries include React Hooks for AFJ and a REST API wrapper.
+Currently, there are four packages in the extension repository. Example extension libraries include React Hooks for Credo and a REST API wrapper.
 
 | Package                                                                                                    | Version                                                                                                          | Description                                             |
 | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |

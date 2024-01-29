@@ -20,7 +20,7 @@ You can find their documentation here:
 
 ### Credo
 
-Credo (core) is at the core of the Credo ecosystem. AFJ provides all the functionality related to cryptography, storage, messaging and more that is required
+Credo (core) is at the core of the Credo ecosystem. Credo provides all the functionality related to cryptography, storage, messaging and more that is required
 
 ## Contributing in the Credo Ecosystem
 

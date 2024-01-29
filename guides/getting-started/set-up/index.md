@@ -13,7 +13,7 @@ This guide assumes you have followed the [Prerequisites](./prerequisites), and y
 
 Credo is still in **active development**, and as such some APIs are still experimental. **When using any experimental features, make sure to use an exact version of Credo** (`0.4.0`) instead of a range (`^0.4.0`), to prevent accidental breaking changes. If you're not leveraging any experimental features, you can use a range (`^0.4.0`) to get the latest bugfixes and features.
 
-For AFJ `0.4.x`, **the following features are experimental**:
+For Credo `0.4.x`, **the following features are experimental**:
 
 - Implementing your own `AnonCredsRegistry` and AnonCreds service implementation.
 - Using the shared component libraries from `@aries-framework/aries-askar`, `@aries-framework/indy-vdr` and `@aries-framework/anoncreds-rs`
@@ -67,7 +67,7 @@ of your application.
 + import 'react-native-get-random-values'
 ```
 
-In addition you need add support for resolving modules with the `.cjs` extension, as this is used by some of AFJ's dependencies and not automatically supported by React Native.
+In addition you need add support for resolving modules with the `.cjs` extension, as this is used by some of Credo's dependencies and not automatically supported by React Native.
 
 ```js title="metro.config.js" showLineNumbers
 module.exports = {
@@ -130,7 +130,7 @@ enough for your specific use cases. Please refer to the
 
 ### Adding a wallet and storage implementation
 
-After creating the `Agent` instance, we need to provide the agent with a wallet and storage implementation. AFJ provides a few implementations out of the box, but you can also implement your own. Currently the following Wallet and Storage implementations are supported out of the box. Follow the specific guides to set up the wallet and storage implementation of your choice.
+After creating the `Agent` instance, we need to provide the agent with a wallet and storage implementation. Credo provides a few implementations out of the box, but you can also implement your own. Currently the following Wallet and Storage implementations are supported out of the box. Follow the specific guides to set up the wallet and storage implementation of your choice.
 
 - [Aries Askar](./set-up/aries-askar) - Recommended.
 - [Indy SDK](./set-up/indy-sdk) - Legacy. Will be deprecated in the future.
