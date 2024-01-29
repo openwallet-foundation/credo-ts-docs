@@ -1,8 +1,6 @@
 # Agent Config
 
-The Aries agent provided by [Aries Framework
-JavaScript](https://github.com/openwallet-foundation/credo-ts) is very
-extensible. These are all the configuration options with a short description:
+The Credo agent is very extensible. These are all the configuration options with a short description:
 
 ## `label`\*
 
@@ -127,7 +125,7 @@ that can be used for simple logs. See [Logging](./logging) for more details on c
 **Type**: `Logger`
 
 ```typescript title="example"
-import { ConsoleLogger, LogLevel } from '@aries-framework/core'
+import { ConsoleLogger, LogLevel } from '@credo-ts/core'
 
 logger: new ConsoleLogger(LogLevel.info)
 ```
@@ -155,7 +153,7 @@ much more ambiguous in their specification.
 &nbsp;&nbsp;&nbsp; "application/didcomm-envelope-enc"
 
 ```typescript title="example"
-import { DidCommMimeType } from '@aries-framework/core'
+import { DidCommMimeType } from '@credo-ts/core'
 
 didCommMimeType: DidCommMimeType.V1
 ```
@@ -207,8 +205,7 @@ connectionImageUrl: 'https://picsum.photos/200'
 ## `autoUpdateStorageOnStartup`
 
 Whether the storage should automatically be updated when a newer version of
-[Aries Framework
-JavaScript](https://github.com/openwallet-foundation/credo-ts) is used.
+[Credo](https://github.com/openwallet-foundation/credo-ts) is used.
 
 **Type**: `boolean`
 

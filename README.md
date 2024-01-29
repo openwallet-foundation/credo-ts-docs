@@ -2,14 +2,14 @@
   <br />
   <img
     alt="Hyperledger Aries logo"
-    src="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript/aa31131825e3331dc93694bc58414d955dcb1129/images/aries-logo.png"
+    src="https://raw.githubusercontent.com/openwallet-foundation/credo-ts/aa31131825e3331dc93694bc58414d955dcb1129/images/aries-logo.png"
     height="250px"
   />
 </p>
 <h1 align="center"><b>Credo Documentation</b></h1>
 <p align="center">
   <a
-    href="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript/main/LICENSE"
+    href="https://raw.githubusercontent.com/openwallet-foundation/credo-ts/main/LICENSE"
     ><img
       alt="License"
       src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"
@@ -22,7 +22,7 @@
   <a href="#license">License</a>
 </p>
 
-Credo is an ecosystem of self-sovereign identity development tools, with [Credo](https://github.com/openwallet-foundation/credo-ts) at the center. This documentation site serves to make it as easy as possible for developers of any level to get started with building self-sovereign identity solutions.
+[Credo](https://github.com/openwallet-foundation/credo-ts) is a modular ecosystem of self-sovereign identity development tools written in TypeScript. This documentation site serves to make it as easy as possible for developers of any level to get started with building self-sovereign identity solutions.
 
 # Getting Started
 

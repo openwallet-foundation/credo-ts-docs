@@ -84,4 +84,4 @@ agentDependencies.indy.setLogger((level, target, message, modulePath, file, line
 > WARNING: You can only set the logger once. Call indy_set_default_logger, indy_set_logger, not both. Once it's been set, libindy won't let you change it.
 
 You can also set the environment variable `RUST_LOG` to log at specified log levels.
-See <https://crates.io/crates/env_logger> for more information.
+See https://crates.io/crates/env_logger for more information.
