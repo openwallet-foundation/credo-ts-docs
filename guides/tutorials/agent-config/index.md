@@ -1,7 +1,7 @@
 # Agent Config
 
 The Aries agent provided by [Aries Framework
-JavaScript](https://github.com/hyperledger/aries-framework-javascript) is very
+JavaScript](https://github.com/openwallet-foundation/credo-ts) is very
 extensible. These are all the configuration options with a short description:
 
 ## `label`\*
@@ -208,7 +208,7 @@ connectionImageUrl: 'https://picsum.photos/200'
 
 Whether the storage should automatically be updated when a newer version of
 [Aries Framework
-JavaScript](https://github.com/hyperledger/aries-framework-javascript) is used.
+JavaScript](https://github.com/openwallet-foundation/credo-ts) is used.
 
 **Type**: `boolean`
 

@@ -3,7 +3,7 @@
 When working with any Credo implementation, you will interact with an Credo
 agent. This will be either directly or via a REST API, like [the Credo
 framework REST
-API](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/rest).
+API](https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/rest).
 
 ### Characteristics
 

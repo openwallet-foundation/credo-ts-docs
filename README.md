@@ -22,7 +22,7 @@
   <a href="#license">License</a>
 </p>
 
-Credo is an ecosystem of self-sovereign identity development tools, with [Credo](https://github.com/hyperledger/aries-framework-javascript) at the center. This documentation site serves to make it as easy as possible for developers of any level to get started with building self-sovereign identity solutions.
+Credo is an ecosystem of self-sovereign identity development tools, with [Credo](https://github.com/openwallet-foundation/credo-ts) at the center. This documentation site serves to make it as easy as possible for developers of any level to get started with building self-sovereign identity solutions.
 
 # Getting Started
 
@@ -68,7 +68,7 @@ If you are using GitHub pages for hosting, this command is a convenient way to b
 
 ## Contributing
 
-The docs are a work in progress, contributions are incredibly appreciated! If you're looking to contribute check out the [contribution guideline](https://github.com/hyperledger/aries-javascript-docs/blob/main/CONTRIBUTING.md).
+The docs are a work in progress, contributions are incredibly appreciated! If you're looking to contribute check out the [contribution guideline](https://github.com/openwallet-foundation/credo-ts-docs/blob/main/CONTRIBUTING.md).
 
 Issues are also welcomed as it gives us a good idea of the work still needing to be done.
 

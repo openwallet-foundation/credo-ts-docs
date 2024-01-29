@@ -10,7 +10,7 @@ While the migration script technically works on node.js, it is strongly advised 
 
 :::caution
 
-Postgres is not supported. If you are using postgres with Indy SDK and need to update to Aries Askar, please open an issue on [GitHub](https://github.com/hyperledger/aries-framework-javascript).
+Postgres is not supported. If you are using postgres with Indy SDK and need to update to Aries Askar, please open an issue on [GitHub](https://github.com/openwallet-foundation/credo-ts).
 
 :::
 
