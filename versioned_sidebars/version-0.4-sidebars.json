@@ -48,11 +48,7 @@
         "type": "doc",
         "id": "concepts/index"
       },
-      "items": [
-        "concepts/agents",
-        "concepts/did-and-didcomm",
-        "concepts/platform-and-environment"
-      ]
+      "items": ["concepts/agents", "concepts/did-and-didcomm", "concepts/platform-and-environment"]
     },
     {
       "type": "category",
@@ -69,9 +65,7 @@
             "type": "doc",
             "id": "tutorials/agent-config/index"
           },
-          "items": [
-            "tutorials/agent-config/logging"
-          ]
+          "items": ["tutorials/agent-config/logging"]
         },
         "tutorials/create-a-connection",
         "tutorials/cheqd/index",

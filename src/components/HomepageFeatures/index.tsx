@@ -14,8 +14,8 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/easy-to-use.svg').default,
     description: (
       <>
-        Credo was designed with the mindset that building self-sovereign identity solutions should be easy
-        and straightforward.
+        Credo was designed with the mindset that building self-sovereign identity solutions should be easy and
+        straightforward.
       </>
     ),
   },
