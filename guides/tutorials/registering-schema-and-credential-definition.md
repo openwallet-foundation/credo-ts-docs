@@ -1,6 +1,6 @@
 # Registering a schema and credential definition on an AnonCreds Registry
 
-In this tutorial we will register a schema and credential definition on an AnonCredsRegistry e.g. Hyperledger Indy ledger [indy-vdr](https://github.com/hyperledger/indy-vdr), [cheqd](https://github.com/hyperledger/aries-framework-javascript/packages/cheqd).
+In this tutorial we will register a schema and credential definition on an AnonCredsRegistry e.g. Hyperledger Indy ledger [indy-vdr](https://github.com/hyperledger/indy-vdr), [cheqd](https://github.com/openwallet-foundation/credo-ts/packages/cheqd).
 
 :::info
 

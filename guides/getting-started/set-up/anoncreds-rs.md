@@ -4,7 +4,7 @@
 
 :::caution
 
-Support for the AnonCreds RS library in Credo is currently experimental. We recommend new projects to use AnonCreds RS from the start, and also to migrate existing projects to AnonCreds, from the Indy Sdk. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/hyperledger/aries-framework-javascript/issues/new).
+Support for the AnonCreds RS library in Credo is currently experimental. We recommend new projects to use AnonCreds RS from the start, and also to migrate existing projects to AnonCreds, from the Indy Sdk. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/openwallet-foundation/credo-ts/issues/new).
 
 Currently, there are few limitations to using AnonCreds RS.
 

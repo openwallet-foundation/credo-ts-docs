@@ -4,7 +4,7 @@
 
 :::caution
 
-Support for Indy VDR in Credo is currently experimental. We recommend new projects to use Indy VDR from the start, and also to migrate existing projects to Indy VDR, from the indy-sdk. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/hyperledger/aries-framework-javascript/issues/new).
+Support for Indy VDR in Credo is currently experimental. We recommend new projects to use Indy VDR from the start, and also to migrate existing projects to Indy VDR, from the indy-sdk. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/openwallet-foundation/credo-ts/issues/new).
 
 Currently, there are few limitations to using Indy VDR.
 

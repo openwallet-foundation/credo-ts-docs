@@ -19,10 +19,10 @@
 <p align="center">
   <a href="#getting-started">Getting started</a> &nbsp;|&nbsp;
   <a href="#contributing">Contributing</a> &nbsp;|&nbsp;
-  <a href="#license">License</a> 
+  <a href="#license">License</a>
 </p>
 
-Aries JavaScipt is an ecosystem of self-sovereign identity development tools, with [Aries Framework JavaScipt](https://github.com/hyperledger/aries-framework-javascript) at the center. This documentation site serves to make it as easy as possible for developers of any level to get started with building self-sovereign identity solutions.
+Credo is an ecosystem of self-sovereign identity development tools, with [Credo](https://github.com/hyperledger/aries-framework-javascript) at the center. This documentation site serves to make it as easy as possible for developers of any level to get started with building self-sovereign identity solutions.
 
 # Getting Started
 
@@ -31,13 +31,13 @@ This website is built using [Docusaurus 2](https://docusaurus.io/), a modern sta
 ### Installation
 
 ```
-$ yarn
+yarn
 ```
 
 ### Local Development
 
 ```
-$ yarn start
+yarn start
 ```
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
@@ -45,7 +45,7 @@ This command starts a local development server and opens up a browser window. Mo
 ### Build
 
 ```
-$ yarn build
+yarn build
 ```
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
@@ -55,13 +55,13 @@ This command generates static content into the `build` directory and can be serv
 Using SSH:
 
 ```
-$ USE_SSH=true yarn deploy
+USE_SSH=true yarn deploy
 ```
 
 Not using SSH:
 
 ```
-$ GIT_USER=<Your GitHub username> yarn deploy
+GIT_USER=<Your GitHub username> yarn deploy
 ```
 
 If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
