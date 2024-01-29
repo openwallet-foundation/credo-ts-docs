@@ -10,13 +10,13 @@ While the migration script technically works on node.js, it is strongly advised 
 
 :::caution
 
-Postgres is not supported. If you are using postgres with Indy SDK and need to update to Aries Askar, please open an issue on [GitHub](https://github.com/hyperledger/aries-framework-javascript).
+Postgres is not supported. If you are using postgres with Indy SDK and need to update to Aries Askar, please open an issue on [GitHub](https://github.com/openwallet-foundation/credo-ts).
 
 :::
 
 :::caution
 
-The migration script is supported to run on 0.3.x before migrating from 0.3.x to 0.4.x. Please refer to [Migrating from AFJ 0.3.x to 0.4.x](./versions/0.3-to-0.4.md) to get to 0.4.x afterwards.
+The migration script is supported to run on 0.3.x before migrating from 0.3.x to 0.4.x. Please refer to [Migrating from Credo 0.3.x to 0.4.x](./versions/0.3-to-0.4.md) to get to 0.4.x afterwards.
 
 It is important to note that this script must be ran before you update from 0.3.x to 0.4.x.
 
@@ -28,7 +28,7 @@ The migration script does the following to make sure everything is migrated prop
 
 ### Create a backup
 
-Because undefined behavior might occur, we create a backup in the new `tmp` directory from Aries Framework JavaScript. if some error occurs, it will be reverted back to the backed-up state and if no error occurs, it will delete the backup from the temporary directory.
+Because undefined behavior might occur, we create a backup in the new `tmp` directory from Credo. if some error occurs, it will be reverted back to the backed-up state and if no error occurs, it will delete the backup from the temporary directory.
 
 ### Migrate the database to an Aries Askar structure
 
@@ -46,7 +46,7 @@ Aries Askar has a specific way to store keys and every key, defined by the categ
 
 :::caution
 
-This update script does not transform did records. This is fine for something like `did:peer`, but will cause issues with `indy` and `sov` DIDs. For more information, please check out the [Migrating from AFJ 0.3.x to 0.4.x](./versions/0.3-to-0.4.md#removal-of-publicdidseed-and-publicdid)
+This update script does not transform did records. This is fine for something like `did:peer`, but will cause issues with `indy` and `sov` DIDs. For more information, please check out the [Migrating from Credo 0.3.x to 0.4.x](./versions/0.3-to-0.4.md#removal-of-publicdidseed-and-publicdid)
 
 :::
 
@@ -84,7 +84,7 @@ Updating does not require a lot of code, but must be done with caution.
 
 It is very important to note that the migration script only has to be run once. If it runs for a second time, it will error saying that the database is already migrated. Also, when the migration is finished, it is common practice to store this state in your persistent app storage. This script does not provide a way to detect if an update has happened, so storing this value will prevent the script from running every time. For more information regarding this topic, please check out [Update Assistant](./update-assistant.md#storing-the-agent-storage-version-outside-of-the-agent-storage).
 
-### add the required dependencies:
+### add the required dependencies
 
 ```sh
 yarn add @hyperledger/aries-askar-react-native @aries-framework/indy-sdk-to-askar-migration react-native-fs

@@ -25,7 +25,7 @@ transport-agnostic, interoperable and much more. This means that you can
 securely send a message from as Alice to Bob securely via bluetooth, HTTP,
 WebSockets, etc.
 
-When working with the tools available inside the Aries JavaScript ecosystem,
+When working with the tools available inside the Credo ecosystem,
 deep knowledge of DIDComm is not required.
 
 ### Useful Resources
