@@ -10,7 +10,7 @@ cheqd also has a dedicated token, $CHEQ, used for identity writes to the network
 
 ### Installing cheqd
 
-When using Aries Framework JavaScript with the cheqd, there's a few extra dependencies that need to be installed. We need to install the `@aries-framework/cheqd` package, which implements the needed interfaces for the agent.
+When using Credo with the cheqd, there's a few extra dependencies that need to be installed. We need to install the `@aries-framework/cheqd` package, which implements the needed interfaces for the agent.
 
 #### React Native
 

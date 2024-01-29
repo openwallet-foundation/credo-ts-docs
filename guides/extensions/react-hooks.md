@@ -1,6 +1,6 @@
 # React Hooks
 
-The React Hooks package exposes useful React hooks that allow you to easily interact with AFJ from a React client application.
+The React Hooks package exposes useful React hooks that allow you to easily interact with Credo from a React client application.
 
 These hooks provide a simple way to query agent data in a client application, allowing you to focus on the user interface.
 
@@ -32,7 +32,7 @@ yarn add @aries-framework/react-hooks@^0.5
 
 ## Usage
 
-This package exposes useful React hooks that allow you to easily interact with AFJ.
+This package exposes useful React hooks that allow you to easily interact with Credo.
 
 Everything exported from Hooks:
 

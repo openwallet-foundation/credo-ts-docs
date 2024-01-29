@@ -1,0 +1,39 @@
+{
+  "name": "snippets-0.4",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:mediator-setup": "ts-node --esm src/mediator-setup.ts",
+    "dev:mediation-recipient": "ts-node --esm src/mediation-recipient.ts",
+    "dev:connection": "ts-node --esm src/create-a-connection.ts",
+    "dev:credential": "ts-node --esm src/issue-a-credential.ts",
+    "dev:register-with-indy": "ts-node --esm src/register-schema-and-cred-def.ts",
+    "dev:set-up": "ts-node --esm src/set-up.ts"
+  },
+  "dependencies": {
+    "@aries-framework/anoncreds": "^0.4.0",
+    "@aries-framework/anoncreds-rs": "^0.4.0",
+    "@aries-framework/askar": "^0.4.0",
+    "@aries-framework/core": "^0.4.0",
+    "@aries-framework/indy-sdk": "^0.4.0",
+    "@aries-framework/indy-vdr": "^0.4.0",
+    "@aries-framework/cheqd": "^0.4.0",
+    "@aries-framework/node": "^0.4.0",
+    "@aries-framework/react-native": "^0.4.0",
+    "@hyperledger/anoncreds-nodejs": "^0.1.0",
+    "@hyperledger/anoncreds-react-native": "^0.1.0",
+    "@hyperledger/aries-askar-nodejs": "^0.1.0",
+    "@hyperledger/aries-askar-react-native": "^0.1.0",
+    "@hyperledger/indy-vdr-nodejs": "^0.1.0",
+    "@hyperledger/indy-vdr-react-native": "^0.1.0",
+    "indy-sdk": "^1.16.0-dev-1655",
+    "indy-sdk-react-native": "^0.3.1",
+    "node-fetch": "2"
+  },
+  "devDependencies": {
+    "@types/indy-sdk": "1.16.26",
+    "@types/indy-sdk-react-native": "npm:@types/indy-sdk@1.16.26"
+  }
+}
