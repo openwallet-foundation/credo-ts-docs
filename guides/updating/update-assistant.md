@@ -1,6 +1,6 @@
 # Update Assistant
 
-The Update Assistant helps you update the storage objects from AFJ to newer versions. This documents describes the different ways you can leverage the Update Assistant from fully managed to more manual approaches.
+The Update Assistant helps you update the storage objects from Credo to newer versions. This documents describes the different ways you can leverage the Update Assistant from fully managed to more manual approaches.
 
 - [Update Strategies](#update-strategies)
   - [Manually instantiating the update assistant on agent startup](#manually-instantiating-the-update-assistant-on-agent-startup)
