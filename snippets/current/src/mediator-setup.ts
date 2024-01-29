@@ -16,7 +16,7 @@ const name = 'mediator'
 const port = 3001
 
 const agentConfig: InitConfig = {
-  label: `Aries Framework JavaScript ${name}`,
+  label: `Credo ${name}`,
   walletConfig: {
     id: name,
     key: name,

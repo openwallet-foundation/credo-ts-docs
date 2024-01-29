@@ -3,7 +3,7 @@
 [Aries Askar](https://github.com/hyperledger/aries-askar) provides secure, encrypted storage and cryptographic support for encrypting, decrypting, signing and verifying data. It also provides both the `Wallet` and `StorageService` implementations for the agent.
 
 :::caution
-Although Aries Askar is stable and already used in production in agents such as [Aries Cloud Agent Python](https://github.com/hyperledger/aries-cloudagent-python), support for Aries Askar in Aries Framework JavaScript is currently experimental. We recommend new projects to use Aries Askar from the start, and also to migrate existing projects to Aries Askar. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/hyperledger/aries-framework-javascript/issues/new).
+Although Aries Askar is stable and already used in production in agents such as [Aries Cloud Agent Python](https://github.com/hyperledger/aries-cloudagent-python), support for Aries Askar in Credo is currently experimental. We recommend new projects to use Aries Askar from the start, and also to migrate existing projects to Aries Askar. However, projects may experience some issues. If you encounter any issues, please [open an issue](https://github.com/openwallet-foundation/credo-ts/issues/new).
 
 Currently, there are few limitations to using Aries Askar.
 
@@ -20,7 +20,7 @@ If you're upgrading from the Indy SDK to Aries Askar, see [Migrating from an Ind
 
 ### Installing Aries Askar
 
-When using Aries Framework JavaScript with Aries Askar, there are a few extra dependencies that need to be installed. We need to install the `@aries-framework/askar` package, which implements the needed interfaces for the agent. Secondly, we need to add native bindings for the specific platform `@hyperledger/aries-askar-<platform>`. Currently there are bindings for Node.JS, as `@hyperledger/aries-askar-nodejs`, and React Native as `@hyperlegder/aries-askar-react-native`.
+When using Credo with Aries Askar, there are a few extra dependencies that need to be installed. We need to install the `@aries-framework/askar` package, which implements the needed interfaces for the agent. Secondly, we need to add native bindings for the specific platform `@hyperledger/aries-askar-<platform>`. Currently there are bindings for Node.JS, as `@hyperledger/aries-askar-nodejs`, and React Native as `@hyperlegder/aries-askar-react-native`.
 
 <!--tabs-->
 
