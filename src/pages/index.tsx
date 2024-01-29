@@ -26,7 +26,7 @@ function HomepageHeader() {
 export default function Home(): JSX.Element {
   const { siteConfig } = useDocusaurusContext()
   return (
-    <Layout title={siteConfig.title} description="Aries JavaScript Docs">
+    <Layout title={siteConfig.title} description="Credo Docs">
       <HomepageHeader />
       <main>
         <HomepageFeatures />
