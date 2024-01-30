@@ -7,7 +7,7 @@ const remarkTabs = require('remark-docusaurus-tabs')
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Credo',
-  tagline: 'Everything you need to know about the Credo TS ecosystem.',
+  tagline: 'Everything you need to know about the Credo ecosystem.',
   url: 'https://credo.js.org',
   baseUrl: '/',
   onBrokenLinks: 'warn',
@@ -116,11 +116,7 @@ const config = {
               },
               {
                 label: 'Working Group Call Notes',
-                href: 'https://wiki.hyperledger.org/display/ARIES/Framework+JS+Meetings',
-              },
-              {
-                label: 'Working Group Call Calendar',
-                href: 'https://lists.hyperledger.org/login?r=https%3A%2F%2Flists.hyperledger.org%2Fg%2Faries%2Fcalendar',
+                href: 'https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information',
               },
             ],
           },
