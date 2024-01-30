@@ -74,8 +74,8 @@ const config = {
       navbar: {
         title: 'Credo Docs',
         logo: {
-          alt: 'Hyperledger Aries Logo',
-          src: 'img/aries-logo.png',
+          alt: 'Credo Logo',
+          src: 'img/credo-logo.png',
         },
         items: [
           {
