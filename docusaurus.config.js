@@ -115,6 +115,10 @@ const config = {
                 href: 'https://discord.com/channels/1022962884864643214/1179453305856991263',
               },
               {
+                label: 'Mailing List',
+                href: 'https://lists.openwallet.foundation/g/credo-project',
+              },
+              {
                 label: 'Working Group Call Notes',
                 href: 'https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information',
               },
