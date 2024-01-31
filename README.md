@@ -2,7 +2,7 @@
   <br />
   <img
     alt="Credo logo"
-    src="https://raw.githubusercontent.com/openwallet-foundation/credo-ts/aa31131825e3331dc93694bc58414d955dcb1129/images/aries-logo.png"
+    src="https://github.com/openwallet-foundation/credo-ts/blob/c7886cb8377ceb8ee4efe8d264211e561a75072d/images/credo-logo.png"
     height="250px"
   />
 </p>
@@ -70,7 +70,9 @@ If you are using GitHub pages for hosting, this command is a convenient way to b
 
 The docs are a work in progress, contributions are incredibly appreciated! If you're looking to contribute check out the [contribution guideline](https://github.com/openwallet-foundation/credo-ts-docs/blob/main/CONTRIBUTING.md).
 
-Issues are also welcomed as it gives us a good idea of the work still needing to be done.
+There are regular community working groups to discuss ongoing efforts within Credo, showcase items you've built with Credo, or ask questions. See [Meeting Information](https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information) for up to date information on the meeting schedule. Everyone is welcome to join!
+
+We welcome you to join our mailing list and Discord channel. See the [Wiki](https://github.com/openwallet-foundation/credo-ts/wiki/Communication) for up to date information.
 
 ## Licence
 
