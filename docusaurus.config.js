@@ -70,7 +70,7 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      image: 'img/aries-social-preview-layered.png',
+      image: 'img/credo-social-preview.png',
       navbar: {
         title: 'Credo Docs',
         logo: {
