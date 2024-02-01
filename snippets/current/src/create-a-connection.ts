@@ -1,4 +1,4 @@
-import { AskarModule } from '@aries-framework/askar'
+import { AskarModule } from '@credo-ts/askar'
 import {
   Agent,
   InitConfig,
@@ -9,8 +9,8 @@ import {
   DidExchangeState,
   OutOfBandRecord,
   ConnectionsModule,
-} from '@aries-framework/core'
-import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
+} from '@credo-ts/core'
+import { agentDependencies, HttpInboundTransport } from '@credo-ts/node'
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 
 // start-section-1
@@ -27,7 +27,6 @@ const initializeBobAgent = async () => {
   }
 
   // A new instance of an agent is created here
-  // Askar can also be replaced by the indy-sdk if required
   const agent = new Agent({
     config,
     modules: {
@@ -64,7 +63,6 @@ const initializeAcmeAgent = async () => {
   }
 
   // A new instance of an agent is created here
-  // Askar can also be replaced by the indy-sdk if required
   const agent = new Agent({
     config,
     modules: {

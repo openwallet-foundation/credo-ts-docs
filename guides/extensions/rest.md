@@ -10,7 +10,7 @@ The Credo REST API is the most convenient way for self-sovereign identity (SSI) 
 
 :::danger
 
-The `@aries-framework/rest` package has not been updated to work with the latest version (**`0.4.x`**) of `@aries-framework/core`. The documentation in this section is for version **`0.9.x`** of the `@aries-framework/rest` package, that works with `@aries-framework/core` version **`0.2.x`**. Extension packages (such as REST API) are versioned separately from the core packages.
+The `@credo-ts/rest` package has not been updated to work with the latest version (**`0.4.x`**) of `@credo-ts/core`. The documentation in this section is for version **`0.9.x`** of the `@credo-ts/rest` package, that works with `@credo-ts/core` version **`0.2.x`**. Extension packages (such as REST API) are versioned separately from the core packages.
 
 :::
 
@@ -31,7 +31,7 @@ You can do this directly on your machine.
 After installing and confirming that Libindy is installed, simply run:
 
 ```sh
-npx -p @aries-framework/rest afj-rest start \
+npx -p @credo-ts/rest afj-rest start \
   --label "Credo Rest" \
   --wallet-id "walletId" \
   --wallet-key "walletKey" \
@@ -48,5 +48,5 @@ The REST API provides an OpenAPI schema that can easily be viewed using the Swag
 To find out all available configuration options from the CLI, you can run the CLI command with `--help`. This will print a full list of all available options.
 
 ```sh
-npx -p @aries-framework/rest afj-rest start --help
+npx -p @credo-ts/rest afj-rest start --help
 ```

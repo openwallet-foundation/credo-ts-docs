@@ -6,10 +6,10 @@ import {
   MediationStateChangedEvent,
   MediatorModule,
   RoutingEventTypes,
-} from '@aries-framework/core'
-import { IndySdkModule } from '@aries-framework/indy-sdk'
-import { HttpInboundTransport, agentDependencies } from '@aries-framework/node'
-import indySdk from 'indy-sdk'
+} from '@credo-ts/core'
+import { AskarModule } from '@credo-ts/askar'
+import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
+import { HttpInboundTransport, agentDependencies } from '@credo-ts/node'
 
 // start-section-1
 const name = 'mediator'
@@ -28,7 +28,7 @@ const mediator = new Agent({
   config: agentConfig,
   dependencies: agentDependencies,
   modules: {
-    indySdk: new IndySdkModule({ indySdk }),
+    askar: new AskarModule({ ariesAskar }),
     mediator: new MediatorModule({
       autoAcceptMediationRequests: true,
     }),

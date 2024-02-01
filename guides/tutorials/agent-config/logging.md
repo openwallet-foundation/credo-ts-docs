@@ -5,8 +5,8 @@
 To enable logging inside the framework a logger must be passed to the agent config. A simple `ConsoleLogger` can be imported from the framework.
 
 ```ts
-import type { InitConfig } from '@aries-framework/core'
-import { ConsoleLogger, LogLevel } from '@aries-framework/core'
+import type { InitConfig } from '@credo-ts/core'
+import { ConsoleLogger, LogLevel } from '@credo-ts/core'
 
 const agentConfig: InitConfig = {
   // ... other config properties ...
@@ -19,7 +19,7 @@ const agentConfig: InitConfig = {
 For more advanced use cases the `Logger` interface can be implemented. See the example below.
 
 ```ts
-import { Logger, LogLevel } from '@aries-framework/core'
+import { Logger, LogLevel } from '@credo-ts/core'
 
 class MyCustomLogger implements Logger {
   public logLevel: LogLevel
@@ -57,31 +57,3 @@ class MyCustomLogger implements Logger {
   }
 }
 ```
-
-## Indy Logs
-
-To enable logging in the underlying Rust framework, either `setLogger` or `setDefaultLogger` must be called on the indy dependency, as seen [here](https://github.com/hyperledger/indy-sdk/tree/master/wrappers/nodejs#logger).
-
-:::caution
-
-The `setLogger` and `setDefaultLogger` methods have only been implemented in the Node.JS wrapper of the indy sdk. This won't work when importing from `@aries-framework/react-native`
-
-:::
-
-The easiest way to do this from Credo is through the `indy` property of `agentDependencies`.
-
-```ts
-import { agentDependencies } from '@aries-framework/node'
-agentDependencies.indy.setDefaultLogger('trace')
-
-// OR
-
-agentDependencies.indy.setLogger((level, target, message, modulePath, file, line) => {
-  console.log('libindy said:', level, target, message, modulePath, file, line)
-})
-```
-
-> WARNING: You can only set the logger once. Call indy_set_default_logger, indy_set_logger, not both. Once it's been set, libindy won't let you change it.
-
-You can also set the environment variable `RUST_LOG` to log at specified log levels.
-See https://crates.io/crates/env_logger for more information.

@@ -6,7 +6,7 @@ These hooks provide a simple way to query agent data in a client application, al
 
 :::note
 
-This document is for version **`0.5.x`** of the `@aries-framework/react-hooks` package, that works with `@aries-framework/core` version **`0.4.x`**. Extension packages (such as React Hooks) are versioned separately from the core packages.
+This document is for version **`0.5.x`** of the `@credo-ts/react-hooks` package, that works with `@credo-ts/core` version **`0.4.x`**. Extension packages (such as React Hooks) are versioned separately from the core packages.
 
 :::
 
@@ -19,13 +19,13 @@ To add the React Hooks package to your existing project simply run:
 ## npm
 
 ```sh
-npm i @aries-framework/react-hooks@^0.5
+npm i @credo-ts/react-hooks@^0.5
 ```
 
 ## Yarn
 
 ```sh
-yarn add @aries-framework/react-hooks@^0.5
+yarn add @credo-ts/react-hooks@^0.5
 ```
 
 <!--/tabs-->
@@ -47,13 +47,13 @@ import AgentProvider, {
   useProofs,
   useProofById,
   useProofByState,
-} from '@aries-framework/react-hooks'
+} from '@credo-ts/react-hooks'
 ```
 
 First step is to wrap your entire app in our `<AgentProvider/>`. The provider takes an initialized agent. The base of your app should look something like this:
 
 ```tsx
-import AgentProvider from '@aries-framework/react-hooks'
+import AgentProvider from '@credo-ts/react-hooks'
 
 const App = () => {
   const [agent, setAgent] = useState(undefined)
@@ -83,7 +83,7 @@ The `useAgent` hook returns `{ agent, loading }` so anytime you need access to a
 The following is an example of how you could use the `useConnections` hook to render a full list of all a user's connections.
 
 ```ts
-import { useConnections } from '@aries-framework/react-hooks'
+import { useConnections } from '@credo-ts/react-hooks'
 
 const MyConnectionsComponent = () => {
   // all base hooks return an array of objects and a loading boolean
