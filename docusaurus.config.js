@@ -7,7 +7,7 @@ const remarkTabs = require('remark-docusaurus-tabs')
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Credo',
-  tagline: 'Everything you need to know about the Credo TS ecosystem.',
+  tagline: 'Everything you need to know about the Credo ecosystem.',
   url: 'https://credo.js.org',
   baseUrl: '/',
   onBrokenLinks: 'warn',
@@ -70,12 +70,12 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      image: 'img/aries-social-preview-layered.png',
+      image: 'img/credo-social-preview.png',
       navbar: {
         title: 'Credo Docs',
         logo: {
-          alt: 'Hyperledger Aries Logo',
-          src: 'img/aries-logo.png',
+          alt: 'Credo Logo',
+          src: 'img/credo-logo.png',
         },
         items: [
           {
@@ -115,12 +115,12 @@ const config = {
                 href: 'https://discord.com/channels/1022962884864643214/1179453305856991263',
               },
               {
-                label: 'Working Group Call Notes',
-                href: 'https://wiki.hyperledger.org/display/ARIES/Framework+JS+Meetings',
+                label: 'Mailing List',
+                href: 'https://lists.openwallet.foundation/g/credo-project',
               },
               {
-                label: 'Working Group Call Calendar',
-                href: 'https://lists.hyperledger.org/login?r=https%3A%2F%2Flists.hyperledger.org%2Fg%2Faries%2Fcalendar',
+                label: 'Working Group Call Notes',
+                href: 'https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information',
               },
             ],
           },
