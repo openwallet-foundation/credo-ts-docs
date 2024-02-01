@@ -31,7 +31,7 @@ You can do this directly on your machine.
 After installing and confirming that Libindy is installed, simply run:
 
 ```sh
-npx -p @credo-ts/rest afj-rest start \
+npx -p @credo-ts/rest credo-rest start \
   --label "Credo Rest" \
   --wallet-id "walletId" \
   --wallet-key "walletKey" \
