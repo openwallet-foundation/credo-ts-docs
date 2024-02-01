@@ -9,23 +9,22 @@ import {
   Agent,
   CredentialsModule,
   V2CredentialProtocol,
-} from '@aries-framework/core'
-import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
-import { AskarModule } from '@aries-framework/askar'
+} from '@credo-ts/core'
+import { agentDependencies, HttpInboundTransport } from '@credo-ts/node'
+import { AskarModule } from '@credo-ts/askar'
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 import {
   IndyVdrAnonCredsRegistry,
   IndyVdrIndyDidRegistrar,
   IndyVdrIndyDidResolver,
   IndyVdrModule,
-} from '@aries-framework/indy-vdr'
+} from '@credo-ts/indy-vdr'
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
 import {
   AnonCredsCredentialFormatService,
   AnonCredsModule,
   LegacyIndyCredentialFormatService,
-} from '@aries-framework/anoncreds'
-import { AnonCredsRsModule } from '@aries-framework/anoncreds-rs'
+} from '@credo-ts/anoncreds'
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
 
 const issuerConfig: InitConfig = {
@@ -52,9 +51,6 @@ const issuer = new Agent({
     askar: new AskarModule({
       ariesAskar,
     }),
-    anoncredsRs: new AnonCredsRsModule({
-      anoncreds,
-    }),
     indyVdr: new IndyVdrModule({
       indyVdr,
       networks: [
@@ -68,6 +64,7 @@ const issuer = new Agent({
     }),
     anoncreds: new AnonCredsModule({
       registries: [new IndyVdrAnonCredsRegistry()],
+      anoncreds,
     }),
     dids: new DidsModule({
       registrars: [new IndyVdrIndyDidRegistrar()],
@@ -101,9 +98,6 @@ const holder = new Agent({
     askar: new AskarModule({
       ariesAskar,
     }),
-    anoncredsRs: new AnonCredsRsModule({
-      anoncreds,
-    }),
     indyVdr: new IndyVdrModule({
       indyVdr,
       networks: [
@@ -117,6 +111,7 @@ const holder = new Agent({
     }),
     anoncreds: new AnonCredsModule({
       registries: [new IndyVdrAnonCredsRegistry()],
+      anoncreds,
     }),
     dids: new DidsModule({
       resolvers: [new IndyVdrIndyDidResolver()],

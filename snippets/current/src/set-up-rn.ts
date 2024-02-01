@@ -1,7 +1,7 @@
 // start-section-1
-import type { InitConfig } from '@aries-framework/core'
-import { Agent } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/react-native'
+import type { InitConfig } from '@credo-ts/core'
+import { Agent } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/react-native'
 
 const config: InitConfig = {
   label: 'docs-agent-react-native',
@@ -18,7 +18,7 @@ const agent = new Agent({
 // end-section-1
 
 // start-section-2
-import { HttpOutboundTransport, WsOutboundTransport } from '@aries-framework/core'
+import { HttpOutboundTransport, WsOutboundTransport } from '@credo-ts/core'
 
 // ... agent setup from prevous section ...
 

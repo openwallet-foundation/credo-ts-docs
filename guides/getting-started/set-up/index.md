@@ -11,37 +11,34 @@ This guide assumes you have followed the [Prerequisites](./prerequisites), and y
 
 :::caution
 
-Credo is still in **active development**, and as such some APIs are still experimental. **When using any experimental features, make sure to use an exact version of Credo** (`0.4.0`) instead of a range (`^0.4.0`), to prevent accidental breaking changes. If you're not leveraging any experimental features, you can use a range (`^0.4.0`) to get the latest bugfixes and features.
+Credo is still in **active development**, and as such some APIs are still experimental. **When using any experimental features, make sure to use an exact version of Credo** (`0.5.0`) instead of a range (`^0.5.0`), to prevent accidental breaking changes. If you're not leveraging any experimental features, you can use a range (`^0.5.0`) to get the latest bugfixes and features.
 
-For Credo `0.4.x`, **the following features are experimental**:
+For Credo `0.5.x`, **the following features are experimental**:
 
-- Implementing your own `AnonCredsRegistry` and AnonCreds service implementation.
-- Using the shared component libraries from `@aries-framework/aries-askar`, `@aries-framework/indy-vdr` and `@aries-framework/anoncreds-rs`
-- Using OpenID4VC from the `@aries-framework/openid4vc-client` module
-- W3C JWT Verifiable Credentials
-- Using multi-tenancy from the `@aries-framework/tenants` module
-- Using BBS+ Signatures from the `@aries-framework/bbs-signatures` module
-- Using the cheqd module from the `@aries-framework/cheqd` module
+- Using OpenID4VC from the `@credo-ts/openid4vc` module
+- SD-JWT Verifiable Credentials
+- Using multi-tenancy from the `@credo-ts/tenants` module
+- Using BBS+ Signatures from the `@credo-ts/bbs-signatures` module
+- Using the cheqd module from the `@credo-ts/cheqd` module
 
 :::
 
 ### Installing the required dependencies
 
-First we have to install the minimal amount of dependencies that are required
-for configuring an Credo agent.
+First we have to install the minimal amount of dependencies that are required for configuring an Credo agent.
 
 <!--tabs-->
 
 # Node.JS
 
 ```console
-yarn add @aries-framework/core@^0.4.0 @aries-framework/node@^0.4.0
+yarn add @credo-ts/core@^0.5.0 @credo-ts/node@^0.5.0
 ```
 
 # React Native
 
 ```console
-yarn add @aries-framework/core@^0.4.0 @aries-framework/react-native@^0.4.0 react-native-fs react-native-get-random-values
+yarn add @credo-ts/core@^0.5.0 @credo-ts/react-native@^0.5.0 react-native-fs react-native-get-random-values
 ```
 
 <!--/tabs-->
@@ -130,15 +127,16 @@ enough for your specific use cases. Please refer to the
 
 ### Adding a wallet and storage implementation
 
-After creating the `Agent` instance, we need to provide the agent with a wallet and storage implementation. Credo provides a few implementations out of the box, but you can also implement your own. Currently the following Wallet and Storage implementations are supported out of the box. Follow the specific guides to set up the wallet and storage implementation of your choice.
+After creating the `Agent` instance, we need to provide the agent with a wallet and storage implementation. Credo provides one implementations out of the box, but you can also implement your own. Currently a Wallet and Storage implementation using Aries Askar is supported out of the box.
 
-- [Aries Askar](./set-up/aries-askar) - Recommended.
-- [Indy SDK](./set-up/indy-sdk) - Legacy. Will be deprecated in the future.
+- [Aries Askar](./set-up/aries-askar)
 
-<DocCardList items={[
-{ type: 'link', label: 'Aries Askar', href: './set-up/aries-askar', docId: 'getting-started/set-up/aries-askar' },
-{ type: 'link', label: 'Indy SDK', href: './set-up/indy-sdk', docId: 'getting-started/set-up/indy-sdk/index' }
-]} />
+<DocCardList items={[{
+type: 'link',
+label: 'Aries Askar',
+href: './set-up/aries-askar',
+docId: 'getting-started/set-up/aries-askar'
+}]} />
 
 ### Setting up the transports
 

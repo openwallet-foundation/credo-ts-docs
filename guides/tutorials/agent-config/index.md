@@ -27,7 +27,7 @@ can be initialized separately.
 **Type**: `WalletConfig`
 
 ```typescript title="example"
-import { KeyDerivationMethod } from '@aries-framework/core'
+import { KeyDerivationMethod } from '@credo-ts/core'
 
 walletConfig: {
   id: 'foo',
@@ -58,11 +58,7 @@ be seem like a password.
 The method used for key derivation of the
 [`walletConfig.key`](#walletconfigkey).
 
-When using `KeyDerivationMethod.Raw`, it is strongly recommended to get the raw
-key via
-[`indy_generate_wallet_key`](https://github.com/hyperledger/indy-sdk/blob/1c7096dd95d0fd53881070f66907df4b9e61b874/libindy/src/api/wallet.rs#L560).
-If you really must implement your own key generation, it is required to be a
-base58-encoded
+When using `KeyDerivationMethod.Raw`, the key must be a base58-encoded
 [ChaCha20-Poly1305](https://en.wikipedia.org/wiki/ChaCha20-Poly1305) key.
 
 > For the advanced readers
@@ -85,10 +81,7 @@ base58-encoded
 
 **`KeyDerivationMethod.Raw`**
 
-&nbsp;&nbsp;&nbsp; uses no derivation method.
-It is recommended to use the
-[`indy_generate_wallet_key`](https://github.com/hyperledger/indy-sdk/blob/1c7096dd95d0fd53881070f66907df4b9e61b874/libindy/src/api/wallet.rs#L560)
-for key generation.
+&nbsp;&nbsp;&nbsp; uses no derivation method and the key must be a base58-encoded [ChaCha20-Poly1305](https://en.wikipedia.org/wiki/ChaCha20-Poly1305) key.
 
 ### `walletConfig.storage`
 

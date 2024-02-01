@@ -1,7 +1,7 @@
 // start-section-1
-import type { InitConfig } from '@aries-framework/core'
-import { Agent } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/node'
+import type { InitConfig } from '@credo-ts/core'
+import { Agent } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/node'
 
 const config: InitConfig = {
   label: 'docs-agent-nodejs',
@@ -18,8 +18,8 @@ const agent = new Agent({
 // end-section-1
 
 // start-section-2
-import { HttpOutboundTransport, WsOutboundTransport } from '@aries-framework/core'
-import { HttpInboundTransport } from '@aries-framework/node'
+import { HttpOutboundTransport, WsOutboundTransport } from '@credo-ts/core'
+import { HttpInboundTransport } from '@credo-ts/node'
 
 // ... agent setup from prevous section ...
 
