@@ -107,7 +107,7 @@ Not supported at the moment. NPM overrides work different than Yarn resolutions,
 In order to use the agent in the application we have to configure and
 initialize it. This following configuration is quite generic and possibly not
 enough for your specific use cases. Please refer to the
-[tutorials](../tutorials/index) for a more use-case-specific agent setup.
+[tutorials](../tutorials) for a more use-case-specific agent setup.
 
 <!--tabs-->
 
