@@ -1,9 +1,8 @@
 # Agents
 
 When working with any Aries implementation, you will interact with an Aries
-agent. This will be either directly or via a REST API, like [the Aries
-framework REST
-API](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/rest).
+agent. This will be either directly or via a REST API, like [the Credo REST
+API](https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/rest).
 
 ### Characteristics
 
