@@ -1,6 +1,6 @@
 // start-section-1
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
-import { IndyVdrModule } from '@aries-framework/indy-vdr'
+import { IndyVdrModule } from '@credo-ts/indy-vdr'
 
 const modules = {
   indyVdr: new IndyVdrModule({

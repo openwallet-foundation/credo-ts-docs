@@ -6,7 +6,7 @@ The Redux Store allows you to integrate state management for the most important 
 
 :::note
 
-This document is for version **`0.4.x`** of the `@aries-framework/redux-store` package, that works with `@aries-framework/core` version **`0.4.x`**. Extension packages (such as Redux Store) are versioned separately from the core packages.
+This document is for version **`0.4.x`** of the `@credo-ts/redux-store` package, that works with `@credo-ts/core` version **`0.4.x`**. Extension packages (such as Redux Store) are versioned separately from the core packages.
 
 :::
 
@@ -19,13 +19,13 @@ To add the Redux Store package to your existing project simply run:
 ## npm
 
 ```sh
-npm i @aries-framework/redux-store
+npm i @credo-ts/redux-store
 ```
 
 ## Yarn
 
 ```sh
-yarn add @aries-framework/redux-store
+yarn add @credo-ts/redux-store
 ```
 
 <!--tabs-->

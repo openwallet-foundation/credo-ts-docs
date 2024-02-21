@@ -21,10 +21,10 @@ There are three options on how to leverage the update assistant on agent startup
 When the version of the storage is stored inside the agent storage, it means we need to check if the agent needs to be updated on every agent startup. We'll initialize the update assistant and check whether the storage is up to date. The advantage of this approach is that you don't have to store anything yourself, and have full control over the workflow.
 
 ```ts
-import { UpdateAssistant, Agent } from '@aries-framework/core'
+import { UpdateAssistant, Agent } from '@credo-ts/core'
 
-// or @aries-framework/node
-import { agentDependencies } from '@aries-framework/react-native'
+// or @credo-ts/node
+import { agentDependencies } from '@credo-ts/react-native'
 
 // First create the agent
 const agent = new Agent({
@@ -61,10 +61,10 @@ When the version of the storage is stored outside of the agent storage, you don'
 When a wallet has been exported and later imported you don't always have the latest version available. If this is the case you can always rely on Method 1 or 2 for updating the wallet, and storing the version yourself afterwards. You can also get the current version by calling `await updateAssistant.getCurrentAgentStorageVersion()`. Do note the `UpdateAssistant` needs to be initialized before calling this method.
 
 ```ts
-import { UpdateAssistant, Agent } from '@aries-framework/core'
+import { UpdateAssistant, Agent } from '@credo-ts/core'
 
-// or @aries-framework/node
-import { agentDependencies } from '@aries-framework/react-native'
+// or @credo-ts/node
+import { agentDependencies } from '@credo-ts/react-native'
 
 // The storage version will normally be stored in e.g. persistent storage on a mobile device
 let currentStorageVersion: VersionString = '0.1'
@@ -106,10 +106,10 @@ await agent.initialize()
 This is by far the easiest way to update the agent, but has the least amount of flexibility and is not configurable. This means you will have to use the default update options to update the agent storage. You can find the default update config in the respective version migration guides (e.g. in [0.1-to-0.2](/guides/updating/versions/0.1-to-0.2.md)).
 
 ```ts
-import { UpdateAssistant, Agent } from '@aries-framework/core'
+import { UpdateAssistant, Agent } from '@credo-ts/core'
 
-// or @aries-framework/node
-import { agentDependencies } from '@aries-framework/react-native'
+// or @credo-ts/node
+import { agentDependencies } from '@credo-ts/react-native'
 
 // First create the agent, setting the autoUpdateStorageOnStartup option to true
 const agent = new Agent({

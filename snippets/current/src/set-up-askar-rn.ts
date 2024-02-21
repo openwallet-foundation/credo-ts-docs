@@ -1,4 +1,4 @@
-import type { InitConfig } from '@aries-framework/core'
+import type { InitConfig } from '@credo-ts/core'
 
 const config: InitConfig = {
   label: 'docs-agent-react-native',
@@ -9,9 +9,9 @@ const config: InitConfig = {
 }
 
 // start-section-1
-import { Agent } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/react-native'
-import { AskarModule } from '@aries-framework/askar'
+import { Agent } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/react-native'
+import { AskarModule } from '@credo-ts/askar'
 import { ariesAskar } from '@hyperledger/aries-askar-react-native'
 
 const agent = new Agent({

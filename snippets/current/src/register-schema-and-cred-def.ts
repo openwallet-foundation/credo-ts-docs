@@ -1,4 +1,4 @@
-import { DidsModule, InitConfig, KeyType, LogLevel, TypedArrayEncoder } from '@aries-framework/core'
+import { DidsModule, InitConfig, KeyType, TypedArrayEncoder } from '@credo-ts/core'
 
 const config: InitConfig = {
   label: 'docs-agent-nodejs-register-schema-and-cred-def',
@@ -9,19 +9,18 @@ const config: InitConfig = {
 }
 
 // start-section-1
-import { Agent } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/node'
-import { AskarModule } from '@aries-framework/askar'
+import { Agent } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/node'
+import { AskarModule } from '@credo-ts/askar'
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 import {
   IndyVdrAnonCredsRegistry,
   IndyVdrIndyDidRegistrar,
   IndyVdrIndyDidResolver,
   IndyVdrModule,
-} from '@aries-framework/indy-vdr'
+} from '@credo-ts/indy-vdr'
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
-import { AnonCredsModule } from '@aries-framework/anoncreds'
-import { AnonCredsRsModule } from '@aries-framework/anoncreds-rs'
+import { AnonCredsModule } from '@credo-ts/anoncreds'
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
 import {
   CheqdAnonCredsRegistry,
@@ -29,7 +28,7 @@ import {
   CheqdDidResolver,
   CheqdModule,
   CheqdModuleConfig,
-} from '@aries-framework/cheqd'
+} from '@credo-ts/cheqd'
 
 const agent = new Agent({
   config,
@@ -39,9 +38,6 @@ const agent = new Agent({
     // We do this to have access to a wallet
     askar: new AskarModule({
       ariesAskar,
-    }),
-    anoncredsRs: new AnonCredsRsModule({
-      anoncreds,
     }),
     indyVdr: new IndyVdrModule({
       indyVdr,
@@ -66,6 +62,7 @@ const agent = new Agent({
     ),
     anoncreds: new AnonCredsModule({
       registries: [new IndyVdrAnonCredsRegistry(), new CheqdAnonCredsRegistry()],
+      anoncreds,
     }),
     dids: new DidsModule({
       registrars: [new IndyVdrIndyDidRegistrar(), new CheqdDidRegistrar()],
@@ -129,7 +126,9 @@ const credentialDefinitionResult = await agent.modules.anoncreds.registerCredent
     issuerId: '<did>',
     schemaId: schemaResult.schemaState.schemaId,
   },
-  options: {},
+  options: {
+    supportRevocation: false,
+  },
 })
 
 if (credentialDefinitionResult.credentialDefinitionState.state === 'failed') {

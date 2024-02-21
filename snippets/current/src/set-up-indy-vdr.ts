@@ -1,4 +1,4 @@
-import type { InitConfig } from '@aries-framework/core'
+import type { InitConfig } from '@credo-ts/core'
 
 const config: InitConfig = {
   label: 'docs-agent-nodejs',
@@ -9,14 +9,15 @@ const config: InitConfig = {
 }
 
 // start-section-1
-import { Agent } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/node'
-import { AskarModule } from '@aries-framework/askar'
+import { Agent } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/node'
+import { AskarModule } from '@credo-ts/askar'
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 
-import { IndyVdrAnonCredsRegistry, IndyVdrModule } from '@aries-framework/indy-vdr'
+import { IndyVdrAnonCredsRegistry, IndyVdrModule } from '@credo-ts/indy-vdr'
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
-import { AnonCredsModule } from '@aries-framework/anoncreds'
+import { AnonCredsModule } from '@credo-ts/anoncreds'
+import { anoncreds } from '@hyperledger/anoncreds-nodejs'
 
 const agent = new Agent({
   config,
@@ -35,6 +36,7 @@ const agent = new Agent({
     }),
     anoncreds: new AnonCredsModule({
       registries: [new IndyVdrAnonCredsRegistry()],
+      anoncreds,
     }),
     // Indy VDR can optionally be used with Askar as wallet and storage implementation
     askar: new AskarModule({

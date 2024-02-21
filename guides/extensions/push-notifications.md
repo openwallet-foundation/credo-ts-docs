@@ -4,7 +4,7 @@ The Push Notifications plugin package provides a way for you to register your AP
 
 :::note
 
-This document is for version **`0.5.x`** of the `@aries-framework/push-notifications` package, that works with `@aries-framework/core` version **`0.4.x`**. Extension packages (such as Push Notifications) are versioned separately from the core packages.
+This document is for version **`0.5.x`** of the `@credo-ts/push-notifications` package, that works with `@credo-ts/core` version **`0.4.x`**. Extension packages (such as Push Notifications) are versioned separately from the core packages.
 
 :::
 
@@ -17,13 +17,13 @@ To add the Push Notifications plugin package to your existing project simply run
 ## npm
 
 ```sh
-npm i @aries-framework/push-notifications
+npm i @credo-ts/push-notifications
 ```
 
 ## Yarn
 
 ```sh
-yarn add @aries-framework/push-notifications
+yarn add @credo-ts/push-notifications
 ```
 
 <!--tabs-->
@@ -31,8 +31,8 @@ yarn add @aries-framework/push-notifications
 ## Usage
 
 ```ts
-import { PushNotificationsApnsModule, PushNotificationsFcmModule } from '@aries-framework/push-notifications'
-import {  } from '@aries-framework/core'
+import { PushNotificationsApnsModule, PushNotificationsFcmModule } from '@credo-ts/push-notifications'
+import {  } from '@credo-ts/core'
 
 const agent = new Agent({
     /** agent config... */,

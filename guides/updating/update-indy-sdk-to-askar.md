@@ -87,7 +87,7 @@ It is very important to note that the migration script only has to be run once. 
 ### add the required dependencies
 
 ```sh
-yarn add @hyperledger/aries-askar-react-native @aries-framework/indy-sdk-to-askar-migration react-native-fs
+yarn add @hyperledger/aries-askar-react-native @credo-ts/indy-sdk-to-askar-migration react-native-fs
 ```
 
 Below is the minimal code required for the migration to work. It is recommended to turn the logger on as it gives a lot of information regarding the migration.
@@ -99,9 +99,9 @@ The agent is not allowed to be initialized to run this script. This makes sure n
 :::
 
 ```typescript
-import { agentDependencies } from '@aries-framework/react-native'
-import { AskarModule } from '@aries-framework/askar'
-import { IndySdkToAskarMigrationUpdater } from '@aries-framework/indy-sdk-to-askar-migration'
+import { agentDependencies } from '@credo-ts/react-native'
+import { AskarModule } from '@credo-ts/askar'
+import { IndySdkToAskarMigrationUpdater } from '@credo-ts/indy-sdk-to-askar-migration'
 import { ariesAskar } from '@hyperledger/aries-askar-react-native'
 
 const oldAgent = new Agent({
