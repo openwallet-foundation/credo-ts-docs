@@ -1,4 +1,4 @@
-import type { InitConfig } from '@aries-framework/core'
+import type { InitConfig } from '@credo-ts/core'
 
 const config: InitConfig = {
   label: 'docs-agent-nodejs',
@@ -9,9 +9,9 @@ const config: InitConfig = {
 }
 
 // start-section-1
-import { Agent } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/node'
-import { AskarModule } from '@aries-framework/askar'
+import { Agent } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/node'
+import { AskarModule } from '@credo-ts/askar'
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 
 const agent = new Agent({

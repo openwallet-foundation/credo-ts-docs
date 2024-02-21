@@ -1,4 +1,4 @@
-import type { InitConfig } from '@aries-framework/core'
+import type { InitConfig } from '@credo-ts/core'
 
 const config: InitConfig = {
   label: 'docs-agent-nodejs',
@@ -9,15 +9,14 @@ const config: InitConfig = {
 }
 
 // start-section-1
-import { Agent } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/node'
-import { AskarModule } from '@aries-framework/askar'
+import { Agent } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/node'
+import { AskarModule } from '@credo-ts/askar'
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
-import { AnonCredsModule } from '@aries-framework/anoncreds'
-import { AnonCredsRsModule } from '@aries-framework/anoncreds-rs'
-import { IndyVdrAnonCredsRegistry } from '@aries-framework/indy-vdr'
+import { AnonCredsModule } from '@credo-ts/anoncreds'
+import { IndyVdrAnonCredsRegistry } from '@credo-ts/indy-vdr'
 
 const agent = new Agent({
   config,
@@ -28,13 +27,11 @@ const agent = new Agent({
     askar: new AskarModule({
       ariesAskar,
     }),
-    anoncredsRs: new AnonCredsRsModule({
-      anoncreds,
-    }),
     anoncreds: new AnonCredsModule({
       // Here we add an Indy VDR registry as an example, any AnonCreds registry
       // can be used
       registries: [new IndyVdrAnonCredsRegistry()],
+      anoncreds,
     }),
   },
 })

@@ -1,4 +1,4 @@
-import { DidDocumentService, InitConfig } from '@aries-framework/core'
+import { DidDocumentService, InitConfig } from '@credo-ts/core'
 
 const config: InitConfig = {
   label: 'docs-agent-react-native',
@@ -9,9 +9,9 @@ const config: InitConfig = {
 }
 
 // start-section-1
-import { Agent, DidsModule, KeyType, DidDocument } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/react-native'
-import { AskarModule } from '@aries-framework/askar'
+import { Agent, DidsModule, KeyType, DidDocument } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/react-native'
+import { AskarModule } from '@credo-ts/askar'
 import { ariesAskar } from '@hyperledger/aries-askar-react-native'
 
 import {
@@ -21,8 +21,9 @@ import {
   CheqdModule,
   CheqdModuleConfig,
   CheqdDidCreateOptions,
-} from '@aries-framework/cheqd'
-import { AnonCredsModule } from '@aries-framework/anoncreds'
+} from '@credo-ts/cheqd'
+import { AnonCredsModule } from '@credo-ts/anoncreds'
+import { anoncreds } from '@hyperledger/anoncreds-react-native'
 
 const agent = new Agent({
   config,
@@ -36,6 +37,7 @@ const agent = new Agent({
     // AnonCreds
     anoncreds: new AnonCredsModule({
       registries: [new CheqdAnonCredsRegistry()],
+      anoncreds,
     }),
 
     // Add cheqd module

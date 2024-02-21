@@ -32,19 +32,7 @@ const sidebars = {
           link: { type: 'doc', id: 'getting-started/set-up/index' },
           items: [
             'getting-started/set-up/aries-askar',
-            {
-              type: 'category',
-              label: 'Indy SDK',
-              link: { type: 'doc', id: 'getting-started/set-up/indy-sdk/index' },
-              items: [
-                'getting-started/set-up/indy-sdk/linux',
-                'getting-started/set-up/indy-sdk/windows',
-                'getting-started/set-up/indy-sdk/macos-intel',
-                'getting-started/set-up/indy-sdk/macos-arm',
-                'getting-started/set-up/indy-sdk/react-native',
-              ],
-            },
-            'getting-started/set-up/anoncreds-rs',
+            'getting-started/set-up/anoncreds',
             'getting-started/set-up/indy-vdr',
             'getting-started/set-up/cheqd/index',
           ],
@@ -56,6 +44,12 @@ const sidebars = {
       label: 'Concepts',
       link: { type: 'doc', id: 'concepts/index' },
       items: ['concepts/agents', 'concepts/did-and-didcomm', 'concepts/platform-and-environment'],
+    },
+    {
+      type: 'category',
+      label: 'Features',
+      link: { type: 'doc', id: 'features/index' },
+      items: ['features/aries', 'features/openid4vc', 'features/dids', 'features/credentials'],
     },
     {
       type: 'category',
@@ -73,16 +67,6 @@ const sidebars = {
         'tutorials/registering-schema-and-credential-definition',
         'tutorials/issue-a-credential',
         'tutorials/mediation',
-        {
-          type: 'category',
-          label: 'Using PostgreSQL with the Indy SDK',
-          link: { type: 'doc', id: 'tutorials/indy-sdk-postgres-database-nodejs/index' },
-          items: [
-            'tutorials/indy-sdk-postgres-database-nodejs/linux',
-            'tutorials/indy-sdk-postgres-database-nodejs/macos',
-            'tutorials/indy-sdk-postgres-database-nodejs/windows',
-          ],
-        },
       ],
     },
     {

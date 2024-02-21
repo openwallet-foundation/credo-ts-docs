@@ -6,10 +6,10 @@ import {
   LogLevel,
   MediationRecipientModule,
   WsOutboundTransport,
-} from '@aries-framework/core'
-import { IndySdkModule } from '@aries-framework/indy-sdk'
-import { agentDependencies } from '@aries-framework/node'
-import indySdk from 'indy-sdk'
+} from '@credo-ts/core'
+import { AskarModule } from '@credo-ts/askar'
+import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
+import { agentDependencies } from '@credo-ts/node'
 
 // start-section-1
 const name = 'alice'
@@ -35,7 +35,7 @@ const alice = new Agent({
     mediationRecipient: new MediationRecipientModule({
       mediatorInvitationUrl,
     }),
-    indySdk: new IndySdkModule({ indySdk }),
+    askar: new AskarModule({ ariesAskar }),
   },
 })
 
