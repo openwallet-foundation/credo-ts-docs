@@ -82,9 +82,7 @@ const ed25519PublicKeyBase58 = key.publicKeyBase58
 await agent.dids.create<CheqdDidCreateOptions>({
   method: 'cheqd',
   secret: {},
-  options: {
-    network: 'testnet',
-  },
+  options: {},
   didDocument: new DidDocument({
     id: 'did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d',
     controller: ['did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d'],

@@ -20,6 +20,8 @@ For Credo `0.5.x`, **the following features are experimental**:
 - Using multi-tenancy from the `@credo-ts/tenants` module
 - Using BBS+ Signatures from the `@credo-ts/bbs-signatures` module
 - Using the cheqd module from the `@credo-ts/cheqd` module
+- Using DIF Presentation Exchange
+- Using AnonCreds in the W3C Verifiable Credential format
 
 :::
 
@@ -32,13 +34,13 @@ First we have to install the minimal amount of dependencies that are required fo
 # Node.JS
 
 ```console
-yarn add @credo-ts/core@^0.5.0 @credo-ts/node@^0.5.0
+yarn add @credo-ts/core@^0.5.3 @credo-ts/node@^0.5.3
 ```
 
 # React Native
 
 ```console
-yarn add @credo-ts/core@^0.5.0 @credo-ts/react-native@^0.5.0 react-native-fs react-native-get-random-values
+yarn add @credo-ts/core@^0.5.3 @credo-ts/react-native@^0.5.3 react-native-fs react-native-get-random-values
 ```
 
 <!--/tabs-->

@@ -11,13 +11,13 @@ When using Credo with Indy VDR, there are a few extra dependencies that need to 
 # Node.JS
 
 ```console
-yarn add @credo-ts/indy-vdr@^0.5.0 @hyperledger/indy-vdr-nodejs@^0.2.0
+yarn add @credo-ts/indy-vdr@^0.5.3 @hyperledger/indy-vdr-nodejs@^0.2.2
 ```
 
 # React Native
 
 ```console
-yarn add @credo-ts/indy-vdr@^0.5.0 @hyperledger/indy-vdr-react-native@^0.2.0
+yarn add @credo-ts/indy-vdr@^0.5.3 @hyperledger/indy-vdr-react-native@^0.2.2
 ```
 
 <!--/tabs-->
