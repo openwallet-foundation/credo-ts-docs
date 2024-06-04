@@ -17,13 +17,13 @@ When using Credo with Aries Askar, there are a few extra dependencies that need 
 # Node.JS
 
 ```console
-yarn add @credo-ts/askar@^0.5.0 @hyperledger/aries-askar-nodejs@^0.2.0
+yarn add @credo-ts/askar@^0.5.3 @hyperledger/aries-askar-nodejs@^0.2.1
 ```
 
 # React Native
 
 ```console
-yarn add @credo-ts/askar@^0.5.0 @hyperledger/aries-askar-react-native@^0.2.0
+yarn add @credo-ts/askar@^0.5.3 @hyperledger/aries-askar-react-native@^0.2.1
 ```
 
 <!--/tabs-->

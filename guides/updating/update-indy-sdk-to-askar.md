@@ -4,7 +4,7 @@ This documentation explains the process of migrating your Indy SDK wallet to [Ar
 
 :::danger
 
-While the migration script technically works on node.js, it is strongly advised not to use it, yet. The migration of issuer records (such as Schemas and Credential Definitions) is not implemented yet. When a credential definition is detected it will revert the migration process and no harm is done.
+While the migration script technically works on Node.JS, it is strongly advised not to use it, yet. The migration of issuer records (such as Schemas and Credential Definitions) is not implemented yet. When a credential definition is detected it will revert the migration process and no harm is done.
 
 :::
 
@@ -84,10 +84,30 @@ Updating does not require a lot of code, but must be done with caution.
 
 It is very important to note that the migration script only has to be run once. If it runs for a second time, it will error saying that the database is already migrated. Also, when the migration is finished, it is common practice to store this state in your persistent app storage. This script does not provide a way to detect if an update has happened, so storing this value will prevent the script from running every time. For more information regarding this topic, please check out [Update Assistant](./update-assistant.md#storing-the-agent-storage-version-outside-of-the-agent-storage).
 
-### add the required dependencies
+### Migrate code to Aries Askar, Indy VDR, AnonCreds.
+
+Since Credo 0.4, there have been three new packages introduced that replace Indy SDK: Aries Askar (secure storage and cryptography), Indy VDR (integration with Hyperledger Indy blockchain), and AnonCreds (AnonCreds credential format).
+
+Before setting up the migration script for Aries Askar (the storage), it is advised to first update your code with the new dependencies, and test it in a fresh environment to make sure everything works as expected.
+
+To update your code to use the new packages, remove the `@aries-framework/indy-sdk`, `indy-sdk`, `indy-sdk-react-native`, `@types/indy-sdk` and `@types/indy-sdk-react-native` packages from the dependencies of your project, and remove all related imports from your code.
+
+Then, setup the required dependencies for Aries Askar, Indy VDR, and AnonCreds. It is not required to set up all dependencies. This guide focuses on migration the storage from Indy SDK to Aries Askar, so only the Aries Askar dependency is required.
+
+To setup the new dependencies, follow the getting started guide for each package:
+
+- [Aries Askar](../getting-started/set-up/aries-askar.md)
+- [AnonCreds](../getting-started/set-up/anoncreds.md)
+- [Indy VDR](../getting-started/set-up/indy-vdr.md)
+
+Once this has been set-up, make sure all code works on a **fresh environment** before continuing with the migration script.
+
+### Add the required dependencies
+
+Once all the new dependencies have been configured for your platform, you can add the migration script to your project:
 
 ```sh
-yarn add @hyperledger/aries-askar-react-native @credo-ts/indy-sdk-to-askar-migration react-native-fs
+yarn add @credo-ts/indy-sdk-to-askar-migration@^0.5.3
 ```
 
 Below is the minimal code required for the migration to work. It is recommended to turn the logger on as it gives a lot of information regarding the migration.
@@ -99,7 +119,7 @@ The agent is not allowed to be initialized to run this script. This makes sure n
 :::
 
 ```typescript
-import { agentDependencies } from '@credo-ts/react-native'
+import { agentDependencies } from '@credo-ts/react-native' // or @credo-ts/node
 import { AskarModule } from '@credo-ts/askar'
 import { IndySdkToAskarMigrationUpdater } from '@credo-ts/indy-sdk-to-askar-migration'
 import { ariesAskar } from '@hyperledger/aries-askar-react-native'
@@ -109,6 +129,7 @@ const oldAgent = new Agent({
     /* ... */
   },
   modules: {
+    // ... other modules (including optionally IndyVdrModule and AnonCredsModule)
     ariesAskar: new AskarModule({
       ariesAskar,
     }),
@@ -116,46 +137,40 @@ const oldAgent = new Agent({
   dependencies: agentDependencies,
 })
 
-const dbPath = '' // see section below
+// See section below for getting the database path
+const dbPath = getMobileIndySdkDatabasePath(oldAgent.config.walletConfig.id)
 
-const updater = await IndySdkToAskarMigrationUpdater.initialize({ dbPath, agent })
+const updater = await IndySdkToAskarMigrationUpdater.initialize({ dbPath, agent: oldAgent })
 await updater.update()
 ```
 
 ### Getting the database path
 
-#### Android
+#### React Native
 
-On android, the database is commonly located under the `ExternalDirectoryPath`.
+On Android, the database is commonly located under the `ExternalDirectoryPath`. If you did not follow the default Indy SDK for React Native setup on Android, your path might differ. Check out [Indy SDK React Native Android Setup](https://github.com/hyperledger-archives/indy-sdk-react-native#5-load-indy-library) for the default behavior.
 
-If you did not follow the default indy-sdk for React Native setup, your path might differ. Check out [step 5 of the Android setup for Indy SDK React Native](https://github.com/hyperledger/indy-sdk-react-native#5-load-indy-library) for the default behavior.
+On iOS, the database is commonly located under the `DocumentDirectoryPath`. For iOS this can only change if your phone does not have the `HOME` environment variable set. This is not usual behavior, and if `HOME` is not set, the `base` in the code section below will be `/home/indy/Documents`.
 
-```typescript
-import fs from 'react-native-fs'
-
-const base = fs.ExternalDirectoryPath
-const indyClient = '.indy_client'
-const wallet = 'wallet'
-const walletId = agent.config.walletConfig.id
-const file = 'sqlite.db'
-
-const dbPath = `${base}/${indyClient}/${wallet}/${walletId}/${file}`
-```
-
-#### iOS
-
-On iOS, the database is commonly located under the `DocumentDirectoryPath`.
-
-For iOS this can only change if your phone does not have the `HOME` environment variable set. This is not usual behavior, and if `HOME` is not set, the `base` in the code section below will be `/home/indy/Documents`.
+To get the path to the database, you can use the following code, where `walletId` is the `walletConfig.id`.
 
 ```typescript
+import { Platform } from 'react-native'
 import fs from 'react-native-fs'
 
-const base = fs.DocumentDirectoryPath
-const indyClient = '.indy_client'
-const wallet = 'wallet'
-const walletId = agent.config.walletConfig.id
-const file = 'sqlite.db'
+/**
+ * Get the path to and Indy SDK SQlite wallet database on mobile.
+ *
+ * @note this assumes you are using the default configuration.
+ * If you are not, you will need to adjust the path accordingly.
+ */
+function getMobileIndySdkDatabasePath(walletId: string) {
+  const base = Platform.OS === 'android' ? fs.ExternalDirectoryPath : fs.DocumentDirectoryPath
 
-const dbPath = `${base}/${indyClient}/${wallet}/${walletId}/${file}`
+  return `${base}/.indy_client/wallet/${walletId}/sqlite.db`
+}
 ```
+
+#### Node.JS
+
+Migration of data from Indy SDK to Aries Askar is not supported yet in Node.JS. If you are using Node.JS or Postgres and need to update to Aries Askar, please open an issue on [GitHub](https://github.com/openwallet-foundation/credo-ts).

@@ -11,13 +11,13 @@ When using Credo with AnonCreds, there are a few extra dependencies that need to
 # Node.JS
 
 ```console
-yarn add @credo-ts/anoncreds@^0.5.0 @hyperledger/anoncreds-nodejs@^0.2.0
+yarn add @credo-ts/anoncreds@^0.5.3 @hyperledger/anoncreds-nodejs@^0.2.2
 ```
 
 # React Native
 
 ```console
-yarn add @credo-ts/anoncreds@^0.5.0 @hyperledger/anoncreds-react-native@^0.2.0
+yarn add @credo-ts/anoncreds@^0.5.3 @hyperledger/anoncreds-react-native@^0.2.2
 ```
 
 <!--/tabs-->
