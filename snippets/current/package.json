@@ -8,7 +8,8 @@
     "dev:mediator-setup": "ts-node --esm src/mediator-setup.ts",
     "dev:mediation-recipient": "ts-node --esm src/mediation-recipient.ts",
     "dev:connection": "ts-node --esm src/create-a-connection.ts",
-    "dev:credential": "ts-node --esm src/issue-a-credential.ts",
+    "dev:issue-anoncreds-credential-didcomm": "ts-node --esm src/issue-anoncreds-credential-didcomm.ts",
+    "dev:openid4vc": "ts-node --esm src/sd-jwt-vc-openid4vc.ts",
     "dev:register-with-indy": "ts-node --esm src/register-schema-and-cred-def.ts",
     "dev:set-up": "ts-node --esm src/set-up.ts"
   },
