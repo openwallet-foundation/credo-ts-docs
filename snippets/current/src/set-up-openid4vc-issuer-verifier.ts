@@ -10,7 +10,7 @@ const config: InitConfig = {
 
 // start-section-1
 import { Agent } from '@credo-ts/core'
-// OpenID4VC issuer and verifier modules only work in Node.JS
+// OpenID4VC issuer and verifier modules only work in Node.js
 import { agentDependencies } from '@credo-ts/node'
 
 import express, { Router } from 'express'
@@ -55,7 +55,7 @@ const agent = new Agent({
       },
     }),
 
-    // openId4VcVerifier module can only be used in Node.JS
+    // openId4VcVerifier module can only be used in Node.js
     openId4VcVerifier: new OpenId4VcVerifierModule({
       baseUrl: 'http://127.0.0.1:3000/siop',
 

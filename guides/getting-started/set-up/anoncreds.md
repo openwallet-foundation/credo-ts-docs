@@ -4,11 +4,11 @@ The AnonCreds module provides functionality for issuing and verifying [AnonCreds
 
 ### Installing
 
-When using Credo with AnonCreds, there are a few extra dependencies that need to be installed. We need to install `@credo-ts/anoncreds` package, which contains the interfaces, and `@hyperledger/anoncreds-<platform>` package which is an implementation which depends on a wrapper of anoncreds-rs. Currently there are bindings for Node.JS, as `@hyperledger/anoncreds-nodejs`, and React Native as `@hyperlegder/anoncreds-react-native`.
+When using Credo with AnonCreds, there are a few extra dependencies that need to be installed. We need to install `@credo-ts/anoncreds` package, which contains the interfaces, and `@hyperledger/anoncreds-<platform>` package which is an implementation which depends on a wrapper of anoncreds-rs. Currently there are bindings for Node.js, as `@hyperledger/anoncreds-nodejs`, and React Native as `@hyperlegder/anoncreds-react-native`.
 
 <!--tabs-->
 
-# Node.JS
+# Node.js
 
 ```console
 yarn add @credo-ts/anoncreds@^0.5.3 @hyperledger/anoncreds-nodejs@^0.2.2
@@ -28,7 +28,7 @@ After installing the dependencies, we should register the `AnonCredsModule` on t
 
 <!--tabs-->
 
-# Node.JS
+# Node.js
 
 ```typescript showLineNumbers set-up-anoncreds.ts section-1
 

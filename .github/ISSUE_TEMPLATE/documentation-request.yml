@@ -30,7 +30,7 @@ body:
       description: You may select more than one.
       options:
         - label: React Native
-        - label: Node.JS
+        - label: Node.js
   - type: checkboxes
     id: contribute
     attributes:

@@ -4,7 +4,7 @@ This documentation explains the process of migrating your Indy SDK wallet to [Ar
 
 :::danger
 
-While the migration script technically works on Node.JS, it is strongly advised not to use it, yet. The migration of issuer records (such as Schemas and Credential Definitions) is not implemented yet. When a credential definition is detected it will revert the migration process and no harm is done.
+While the migration script technically works on Node.js, it is strongly advised not to use it, yet. The migration of issuer records (such as Schemas and Credential Definitions) is not implemented yet. When a credential definition is detected it will revert the migration process and no harm is done.
 
 :::
 
@@ -54,7 +54,7 @@ This update script does not transform did records. This is fine for something li
 
 :::danger
 
-Updating of credential definitions is not yet supported. This is why it is strongly advised not to run this script in a node.js environment.
+Updating of credential definitions is not yet supported. This is why it is strongly advised not to run this script in a Node.js environment.
 
 :::
 
@@ -171,6 +171,6 @@ function getMobileIndySdkDatabasePath(walletId: string) {
 }
 ```
 
-#### Node.JS
+#### Node.js
 
-Migration of data from Indy SDK to Aries Askar is not supported yet in Node.JS. If you are using Node.JS or Postgres and need to update to Aries Askar, please open an issue on [GitHub](https://github.com/openwallet-foundation/credo-ts).
+Migration of data from Indy SDK to Aries Askar is not supported yet in Node.js. If you are using Node.js or Postgres and need to update to Aries Askar, please open an issue on [GitHub](https://github.com/openwallet-foundation/credo-ts).
