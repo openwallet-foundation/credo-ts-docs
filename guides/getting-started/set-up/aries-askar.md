@@ -10,11 +10,11 @@ If you're upgrading from the Indy SDK to Aries Askar, see [Migrating from an Ind
 
 ### Installing Aries Askar
 
-When using Credo with Aries Askar, there are a few extra dependencies that need to be installed. We need to install the `@credo-ts/askar` package, which implements the needed interfaces for the agent. Secondly, we need to add native bindings for the specific platform `@hyperledger/aries-askar-<platform>`. Currently there are bindings for Node.JS, as `@hyperledger/aries-askar-nodejs`, and React Native as `@hyperlegder/aries-askar-react-native`.
+When using Credo with Aries Askar, there are a few extra dependencies that need to be installed. We need to install the `@credo-ts/askar` package, which implements the needed interfaces for the agent. Secondly, we need to add native bindings for the specific platform `@hyperledger/aries-askar-<platform>`. Currently there are bindings for Node.js, as `@hyperledger/aries-askar-nodejs`, and React Native as `@hyperlegder/aries-askar-react-native`.
 
 <!--tabs-->
 
-# Node.JS
+# Node.js
 
 ```console
 yarn add @credo-ts/askar@^0.5.3 @hyperledger/aries-askar-nodejs@^0.2.1
@@ -34,7 +34,7 @@ After installing the dependencies, we can register the Askar Module on the agent
 
 <!--tabs-->
 
-# Node.JS
+# Node.js
 
 ```typescript showLineNumbers set-up-askar.ts section-1
 

@@ -4,11 +4,11 @@
 
 ### Installing Indy VDR
 
-When using Credo with Indy VDR, there are a few extra dependencies that need to be installed. We need to install the `@hyperledger/indy-vdr`, which contains all the functionality to register objects on an Hyperledger Indy VDR. Secondly, we need to add native bindings for the specific platform `@hyperledger/indy-vdr-<platform>`. Currently there are bindings for Node.JS, as `@hyperledger/indy-vdr-nodejs`, and React Native as `@hyperlegder/indy-vdr-react-native`.
+When using Credo with Indy VDR, there are a few extra dependencies that need to be installed. We need to install the `@hyperledger/indy-vdr`, which contains all the functionality to register objects on an Hyperledger Indy VDR. Secondly, we need to add native bindings for the specific platform `@hyperledger/indy-vdr-<platform>`. Currently there are bindings for Node.js, as `@hyperledger/indy-vdr-nodejs`, and React Native as `@hyperlegder/indy-vdr-react-native`.
 
 <!--tabs-->
 
-# Node.JS
+# Node.js
 
 ```console
 yarn add @credo-ts/indy-vdr@^0.5.3 @hyperledger/indy-vdr-nodejs@^0.2.2
@@ -28,7 +28,7 @@ After installing the dependencies, we can register the Indy VDR module on the ag
 
 <!--tabs-->
 
-# Node.JS
+# Node.js
 
 ```typescript showLineNumbers set-up-indy-vdr.ts section-1
 

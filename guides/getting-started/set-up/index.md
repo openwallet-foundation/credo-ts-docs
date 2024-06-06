@@ -5,7 +5,7 @@ import DocCardList from '@theme/DocCardList';
 :::info
 
 This guide assumes you have followed the [Prerequisites](./prerequisites), and you have a valid
-[Node.JS](https://nodejs.org) or [React Native](https://reactnative.dev) project setup.
+[Node.js](https://nodejs.org) or [React Native](https://reactnative.dev) project setup.
 
 :::
 
@@ -31,7 +31,7 @@ First we have to install the minimal amount of dependencies that are required fo
 
 <!--tabs-->
 
-# Node.JS
+# Node.js
 
 ```console
 yarn add @credo-ts/core@^0.5.3 @credo-ts/node@^0.5.3
@@ -51,7 +51,7 @@ yarn add @credo-ts/core@^0.5.3 @credo-ts/react-native@^0.5.3 react-native-fs rea
 
 # Node.js
 
-No additional setup is required for Node.JS
+No additional setup is required for Node.js
 
 # React Native
 
@@ -113,7 +113,7 @@ enough for your specific use cases. Please refer to the
 
 <!--tabs-->
 
-# Node.JS
+# Node.js
 
 ```typescript showLineNumbers set-up.ts section-1
 

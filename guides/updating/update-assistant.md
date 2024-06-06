@@ -63,7 +63,7 @@ await updateAssistant.initialize()
 if (!(await updateAssistant.isUpToDate())) {
   await updateAssistant.update({
     // If you don't want to create a backup before the update process starts
-    // (see )
+    // (see "Disabling Backups")
     createBackupBeforeUpdate: false,
   })
 }
