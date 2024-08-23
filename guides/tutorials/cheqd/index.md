@@ -70,6 +70,29 @@ A DID can be deactivated, it can still be resolved
 
 ```
 
+### Create Resource
+
+Using the createResource cheqd api agents are able to create custom DID-Linked Resources, including:
+
+- Trust Registries
+- Status Lists
+- Logos associated with DIDs
+- Governance files
+
+#### Parameters
+
+1. `did`\*
+2. `name`\*
+3. `resourceType`\*
+4. `id`\*
+5. `data`\* : Text, Base64 string or an object
+6. `alsoKnownAs`
+7. `version`
+
+```typescript showLineNumbers set-up-cheqd.ts section-6
+
+```
+
 ### Types
 
 ---
