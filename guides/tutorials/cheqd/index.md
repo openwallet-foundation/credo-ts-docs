@@ -93,6 +93,30 @@ Using the createResource cheqd api agents are able to create custom DID-Linked R
 
 ```
 
+### Resolve Resource
+
+The resolveResource function in the cheqd API allows agents to resolve DID-Linked Resources in two ways:
+
+- By `resourceId`
+- By `resourceName` and `resourceType`
+
+Additionally, two query parameters are supported for both conventions:
+
+- `resourceUrl?version=<versionId>`
+- `resourceUrl?resourceVersionTime=<epoch time>`
+
+#### Using `resourceId`
+
+```typescript showLineNumbers set-up-cheqd.ts section-7
+
+```
+
+#### Using `resourceName` and `resourceType`
+
+```typescript showLineNumbers set-up-cheqd.ts section-8
+
+```
+
 ### Types
 
 ---
