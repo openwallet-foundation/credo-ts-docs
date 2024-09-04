@@ -176,12 +176,12 @@ await agent.modules.cheqd.createResource('did:cheqd:testnet:92874297-d824-40ea-8
 
 // start-section-7
 await agent.modules.cheqd.resolveResource(
-  'did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d/resource/6de33634-6439-4e46-aa3f-bfe03606b000'
+  'did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d/resources/6de33634-6439-4e46-aa3f-bfe03606b000'
 )
 // end-section-7
 
 // start-section-8
 await agent.modules.cheqd.resolveResource(
-  'did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d/resource?resourceName=resourceName&resourceType=resourceType'
+  'did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d?resourceName=resourceName&resourceType=resourceType'
 )
 // end-section-8
