@@ -100,10 +100,10 @@ The resolveResource function in the cheqd API allows agents to resolve DID-Linke
 - By `resourceId`
 - By `resourceName` and `resourceType`
 
-Additionally, two query parameters are supported for both conventions:
+Additionally, both conventions support the following query parameters:
 
-- `resourceUrl?version=<versionId>`
-- `resourceUrl?resourceVersionTime=<epoch time>`
+- To fetch a specific resource version: `resourceUrl?version=<versionId>`
+- To fetch the closest resource version for a given time: `resourceUrl?resourceVersionTime=<epoch time>`
 
 #### Using `resourceId`
 
