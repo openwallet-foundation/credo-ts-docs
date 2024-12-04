@@ -192,7 +192,7 @@ Finally, we can initialize the agent and it's ready for use.
 Now that you have your agent setup, it's time to start building your application. Head over to the tutorials page to get started.
 
 <DocCardList items={[
-{ type: 'link', label: 'Tutorials', href: '../tutorials/index', docId: 'tutorials/index' },
+{ type: 'link', label: 'Tutorials', href: '../tutorials', docId: 'tutorials/index' },
 { type: 'link', label: 'Create a Connection', href: '../tutorials/create-a-connection', docId: 'tutorials/create-a-connection' }
 ]} />
 
