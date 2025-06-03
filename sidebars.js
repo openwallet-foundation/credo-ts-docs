@@ -67,6 +67,7 @@ const sidebars = {
         'tutorials/cheqd/index',
         'tutorials/registering-schema-and-credential-definition',
         'tutorials/issue-an-anoncreds-credential-over-didcomm',
+        'tutorials/issue-and-verify-jsonld-credential-over-didcomm',
         'tutorials/mediation',
         {
           type: 'category',
