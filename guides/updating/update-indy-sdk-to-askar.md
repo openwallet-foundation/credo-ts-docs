@@ -16,9 +16,9 @@ Postgres is not supported. If you are using postgres with Indy SDK and need to u
 
 :::caution
 
-The migration script is supported to run on 0.3.x before migrating from 0.3.x to 0.4.x. Please refer to [Migrating from Credo 0.3.x to 0.4.x](./versions/0.3-to-0.4.md) to get to 0.4.x afterwards.
+The migration script is supported to run on 0.3.x before migrating to 0.5.x.
 
-It is important to note that this script must be ran before you update from 0.3.x to 0.4.x.
+It is important to note that this script must be ran before you update from 0.3.x to 0.5.x.
 
 :::
 
@@ -46,7 +46,7 @@ Aries Askar has a specific way to store keys and every key, defined by the categ
 
 :::caution
 
-This update script does not transform did records. This is fine for something like `did:peer`, but will cause issues with `indy` and `sov` DIDs. For more information, please check out the [Migrating from Credo 0.3.x to 0.4.x](./versions/0.3-to-0.4.md#removal-of-publicdidseed-and-publicdid)
+This update script does not transform did records. This is fine for something like `did:peer`, but will cause issues with `indy` and `sov` DIDs. For more information, please check out the migration guides for the specific version you're upgrading from.
 
 :::
 

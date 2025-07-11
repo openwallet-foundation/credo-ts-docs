@@ -50,12 +50,6 @@ const config = {
             current: {
               label: 'v0.5.x',
             },
-            0.4: {
-              label: 'v0.4.x',
-            },
-            0.3: {
-              label: 'v0.3.x',
-            },
           },
         },
         theme: {
