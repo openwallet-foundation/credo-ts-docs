@@ -18,7 +18,7 @@ The `@credo-ts/rest` package has not been updated to work with the latest versio
 
 :::info
 
-This guide assumes you have followed the install guides for the framework (See [Getting Started](../../getting-started/index.md) section) for your platform and a valid [Node.js](https://nodejs.org) project setup.
+This guide assumes you have followed the install guides for the framework (See [Getting Started](../getting-started/index.md) section) for your platform and a valid [Node.js](https://nodejs.org) project setup.
 
 :::
 
