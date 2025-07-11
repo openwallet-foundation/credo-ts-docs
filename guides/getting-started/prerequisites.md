@@ -4,7 +4,7 @@ To work with [Credo](https://github.com/openwallet-foundation/credo-ts) we need 
 
 The specific items that we set-up:
 
-- [Node.js](https://nodejs.org) - v16 or v18
+- [Node.js](https://nodejs.org) - v18, v20, v22
 - [yarn](https://classic.yarnpkg.com/lang/en/docs/install) or [npm](https://www.npmjs.com/)
 - Node.js or React Native project.
 
