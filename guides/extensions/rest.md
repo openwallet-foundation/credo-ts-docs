@@ -41,7 +41,7 @@ npx -p @credo-ts/rest credo-rest start \
   --inbound-transport http 5000
 ```
 
-The REST API provides an OpenAPI schema that can easily be viewed using the SwaggerUI that is provided with the server. The endpoint documentation can be viewed at the `/docs` endpoint (e.g. <http://localhost:3000/docs>).
+The REST API provides an OpenAPI schema that can easily be viewed using the SwaggerUI that is provided with the server. The endpoint documentation can be viewed at the `/docs` endpoint (e.g. [http://localhost:3000/docs](http://localhost:3000/docs)).
 
 ### Configuration
 

@@ -41,10 +41,6 @@ const config = {
           routeBasePath: 'guides',
           sidebarPath: require.resolve('./sidebars.js'),
           remarkPlugins: [remarkTabs],
-          admonitions: {
-            tag: ':::',
-            keywords: ['note', 'tip', 'info', 'caution', 'danger', 'issuer', 'verifier', 'holder', 'bob', 'acme'],
-          },
           lastVersion: 'current',
           versions: {
             current: {
