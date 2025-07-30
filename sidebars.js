@@ -87,9 +87,6 @@ const sidebars = {
       items: [
         'updating/update-assistant',
         'updating/update-indy-sdk-to-askar',
-        'updating/versions/0.1-to-0.2',
-        'updating/versions/0.2-to-0.3',
-        'updating/versions/0.4-to-0.5',
       ],
     },
     'ecosystem/index',

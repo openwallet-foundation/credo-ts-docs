@@ -121,7 +121,7 @@ await agent.initialize()
 
 ### Automatically update on agent startup
 
-This is by far the easiest way to update the agent, but has the least amount of flexibility and is not configurable. This means you will have to use the default update options to update the agent storage. You can find the default update config in the respective version migration guides (e.g. in [0.1-to-0.2](/guides/updating/versions/0.1-to-0.2.md)).
+This is by far the easiest way to update the agent, but has the least amount of flexibility and is not configurable.
 
 :::caution
 
