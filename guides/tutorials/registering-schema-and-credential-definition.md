@@ -1,6 +1,6 @@
 # Registering a schema and credential definition on an AnonCreds Registry
 
-In this tutorial we will register a schema and credential definition on an AnonCredsRegistry e.g. Hyperledger Indy ledger [indy-vdr](https://github.com/hyperledger/indy-vdr), [cheqd](https://github.com/openwallet-foundation/credo-ts/packages/cheqd).
+In this tutorial we will register a schema and credential definition on an AnonCredsRegistry e.g. Hyperledger Indy ledger [indy-vdr](https://github.com/hyperledger/indy-vdr), [cheqd](https://github.com/openwallet-foundation/credo-ts/packages/cheqd), [hedera](https://github.com/openwallet-foundation/credo-ts/packages/hedera).
 
 :::info
 
@@ -13,7 +13,7 @@ This section assumes that
 
 ### 1. Setting up the agent
 
-First, an agent must be setup with a wallet and an indy-vdr or cheqd module. For these code examples, we will use a Node.js environment.
+First, an agent must be setup with a wallet and an indy-vdr, cheqd or hedera module. For these code examples, we will use a Node.js environment.
 
 :::issuer
 
@@ -36,6 +36,10 @@ We recommend [BCovrin Testnet](http://test.bcovrin.vonx.io/). This network allow
 #### Cheqd
 
 Follow the [cheqd setup](../getting-started//set-up/cheqd/index.md) and [cheqd DID module](./cheqd/index.md) to setup the network and create a DID. Cheqd supports a mainnet for production and a testnet for development purposes.
+
+#### Hedera
+
+Follow the [hedera setup](../getting-started//set-up/hedera/index.md) and [hedera DID module](./hedera/index.md) to setup the network and create a DID. Hedera supports a mainnet for production and a testnet for development purposes.
 
 :::
 
@@ -82,3 +86,4 @@ After everything is registered on a AnonCredsRegistry, we can use it to issue cr
 ### Useful Resources
 
 - [Cheqd AnonCreds Specification](https://docs.cheqd.io/identity/guides/anoncreds)
+- [Hedera AnonCreds Specification (!!! FIXME)](https://docs.hedera.io/identity/guides/anoncreds)
