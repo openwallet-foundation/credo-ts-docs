@@ -9,9 +9,6 @@ In particular, Hedera can be used as Verifiable Data Registry (VDR) for [Hedera 
 
 Details on Hedera AnonCreds VDR implementation approach can be found in [Hiero AnonCreds Method](https://dsrcorporation.github.io/hedera-anoncreds-method/).
 
-### KMS compatibility
-Please note that current version of Hedera Credo module requires [Askar module](../aries-askar.md) to be installed with Askar KMS backend registered for Credo agent.
-
 ### Installing Hedera
 
 To use Credo with Hedera, you need to install several additional dependencies. Specifically, the package `@credo-ts/hedera` must be installed, which implements the necessary interfaces for the agent. The `@credo-ts/hedera` package depends on a set of third-party packages from the [@hiero-did-sdk-js](https://github.com/hiero-ledger/hiero-did-sdk-js) family, which provide direct interaction with the Hedera network. Additionally, for proper functionality, you need to install extra libraries compatible with your chosen framework to support these dependencies.
