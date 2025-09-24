@@ -42,7 +42,9 @@ pnpm install zstd-napi
 
 #### React Native
 
-To use Hedera Credo module in React Native environment, you need to install the ZSTD package and the crypto package.
+To use Hedera Credo module in React Native environment, please make sure that your app has enabled support for [package exports](https://metrobundler.dev/docs/package-exports/) and [optional dependencies](https://github.com/facebook/react-native/blob/main/packages/metro-config/src/index.flow.js#L86) (enabled in default config, but worth mentioning).
+
+First, you need to install the ZSTD and crypto packages.
 
 <!--tabs-->
 
