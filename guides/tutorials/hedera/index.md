@@ -21,7 +21,7 @@ The DID can be created in two different ways
 
 #### Parameters
 
-```typescript showLineNumbers 
+```typescript showLineNumbers
 {
   method: 'hedera'
   options?: {
@@ -35,9 +35,9 @@ The DID can be created in two different ways
 }
 ```
 
-1. `method`: `hedera` - (required) DidMethod identifier 
-3. `options` - Target network for did document creation. Can be optional if used the single Hedera network, is required if plugin configured for using several networks. Can be equal "mainnet", "testnet", "previewnet", "local-node" or custom network name, defined when the Hedera module was [initialized](../../getting-started/set-up/hedera/index.md).       
-2. `secret` - (optional) A KMS keyset for using. Keys are required for signing Hedera transaction.   
+1. `method`: `hedera` - (required) DidMethod identifier
+2. `options` - Target network for did document creation. Can be optional if used the single Hedera network, is required if plugin configured for using several networks. Can be equal "mainnet", "testnet", "previewnet", "local-node" or custom network name, defined when the Hedera module was [initialized](../../getting-started/set-up/hedera/index.md).
+3. `secret` - (optional) A KMS keyset for using. Keys are required for signing Hedera transaction.
 4. `didDocument` - (optional) Did document for initializing
 
 ##### Option 1
@@ -62,7 +62,7 @@ To update a DID Document, fetch the body of the DID Document you want to change 
 
 #### Parameters
 
-```typescript showLineNumbers 
+```typescript showLineNumbers
 {
   did: string
   secret: {
@@ -73,9 +73,9 @@ To update a DID Document, fetch the body of the DID Document you want to change 
 }
 ```
 
-1. `did` - (required) Did identifier. Target Hedera network will be defined by `did` automatically.  
+1. `did` - (required) Did identifier. Target Hedera network will be defined by `did` automatically.
 2. `secret` - (required) A KMS keyset for using. Keys are required for signing Hedera transaction.
-3. `didDocumentOperation` - Update did document action. Can be equal 'setDidDocument', 'addToDidDocument' or 'removeFromDidDocument'  
+3. `didDocumentOperation` - Update did document action. Can be equal 'setDidDocument', 'addToDidDocument' or 'removeFromDidDocument'
 4. `didDocument` - (required) Did document properties for applying to the changing document
 
 #### Example
@@ -90,7 +90,7 @@ A DID can be deactivated, it can still be resolved
 
 #### Parameters
 
-```typescript showLineNumbers 
+```typescript showLineNumbers
 {
   did: string
 }

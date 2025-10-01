@@ -15,7 +15,7 @@ To use Credo with Hedera, you need to install several additional dependencies. S
 
 #### Node
 
-To use Hedera Credo module in Node environment, you need to install the ZSTD package. 
+To use Hedera Credo module in Node environment, you need to install the ZSTD package.
 
 <!--tabs-->
 
@@ -38,7 +38,6 @@ pnpm install zstd-napi
 ```
 
 <!--/tabs-->
-
 
 #### React Native
 
@@ -71,6 +70,7 @@ npm install react-native-zstd
 pnpm install react-native-quick-crypto
 pnpm install buffer
 ```
+
 <!--/tabs-->
 
 Following that we need to add a buffer polyfill. Create a `shim.js` file with the below code snippet
@@ -81,7 +81,6 @@ global.Buffer = Buffer
 ```
 
 Import `shim.js` file into your file where the App is imported
-
 
 ### Adding the Hedera to the Agent
 
@@ -94,7 +93,6 @@ After installing the dependencies, we can register the Hedera Module on the agen
 ```
 
 HederaModule allows you to use multiple networks simultaneously. It also supports both standard and custom networks built on top of Hedera. These network settings can be specified in the configuration. For more detailed information, you can refer to the client guide documentation available from the [Hiero DID SDK JS](https://hiero-ledger.github.io/hiero-did-sdk-js/documentation/latest/03-implementation/components/client-guide.html) project.
-
 
 ### Tutorials
 

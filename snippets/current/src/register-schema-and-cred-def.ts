@@ -29,12 +29,7 @@ import {
   CheqdModule,
   CheqdModuleConfig,
 } from '@credo-ts/cheqd'
-import {
-  HederaAnonCredsRegistry,
-  HederaDidRegistrar,
-  HederaDidResolver,
-  HederaModule,
-} from '@credo-ts/hedera'
+import { HederaAnonCredsRegistry, HederaDidRegistrar, HederaDidResolver, HederaModule } from '@credo-ts/hedera'
 
 const agent = new Agent({
   config,
@@ -67,11 +62,13 @@ const agent = new Agent({
       })
     ),
     hedera: new HederaModule({
-      networks: [{
-        network: '<mainnet or testnet or previewnet or local-node>',
-        operatorId: '<your operator ID on the Hedera network>',
-        operatorKey: '<your operator Key on the Hedera network in the DER format>',
-      }]
+      networks: [
+        {
+          network: '<mainnet or testnet or previewnet or local-node>',
+          operatorId: '<your operator ID on the Hedera network>',
+          operatorKey: '<your operator Key on the Hedera network in the DER format>',
+        },
+      ],
     }),
     anoncreds: new AnonCredsModule({
       registries: [new IndyVdrAnonCredsRegistry(), new CheqdAnonCredsRegistry(), new HederaAnonCredsRegistry()],
