@@ -51,6 +51,9 @@ First, you need to install the ZSTD and crypto packages.
 
 ```console
 npm install react-native-zstd
+# If you're using React Native version prior to 0.74, please use the following Git dependency
+# npm install react-native-zstd@git+https://github.com/DSRCorporation/react-native-zstd#react-native-0.73
+
 npm install react-native-quick-crypto
 npm install buffer
 ```
@@ -59,6 +62,9 @@ npm install buffer
 
 ```console
 yarn add react-native-zstd
+# If you're using React Native version prior to 0.74, please use the following Git dependency
+# yarn add react-native-zstd@git+https://github.com/DSRCorporation/react-native-zstd#react-native-0.73
+
 yarn add react-native-quick-crypto
 yarn add buffer
 ```
@@ -66,7 +72,10 @@ yarn add buffer
 # PNPM
 
 ```console
-npm install react-native-zstd
+pnpm install react-native-zstd
+# If you're using React Native version prior to 0.74, please use the following Git dependency
+# pnpm install react-native-zstd@git+https://github.com/DSRCorporation/react-native-zstd#react-native-0.73
+
 pnpm install react-native-quick-crypto
 pnpm install buffer
 ```
