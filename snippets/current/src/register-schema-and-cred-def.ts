@@ -64,7 +64,7 @@ const agent = new Agent({
     hedera: new HederaModule({
       networks: [
         {
-          network: '<mainnet or testnet or previewnet or local-node>',
+          network: 'testnet', // '<mainnet or testnet or previewnet or local-node>'
           operatorId: '<your operator ID on the Hedera network>',
           operatorKey: '<your operator Key on the Hedera network in the DER format>',
         },

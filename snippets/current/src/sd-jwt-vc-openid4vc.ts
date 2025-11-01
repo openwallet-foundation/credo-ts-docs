@@ -1,4 +1,4 @@
-import type { InitConfig, SdJwtVcRecord, W3cCredentialRecord } from '@credo-ts/core'
+import { InitConfig, MdocRecord, SdJwtVcRecord, W3cCredentialRecord } from '@credo-ts/core'
 import { AskarModule } from '@credo-ts/askar'
 
 const issuerConfig: InitConfig = {
@@ -317,10 +317,13 @@ const credentials = await holder.modules.openId4VcHolderModule.acceptCredentialO
 console.log('Received credentials', JSON.stringify(credentials, null, 2))
 
 // Store the received credentials
-const records: Array<W3cCredentialRecord | SdJwtVcRecord> = []
+const records: Array<W3cCredentialRecord | SdJwtVcRecord | MdocRecord> = []
 for (const credential of credentials) {
   if ('compact' in credential) {
     const record = await holder.sdJwtVc.store(credential.compact)
+    records.push(record)
+  } else if ('issuerSignedDocument' in credential) {
+    const record = await holder.mdoc.store(credential)
     records.push(record)
   } else {
     const record = await holder.w3cCredentials.storeCredential({

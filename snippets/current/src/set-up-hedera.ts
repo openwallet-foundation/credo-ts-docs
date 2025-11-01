@@ -1,10 +1,10 @@
 // start-section-1
-import { Agent, DidDocumentService, DidsModule, TypedArrayEncoder } from '@credo-ts/core'
+import { Agent, DidDocument, DidDocumentService, DidsModule, KeyType } from '@credo-ts/core'
 import { AskarModule } from '@credo-ts/askar'
 import { AnonCredsModule } from '@credo-ts/anoncreds'
 /* Should be used for Node */
 import { agentDependencies } from '@credo-ts/node'
-import { askar } from '@openwallet-foundation/askar-nodejs'
+import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
 /* Should be used for ReactNative */
 // import { agentDependencies } from '@credo-ts/react-native'
@@ -38,24 +38,14 @@ const agent = new Agent({
     hedera: new HederaModule({
       networks: [
         {
-          network: '<mainnet or testnet or previewnet or local-node>',
+          network: 'testnet', // '<mainnet or testnet or previewnet or local-node>'
           operatorId: '<your operator ID on the Hedera network>',
           operatorKey: '<your operator Key on the Hedera network in the DER format>',
         },
       ],
     }),
     askar: new AskarModule({
-      askar,
-      store: {
-        id: 'docs-wallet-id',
-        key: 'docs-wallet-key',
-        database: {
-          type: 'sqlite',
-          config: {
-            inMemory: true,
-          },
-        },
-      },
+      ariesAskar,
     }),
   },
 })
@@ -72,32 +62,24 @@ agent
 
 // start-section-2
 // Create a key pair
-const { keyId, publicJwk } = await agent.kms.createKey({
-  type: {
-    crv: 'Ed25519',
-    kty: 'OKP',
-  },
+const key = await agent.wallet.createKey({
+  keyType: KeyType.Ed25519,
 })
-// Encode a public key according to the verification method
-const publicKeyMultibase = `z${TypedArrayEncoder.toBase58(Uint8Array.from(TypedArrayEncoder.fromBase64(publicJwk.x)))}`
 // Create a DID
 await agent.dids.create<HederaDidCreateOptions>({
   method: 'hedera',
   options: { network: 'testnet' },
-  secret: {
-    keys: [{ kmsKeyId: keyId, didDocumentRelativeKeyId: '#key-1' }],
-  },
-  didDocument: {
+  didDocument: new DidDocument({
     id: 'did:hedera:testnet:44eesExqdsUvLZ35FpnBPErqRGRnYbzzyG3wgCCYxkmq_0.0.6226170',
     verificationMethod: [
       {
         id: '#key-1',
         type: 'Ed25519VerificationKey2020',
         controller: 'did:hedera:testnet:44eesExqdsUvLZ35FpnBPErqRGRnYbzzyG3wgCCYxkmq_0.0.6226170',
-        publicKeyMultibase,
+        publicKeyMultibase: key.fingerprint,
       },
     ],
-  },
+  }),
 })
 // end-section-2
 
