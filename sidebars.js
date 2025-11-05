@@ -36,6 +36,7 @@ const sidebars = {
             'getting-started/set-up/indy-vdr',
             'getting-started/set-up/cheqd/index',
             'getting-started/set-up/openid4vc',
+            'getting-started/set-up/hedera/index',
           ],
         },
       ],
@@ -68,6 +69,7 @@ const sidebars = {
         'tutorials/registering-schema-and-credential-definition',
         'tutorials/issue-an-anoncreds-credential-over-didcomm',
         'tutorials/mediation',
+        'tutorials/hedera/index',
         {
           type: 'category',
           label: 'OpenID for Verifiable Credentials',
