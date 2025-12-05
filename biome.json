@@ -22,6 +22,7 @@
     ]
   },
   "javascript": {
+    "jsxRuntime": "reactClassic",
     "parser": {
       "unsafeParameterDecoratorsEnabled": true
     },

@@ -22,7 +22,7 @@ After installing the dependencies, we can register the the different modules on 
 
 If you want to issue or verify credentials using OpenID for Verifiable Credentials, you can add the `OpenId4VcIssuerModule` and the `OpenId4VcVerifierModule`. These modules can only run on the server, in Node.js and don't work in a React Native environment. These modules can be added separately, it's not required to use both modules. The set up for the issuer and verifier module can be combined with the set up for the holder module below to support issuance, holding, and verification OpenID4VC flows within the same agent.
 
-In the example we haven't implemented the `credentialRequestToCredentialMapper` method for the issuer module yet, this is covered in the [OpenID4VC Guides](/guides/tutorials/openid4vc).
+In the example we haven't implemented the `credentialRequestToCredentialMapper` method for the issuer module yet, this is covered in the [OpenID4VC Guides](../../tutorials/openid4vc).
 
 ```typescript showLineNumbers set-up-openid4vc-issuer-verifier.ts section-1
 

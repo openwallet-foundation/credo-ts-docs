@@ -60,7 +60,7 @@ the `indyVdr` key takes a class that implements all the native bindings for Indy
 
 **Type**: `IndyVdrPoolConfig[]`
 
-An array of indy networks to connect to. The list can contain the following object and it must [`genesisTransactions`](#indyledgersgenesistransactions).
+An array of indy networks to connect to. The list can contain the following object and it must [`genesisTransactions`](#genesistransactions).
 
 ##### indyNamespace
 

@@ -91,7 +91,7 @@ This method will create an invitation using the legacy method according to [0160
 ### 3. Receiving the invitation
 
 After we have created the invitation we have to transmit it to the other
-agent. Common practise, when sending it to a holder, it to embed the url inside
+agent. Common practice, when sending it to a holder, it to embed the url inside
 a QR code. This QR code can then be scanned by the holder, in this case _Bob_.
 After this, because both have set `autoAcceptConnections` to `true`, the
 connection is established.

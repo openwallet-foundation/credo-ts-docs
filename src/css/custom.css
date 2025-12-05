@@ -50,22 +50,22 @@
   color: black;
 }
 
-.admonition-holder {
+.theme-admonition-holder {
   --ifm-alert-background-color: #b6b2f5;
 }
 
-.admonition-issuer {
+.theme-admonition-issuer {
   --ifm-alert-background-color: #5dea7e;
 }
 
-.admonition-verifier {
+.theme-admonition-verifier {
   --ifm-alert-background-color: #ee90ca;
 }
 
-.admonition-acme {
+.theme-admonition-acme {
   --ifm-alert-background-color: #a0faaa;
 }
 
-.admonition-bob {
+.theme-admonition-bob {
   --ifm-alert-background-color: #ffaaff;
 }
