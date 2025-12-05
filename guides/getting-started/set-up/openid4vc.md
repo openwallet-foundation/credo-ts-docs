@@ -10,7 +10,7 @@ The OpenID4VC Module in Credo currently exposes three modules, one for each role
 
 When using Credo with OpenID4VC you need to install the `@credo-ts/openid4vc` module:
 
-```console
+```bash
 yarn add @credo-ts/openid4vc@0.5.3
 ```
 

@@ -18,13 +18,13 @@ To add the Redux Store package to your existing project simply run:
 
 ## npm
 
-```sh
+```bash
 npm i @credo-ts/redux-store
 ```
 
 ## Yarn
 
-```sh
+```bash
 yarn add @credo-ts/redux-store
 ```
 

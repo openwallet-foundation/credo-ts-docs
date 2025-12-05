@@ -6,7 +6,7 @@ In this tutorial we will see how to use the Hedera modules in detail.
 
 This section assumes that
 
-1. You have [set-up your develoment environment](../../getting-started/index.md).
+1. You have [set-up your development environment](../../getting-started/index.md).
 2. You have setup the Hedera module [setup hedera](../../getting-started/set-up/hedera/index.md)
 
 :::

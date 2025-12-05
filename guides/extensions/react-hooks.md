@@ -18,13 +18,13 @@ To add the React Hooks package to your existing project simply run:
 
 ## npm
 
-```sh
+```bash
 npm i @credo-ts/react-hooks@^0.5
 ```
 
 ## Yarn
 
-```sh
+```bash
 yarn add @credo-ts/react-hooks@^0.5
 ```
 

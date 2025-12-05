@@ -35,7 +35,7 @@ To install [Ngrok](https://ngrok.com) and expose the port to the public the foll
 
 # yarn
 
-```console
+```bash
 yarn global add ngrok
 
 ngrok http <PORT>
@@ -43,7 +43,7 @@ ngrok http <PORT>
 
 # npm
 
-```console
+```bash
 npm install --global ngrok
 
 ngrok http <PORT>

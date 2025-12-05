@@ -62,7 +62,7 @@ Using [Yarn `resolutions`](https://classic.yarnpkg.com/lang/en/docs/selective-ve
 
 Following that we need to add a buffer polyfill
 
-```console
+```bash
 yarn add buffer
 ```
 

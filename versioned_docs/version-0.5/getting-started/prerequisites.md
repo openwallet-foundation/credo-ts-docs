@@ -22,13 +22,13 @@ You can download it from the [Node.js Website](https://nodejs.org/en/download/)
 
 Make sure you have [Homebrew](https://brew.sh/) installed. If not you can install it with the following command:
 
-```console
+```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
 Then install Node.js with the following command:
 
-```console
+```bash
 brew install nodejs
 ```
 
@@ -70,7 +70,7 @@ The Node Package Manager comes pre-bundled with the NodeJS installation from abo
 
 For every platform, the installation of yarn is the same.
 
-```console
+```bash
 npm install --global yarn
 ```
 

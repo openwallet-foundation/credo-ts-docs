@@ -21,19 +21,19 @@ To use Hedera Credo module in Node environment, you need to install the ZSTD pac
 
 # NPM
 
-```console
+```bash
 npm install zstd-napi
 ```
 
 # Yarn
 
-```console
+```bash
 yarn add zstd-napi
 ```
 
 # PNPM
 
-```console
+```bash
 pnpm install zstd-napi
 ```
 
@@ -49,7 +49,7 @@ First, you need to install the ZSTD and crypto packages.
 
 # NPM
 
-```console
+```bash
 npm install react-native-zstd
 # If you're using React Native version prior to 0.74, please use the following Git dependency
 # npm install react-native-zstd@git+https://github.com/DSRCorporation/react-native-zstd#react-native-0.73
@@ -60,7 +60,7 @@ npm install buffer
 
 # Yarn
 
-```console
+```bash
 yarn add react-native-zstd
 # If you're using React Native version prior to 0.74, please use the following Git dependency
 # yarn add react-native-zstd@git+https://github.com/DSRCorporation/react-native-zstd#react-native-0.73
@@ -71,7 +71,7 @@ yarn add buffer
 
 # PNPM
 
-```console
+```bash
 pnpm install react-native-zstd
 # If you're using React Native version prior to 0.74, please use the following Git dependency
 # pnpm install react-native-zstd@git+https://github.com/DSRCorporation/react-native-zstd#react-native-0.73

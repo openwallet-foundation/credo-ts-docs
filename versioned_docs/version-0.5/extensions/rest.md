@@ -30,7 +30,7 @@ You can do this directly on your machine.
 
 After installing and confirming that Libindy is installed, simply run:
 
-```sh
+```bash
 npx -p @credo-ts/rest credo-rest start \
   --label "Credo Rest" \
   --wallet-id "walletId" \
@@ -47,6 +47,6 @@ The REST API provides an OpenAPI schema that can easily be viewed using the Swag
 
 To find out all available configuration options from the CLI, you can run the CLI command with `--help`. This will print a full list of all available options.
 
-```sh
+```bash
 npx -p @credo-ts/rest afj-rest start --help
 ```

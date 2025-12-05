@@ -33,13 +33,13 @@ First we have to install the minimal amount of dependencies that are required fo
 
 # Node.js
 
-```console
+```bash
 yarn add @credo-ts/core@^0.5.3 @credo-ts/node@^0.5.3
 ```
 
 # React Native
 
-```console
+```bash
 yarn add @credo-ts/core@^0.5.3 @credo-ts/react-native@^0.5.3 react-native-fs react-native-get-random-values
 ```
 

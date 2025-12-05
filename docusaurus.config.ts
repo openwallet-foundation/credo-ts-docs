@@ -151,7 +151,7 @@ const config: Config = {
     prism: {
       theme: lightCodeTheme,
       darkTheme: darkCodeTheme,
-      additionalLanguages: ['json', 'diff'],
+      additionalLanguages: ['json', 'diff', 'bash'],
     },
   } satisfies Preset.ThemeConfig,
   plugins: [

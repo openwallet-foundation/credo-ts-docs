@@ -16,13 +16,13 @@ To add the Push Notifications plugin package to your existing project simply run
 
 ## npm
 
-```sh
+```bash
 npm i @credo-ts/push-notifications
 ```
 
 ## Yarn
 
-```sh
+```bash
 yarn add @credo-ts/push-notifications
 ```
 

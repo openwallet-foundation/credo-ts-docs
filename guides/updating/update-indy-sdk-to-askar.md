@@ -106,7 +106,7 @@ Once this has been set-up, make sure all code works on a **fresh environment** b
 
 Once all the new dependencies have been configured for your platform, you can add the migration script to your project:
 
-```sh
+```bash
 yarn add @credo-ts/indy-sdk-to-askar-migration@^0.5.3
 ```
 
