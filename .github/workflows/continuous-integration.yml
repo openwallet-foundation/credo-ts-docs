@@ -20,8 +20,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Check prettier
-        run: pnpm format:check
+      - name: Check formatting
+        run: pnpm style:check
 
       - name: Check types
         run: pnpm types:check
