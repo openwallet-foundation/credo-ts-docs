@@ -54,7 +54,7 @@ function CautionIcon() {
     </svg>
   )
 }
-// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
+
 const AdmonitionConfigs = {
   note: {
     infimaClassName: 'secondary',

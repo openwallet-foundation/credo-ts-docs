@@ -1,8 +1,8 @@
-import { useDocsVersion } from '@docusaurus/theme-common/internal'
+import { useDocsVersion } from '@docusaurus/plugin-content-docs/client'
 import useIsBrowser from '@docusaurus/useIsBrowser'
 import ElementContent from '@theme/CodeBlock/Content/Element'
 import StringContent from '@theme/CodeBlock/Content/String'
-import React, { isValidElement } from 'react'
+import React, { isValidElement, useEffect, useState } from 'react'
 
 /**
  * Best attempt to make the children a plain string so it is copyable. If there
@@ -58,10 +58,17 @@ export default function CodeBlock({ children: rawChildren, ...props }) {
   const isBrowser = useIsBrowser()
   const versionMetadata = useDocsVersion()
   const children = maybeStringifyChildren(rawChildren)
+  const [snippetContent, setSnippetContent] = useState()
 
   const version = versionMetadata.version
 
   const CodeBlockComp = typeof children === 'string' ? StringContent : ElementContent
+
+  useEffect(() => {
+    if (!props.metastring) return
+    const loadPromise = import(`!!raw-loader!../../../snippets/${version}/src/${parseFileName(props.metastring)}`)
+    loadPromise.then((content) => setSnippetContent(content))
+  }, [props.metastring, version])
 
   if (!props.metastring) {
     return (
@@ -70,12 +77,6 @@ export default function CodeBlock({ children: rawChildren, ...props }) {
       </CodeBlockComp>
     )
   }
-
-  let snippetContent
-
-  try {
-    snippetContent = require(`!!raw-loader!../../../snippets/${version}/src/${parseFileName(props.metastring)}`).default
-  } catch {}
 
   const sectionNumber = parseSectionNumber(props.metastring)
 

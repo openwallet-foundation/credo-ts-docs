@@ -1,18 +1,18 @@
-// @ts-check
-// Note: type annotations allow type checking and IDEs autocompletion
+import type * as Preset from '@docusaurus/preset-classic'
+import { Config } from '@docusaurus/types'
+import { themes } from 'prism-react-renderer'
 
-const lightCodeTheme = require('prism-react-renderer/themes/github')
-const darkCodeTheme = require('prism-react-renderer/themes/dracula')
-const remarkTabs = require('remark-docusaurus-tabs')
-/** @type {import('@docusaurus/types').Config} */
-const config = {
+const { github: lightCodeTheme, dracula: darkCodeTheme } = themes
+
+const config: Config = {
   title: 'Credo',
   tagline: 'Everything you need to know about the Credo ecosystem.',
   url: 'https://credo.js.org',
   baseUrl: '/',
   onBrokenLinks: 'warn',
-  onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
+
+  themes: ['@docusaurus/theme-mermaid'],
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -27,20 +27,35 @@ const config = {
   //   defaultLocale: "en",
   //   locales: ["en"],
   // },
-  markdown: {},
+  markdown: {
+    mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
+  },
   presets: [
     [
-      '@docusaurus/preset-classic',
-      /** @type {import('@docusaurus/preset-classic').Options} */
+      'classic',
       {
         docs: {
           path: 'guides',
           routeBasePath: 'guides',
-          sidebarPath: require.resolve('./sidebars.js'),
-          remarkPlugins: [remarkTabs],
+          sidebarPath: 'sidebars.js',
+          remarkPlugins: [],
           admonitions: {
-            tag: ':::',
-            keywords: ['note', 'tip', 'info', 'caution', 'danger', 'issuer', 'verifier', 'holder', 'bob', 'acme'],
+            keywords: [
+              'note',
+              'tip',
+              'info',
+              'warning',
+              'caution',
+              'danger',
+              'issuer',
+              'verifier',
+              'holder',
+              'bob',
+              'acme',
+            ],
           },
           lastVersion: 'current',
           versions: {
@@ -53,97 +68,95 @@ const config = {
           },
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: './src/css/custom.css',
         },
-      },
+      } satisfies Preset.Options,
     ],
   ],
 
-  themeConfig:
-    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    ({
-      image: 'img/credo-social-preview.png',
-      navbar: {
-        title: 'Credo Docs',
-        logo: {
-          alt: 'Credo Logo',
-          src: 'img/credo-logo.png',
+  themeConfig: {
+    image: 'img/credo-social-preview.png',
+    navbar: {
+      title: 'Credo Docs',
+      logo: {
+        alt: 'Credo Logo',
+        src: 'img/credo-logo.png',
+      },
+      items: [
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
         },
-        items: [
-          {
-            type: 'docsVersionDropdown',
-            position: 'right',
-          },
-          {
-            to: '/guides',
-            type: 'doc',
-            docId: 'index',
-            position: 'left',
-            label: 'Guides',
-          },
-        ],
-      },
-      footer: {
-        style: 'dark',
-        links: [
-          {
-            title: 'Guides',
-            items: [
-              {
-                label: 'Concepts',
-                to: '/guides/concepts',
-              },
-              {
-                label: 'Tutorials',
-                to: '/guides/tutorials',
-              },
-            ],
-          },
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'Discord',
-                href: 'https://discord.com/channels/1022962884864643214/1179453305856991263',
-              },
-              {
-                label: 'Mailing List',
-                href: 'https://lists.openwallet.foundation/g/credo-project',
-              },
-              {
-                label: 'Working Group Call Notes',
-                href: 'https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information',
-              },
-            ],
-          },
-          {
-            title: 'Repositories',
-            items: [
-              {
-                label: 'Credo',
-                href: 'https://github.com/openwallet-foundation/credo-ts',
-              },
-              {
-                label: 'Credo Extensions',
-                href: 'https://github.com/openwallet-foundation/credo-ts-ext',
-              },
-              {
-                label: 'Credo Docs (this site)',
-                href: 'https://github.com/openwallet-foundation/credo-ts-docs',
-              },
-            ],
-          },
-        ],
-        // copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-      },
-      prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
-      },
-    }),
+        {
+          to: '/guides',
+          type: 'doc',
+          docId: 'index',
+          position: 'left',
+          label: 'Guides',
+        },
+      ],
+    },
+    footer: {
+      style: 'dark',
+      links: [
+        {
+          title: 'Guides',
+          items: [
+            {
+              label: 'Concepts',
+              to: '/guides/concepts',
+            },
+            {
+              label: 'Tutorials',
+              to: '/guides/tutorials',
+            },
+          ],
+        },
+        {
+          title: 'Community',
+          items: [
+            {
+              label: 'Discord',
+              href: 'https://discord.com/channels/1022962884864643214/1179453305856991263',
+            },
+            {
+              label: 'Mailing List',
+              href: 'https://lists.openwallet.foundation/g/credo-project',
+            },
+            {
+              label: 'Working Group Call Notes',
+              href: 'https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information',
+            },
+          ],
+        },
+        {
+          title: 'Repositories',
+          items: [
+            {
+              label: 'Credo',
+              href: 'https://github.com/openwallet-foundation/credo-ts',
+            },
+            {
+              label: 'Credo Extensions',
+              href: 'https://github.com/openwallet-foundation/credo-ts-ext',
+            },
+            {
+              label: 'Credo Docs (this site)',
+              href: 'https://github.com/openwallet-foundation/credo-ts-docs',
+            },
+          ],
+        },
+      ],
+    },
+    prism: {
+      theme: lightCodeTheme,
+      darkTheme: darkCodeTheme,
+      additionalLanguages: ['json', 'diff'],
+    },
+  } satisfies Preset.ThemeConfig,
   plugins: [
     [
-      require.resolve('@cmfcmf/docusaurus-search-local'),
+      '@cmfcmf/docusaurus-search-local',
       {
         indexDocs: true,
         indexDocSidebarParentCategories: 3,
@@ -173,6 +186,7 @@ const config = {
           // the following settings.
           titleBoost: 10,
           contentBoost: 1,
+          tagsBoost: 3,
           parentCategoriesBoost: 2, // Only used when indexDocSidebarParentCategories > 0
         },
       },
@@ -180,4 +194,4 @@ const config = {
   ],
 }
 
-module.exports = config
+export default config

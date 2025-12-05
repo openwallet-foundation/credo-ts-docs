@@ -68,6 +68,26 @@ This section explains the message exchange between agents when a mediator is in 
 
 If Alice establishes a connection with another fictional agent, say, Bob's agent, who is not using any mediators _(3-6)_. (Connection establishment is no different when a mediator is involved). Then, messages from Alice to Bob _(7)_ are routed directly to Bob, while messages from Bob to Alice _(8-9)_ are routed through the intermediary.
 
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Alice
+    participant Mediator
+    participant Bob
+    Note over Mediator: Start
+    Note over Alice: Start
+    Alice->>Mediator: Request Mediation
+    Mediator->>Alice: Grant Mediation
+    Note over Bob: Start
+    Alice->>Alice: CreateInvitation
+    Alice --> Bob: (Send Invitation to Bob)
+    Bob->>Bob: RecieveInvitation
+    Alice->>Bob: WaitForConnection
+    Alice->>Bob: SendMessage Alice->Bob
+    Bob->>Mediator: SendMessage Bob->Alice (Mediator)
+    Mediator->>Alice: ForwardMessage Bob->Alice (Mediator)
+```
+
 ### Useful resources
 
 For more information about mediator refer to:
