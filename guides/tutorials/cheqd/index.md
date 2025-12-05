@@ -70,6 +70,53 @@ A DID can be deactivated, it can still be resolved
 
 ```
 
+### Create Resource
+
+Using the createResource cheqd api agents are able to create custom DID-Linked Resources, including:
+
+- Trust Registries
+- Status Lists
+- Logos associated with DIDs
+- Governance files
+
+#### Parameters
+
+1. `did`\*
+2. `name`\*
+3. `resourceType`\*
+4. `id`\*
+5. `data`\* : Text, Base64 string or an object
+6. `alsoKnownAs`
+7. `version`
+
+```typescript showLineNumbers set-up-cheqd.ts section-6
+
+```
+
+### Resolve Resource
+
+The resolveResource function in the cheqd API allows agents to resolve DID-Linked Resources in two ways:
+
+- By `resourceId`
+- By `resourceName` and `resourceType`
+
+Additionally, both conventions support the following query parameters:
+
+- To fetch a specific resource version: `resourceUrl?version=<versionId>`
+- To fetch the closest resource version for a given time: `resourceUrl?resourceVersionTime=<epoch time>`
+
+#### Using `resourceId`
+
+```typescript showLineNumbers set-up-cheqd.ts section-7
+
+```
+
+#### Using `resourceName` and `resourceType`
+
+```typescript showLineNumbers set-up-cheqd.ts section-8
+
+```
+
 ### Types
 
 ---

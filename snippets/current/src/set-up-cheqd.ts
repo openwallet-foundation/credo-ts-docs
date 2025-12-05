@@ -82,9 +82,7 @@ const ed25519PublicKeyBase58 = key.publicKeyBase58
 await agent.dids.create<CheqdDidCreateOptions>({
   method: 'cheqd',
   secret: {},
-  options: {
-    network: 'testnet',
-  },
+  options: {},
   didDocument: new DidDocument({
     id: 'did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d',
     controller: ['did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d'],
@@ -162,3 +160,28 @@ await agent.dids.deactivate({
   },
 })
 // end-section-5
+
+// start-section-6
+await agent.modules.cheqd.createResource('did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d', {
+  name: 'resourceName',
+  resourceType: 'resourceType',
+  id: '6de33634-6439-4e46-aa3f-bfe03606b000',
+  version: '1.0',
+  data: {
+    name: 'name',
+    age: 18,
+  },
+})
+// end-section-6
+
+// start-section-7
+await agent.modules.cheqd.resolveResource(
+  'did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d/resources/6de33634-6439-4e46-aa3f-bfe03606b000'
+)
+// end-section-7
+
+// start-section-8
+await agent.modules.cheqd.resolveResource(
+  'did:cheqd:testnet:92874297-d824-40ea-8ae5-364a1ec9237d?resourceName=resourceName&resourceType=resourceType'
+)
+// end-section-8

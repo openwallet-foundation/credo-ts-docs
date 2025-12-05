@@ -91,4 +91,4 @@ The cosmosPayerSeed can be a 32-bit seed value or a mnemonic, which can be manag
 
 - [Cheqd DID Module](../../../tutorials/cheqd/index.md)
 - [Register Schema and Credential Definition](../../../tutorials/registering-schema-and-credential-definition.md)
-- [Issue a Credential](../../../tutorials/issue-a-credential.md)
+- [Issue an AnonCreds Credential over DIDComm](../../../tutorials/issue-an-anoncreds-credential-over-didcomm.md)

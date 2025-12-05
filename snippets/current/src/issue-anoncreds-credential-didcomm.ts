@@ -143,6 +143,7 @@ holder.events.on<CredentialStateChangedEvent>(CredentialEventTypes.CredentialSta
       console.log('received a credential')
       // custom logic here
       await holder.credentials.acceptOffer({ credentialRecordId: payload.credentialRecord.id })
+      break
     case CredentialState.Done:
       console.log(`Credential for credential id ${payload.credentialRecord.id} is accepted`)
       // For demo purposes we exit the program here.

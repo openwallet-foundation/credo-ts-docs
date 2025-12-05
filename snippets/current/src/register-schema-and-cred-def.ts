@@ -29,6 +29,7 @@ import {
   CheqdModule,
   CheqdModuleConfig,
 } from '@credo-ts/cheqd'
+import { HederaAnonCredsRegistry, HederaDidRegistrar, HederaDidResolver, HederaModule } from '@credo-ts/hedera'
 
 const agent = new Agent({
   config,
@@ -60,13 +61,22 @@ const agent = new Agent({
         ],
       })
     ),
+    hedera: new HederaModule({
+      networks: [
+        {
+          network: 'testnet', // '<mainnet or testnet or previewnet or local-node>'
+          operatorId: '<your operator ID on the Hedera network>',
+          operatorKey: '<your operator Key on the Hedera network in the DER format>',
+        },
+      ],
+    }),
     anoncreds: new AnonCredsModule({
-      registries: [new IndyVdrAnonCredsRegistry(), new CheqdAnonCredsRegistry()],
+      registries: [new IndyVdrAnonCredsRegistry(), new CheqdAnonCredsRegistry(), new HederaAnonCredsRegistry()],
       anoncreds,
     }),
     dids: new DidsModule({
-      registrars: [new IndyVdrIndyDidRegistrar(), new CheqdDidRegistrar()],
-      resolvers: [new IndyVdrIndyDidResolver(), new CheqdDidResolver()],
+      registrars: [new IndyVdrIndyDidRegistrar(), new CheqdDidRegistrar(), new HederaDidRegistrar()],
+      resolvers: [new IndyVdrIndyDidResolver(), new CheqdDidResolver(), new HederaDidResolver()],
     }),
   },
 })
@@ -100,6 +110,13 @@ await agent.dids.import({
       keyType: KeyType.Ed25519,
     },
   ],
+})
+
+const hederaDid = await agent.dids.create({
+  method: 'hedera',
+  options: {
+    network: 'testnet',
+  },
 })
 // end-section-2
 

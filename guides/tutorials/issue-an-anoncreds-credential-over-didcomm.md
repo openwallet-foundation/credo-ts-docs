@@ -1,6 +1,6 @@
-# Issue a credential
+# Issue an AnonCreds credential over DIDComm
 
-In this tutorial we will issue a credential from the _Issuer_ to a _Holder_. We will start with setting up both their agents with the minimal configuration required to follow this tutorial. It is assumed that there is a connection between the _Issuer_ and the _Holder_ and the _Issuer_ also has a registered schema and credential definition. After initializing the _Issuer_ will send a credential to the _holder_, and will then accept this credential and automatically store it in their wallet.
+In this tutorial we will issue an AnonCreds credential from the _Issuer_ to a _Holder_ over DIDComm. We will start with setting up both their agents with the minimal configuration required to follow this tutorial. It is assumed that there is a connection between the _Issuer_ and the _Holder_ and the _Issuer_ also has a registered schema and credential definition. After initializing the _Issuer_ will send a credential to the _holder_, and will then accept this credential and automatically store it in their wallet.
 
 _Using [AnonCreds](https://anoncreds-wg.github.io/anoncreds-spec/) and the [Issue Credential V2 Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0453-issue-credential-v2/README.md) or the [Issue Credential V1 Protocol](https://github.com/hyperledger/aries-rfcs/blob/main/features/0036-issue-credential/README.md)._
 
@@ -8,7 +8,7 @@ _Using [AnonCreds](https://anoncreds-wg.github.io/anoncreds-spec/) and the [Issu
 
 This section assumes that
 
-1. You have [set-up your develoment environment](../getting-started).
+1. You have [set-up your development environment](../getting-started).
 1. You have basic knowledge of the required fields in the [Agent Config](./agent-config)
 1. You have completed the [Create a Connection tutorial](./create-a-connection)
 1. You have a registered schema and credential definition. This can be done by following the [Registering on a AnonCreds Registry](./registering-schema-and-credential-definition)
@@ -53,7 +53,7 @@ ngrok http <PORT>
 
 :::issuer
 
-```typescript showLineNumbers issue-a-credential.ts section-1
+```typescript showLineNumbers issue-anoncreds-credential-didcomm.ts section-1
 
 ```
 
@@ -70,7 +70,7 @@ For the _Holder_ we need to setup a basic agent with a wallet, mediator, outboun
 
 :::holder
 
-```typescript showLineNumbers issue-a-credential.ts section-2
+```typescript showLineNumbers issue-anoncreds-credential-didcomm.ts section-2
 
 ```
 
@@ -82,7 +82,7 @@ When we want to accept a credential, we have to listen to incoming credentials a
 
 :::holder
 
-```typescript showLineNumbers issue-a-credential.ts section-3
+```typescript showLineNumbers issue-anoncreds-credential-didcomm.ts section-3
 
 ```
 
@@ -100,7 +100,7 @@ Now that everything is setup on both sides, the _Issuer_ can now offer a credent
 
 :::issuer
 
-```typescript showLineNumbers issue-a-credential.ts section-4
+```typescript showLineNumbers issue-anoncreds-credential-didcomm.ts section-4
 
 ```
 
@@ -110,7 +110,7 @@ Now that everything is setup on both sides, the _Issuer_ can now offer a credent
 
 :::issuer
 
-```typescript showLineNumbers issue-a-credential.ts section-5
+```typescript showLineNumbers issue-anoncreds-credential-didcomm.ts section-5
 
 ```
 

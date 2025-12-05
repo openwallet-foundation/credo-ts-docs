@@ -45,12 +45,10 @@ const config = {
             tag: ':::',
             keywords: ['note', 'tip', 'info', 'caution', 'danger', 'issuer', 'verifier', 'holder', 'bob', 'acme'],
           },
-          lastVersion: '0.4',
+          lastVersion: 'current',
           versions: {
             current: {
               label: 'v0.5.x',
-              path: '0.5',
-              banner: 'unreleased',
             },
             0.4: {
               label: 'v0.4.x',

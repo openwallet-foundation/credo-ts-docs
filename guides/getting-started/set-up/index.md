@@ -5,7 +5,7 @@ import DocCardList from '@theme/DocCardList';
 :::info
 
 This guide assumes you have followed the [Prerequisites](./prerequisites), and you have a valid
-[Node.JS](https://nodejs.org) or [React Native](https://reactnative.dev) project setup.
+[Node.js](https://nodejs.org) or [React Native](https://reactnative.dev) project setup.
 
 :::
 
@@ -20,6 +20,8 @@ For Credo `0.5.x`, **the following features are experimental**:
 - Using multi-tenancy from the `@credo-ts/tenants` module
 - Using BBS+ Signatures from the `@credo-ts/bbs-signatures` module
 - Using the cheqd module from the `@credo-ts/cheqd` module
+- Using DIF Presentation Exchange
+- Using AnonCreds in the W3C Verifiable Credential format
 
 :::
 
@@ -29,16 +31,16 @@ First we have to install the minimal amount of dependencies that are required fo
 
 <!--tabs-->
 
-# Node.JS
+# Node.js
 
 ```console
-yarn add @credo-ts/core@^0.5.0 @credo-ts/node@^0.5.0
+yarn add @credo-ts/core@^0.5.3 @credo-ts/node@^0.5.3
 ```
 
 # React Native
 
 ```console
-yarn add @credo-ts/core@^0.5.0 @credo-ts/react-native@^0.5.0 react-native-fs react-native-get-random-values
+yarn add @credo-ts/core@^0.5.3 @credo-ts/react-native@^0.5.3 react-native-fs react-native-get-random-values
 ```
 
 <!--/tabs-->
@@ -49,7 +51,7 @@ yarn add @credo-ts/core@^0.5.0 @credo-ts/react-native@^0.5.0 react-native-fs rea
 
 # Node.js
 
-No additional setup is required for Node.JS
+No additional setup is required for Node.js
 
 # React Native
 
@@ -111,7 +113,7 @@ enough for your specific use cases. Please refer to the
 
 <!--tabs-->
 
-# Node.JS
+# Node.js
 
 ```typescript showLineNumbers set-up.ts section-1
 
@@ -190,7 +192,7 @@ Finally, we can initialize the agent and it's ready for use.
 Now that you have your agent setup, it's time to start building your application. Head over to the tutorials page to get started.
 
 <DocCardList items={[
-{ type: 'link', label: 'Tutorials', href: '../tutorials/index', docId: 'tutorials/index' },
+{ type: 'link', label: 'Tutorials', href: '../tutorials', docId: 'tutorials/index' },
 { type: 'link', label: 'Create a Connection', href: '../tutorials/create-a-connection', docId: 'tutorials/create-a-connection' }
 ]} />
 
