@@ -130,6 +130,66 @@ importers:
         specifier: ^4.22.1
         version: 4.22.1
 
+  snippets/current:
+    dependencies:
+      '@credo-ts/anoncreds':
+        specifier: ^0.5.19
+        version: 0.5.19(@hyperledger/anoncreds-shared@0.3.4)(expo@54.0.26(@babel/core@7.28.5)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(react@18.3.1))(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(web-streams-polyfill@3.3.3)
+      '@credo-ts/askar':
+        specifier: ^0.5.19
+        version: 0.5.19(@openwallet-foundation/askar-nodejs@0.4.3)(@openwallet-foundation/askar-react-native@0.4.3(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(react@18.3.1))(expo@54.0.26(@babel/core@7.28.5)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(react@18.3.1))(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(web-streams-polyfill@3.3.3)
+      '@credo-ts/cheqd':
+        specifier: ^0.5.19
+        version: 0.5.19(@hyperledger/anoncreds-shared@0.3.4)(debug@4.4.1)(expo@54.0.26(@babel/core@7.28.5)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(react@18.3.1))(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(web-streams-polyfill@3.3.3)
+      '@credo-ts/core':
+        specifier: ^0.5.19
+        version: 0.5.19(expo@54.0.26(@babel/core@7.28.5)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(react@18.3.1))(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(web-streams-polyfill@3.3.3)
+      '@credo-ts/hedera':
+        specifier: ^0.5.19
+        version: 0.5.19(@hyperledger/anoncreds-shared@0.3.4)(bn.js@5.2.2)(expo@54.0.26(@babel/core@7.28.5)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(react@18.3.1))(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(web-streams-polyfill@3.3.3)
+      '@credo-ts/indy-vdr':
+        specifier: ^0.5.19
+        version: 0.5.19(@hyperledger/anoncreds-shared@0.3.4)(@hyperledger/indy-vdr-shared@0.2.3)(expo@54.0.26(@babel/core@7.28.5)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(react@18.3.1))(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(web-streams-polyfill@3.3.3)
+      '@credo-ts/node':
+        specifier: ^0.5.19
+        version: 0.5.19(expo@54.0.26(@babel/core@7.28.5)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(react@18.3.1))(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(web-streams-polyfill@3.3.3)
+      '@credo-ts/openid4vc':
+        specifier: ^0.5.19
+        version: 0.5.19(expo@54.0.26(@babel/core@7.28.5)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(react@18.3.1))(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(ts-node@10.9.2(@types/node@22.19.1)(typescript@5.9.3))(typescript@5.9.3)(web-streams-polyfill@3.3.3)
+      '@credo-ts/react-native':
+        specifier: ^0.5.19
+        version: 0.5.19(expo@54.0.26(@babel/core@7.28.5)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(react@18.3.1))(react-native-fs@2.20.0(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1)))(react-native-get-random-values@1.11.0(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1)))(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(web-streams-polyfill@3.3.3)
+      '@hyperledger/anoncreds-nodejs':
+        specifier: ^0.3.4
+        version: 0.3.4
+      '@hyperledger/anoncreds-react-native':
+        specifier: ^0.3.4
+        version: 0.3.4(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(react@18.3.1)
+      '@hyperledger/anoncreds-shared':
+        specifier: ^0.3.4
+        version: 0.3.4
+      '@hyperledger/indy-vdr-nodejs':
+        specifier: ^0.2.3
+        version: 0.2.3
+      '@hyperledger/indy-vdr-react-native':
+        specifier: ^0.2.3
+        version: 0.2.3(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(react@18.3.1)
+      '@hyperledger/indy-vdr-shared':
+        specifier: ^0.2.3
+        version: 0.2.3
+      '@openwallet-foundation/askar-nodejs':
+        specifier: ^0.4.3
+        version: 0.4.3
+      '@openwallet-foundation/askar-react-native':
+        specifier: ^0.4.3
+        version: 0.4.3(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@18.3.1))(react@18.3.1)
+      '@openwallet-foundation/askar-shared':
+        specifier: ^0.4.3
+        version: 0.4.3
+      express:
+        specifier: ^4.22.1
+        version: 4.22.1
+
 packages:
 
   '@0no-co/graphql.web@1.2.0':
