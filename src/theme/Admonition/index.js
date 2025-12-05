@@ -1,8 +1,9 @@
-import React from 'react'
-import clsx from 'clsx'
-import { ThemeClassNames } from '@docusaurus/theme-common'
 import Translate from '@docusaurus/Translate'
+import { ThemeClassNames } from '@docusaurus/theme-common'
+import clsx from 'clsx'
+import React from 'react'
 import styles from './styles.module.css'
+
 function NoteIcon() {
   return (
     <svg viewBox="0 0 14 16">

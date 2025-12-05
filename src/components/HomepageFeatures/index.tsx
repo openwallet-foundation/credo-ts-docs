@@ -1,11 +1,11 @@
-import React from 'react'
 import clsx from 'clsx'
+import React from 'react'
 import styles from './styles.module.css'
 
 type FeatureItem = {
   title: string
   Svg: React.ComponentType<React.ComponentProps<'svg'>>
-  description: JSX.Element
+  description: React.ReactNode
 }
 
 const FeatureList: FeatureItem[] = [
@@ -55,8 +55,8 @@ export default function HomepageFeatures(): JSX.Element {
     <section className={styles.features}>
       <div className="container">
         <div className="row">
-          {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
+          {FeatureList.map((props) => (
+            <Feature key={props.title} {...props} />
           ))}
         </div>
       </div>

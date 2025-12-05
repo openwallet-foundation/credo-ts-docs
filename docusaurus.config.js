@@ -13,7 +13,6 @@ const config = {
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  themes: ['@docusaurus/theme-mermaid'],
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -28,9 +27,7 @@ const config = {
   //   defaultLocale: "en",
   //   locales: ["en"],
   // },
-  markdown: {
-    mermaid: true,
-  },
+  markdown: {},
   presets: [
     [
       '@docusaurus/preset-classic',
@@ -48,13 +45,10 @@ const config = {
           lastVersion: 'current',
           versions: {
             current: {
+              label: 'v0.6.x',
+            },
+            0.5: {
               label: 'v0.5.x',
-            },
-            0.4: {
-              label: 'v0.4.x',
-            },
-            0.3: {
-              label: 'v0.3.x',
             },
           },
         },
@@ -160,7 +154,7 @@ const config = {
           // By default, it splits the text at whitespace and dashes.
           //
           // Note: Does not work for "ja" and "th" languages, since these use a different tokenizer.
-          tokenizerSeparator: /[\s\-]+/,
+          tokenizerSeparator: /[\s-]+/,
           // https://lunrjs.com/guides/customising.html#similarity-tuning
           //
           // This parameter controls the importance given to the length of a document and its fields. This

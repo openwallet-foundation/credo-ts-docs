@@ -1,8 +1,9 @@
-import React, { isValidElement } from 'react'
+import { useDocsVersion } from '@docusaurus/theme-common/internal'
 import useIsBrowser from '@docusaurus/useIsBrowser'
 import ElementContent from '@theme/CodeBlock/Content/Element'
 import StringContent from '@theme/CodeBlock/Content/String'
-import { useDocsVersion } from '@docusaurus/theme-common/internal'
+import React, { isValidElement } from 'react'
+
 /**
  * Best attempt to make the children a plain string so it is copyable. If there
  * are react elements, we will not be able to copy the content, and it will
