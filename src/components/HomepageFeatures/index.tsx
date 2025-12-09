@@ -1,17 +1,20 @@
-import React from 'react'
+import easyToUseSvg from '@site/static/img/easy-to-use.svg'
+import multiplatformSvg from '@site/static/img/multiplatform.svg'
+import standardsSvg from '@site/static/img/standards.svg'
 import clsx from 'clsx'
+import React from 'react'
 import styles from './styles.module.css'
 
 type FeatureItem = {
   title: string
   Svg: React.ComponentType<React.ComponentProps<'svg'>>
-  description: JSX.Element
+  description: React.ReactNode
 }
 
 const FeatureList: FeatureItem[] = [
   {
     title: 'Easy to Use',
-    Svg: require('@site/static/img/easy-to-use.svg').default,
+    Svg: easyToUseSvg,
     description: (
       <>
         Credo was designed with the mindset that building self-sovereign identity solutions should be easy and
@@ -21,7 +24,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Multi-platform',
-    Svg: require('@site/static/img/multiplatform.svg').default,
+    Svg: multiplatformSvg,
     description: (
       <>
         With support for Node.js and React Native, Credo allows you to reuse the same code base in different
@@ -31,7 +34,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Based on the latest standards',
-    Svg: require('@site/static/img/standards.svg').default,
+    Svg: standardsSvg,
     description: <>By keeping up with the latest standards, we ensure Credo is secure and interoperable.</>,
   },
 ]
@@ -55,8 +58,8 @@ export default function HomepageFeatures(): JSX.Element {
     <section className={styles.features}>
       <div className="container">
         <div className="row">
-          {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
+          {FeatureList.map((props) => (
+            <Feature key={props.title} {...props} />
           ))}
         </div>
       </div>

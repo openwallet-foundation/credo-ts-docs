@@ -19,7 +19,7 @@
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
+[data-theme="dark"] {
   --ifm-color-primary: #cf00b8;
   --ifm-color-primary-dark: #ba00a6;
   --ifm-color-primary-darker: #b0009c;
@@ -34,7 +34,7 @@
   background: var(--ifm-background-color);
 }
 
-[data-theme='dark'] .custom-banner-bg a {
+[data-theme="dark"] .custom-banner-bg a {
   color: white;
 }
 
@@ -42,30 +42,30 @@
   color: var(--ifm-color-primary);
 }
 
-[data-theme='dark'] .custom-banner-bg p {
+[data-theme="dark"] .custom-banner-bg p {
   color: white;
 }
 
-[data-theme='light'] .custom-banner-bg p {
+[data-theme="light"] .custom-banner-bg p {
   color: black;
 }
 
-.admonition-holder {
+.theme-admonition-holder {
   --ifm-alert-background-color: #b6b2f5;
 }
 
-.admonition-issuer {
+.theme-admonition-issuer {
   --ifm-alert-background-color: #5dea7e;
 }
 
-.admonition-verifier {
+.theme-admonition-verifier {
   --ifm-alert-background-color: #ee90ca;
 }
 
-.admonition-acme {
+.theme-admonition-acme {
   --ifm-alert-background-color: #a0faaa;
 }
 
-.admonition-bob {
+.theme-admonition-bob {
   --ifm-alert-background-color: #ffaaff;
 }

@@ -11,20 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
         with:
-          node-version: 20.x
-          cache: yarn
+          node-version: 22.x
+          cache: pnpm
 
-      # ignore scripts as indy-sdk will try to build and we don't have libindy
       - name: Install dependencies
-        run: yarn install --frozen-lockfile --ignore-scripts
+        run: pnpm install --frozen-lockfile
 
-      - name: Check prettier
-        run: yarn check-format
+      - name: Check formatting
+        run: pnpm style:check
 
       - name: Check types
-        run: yarn check-types
+        run: pnpm types:check
 
       - name: Test build website
-        run: yarn build
+        run: pnpm build

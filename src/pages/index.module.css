@@ -11,8 +11,6 @@
   /* --ifm-hero-background-color: linear-gradient(90deg, #ff008e 0%, #8e00f2 100%); */
 }
 
-
-
 @media screen and (max-width: 996px) {
   .heroBanner {
     padding: 2rem;

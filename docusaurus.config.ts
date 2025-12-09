@@ -1,0 +1,197 @@
+import type * as Preset from '@docusaurus/preset-classic'
+import { Config } from '@docusaurus/types'
+import { themes } from 'prism-react-renderer'
+
+const { github: lightCodeTheme, dracula: darkCodeTheme } = themes
+
+const config: Config = {
+  title: 'Credo',
+  tagline: 'Everything you need to know about the Credo ecosystem.',
+  url: 'https://credo.js.org',
+  baseUrl: '/',
+  onBrokenLinks: 'warn',
+  favicon: 'img/favicon.ico',
+
+  themes: ['@docusaurus/theme-mermaid'],
+
+  // GitHub pages deployment config.
+  // If you aren't using GitHub pages, you don't need these.
+  organizationName: 'openwallet-foundation', // Usually your GitHub org/user name.
+  projectName: 'credo-ts-docs', // Usually your repo name.
+  trailingSlash: false,
+
+  // Even if you don't use internalization, you can use this field to set useful
+  // metadata like html lang. For example, if your site is Chinese, you may want
+  // to replace "en" with "zh-Hans".
+  // i18n: {
+  //   defaultLocale: "en",
+  //   locales: ["en"],
+  // },
+  markdown: {
+    mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
+  },
+  presets: [
+    [
+      'classic',
+      {
+        docs: {
+          path: 'guides',
+          routeBasePath: 'guides',
+          sidebarPath: 'sidebars.js',
+          remarkPlugins: [],
+          admonitions: {
+            keywords: [
+              'note',
+              'tip',
+              'info',
+              'warning',
+              'caution',
+              'danger',
+              'issuer',
+              'verifier',
+              'holder',
+              'bob',
+              'acme',
+            ],
+          },
+          lastVersion: 'current',
+          versions: {
+            current: {
+              label: 'v0.6.x',
+            },
+            0.5: {
+              label: 'v0.5.x',
+            },
+          },
+        },
+        theme: {
+          customCss: './src/css/custom.css',
+        },
+      } satisfies Preset.Options,
+    ],
+  ],
+
+  themeConfig: {
+    image: 'img/credo-social-preview.png',
+    navbar: {
+      title: 'Credo Docs',
+      logo: {
+        alt: 'Credo Logo',
+        src: 'img/credo-logo.png',
+      },
+      items: [
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+        },
+        {
+          to: '/guides',
+          type: 'doc',
+          docId: 'index',
+          position: 'left',
+          label: 'Guides',
+        },
+      ],
+    },
+    footer: {
+      style: 'dark',
+      links: [
+        {
+          title: 'Guides',
+          items: [
+            {
+              label: 'Concepts',
+              to: '/guides/concepts',
+            },
+            {
+              label: 'Tutorials',
+              to: '/guides/tutorials',
+            },
+          ],
+        },
+        {
+          title: 'Community',
+          items: [
+            {
+              label: 'Discord',
+              href: 'https://discord.com/channels/1022962884864643214/1179453305856991263',
+            },
+            {
+              label: 'Mailing List',
+              href: 'https://lists.openwallet.foundation/g/credo-project',
+            },
+            {
+              label: 'Working Group Call Notes',
+              href: 'https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information',
+            },
+          ],
+        },
+        {
+          title: 'Repositories',
+          items: [
+            {
+              label: 'Credo',
+              href: 'https://github.com/openwallet-foundation/credo-ts',
+            },
+            {
+              label: 'Credo Extensions',
+              href: 'https://github.com/openwallet-foundation/credo-ts-ext',
+            },
+            {
+              label: 'Credo Docs (this site)',
+              href: 'https://github.com/openwallet-foundation/credo-ts-docs',
+            },
+          ],
+        },
+      ],
+    },
+    prism: {
+      theme: lightCodeTheme,
+      darkTheme: darkCodeTheme,
+      additionalLanguages: ['json', 'diff', 'bash'],
+    },
+  } satisfies Preset.ThemeConfig,
+  plugins: [
+    [
+      '@cmfcmf/docusaurus-search-local',
+      {
+        indexDocs: true,
+        indexDocSidebarParentCategories: 3,
+        lunr: {
+          // When indexing your documents, their content is split into "tokens".
+          // Text entered into the search box is also tokenized.
+          // This setting configures the separator used to determine where to split the text into tokens.
+          // By default, it splits the text at whitespace and dashes.
+          //
+          // Note: Does not work for "ja" and "th" languages, since these use a different tokenizer.
+          tokenizerSeparator: /[\s-]+/,
+          // https://lunrjs.com/guides/customising.html#similarity-tuning
+          //
+          // This parameter controls the importance given to the length of a document and its fields. This
+          // value must be between 0 and 1, and by default it has a value of 0.75. Reducing this value
+          // reduces the effect of different length documents on a term’s importance to that document.
+          b: 0.75,
+          // This controls how quickly the boost given by a common word reaches saturation. Increasing it
+          // will slow down the rate of saturation and lower values result in quicker saturation. The
+          // default value is 1.2. If the collection of documents being indexed have high occurrences
+          // of words that are not covered by a stop word filter, these words can quickly dominate any
+          // similarity calculation. In these cases, this value can be reduced to get more balanced results.
+          k1: 1.2,
+          // By default, we rank pages where the search term appears in the title higher than pages where
+          // the search term appears in just the text. This is done by "boosting" title matches with a
+          // higher value than content matches. The concrete boosting behavior can be controlled by changing
+          // the following settings.
+          titleBoost: 10,
+          contentBoost: 1,
+          tagsBoost: 3,
+          parentCategoriesBoost: 2, // Only used when indexDocSidebarParentCategories > 0
+        },
+      },
+    ],
+  ],
+}
+
+export default config
