@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkcredo_ts_docs=globalThis.webpackChunkcredo_ts_docs||[]).push([[5820],{5820:(c,e,s)=>{s.d(e,{createArchitectureServices:()=>r.S});var r=s(83738);s(89932)}}]);

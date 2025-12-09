@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkcredo_ts_docs=globalThis.webpackChunkcredo_ts_docs||[]).push([[3363,5744],{93363:(s,d,a)=>{a.r(d),a.d(d,{default:()=>e});const e='<manifest xmlns:android="http://schemas.android.com/apk/res/android"\n          package="org.hyperledger.indyvdr">\n</manifest>\n'}}]);

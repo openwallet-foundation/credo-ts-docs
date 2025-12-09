@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkcredo_ts_docs=globalThis.webpackChunkcredo_ts_docs||[]).push([[1904,9523],{39523:(a,s,n)=>{n.r(s),n.d(s,{default:()=>o});const o='<manifest xmlns:android="http://schemas.android.com/apk/res/android"\n          package="foundation.openwallet.askar">\n</manifest>\n'}}]);

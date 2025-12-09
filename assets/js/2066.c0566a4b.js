@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkcredo_ts_docs=globalThis.webpackChunkcredo_ts_docs||[]).push([[2066,9685],{39685:(s,a,e)=>{e.r(a),e.d(a,{default:()=>d});const d='<manifest xmlns:android="http://schemas.android.com/apk/res/android"\n          package="org.hyperledger.anoncreds">\n</manifest>\n'}}]);

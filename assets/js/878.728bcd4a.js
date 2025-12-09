@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkcredo_ts_docs=globalThis.webpackChunkcredo_ts_docs||[]).push([[878,8497],{30878:(c,n,s)=>{s.r(n),s.d(n,{default:()=>e});const e="package id.animo;\n\npublic class SecureEnvironment {\n    public static native void set_env();\n}\n"}}]);
