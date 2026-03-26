@@ -93,6 +93,7 @@ const sidebars = {
         'updating/versions/0.2-to-0.3',
         'updating/versions/0.3-to-0.4',
         'updating/versions/0.4-to-0.5',
+        'updating/versions/0.5-to-0.6',
       ],
     },
     'ecosystem/index',
