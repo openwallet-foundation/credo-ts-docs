@@ -44,4 +44,5 @@ Currently the following migration guides are available:
 - [Migrating from Credo 0.3.x to 0.4.x](./versions/0.3-to-0.4.md)
 - [Migrating from Credo 0.4.x to 0.5.x](./versions/0.4-to-0.5.md)
 - [Migrating from Credo 0.5.x to 0.6.x](./versions/0.5-to-0.6.md)
+- [Migrating from Credo 0.6.x to 0.7.x](./versions/0.6-to-0.7.md)
 - [Migrating from an Indy SDK Wallet to Aries Askar](./update-indy-sdk-to-askar.md)
