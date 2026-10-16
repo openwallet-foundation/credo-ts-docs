@@ -1,0 +1,92 @@
+---
+title: Multi-tenancy
+description: Run many isolated tenants in one Credo agent with the tenants module, choose how their data is stored, and manage tenant sessions and status.
+---
+
+With `@credo-ts/tenants`, one agent hosts many tenants. Each tenant has its own storage, keys, DIDs and credentials, while all tenants share the agent's modules, configuration and endpoints. Use it for a service that issues, verifies or holds credentials for many organizations or users, instead of running an agent per tenant.
+
+## Install
+
+<InstallTabs packages="@credo-ts/tenants" />
+
+## Configure
+
+```ts showLineNumbers title="agent.ts" tenants.ts section-1
+```
+
+Replace the default cache. The default `SingleContextStorageLruCache` throws as soon as a tenant uses it. Use `InMemoryLruCache`, or `RedisCache` when several instances run the agent. See [Caching](./caching.mdx).
+
+| `TenantsModule` option | Description |
+| --- | --- |
+| `sessionLimit` | Maximum number of tenant sessions open at the same time. Default `100`, which is low on purpose: set it based on your hardware and load. `Infinity` removes the limit. |
+| `sessionAcquireTimeout` | How long, in milliseconds, opening a session waits for a free slot when the limit is reached, before it throws `Failed to acquire an agent context session`. Default `1000`. |
+
+Tenant agents get the modules you register on the root agent. To type them, pass the modules to the generic, for example `new TenantsModule<{ openid4vc: OpenId4VcModule }>()`.
+
+## Where tenant data is stored
+
+| Storage | Tenant records | Tenant keys (Askar) |
+| --- | --- | --- |
+| Askar, `DatabasePerWallet` (default) | A store per tenant: a SQLite file or a PostgreSQL database each | In the tenant's store |
+| Askar, `ProfilePerWallet` | A profile per tenant in the root store | In the tenant's profile |
+| Drizzle | The one database, each row tagged with the tenant | Askar, following `multiWalletDatabaseScheme` |
+
+`ProfilePerWallet` is recommended for Askar, because it performs better with many tenants. With `DatabasePerWallet`, Credo generates a key for each tenant store and saves it in the tenant record. See [Askar](./storage/askar.mdx#multi-tenancy) for both options.
+
+With [Drizzle](./storage/drizzle.mdx), add `tenantsBundle` from `@credo-ts/drizzle-storage/tenants` to `bundles`, and pass `--bundle tenants` when you run the migrations.
+
+## Create a tenant
+
+```ts showLineNumbers title="agent.ts" tenants.ts section-2
+```
+
+`createTenant` saves a `TenantRecord` in the root agent's storage and creates the tenant's storage. The label is for your own use. Use the tenant record's `id` to open the tenant later.
+
+## Use a tenant
+
+Work in a tenant through a tenant agent. A tenant agent has the same API as the root agent, scoped to the tenant. `withTenantAgent` opens a session, runs your callback and ends the session, also when the callback throws:
+
+```ts showLineNumbers title="agent.ts" tenants.ts section-3
+```
+
+`getTenantAgent` returns the tenant agent without a callback. End the session yourself with `endSession()`:
+
+```ts showLineNumbers title="agent.ts" tenants.ts section-4
+```
+
+Each open session takes a slot of `sessionLimit` until it ends, so a missing `endSession()` eventually blocks new sessions. Credo opens a tenant's storage for its first session and closes it when the last session ends.
+
+Inbound DIDComm messages and OpenID4VC requests for a tenant open their own session.
+
+## Manage tenants
+
+`agent.modules.tenants` has methods to look up and change tenants:
+
+| Method | What it does |
+| --- | --- |
+| `getTenantById(tenantId)`, `findTenantsByLabel(label)`, `findTenantsByQuery(query)`, `getAllTenants()` | Find tenant records. |
+| `updateTenant(tenantRecord)` | Saves changes to a tenant record. |
+| `updateTenantStatus(tenantId, status)` | Activates or deactivates a tenant. See [Tenant status](#tenant-status). |
+| `deleteTenantById(tenantId)` | Deletes the tenant record and the tenant's storage. |
+| `getTenantsWithOutdatedStorage()`, `updateTenantStorage({ tenantId })` | Update tenant storage after a Credo upgrade. With `autoUpdateStorageOnStartup`, Credo updates a tenant when it opens a session. |
+
+```ts showLineNumbers title="agent.ts" tenants.ts section-6
+```
+
+## Tenant status
+
+A tenant is active or inactive. New sessions can't be opened for an inactive tenant: `withTenantAgent` and `getTenantAgent` throw a `TenantInactiveError`, and inbound DIDComm messages and OpenID4VC requests for the tenant fail. Sessions that are already open keep working. Pass `allowInactive: true` to open a session anyway, for example for administration:
+
+```ts showLineNumbers title="agent.ts" tenants.ts section-5
+```
+
+New tenants are active. Tenants created before the status existed count as active. `deleteTenantById` also deletes inactive tenants.
+
+With Drizzle, the status is a column that the `0001_add-tenant-status` migration of the tenants bundle adds. Run the tenants migrations before you start the agent.
+
+## Route messages and requests to tenants
+
+Tenants share the root agent's endpoints. Credo finds the tenant for each incoming message or request:
+
+- DIDComm: the root agent's inbound transports receive all messages. When a tenant creates routing keys, for example for a connection, Credo saves which tenant they belong to, and it routes each encrypted message by its recipient key. See [DIDComm](../protocols/didcomm/index.mdx).
+- OpenID4VC: create issuers and verifiers with a tenant agent. Credo saves their ids on the tenant record and routes requests to the issuer or verifier URLs to that tenant. See [Issuing credentials](../protocols/openid4vc/issuer.mdx) and [Verifying credentials](../protocols/openid4vc/verifier.mdx).

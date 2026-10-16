@@ -1,4 +1,14 @@
+---
+title: Redux Store
+---
+
 # Redux Store
+
+:::caution
+
+`@credo-ts/redux-store` 0.5.1, the latest release, requires Credo 0.5 (`@credo-ts/core@^0.5.0`) and hasn't been updated for later versions of Credo.
+
+:::
 
 The Redux Store is an implementation of state management that can be used to build React & React Native SSI clients using Credo.
 
@@ -14,18 +24,22 @@ This document is for version **`0.4.x`** of the `@credo-ts/redux-store` package,
 
 To add the Redux Store package to your existing project simply run:
 
-<!--tabs-->
+<Tabs>
 
-## npm
+<TabItem value="npm" label="npm">
 
 ```bash
 npm i @credo-ts/redux-store
 ```
 
-## Yarn
+</TabItem>
+
+<TabItem value="yarn" label="Yarn">
 
 ```bash
 yarn add @credo-ts/redux-store
 ```
 
-<!--tabs-->
+</TabItem>
+
+</Tabs>

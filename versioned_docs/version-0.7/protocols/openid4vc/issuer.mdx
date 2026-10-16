@@ -1,0 +1,118 @@
+---
+title: Issuing credentials
+description: Run an OpenID4VCI issuer with Credo, define credential configurations, create credentials for incoming requests and create credential offers.
+---
+
+This page covers issuing credentials with OpenID4VCI from a Node.js agent: the issuer metadata, the callback that creates each credential, and credential offers with the pre-authorized code flow. The examples issue an SD-JWT VC. The format-specific parts are in [SD-JWT VC with OpenID4VC](./sd-jwt-vc.mdx), [mdoc with OpenID4VC](./mdoc.mdx) and [W3C VCs with OpenID4VC](./w3c.mdx).
+
+## How issuance works
+
+```mermaid
+sequenceDiagram
+  participant App as Your app
+  participant Issuer as Credo issuer
+  participant Wallet
+  App->>Issuer: createCredentialOffer()
+  Issuer-->>App: offer URI and tx code
+  App->>Wallet: QR code or link (tx code by email)
+  Wallet->>Issuer: fetch offer and issuer metadata
+  Wallet->>Issuer: token request with pre-authorized code and tx code
+  Wallet->>Issuer: credential request with proof of possession
+  Issuer->>App: credentialRequestToCredentialMapper()
+  Issuer-->>Wallet: signed credential
+```
+
+Your application decides who gets which credential and creates the offer. Credo hosts the OpenID4VCI endpoints, checks the wallet's requests and signs the credentials your callback returns.
+
+## Set up the issuer
+
+Register `OpenId4VcModule` with an `issuer` configuration. [OpenID4VC](./index.mdx) explains the module options.
+
+```ts showLineNumbers title="issuer.ts" openid4vc-issuer.ts section-1
+```
+
+- `baseUrl` is the public URL of the issuer endpoints. Each issuer you create gets the credential issuer identifier `<baseUrl>/<issuerId>`.
+- `credentialRequestToCredentialMapper` creates the credentials when a wallet requests them. See [Create the credentials](#create-the-credentials).
+- Credo adds its routes to the Express app, and you start the server.
+
+## Create a signing key and certificate
+
+The issuer signs credentials with a key from the agent's KMS. For SD-JWT VC and mdoc it includes an X.509 certificate for that key, so holders and verifiers can check who signed.
+
+```ts showLineNumbers title="issuer.ts" openid4vc-issuer.ts section-2
+```
+
+The example uses a self-signed certificate. In production a certificate authority issues it, and holders and verifiers trust that CA. See [X.509 certificates](../../dids-and-trust/x509.mdx). If you load a certificate instead of creating it, set `certificate.keyId` to the KMS key id of its key so Credo can sign with it. To sign with a DID instead, use `issuer: { method: 'did', didUrl }` in the callback.
+
+## Create the issuer
+
+An issuer record holds the metadata that wallets fetch from `/.well-known/openid-credential-issuer`: the issuer's display name and the credentials it offers. One agent can host several issuers.
+
+```ts showLineNumbers title="issuer.ts" openid4vc-issuer.ts section-3
+```
+
+Each key of `credentialConfigurationsSupported` is a credential configuration id. You use these ids when you create offers. For each configuration:
+
+- Set `proof_types_supported`. Credo only issues credentials bound to a holder key, so it always asks the wallet for a proof of possession. A Credo holder rejects configurations without this field.
+- Add a `scope` if you also offer the credential through the authorization code flow ([Authorization and wallet security](./authorization.mdx)).
+- Put display information for wallets under `credential_metadata`, as OpenID4VCI 1.0 defines. Wallets that implement draft 15 read `display` and `claims` at the top level of the configuration, so add them there as well if you need to support those wallets.
+
+Create the issuer once, for example when you deploy, and keep its `issuerId`. Credo generates a UUID unless you pass one. Change the metadata later with `updateIssuerMetadata`.
+
+For batch issuance, set `batchCredentialIssuance: { batchSize }` on the issuer. A wallet can then request up to that many instances of a credential in one request, each bound to a different key, so verifiers can't link its presentations to each other.
+
+## Create the credentials
+
+Credo checks each credential request (the access token and the wallet's proof of possession of its keys) and then calls your `credentialRequestToCredentialMapper` with, among others:
+
+- `issuanceSession`: the session created with the offer, including the `issuanceMetadata` you passed.
+- `credentialConfigurationId` and `credentialConfiguration`: the configuration the wallet requests.
+- `holderBinding`: the verified keys or DIDs to bind the credentials to.
+
+```ts showLineNumbers title="issuer.ts" openid4vc-issuer.ts section-4
+```
+
+Return exactly one credential for each entry in `holderBinding.keys`. With batch issuance there are several entries, and Credo rejects the result if the counts differ. For SD-JWT VC, the `vct` in the payload must match the `vct` of the configuration.
+
+The `format` you return decides how Credo signs: `ClaimFormat.SdJwtDc` for SD-JWT VC, `ClaimFormat.MsoMdoc` for mdoc, or one of the W3C formats. To issue the credential later, return a deferral instead (see [Deferred issuance](#deferred-issuance)).
+
+## Create a credential offer
+
+An offer tells the wallet which credentials it can get and how to get authorization. In the pre-authorized code flow, your application has already identified the user (for example after a login), and the offer itself carries the authorization:
+
+```ts showLineNumbers title="issuer.ts" openid4vc-issuer.ts section-5
+```
+
+- `credentialOffer` is a URI such as `openid-credential-offer://?credential_offer_uri=...`. Show it as a QR code when the wallet runs on another device, or as a link on the same device. Use `baseUri` to change the `openid-credential-offer://` prefix, for example to a custom scheme or an HTTPS link.
+- `txCode` makes the wallet ask the user for a transaction code. Credo generates the code and stores it as `issuanceSession.userPin` (4 digits unless you set `length`). Send it over a different channel than the offer, such as email or SMS, so that someone who intercepts the offer can't redeem it.
+- `issuanceMetadata` is stored on the session and passed to the mapper. Store an identifier and look up the data in the mapper, as the example does, or store the claims themselves.
+- The wallet must finish the whole issuance before the offer expires: 3 minutes by default. Change it per offer with `expirationInSeconds`, or for all offers with `statefulCredentialOfferExpirationInSeconds` in the issuer configuration.
+
+For the authorization code flow, where the wallet sends the user to an authorization server, see [Authorization and wallet security](./authorization.mdx).
+
+## Track issuance sessions
+
+Each offer creates an issuance session. Listen for state changes to update your application:
+
+```ts showLineNumbers title="issuer.ts" openid4vc-issuer.ts section-6
+```
+
+In the pre-authorized code flow a session goes through `OfferCreated`, `OfferUriRetrieved`, `AccessTokenRequested`, `AccessTokenCreated`, `CredentialRequestReceived` and `Completed`. Other states:
+
+| State | When |
+| --- | --- |
+| `AuthorizationInitiated`, `AuthorizationGranted` | Authorization code flow with Credo as the authorization server. |
+| `CredentialsPartiallyIssued` | The offer has several credential configurations and the wallet hasn't requested all of them yet. |
+| `Error` | The session failed or expired. `errorMessage` says why. |
+
+To read a session at any time, call `agent.openid4vc.issuer.getIssuanceSessionById(id)`.
+
+## Deferred issuance
+
+If a credential isn't ready when the wallet asks for it, for example because it needs manual approval, return `{ type: 'deferral', transactionId, interval }` from the mapper. The wallet retries at the deferred credential endpoint after `interval` seconds. Credo then calls `deferredCredentialRequestToCredentialMapper` from the issuer configuration, which returns the credentials or another deferral. The session stays valid for `interval` plus `deferralIntervalGracePeriodInSeconds` (7 days by default).
+
+## Next steps
+
+- [Receiving and presenting](./holder.mdx): the wallet side of this flow.
+- [SD-JWT VC with OpenID4VC](./sd-jwt-vc.mdx): claims, selective disclosure and type metadata.
+- [Authorization and wallet security](./authorization.mdx): the authorization code flow, DPoP, PKCE and wallet attestations.

@@ -1,4 +1,14 @@
+---
+title: React Hooks
+---
+
 # React Hooks
+
+:::caution
+
+`@credo-ts/react-hooks` 0.6.1, the latest release, requires Credo 0.5 (`@credo-ts/core@^0.5.0`) and hasn't been updated for later versions of Credo.
+
+:::
 
 The React Hooks package exposes useful React hooks that allow you to easily interact with Credo from a React client application.
 
@@ -14,21 +24,25 @@ This document is for version **`0.5.x`** of the `@credo-ts/react-hooks` package,
 
 To add the React Hooks package to your existing project simply run:
 
-<!--tabs-->
+<Tabs>
 
-## npm
+<TabItem value="npm" label="npm">
 
 ```bash
 npm i @credo-ts/react-hooks@^0.5
 ```
 
-## Yarn
+</TabItem>
+
+<TabItem value="yarn" label="Yarn">
 
 ```bash
 yarn add @credo-ts/react-hooks@^0.5
 ```
 
-<!--/tabs-->
+</TabItem>
+
+</Tabs>
 
 ## Usage
 

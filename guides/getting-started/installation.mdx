@@ -1,0 +1,111 @@
+---
+title: Installation
+description: Set up a Node.js or React Native (Expo) project and install Credo with Askar storage.
+---
+
+This page sets up a project and installs Credo, its platform package and [Askar](../agent-setup/storage/askar.mdx). Every agent needs a storage module, and the next pages use Askar.
+
+## Set up the project
+
+<Tabs groupId="platform" queryString>
+<TabItem value="node" label="Node.js">
+
+Credo needs Node.js 22 or later. It's published as ES modules only, so create a project with `"type": "module"`:
+
+```bash
+mkdir my-agent
+cd my-agent
+npm init -y
+npm pkg set type=module
+```
+
+Add TypeScript and [tsx](https://tsx.is) to run TypeScript files:
+
+<InstallTabs packages="typescript tsx" dev />
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "strict": true,
+    "skipLibCheck": true
+  }
+}
+```
+
+- `"module": "nodenext"` resolves the `exports` of the Credo packages, including subpaths such as `@credo-ts/core/kms`. `"moduleResolution": "bundler"` works too. The older `"node"` resolution doesn't find subpaths.
+- `skipLibCheck` is needed because some of Credo's dependencies ship type definitions that don't type-check.
+
+</TabItem>
+<TabItem value="react-native" label="React Native">
+
+Create an Expo app, or use an existing one:
+
+```bash
+npx create-expo-app@latest my-wallet
+```
+
+Credo uses native modules, so it doesn't run in Expo Go. Build the app with [Continuous Native Generation](https://docs.expo.dev/workflow/continuous-native-generation/), for example with `npx expo run:android` and `npx expo run:ios` or with EAS Build. Expo's TypeScript and Metro defaults work with Credo's ES modules, so you don't need to change them.
+
+</TabItem>
+</Tabs>
+
+## Install Credo
+
+Keep all `@credo-ts/*` packages on the same version. They depend on each other with exact versions.
+
+<Tabs groupId="platform" queryString>
+<TabItem value="node" label="Node.js">
+
+<InstallTabs packages="@credo-ts/core @credo-ts/node @credo-ts/askar @openwallet-foundation/askar-nodejs@0.6.1" />
+
+</TabItem>
+<TabItem value="react-native" label="React Native">
+
+Install the peer dependencies of `@credo-ts/react-native` with `npx expo install`, so you get the versions that match your Expo SDK:
+
+```bash
+npx expo install expo-crypto react-native-get-random-values @dr.pogodin/react-native-fs
+```
+
+| Package | Why Credo needs it |
+| --- | --- |
+| `react-native-get-random-values` | Secure random numbers. `@credo-ts/react-native` imports it for you, so you don't need a polyfill in your entry file. |
+| `expo-crypto` | Hashing in the JSON-LD libraries Credo uses. |
+| `@dr.pogodin/react-native-fs` | File system access. `react-native-fs` works too. Importing `@credo-ts/react-native` throws if neither is installed. |
+
+`@credo-ts/react-native` declares `expo-crypto@^15` as its peer range, which only matches Expo SDK 54. With a newer SDK, npm refuses to install Credo with an `ERESOLVE` error. Add an override to your `package.json` first:
+
+```json title="package.json"
+{
+  "overrides": {
+    "@credo-ts/react-native": {
+      "expo-crypto": "$expo-crypto"
+    }
+  }
+}
+```
+
+pnpm and Yarn print a peer dependency warning instead.
+
+Then install Credo:
+
+<InstallTabs packages="@credo-ts/core @credo-ts/react-native @credo-ts/askar @openwallet-foundation/askar-react-native@0.6.1" />
+
+`@openwallet-foundation/askar-react-native` is linked automatically and doesn't need a config plugin. Rebuild the native app after you install it.
+
+</TabItem>
+</Tabs>
+
+The Askar platform package depends on `@openwallet-foundation/askar-shared` with its exact version, and `@credo-ts/askar` needs the same copy. Install a single Askar version: with two versions of `askar-shared` in your project, `agent.initialize()` fails with `Native askar has not been registered yet`.
+
+:::note[pnpm and Bun]
+
+The Askar packages download their native library in an install script. pnpm and Bun don't run install scripts of dependencies unless you allow them. With pnpm, run `pnpm approve-builds`. With Bun, add the package to `trustedDependencies` in your `package.json`.
+
+:::
+
+## Next steps
+
+- [Your first agent](./first-agent.mdx) configures the agent and runs it.
+- [Storage](../agent-setup/storage/index.mdx) compares Askar with Drizzle.

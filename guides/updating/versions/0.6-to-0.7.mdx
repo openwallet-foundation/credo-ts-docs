@@ -1,0 +1,374 @@
+---
+title: Updating from 0.6 to 0.7
+description: Dependency updates, breaking changes and deprecations when you update Credo from 0.6 to 0.7.
+---
+
+This guide lists what you need to change to update an agent from Credo 0.6 to 0.7: dependencies, breaking changes, and deprecated APIs to replace before 0.8. Read [Updating Credo](../index.md) first for the general steps.
+
+Most breaking changes landed in 0.7.0 and 0.7.1. Credo 0.7.2 adds a PKCE security fix for the OpenID4VC issuer and the import paths this guide uses, so update straight to 0.7.2 or later.
+
+:::caution
+
+Back up your storage before you update. Credo doesn't create backups for you.
+
+:::
+
+## Update dependencies
+
+Update every `@credo-ts/*` package to `^0.7.2`. All Credo packages must have the same version. Then update the native libraries you use:
+
+| Library | 0.6 | 0.7 |
+| --- | --- | --- |
+| Askar (`@openwallet-foundation/askar-*`) | `^0.4.3` | `0.6.1` (`@credo-ts/askar` accepts `^0.4.3 \|\| ^0.5.0 \|\| ^0.6.0`) |
+| AnonCreds (`@hyperledger/anoncreds-*`) | `^0.3.4` | `^0.4.0` |
+| Indy VDR (`@hyperledger/indy-vdr-*`) | `^0.2.3` | `^0.3.0` |
+
+The new native versions load their libraries with koffi instead of ffi-napi. Use the same version for the `-nodejs`, `-react-native` and `-shared` package of a library: for example `askar-nodejs@0.6.1` depends on exactly `askar-shared@0.6.1`. With mixed versions, npm installs a second copy of `askar-shared` for `@credo-ts/askar`, and the agent fails to start with `Native askar has not been registered yet`. If you use `@credo-ts/askar-to-drizzle-storage-migration`, it requires exactly `@openwallet-foundation/askar-shared@0.6.0`.
+
+For example, for an agent with Askar and AnonCreds:
+
+<Tabs groupId="platform" queryString>
+<TabItem value="node" label="Node.js">
+
+<InstallTabs version="0.7" packages="@credo-ts/core @credo-ts/node @credo-ts/askar @credo-ts/anoncreds @openwallet-foundation/askar-nodejs@0.6.1 @hyperledger/anoncreds-nodejs@^0.4.0" />
+
+The minimum Node.js version is still 20.19, but Credo 0.7 is tested on Node.js 22 and 24, and 0.8 requires Node.js 22.
+
+</TabItem>
+<TabItem value="react-native" label="React Native">
+
+<InstallTabs version="0.7" packages="@credo-ts/core @credo-ts/react-native @credo-ts/askar @credo-ts/anoncreds @openwallet-foundation/askar-react-native@0.6.1 @hyperledger/anoncreds-react-native@^0.4.0 @dr.pogodin/react-native-fs" />
+
+Credo now prefers `@dr.pogodin/react-native-fs` over the unmaintained `react-native-fs`. Both still work, and you need one of them.
+
+</TabItem>
+</Tabs>
+
+## Storage
+
+Credo 0.7 doesn't change the storage format, so you don't need to run the update assistant.
+
+If you use [Drizzle](../../agent-setup/storage/drizzle.mdx), apply the new SQL migrations. Credo 0.7 adds migrations for the `core` and `openid4vc` bundles.
+
+## Breaking changes
+
+### Log levels
+
+The members of `LogLevel` are now PascalCase. Their numeric values didn't change.
+
+```ts
+// 0.6
+new ConsoleLogger(LogLevel.debug)
+
+// 0.7
+new ConsoleLogger(LogLevel.Debug)
+```
+
+### `Buffer` is removed
+
+Credo no longer uses the `buffer` package. All APIs take and return `Uint8Array`, and `@credo-ts/core` no longer exports `Buffer`, `Uint8ArrayBuffer`, `AnyUint8Array` and `base64ToBase64URL`. Values that used to be a `Buffer`, such as the result of `TypedArrayEncoder.fromBase64`, are now a plain `Uint8Array`, so `Buffer` methods like `toString('base64')` don't work on them. Use `TypedArrayEncoder` instead.
+
+Several encoder methods were renamed:
+
+| 0.6 | 0.7 |
+| --- | --- |
+| `TypedArrayEncoder.fromString` | `TypedArrayEncoder.fromUtf8String` |
+| `TypedArrayEncoder.toBase64URL` | `TypedArrayEncoder.toBase64Url` |
+| `JsonEncoder.toBase64URL` | `JsonEncoder.toBase64Url` |
+| `JsonEncoder.toString` / `JsonEncoder.fromString` | `JsonEncoder.toUtf8String` / `JsonEncoder.fromUtf8String` |
+| `JsonEncoder.toBuffer` / `JsonEncoder.fromBuffer` | `JsonEncoder.toUint8Array` / `JsonEncoder.fromUint8Array` |
+
+`TypedArrayEncoder.fromBase64` and `JsonEncoder.fromBase64` no longer accept base64url input. Use the new `fromBase64Url` methods for that.
+
+```ts
+// 0.6
+import { Buffer, JsonEncoder, TypedArrayEncoder } from '@credo-ts/core'
+
+const seed = TypedArrayEncoder.fromString('my-seed')
+const payload = JsonEncoder.fromBase64(base64UrlString)
+
+// 0.7
+import { JsonEncoder, TypedArrayEncoder } from '@credo-ts/core'
+
+const seed = TypedArrayEncoder.fromUtf8String('my-seed')
+const payload = JsonEncoder.fromBase64Url(base64UrlString)
+```
+
+`TypedArrayEncoder.equals` now runs in constant time. DIDComm attachments are now encoded as base64url. Credo decodes both base64 and base64url attachments, but if you read `attachment.data.base64` yourself, use `attachment.getDataAsJson()` or `attachment.getDataAsUint8Array()`, which accept both.
+
+### `findVerificationMethodByKeyType` is removed
+
+Use `findVerificationMethodsByTypeAndPurpose` on the DID document. It returns all matching verification methods, in the order of the relationships you pass. To keep the old behavior, pass the relationships the old function searched:
+
+```ts
+// 0.6
+const verificationMethod = await findVerificationMethodByKeyType('Ed25519VerificationKey2018', didDocument)
+
+// 0.7
+const [verificationMethod] = didDocument.findVerificationMethodsByTypeAndPurpose('Ed25519VerificationKey2018', [
+  'verificationMethod',
+  'authentication',
+  'keyAgreement',
+  'assertionMethod',
+  'capabilityInvocation',
+  'capabilityDelegation',
+])
+```
+
+`findVerificationMethodsByPurpose(purposes)` does the same without filtering on type.
+
+### mdoc validity is required
+
+`validityInfo.validUntil` is now required when you sign an mdoc, with `agent.mdoc.sign` or `Mdoc.sign`, and for every mdoc you return from the OpenID4VC issuer's `credentialRequestToCredentialMapper`:
+
+```ts
+// 0.6
+await agent.mdoc.sign({ docType, namespaces, holderKey, issuerCertificate })
+
+// 0.7
+await agent.mdoc.sign({
+  docType,
+  namespaces,
+  holderKey,
+  issuerCertificate,
+  validityInfo: { validUntil: new Date('2027-01-01') },
+})
+```
+
+Signing throws when `validFrom` is before `signed` (which defaults to now), or when `validUntil` isn't later than `validFrom`.
+
+Two more mdoc changes from 0.7.1:
+
+- Elements in the `deviceSigned` part of a device response must be authorized in the mdoc. Authorize them at signing time with the new `keyAuthorizations` option.
+- A CWT status list referenced by an mdoc must have an expiration time, so pass `expiresAt` when you create one, and its `sub` must equal the URI it's referenced by.
+
+### Stricter verification
+
+These changes need no code changes, but credentials and presentations that verified with 0.6 can now be rejected:
+
+- SD-JWT: a compact SD-JWT must end with `~`, disclosure salts must be unique, and the `sub` of a status list token must equal the `uri` that references it.
+- COSE: signing a Sign1 or Mac0 structure fails when no algorithm is declared. It no longer falls back to the first algorithm the key supports.
+- JSON-LD: `Ed25519Signature2018` only accepts `Ed25519VerificationKey2018` verification methods, and `Ed25519Signature2020` requires `Ed25519VerificationKey2020`.
+- `ldp_vp` presentations: the signer of the presentation must control the `credentialSubject.id` of each credential, as Credo already required for `jwt_vp` and SD-JWT. The result is in `credentials[].credentialSubjectAuthentication`.
+- Generic JSON-LD verification rejects `anoncreds-2023` proofs. Those are verified through the AnonCreds module.
+- OpenID4VC: JWTs signed with a DID, such as signed authorization requests, key attestations, wallet attestations and signed issuer metadata, are now checked against `getTrustedIssuersForVerification` when you configure it. Before, only JWTs signed with an X.509 certificate were checked.
+
+### Caching per agent context
+
+- `InMemoryLruCache` now keeps separate entries per agent context. This fixes entries being shared between tenants.
+- `RedisCache` stores entries that are shared between contexts under a `global:` prefix. Existing entries for those caches are missed once after the update.
+- Custom `Cache` implementations receive an optional `CacheOptions` argument on `get`, `set` and `remove`. When `scope` is `'global'`, share the entry between all agent contexts. Otherwise, which must be the default, keep it per `agentContext.contextCorrelationId`.
+
+```ts
+// 0.7
+import type { AgentContext, Cache, CacheOptions } from '@credo-ts/core'
+
+class MyCache implements Cache {
+  public async get<CacheValue>(
+    agentContext: AgentContext,
+    key: string,
+    options?: CacheOptions
+  ): Promise<CacheValue | null> {
+    const scope = options?.scope ?? 'context'
+    // look up `key` globally, or for agentContext.contextCorrelationId
+  }
+  // set(agentContext, key, value, expiresInSeconds?, options?) and remove(agentContext, key, options?)
+}
+```
+
+### Key management uses `defaultBackend`
+
+Before 0.7.1, the `defaultBackend` option of the key management module was ignored, and the first backend that supported an operation was used. Credo now uses the default backend when you don't pass `backend`, and only falls back to another backend, with a warning, when the default one doesn't support the operation. If you set `defaultBackend`, check that new keys end up in the backend you expect.
+
+### did:webvh
+
+- DIDs created with Credo before 0.7.1 don't resolve anymore. A bug in how earlier versions of `didwebvh-ts` calculated hashes made them incompatible with the spec.
+- Attested resources are now signed with a key that the DID references from `assertionMethod`. New DIDs include that reference. For existing DIDs, add it with `agent.dids.update` and republish the DID log before you sign resources with them.
+
+### OpenID4VC issuer: PKCE
+
+Credo 0.7.2 fixes a security issue in the authorization code flow: the issuer now stores the `code_challenge` of a pushed authorization request or authorization challenge request, and checks the `code_verifier` against it at the token endpoint. A token request with a `code_verifier` but no matching `code_challenge` is rejected with `invalid_grant`. Only the `S256` method is supported.
+
+The new `pkceRequired` option rejects authorization requests without a `code_challenge`, as FAPI 2.0, HAIP and OAuth 2.1 require. It defaults to `false` in 0.7 and to `true` in 0.8. Enable it now:
+
+```ts
+new OpenId4VcModule({
+  issuer: {
+    baseUrl: 'https://issuer.example.com/oid4vci',
+    pkceRequired: true,
+    credentialRequestToCredentialMapper,
+  },
+})
+```
+
+You can override it per issuance session with `authorization.requirePkce` in `createCredentialOffer`, or `requirePkce` in `getDynamicIssuanceSession`. An explicit `requirePkce: false` turns PKCE off for that session.
+
+`authorization.requireDpop` and `authorization.requireWalletAttestation` in `createCredentialOffer` are now optional. In 0.7, leaving them out and setting them to `false` both mean "use the global setting". In 0.8, `false` turns the requirement off for the session, so leave them out instead of passing `false`.
+
+### OpenID4VC holder: presentation during issuance
+
+For the presentation during issuance flow, `resolveOpenId4VciAuthorizationRequest` now returns a `codeVerifier` when the authorization server supports PKCE. Pass it to `requestToken`, otherwise issuers that check PKCE, such as Credo 0.7.2 and later, reject the token request:
+
+```ts
+const authorizationRequest = await agent.openid4vc.holder.resolveOpenId4VciAuthorizationRequest(
+  resolvedCredentialOffer,
+  authCodeFlowOptions
+)
+
+// Present the requested credentials to authorizationRequest.openid4vpRequestUrl, then:
+const { authorizationCode } = await agent.openid4vc.holder.retrieveAuthorizationCodeUsingPresentation({
+  resolvedCredentialOffer,
+  authSession: authorizationRequest.authSession,
+  presentationDuringIssuanceSession,
+})
+
+await agent.openid4vc.holder.requestToken({
+  resolvedCredentialOffer,
+  code: authorizationCode,
+  clientId,
+  codeVerifier: authorizationRequest.codeVerifier,
+})
+```
+
+## Deprecations
+
+The APIs below still work in 0.7. Replace them now: the ones marked "removed in 0.8" are gone in the next version.
+
+### AnonCreds and registry imports (removed in 0.8)
+
+Import the AnonCreds DIDComm formats and protocols from `@credo-ts/anoncreds/didcomm`, and the AnonCreds registries of cheqd, Hedera and did:webvh from the `/anoncreds` subpath of their package. These subpaths need 0.7.2 or later.
+
+```ts
+// 0.6
+import { AnonCredsDidCommCredentialFormatService, LegacyIndyDidCommCredentialFormatService } from '@credo-ts/anoncreds'
+import { CheqdAnonCredsRegistry } from '@credo-ts/cheqd'
+import { HederaAnonCredsRegistry } from '@credo-ts/hedera'
+import { WebVhAnonCredsRegistry } from '@credo-ts/webvh'
+
+// 0.7
+import { AnonCredsDidCommCredentialFormatService, LegacyIndyDidCommCredentialFormatService } from '@credo-ts/anoncreds/didcomm'
+import { CheqdAnonCredsRegistry } from '@credo-ts/cheqd/anoncreds'
+import { HederaAnonCredsRegistry } from '@credo-ts/hedera/anoncreds'
+import { WebVhAnonCredsRegistry } from '@credo-ts/webvh/anoncreds'
+```
+
+`AnonCredsModule` and the other non-DIDComm AnonCreds APIs stay in `@credo-ts/anoncreds`.
+
+### Data Integrity credential format (removed in 0.8)
+
+The W3C Data Integrity credential format (Aries RFC 0809) moved to `@credo-ts/didcomm`, because it isn't specific to AnonCreds. `AnonCredsModule` registers the AnonCreds link secret binding for it, so you don't need to configure anything else.
+
+```ts
+// 0.6
+import { DataIntegrityDidCommCredentialFormatService } from '@credo-ts/anoncreds'
+
+new DidCommCredentialV2Protocol({ credentialFormats: [new DataIntegrityDidCommCredentialFormatService()] })
+
+// 0.7
+import { DidCommCredentialV2Protocol, DidCommDataIntegrityCredentialFormatService } from '@credo-ts/didcomm'
+
+new DidCommCredentialV2Protocol({ credentialFormats: [new DidCommDataIntegrityCredentialFormatService()] })
+```
+
+The AnonCreds Data Integrity names in `@credo-ts/core` were renamed as well:
+
+| Deprecated | Replacement |
+| --- | --- |
+| `DataIntegrityProof` | `AnonCredsW3cCredentialProof` |
+| `DataIntegrityProofOptions` | `AnonCredsW3cCredentialProofOptions` |
+| `ANONCREDS_DATA_INTEGRITY_CRYPTOSUITE` | `ANONCREDS_W3C_CREDENTIAL_CRYPTOSUITE` |
+| `IAnonCredsDataIntegrityService` | `IAnonCredsW3cCredentialService` |
+| `AnonCredsDataIntegrityServiceSymbol` | `AnonCredsW3cCredentialServiceSymbol` |
+| `AnoncredsDataIntegrityCreatePresentation` | `AnonCredsW3cCredentialCreatePresentation` |
+| `AnoncredsDataIntegrityVerifyPresentation` | `AnonCredsW3cCredentialVerifyPresentation` |
+| `W3cJsonLdVerifiableCredential.dataIntegrityCryptosuites` | `W3cJsonLdVerifiableCredential.anonCredsW3cCredentialCryptosuites` |
+
+### DIDComm v1 protocols (removed in 0.8)
+
+The Connection protocol (RFC 0160), Issue Credential v1 and Present Proof v1 have been deprecated since 0.6 and are still available in 0.7. Move to DID Exchange and to `DidCommCredentialV2Protocol` and `DidCommProofV2Protocol`. The legacy Indy credential and proof formats work with the v2 protocols. See [Updating from 0.7 to 0.8](./0.7-to-0.8.mdx) for what's removed.
+
+### Native library instances
+
+Pass the `NativeAskar` and `NativeAnoncreds` classes instead of the deprecated `askar` and `anoncreds` exports of the native packages. Credo then looks up the native library each time it uses it, so it no longer matters whether the native package was imported before Credo. This fixes errors such as `Cannot read properties of undefined (reading 'keyGetJwkSecret')` in ESM, bundler and test runner setups. It needs 0.7.2 or later, and `NativeAskar` needs Askar 0.6.0.
+
+```ts
+// 0.6
+import { askar } from '@openwallet-foundation/askar-nodejs'
+import { anoncreds } from '@hyperledger/anoncreds-nodejs'
+
+new AskarModule({ askar, store: { id: 'my-wallet', key: 'my-key' } })
+new AnonCredsModule({ anoncreds, registries: [new IndyVdrAnonCredsRegistry()] })
+
+// 0.7
+import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { NativeAnoncreds } from '@hyperledger/anoncreds-nodejs'
+
+new AskarModule({ askar: NativeAskar, store: { id: 'my-wallet', key: 'my-key' } })
+new AnonCredsModule({ anoncreds: NativeAnoncreds, registries: [new IndyVdrAnonCredsRegistry()] })
+```
+
+Indy VDR has no native class, so keep passing `indyVdr` to `IndyVdrModule`.
+
+### Trusted certificates callback
+
+`getTrustedCertificatesForVerification` on the X.509 module is replaced by `getTrustedIssuersForVerification` in the agent config. The new callback covers both X.509 certificate chains and DIDs, and takes precedence over the old one. Return `undefined` to fall back to the next source of trusted certificates, or an empty `trustedIssuers` list to trust nothing.
+
+```ts
+// 0.6
+new X509Module({
+  getTrustedCertificatesForVerification: async (agentContext, verificationContext) => [rootCertificate],
+})
+
+// 0.7
+new Agent({
+  config: {
+    getTrustedIssuersForVerification: async (agentContext, { signer, verification }) => {
+      if (signer.method !== 'x509') return undefined
+      return { trustedIssuers: [{ method: 'x509', issuance: [rootCertificate] }] }
+    },
+  },
+  // ...
+})
+```
+
+See [Trusted issuers](../../dids-and-trust/trust.mdx).
+
+### Dynamic issuance sessions
+
+The issuer option `allowDynamicIssuanceSessions` is replaced by the `getDynamicIssuanceSession` callback, which also supports wallet-initiated issuance through a chained authorization server and presentation during issuance. This callback does what `allowDynamicIssuanceSessions: true` did:
+
+```ts
+// 0.6
+issuer: { allowDynamicIssuanceSessions: true /* ... */ }
+
+// 0.7
+issuer: {
+  getDynamicIssuanceSession: ({ origin, requestedCredentialConfigurations }) => {
+    if (origin !== 'credentialRequest') return undefined
+
+    return {
+      authorizationFlow: 'external',
+      credentialConfigurationIds: Object.keys(requestedCredentialConfigurations),
+    }
+  },
+  // ...
+}
+```
+
+### Other deprecations
+
+- SD-JWT VC and W3C SD-JWT: disclosing claims through `disclosedPayload` is deprecated in favor of `disclosedPaths`, which `selectCredentialsForRequest` fills in for you. `applyDisclosuresForPayload` is replaced by `applyDisclosuresForPaths`.
+- mdoc: `MdocDeviceResponse.createDeviceResponseWithDcqlQuery` and `MdocService.createDcqlQueryDeviceResponse` are deprecated. Use `DcqlService.createPresentation`, or `createDeviceResponse` with explicit document requests.
+
+## New in 0.7
+
+Not required for the update, but worth knowing:
+
+- W3C Verifiable Credentials Data Model 2.0, secured with JWT, SD-JWT or Data Integrity. `w3cV2Credentials`, `w3cDataIntegrity` and `tokenStatusList` are now default agent modules. See [W3C Verifiable Credentials](../../credential-formats/w3c-vc.mdx).
+- [Token Status Lists](../../credential-formats/status-lists.mdx) for SD-JWT VC and mdoc, including mdoc revocation.
+- The ISO 18013-7 Annex C [Digital Credentials API](../../protocols/mdoc/dc-api.mdx) for mdoc.
+- [X.509](../../dids-and-trust/x509.mdx) certificate revocation checks with CRLs.
+- HPKE algorithms in the Askar and Node.js key management backends.
+- `connectionParameters` for Askar on PostgreSQL, for example to configure SSL.
+- Running the DIDComm HTTP inbound transport on an Express app you already have.
+- The DIDComm W3C SD-JWT credential format (Aries RFC 0881).

@@ -1,0 +1,114 @@
+---
+title: Receiving and presenting
+description: Receive credentials with OpenID4VCI and present them with OpenID4VP from a Credo wallet on Node.js or React Native.
+---
+
+This page covers the holder side of OpenID4VC: receiving credentials from an issuer with OpenID4VCI, and presenting them to a verifier with OpenID4VP. The holder API is the same on Node.js and React Native. The examples continue the SD-JWT VC flow from [Issuing credentials](./issuer.mdx) and [Verifying credentials](./verifier.mdx).
+
+## Set up the holder
+
+Register `OpenId4VcModule` without options. The holder part is always available as `agent.openid4vc.holder`.
+
+<Tabs groupId="platform" queryString>
+<TabItem value="node" label="Node.js">
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-1
+```
+
+</TabItem>
+<TabItem value="react-native" label="React Native">
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder-rn.ts section-1
+```
+
+</TabItem>
+</Tabs>
+
+The holder verifies the credentials it receives and the authorization requests it gets from verifiers. To verify X.509 signatures, it needs the certificates, or root CAs, of the issuers and verifiers you trust. Here these are the certificates from the [issuer](./issuer.mdx) and [verifier](./verifier.mdx) examples. See [Trusted issuers](../../dids-and-trust/trust.mdx). For the store key and secure key storage on a phone, see [Askar](../../agent-setup/storage/askar.mdx) and [Key management](../../agent-setup/key-management.mdx).
+
+## Receive a credential
+
+### Resolve the offer
+
+The wallet gets a credential offer URI from a QR code or a link. `resolveCredentialOffer` fetches the offer and the issuer metadata:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-2
+```
+
+Use the issuer metadata and `offeredCredentialConfigurations` to show the user who offers what. Display names, colors and claim labels are under `credential_metadata` of each configuration, or at its top level for issuers that implement draft 15. If `txCodeRequest` is defined, the issuer sent the user a code (by email, for example), and `description`, `length` and `input_mode` tell you what to ask for.
+
+### Request an access token
+
+In the pre-authorized code flow, exchange the code from the offer for an access token, with the transaction code the user entered:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-3
+```
+
+If the issuer requires DPoP, Credo creates the DPoP proof and returns it in `token.dpop`. Pass it to the next calls. For offers that use the authorization code flow, see [Authorization and wallet security](./authorization.mdx).
+
+### Request the credentials
+
+The issuer binds each credential to a key the wallet controls. Credo calls your `credentialBindingResolver` once for each offered credential configuration, with what the issuer supports, and you return the keys to bind to:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-4
+```
+
+You can bind a credential in two ways:
+
+- `{ method: 'jwk', keys }`: keys from the agent's KMS. Use this for SD-JWT VC and mdoc. W3C formats don't support it.
+- `{ method: 'did', didUrls }`: verification methods of DIDs the agent created, when the issuer lists DID methods in `supportedDidMethods` or supports all of them (`supportsAllDidMethods`). Not allowed for mdoc.
+
+To receive a batch, return up to `issuerMaxBatchSize` keys of the same key type, and you get one credential instance per key. If the issuer requires key attestations, return `{ method: 'attestation', keyAttestationJwt }` (see [Authorization and wallet security](./authorization.mdx)).
+
+Then request the credentials:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-5
+```
+
+By default this requests every credential in the offer. Pass `credentialConfigurationIds` to request only some of them.
+
+### Store the credentials
+
+`requestCredentials` verifies each credential, including the issuer's signature and trust, but it doesn't store anything. Each result has a `record` that you store with the API for its format:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-6
+```
+
+A batch arrives as one record with several instances in `record.credentialInstances`.
+
+- If the issuer defers issuance, the credential is in `deferredCredentials` instead. Call `requestDeferredCredentials` with its `transactionId` after `interval` seconds.
+- If a credential has a `notificationId`, you can tell the issuer whether you stored it with `sendNotification` (`credential_accepted`, `credential_deleted` or `credential_failure`).
+
+## Present credentials
+
+### Resolve the authorization request
+
+A verifier sends an authorization request as a QR code or link (`openid4vp://...`). `resolveOpenId4VpAuthorizationRequest` fetches the request, verifies its signature and finds the stored credentials that match its DCQL query:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-7
+```
+
+- `resolvedRequest.verifier` tells you who is asking. With `x509_san_dns` or `x509_hash` the request was signed with a certificate that the holder trusts. With `decentralized_identifier` it was signed with a DID. With `redirect_uri` the request isn't signed, so the verifier's identity isn't verified. Show this to the user.
+- `queryResult.can_be_satisfied` is `false` when the wallet doesn't have the credentials the verifier asks for.
+- `credential_matches` lists, for each credential query, the matching credentials and the claims each would disclose. Use it to show the user what they're about to share.
+
+Resolving throws if the request signature can't be verified, for example when the holder doesn't trust the verifier's certificate.
+
+### Submit the response
+
+After the user agrees, select the credentials and send the response:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-8
+```
+
+- `selectCredentialsForDcqlRequest` picks the first matching credential for each query and discloses only the requested claims. For credentials received in a batch it uses an unused instance while there is one (`useMode`, default `NewOrFirst`).
+- With the `direct_post` and `direct_post.jwt` response modes, Credo sends the response to the verifier. If the verifier rejects it, the call doesn't throw: `result.ok` is `false` and `result.serverResponse` holds the verifier's answer.
+- `result.redirectUri` is set when the verifier wants the user to continue on its website or app. Open it in the browser.
+
+Requests that use DIF Presentation Exchange (only with OpenID4VP drafts) have `resolvedRequest.presentationExchange` instead of `dcql`. Select with `selectCredentialsForPresentationExchangeRequest` and pass `presentationExchange: { credentials }` when accepting. For requests that include transaction data, see [SD-JWT VC with OpenID4VC](./sd-jwt-vc.mdx). For requests through the browser, see [Digital Credentials API](./dc-api.mdx).
+
+## Next steps
+
+- [SD-JWT VC with OpenID4VC](./sd-jwt-vc.mdx) and [mdoc with OpenID4VC](./mdoc.mdx): format details for wallets.
+- [Authorization and wallet security](./authorization.mdx): the authorization code flow, DPoP and wallet and key attestations.
+- [Trusted issuers](../../dids-and-trust/trust.mdx): decide which issuers and verifiers your wallet accepts.

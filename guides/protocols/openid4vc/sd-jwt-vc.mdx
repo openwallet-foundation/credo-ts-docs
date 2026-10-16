@@ -1,0 +1,104 @@
+---
+title: SD-JWT VC with OpenID4VC
+description: Issue, receive and verify SD-JWT VCs over OpenID4VCI and OpenID4VP with Credo, including selective disclosure with DCQL and transaction data.
+---
+
+This page covers what is specific to SD-JWT VC in each OpenID4VC step: the credential configuration, signing in the credential mapper, receiving the credential, requesting claims with DCQL, transaction data, and reading the disclosed claims. [Issuing credentials](./issuer.mdx), [Receiving and presenting](./holder.mdx) and [Verifying credentials](./verifier.mdx) explain the flow itself, and [SD-JWT VC](../../credential-formats/sd-jwt-vc.mdx) explains the format.
+
+## Configure the credential
+
+Add a `dc+sd-jwt` entry to the `credentialConfigurationsSupported` of the issuer:
+
+```ts showLineNumbers title="issuer.ts" openid4vc-sd-jwt-vc.ts section-1
+```
+
+- `vct` is the credential type. Verifiers request credentials by it, and Credo checks that every credential the mapper returns has this `vct`. If it's an HTTPS URL, a Credo holder fetches the type metadata from it when it receives the credential and keeps it on the record (`record.typeMetadata`).
+- `credential_metadata` holds what wallets show: the card in `display` and a label per claim in `claims`, where `path` points into the credential.
+- `cryptographic_binding_methods_supported` decides what the holder binds the credential to: `jwk` for a key, or DID methods such as `did:key`.
+- Add a `scope` if you offer the credential through the [authorization code flow](./authorization.mdx).
+
+Wallets that implement older drafts use the format `vc+sd-jwt`. Credo accepts it as SD-JWT VC when the configuration has a `vct`, and signs the credential with `vc+sd-jwt` as `typ`. Without a `vct`, `vc+sd-jwt` means a W3C VCDM 2.0 credential, see [W3C VCs with OpenID4VC](./w3c.mdx).
+
+## Sign the credential
+
+The mapper returns the SD-JWT VC sign options, one entry for each holder key:
+
+```ts showLineNumbers title="issuer.ts" openid4vc-sd-jwt-vc.ts section-2
+```
+
+- `payload.vct` must be the `vct` of the configuration. Credo adds `iat`, and sets `iss` and `cnf` from `issuer` and `holder`.
+- `issuer` signs with an X.509 certificate chain (`x5c`, leaf first) or a DID (`{ method: 'did', didUrl }`, for a DID created in this agent). The leaf certificate needs the KMS key id of its key, which `agent.x509.createCertificate` sets. The optional `issuer` URL becomes the `iss` claim and must match a DNS or URI subject alternative name of the leaf certificate.
+- `disclosureFrame` lists in `_sd` the claims the holder can disclose one by one. Nested objects get their own frame, numbers in `_sd` select array items, and `_sd_decoy` adds decoy digests. Claims that aren't listed are always visible.
+- For revocation, add a `status` claim to the payload. See [Status lists](../../credential-formats/status-lists.mdx).
+
+## Trust the issuer
+
+The holder verifies each credential when it receives it, and the verifier verifies it again in the presentation. For an X.509-signed credential, both need the issuer certificate or its root CA:
+
+```ts showLineNumbers title="trust.ts" openid4vc-sd-jwt-vc.ts section-3
+```
+
+DID-signed credentials are accepted from any DID unless you configure trusted issuers. [Trusted issuers](../../dids-and-trust/trust.mdx) covers both, and how to decide per verification.
+
+## Receive and store
+
+The holder side is the same as for other formats. Only the record type differs:
+
+```ts showLineNumbers title="holder.ts" openid4vc-sd-jwt-vc.ts section-4
+```
+
+`requestCredentials` doesn't store anything. The `SdJwtVcRecord` has one instance per credential the issuer returned, so a batch ends up in one record. `record.firstCredential.prettyClaims` has all claims, decoded.
+
+## Request claims with DCQL
+
+The verifier asks for SD-JWT VCs by `vct` and lists the claims it needs:
+
+```ts showLineNumbers title="verifier.ts" openid4vc-sd-jwt-vc.ts section-5
+```
+
+- `format` is `dc+sd-jwt`. `meta.vct_values` also matches credentials whose type metadata extends one of the values.
+- Each entry in `claims` has a `path` into the credential. `null` in a path selects all items of an array, and a number selects one item. Add `values` to only accept certain values, and `claim_sets` to accept alternative combinations of claims.
+- The wallet discloses only the requested claims. Claims the issuer didn't make selectively disclosable are always in the presentation.
+
+## Add transaction data
+
+Transaction data asks the holder to sign over extra data, such as the details of a payment, as part of the presentation. Credo supports it for SD-JWT VC only: the holder includes a hash of each entry in the key binding JWT.
+
+In the request above, `transactionData` has one entry. `type` is defined by your application, and `credential_ids` lists the DCQL credential query ids that may sign it. `transaction_data_hashes_alg` defaults to `sha-256`. OpenID4VP draft 21 doesn't support transaction data.
+
+## Present
+
+On the holder, `resolvedRequest.transactionData` lists each entry with the credentials that can sign it. Show the user what they're signing, and pass one credential id per entry when you accept:
+
+```ts showLineNumbers title="holder.ts" openid4vc-sd-jwt-vc.ts section-6
+```
+
+The holder rejects transaction data that refers to a credential query id that isn't in the DCQL query.
+
+## Read the disclosed claims
+
+After the session reaches `ResponseVerified`, the presentation is an `SdJwtVc`:
+
+```ts showLineNumbers title="verifier.ts" openid4vc-sd-jwt-vc.ts section-7
+```
+
+- `prettyClaims` has the disclosed claims and the claims that are always visible, such as `vct`, `iss` and `cnf`. `payload` has the raw JWT payload.
+- `transactionData` has an entry per transaction data entry, with the decoded entry, the credential query id that signed it, and the hashes Credo checked.
+
+## Full example
+
+The issuer, holder and verifier from this page in one process:
+
+<details>
+<summary>openid4vc-sd-jwt-vc.ts</summary>
+
+```ts showLineNumbers title="openid4vc-sd-jwt-vc.ts" openid4vc-sd-jwt-vc.ts
+```
+
+</details>
+
+## Next steps
+
+- [SD-JWT VC](../../credential-formats/sd-jwt-vc.mdx): signing, presenting and verifying outside OpenID4VC.
+- [Digital Credentials API](./dc-api.mdx): request SD-JWT VCs from a website.
+- [Authorization and wallet security](./authorization.mdx): DPoP, wallet attestations and key attestations.

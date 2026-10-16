@@ -1,0 +1,99 @@
+---
+title: Example setups
+description: Complete Credo agent configurations for a mobile wallet, an issuer and verifier service, a multi-tenant service, a DIDComm mediator and tests.
+---
+
+Each recipe on this page is a complete, type-checked agent configuration for a common deployment. Start from the one closest to what you build. The linked pages explain the options.
+
+## Mobile wallet
+
+A React Native app that receives and presents credentials with [OpenID4VC](../protocols/openid4vc/holder.mdx), and optionally connects to other agents over [DIDComm](../protocols/didcomm/index.mdx) through a mediator. Askar stores the data and keys. Keys that must stay on the device's secure hardware use the secure environment backend.
+
+Install the packages from [Installation](./installation.mdx), and:
+
+<InstallTabs packages="@credo-ts/openid4vc @credo-ts/didcomm @animo-id/expo-secure-environment@^0.1.5" />
+
+```ts showLineNumbers title="agent.ts" example-mobile-wallet-rn.ts section-1
+```
+
+- Askar is the default [key management](../agent-setup/key-management.mdx) backend. A key goes to the secure environment only when you create it with `backend: 'secureEnvironment'`, which supports P-256 keys and ES256 signatures.
+- `walletKey` is a raw key that you generate once and keep in the device keychain. See [Askar](../agent-setup/storage/askar.mdx) for how to create it.
+- If the wallet only uses OpenID4VC, leave out the `didcomm` module and package. The [mediation](../protocols/didcomm/mediation.mdx) page explains the pickup strategies.
+- [Drizzle](../agent-setup/storage/drizzle.mdx) with expo-sqlite is an alternative to Askar storage.
+
+## Issuer and verifier service
+
+A Node.js service that issues credentials with [OpenID4VCI](../protocols/openid4vc/issuer.mdx) and verifies presentations with [OpenID4VP](../protocols/openid4vc/verifier.mdx). It stores its data in PostgreSQL and its cache in Redis, which all instances of the service share.
+
+<InstallTabs packages="@credo-ts/core @credo-ts/node @credo-ts/askar @credo-ts/openid4vc @credo-ts/redis-cache @openwallet-foundation/askar-nodejs@0.6.1 express@^5 ioredis" />
+<InstallTabs packages="@types/express@^5" dev />
+
+```ts showLineNumbers title="server.ts" example-issuer-verifier.ts section-1
+```
+
+- `credentialRequestToCredentialMapper` decides which credential the issuer signs for a request. This one signs SD-JWT VCs with a DID that the agent created before, set in `ISSUER_DID_URL`. [Issuing credentials](../protocols/openid4vc/issuer.mdx) covers the mapper, issuer records and offers.
+- `agent.initialize()` adds the OpenID4VC routes to the Express app, so start the server after it.
+- The agent doesn't close the Redis connection on shutdown. See [Caching](../agent-setup/caching.mdx).
+
+To store the records in PostgreSQL with [Drizzle](../agent-setup/storage/drizzle.mdx) instead, replace the `askar` module with these two modules, and install `@credo-ts/drizzle-storage`, `drizzle-orm@^0.44.6` and `pg`:
+
+```ts showLineNumbers example-issuer-verifier-drizzle.ts section-1
+```
+
+Drizzle doesn't create tables. Run the migrations before every deploy:
+
+```bash
+npx drizzle-storage --bundle core --bundle openid4vc migrate --dialect postgres --database-url "$DATABASE_URL"
+```
+
+## Multi-tenant service
+
+One deployment that serves many organizations. Each tenant has its own DIDs, keys and records. Use it when you host issuers or verifiers for others. See [Multi-tenancy](../agent-setup/multi-tenancy.mdx).
+
+Install the packages of the issuer and verifier service, and:
+
+<InstallTabs packages="@credo-ts/tenants" />
+
+```ts showLineNumbers title="server.ts" example-multi-tenant.ts section-1
+```
+
+- Replace the default cache. It works with one agent context only, and throws as soon as a tenant uses it. Use `InMemoryLruCache` for a single instance or `RedisCache` for several. See [Caching](../agent-setup/caching.mdx).
+- `ProfilePerWallet` keeps all tenants in one PostgreSQL database, with an Askar profile per tenant.
+- Tenant agents use the modules of the root agent. The OpenID4VC endpoints route each request to the tenant that owns the issuer or verifier.
+
+Create a tenant and set it up through a tenant agent:
+
+```ts showLineNumbers example-multi-tenant.ts section-2
+```
+
+## DIDComm mediator
+
+A public Node.js service that receives DIDComm messages for wallets without an endpoint of their own, and holds them until the wallet picks them up. It stores records in PostgreSQL with Drizzle, keeps keys in Askar and caches in Redis. See [Mediation](../protocols/didcomm/mediation.mdx).
+
+<InstallTabs packages="@credo-ts/core @credo-ts/node @credo-ts/askar @credo-ts/didcomm @credo-ts/drizzle-storage @credo-ts/redis-cache @openwallet-foundation/askar-nodejs@0.6.1 drizzle-orm@^0.44.6 pg ioredis" />
+
+```ts showLineNumbers title="mediator.ts" example-mediator.ts section-1
+```
+
+Run the migrations before you start it:
+
+```bash
+npx drizzle-storage --bundle core --bundle didcomm migrate --dialect postgres --database-url "$DATABASE_URL"
+```
+
+- Message pickup (versions 1 and 2, including live mode over WebSocket) is part of the DIDComm module and on by default.
+- Queued messages are kept in memory by default, so they're lost on restart and not shared between instances. For production, pass a persistent `queueTransportRepository` to the `DidCommModule`. [DIDComm Mediator Credo](https://github.com/openwallet-foundation/didcomm-mediator-credo) is a complete mediator with PostgreSQL and DynamoDB queues.
+- `autoUpdateStorageOnStartup` migrates the storage when you upgrade Credo. Back up the database first, see [Updating](../updating/index.md).
+- Wallets connect with an out-of-band invitation from the mediator, see [Mediation](../protocols/didcomm/mediation.mdx).
+
+## Tests
+
+An agent for unit and integration tests. Each agent gets its own in-memory database, so tests don't share state and nothing is written to disk.
+
+```ts showLineNumbers title="agent.test.ts" example-tests.ts section-1
+```
+
+A raw store key skips the key derivation that Askar otherwise runs on every start. A test with Node.js's test runner:
+
+```ts showLineNumbers example-tests.ts section-2
+```

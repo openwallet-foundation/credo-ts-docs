@@ -1,0 +1,66 @@
+---
+title: Credo documentation
+sidebar_label: Overview
+description: Build issuers, verifiers, wallets and mediators for verifiable credentials with Credo, an open source TypeScript framework.
+---
+
+Credo is an open source TypeScript framework for verifiable credentials. You use it to build issuers, verifiers, wallets and mediators that exchange SD-JWT VC, mdoc, W3C and AnonCreds credentials over OpenID4VC and DIDComm, on Node.js and React Native.
+
+## Start here
+
+<Cards>
+  <Card to="getting-started/installation" title="Installation">
+    Set up a Node.js or React Native project and install Credo.
+  </Card>
+  <Card to="getting-started/first-agent" title="Your first agent">
+    Configure storage and keys, initialize an agent and create a DID.
+  </Card>
+  <Card to="concepts/verifiable-credentials" title="Verifiable credentials">
+    Issuers, holders and verifiers, and how protocols and formats fit together.
+  </Card>
+  <Card to="getting-started/example-setups" title="Example setups">
+    Complete agent configurations for a wallet, an issuer and verifier service, and a mediator.
+  </Card>
+</Cards>
+
+## Build by role
+
+<Cards>
+  <Card to="protocols/openid4vc/issuer" title="Issue credentials">
+    Run an OpenID4VCI issuer and offer credentials to any compliant wallet.
+  </Card>
+  <Card to="protocols/openid4vc/holder" title="Build a wallet">
+    Receive, store and present credentials from a mobile or cloud wallet.
+  </Card>
+  <Card to="protocols/openid4vc/verifier" title="Verify credentials">
+    Request claims with DCQL and verify presentations with OpenID4VP.
+  </Card>
+  <Card to="protocols/didcomm/mediation" title="Run a mediator">
+    Relay DIDComm messages for mobile agents that can't receive them directly.
+  </Card>
+</Cards>
+
+## Explore the docs
+
+<Cards>
+  <Card to="agent-setup" title="Agent setup">
+    Storage, key management, caching, multi-tenancy and logging.
+  </Card>
+  <Card to="protocols" title="Protocols">
+    OpenID4VC and DIDComm, role by role, and how to use each credential format with them.
+  </Card>
+  <Card to="credential-formats" title="Credential formats">
+    SD-JWT VC, mdoc, W3C Verifiable Credentials, AnonCreds and status lists.
+  </Card>
+  <Card to="dids-and-trust" title="DIDs and trust">
+    DID methods, X.509 certificates and deciding which issuers to trust.
+  </Card>
+</Cards>
+
+## Use with AI coding agents
+
+Point your coding agent at [llms.txt](https://credo.js.org/guides/next/llms.txt), an index of these docs as Markdown. Every page is also available as Markdown by adding `.md` to its URL. See [AI coding agents](./getting-started/ai-agents.mdx).
+
+## Get help
+
+Ask questions in the [#credo channel on Discord](https://discord.com/channels/1022962884864643214/1179453305856991263), open an issue on [GitHub](https://github.com/openwallet-foundation/credo-ts/issues), or join the [working group calls](https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information).

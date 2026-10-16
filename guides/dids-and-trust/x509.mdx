@@ -1,0 +1,127 @@
+---
+title: X.509 certificates
+description: Create self-signed and CA-issued X.509 certificates and certificate signing requests with agent.x509, parse certificates, validate chains and check revocation.
+---
+
+mdoc issuers, SD-JWT VC issuers and OpenID4VP verifiers often sign with a key that's bound to an X.509 certificate instead of a DID. `agent.x509` creates certificates and certificate signing requests (CSRs), validates certificate chains and creates certificate revocation lists (CRLs). This page covers those APIs and the X.509 module configuration. How a verifier decides which certificates to trust is on [Trusted issuers](./trust.mdx).
+
+In the examples, one agent plays the certificate authority (CA) and a second agent is a verifier. They use these imports:
+
+```ts showLineNumbers title="ca.ts" x509-certificates.ts section-1
+```
+
+## Create a root certificate
+
+Create a key in the [KMS](../agent-setup/key-management.mdx) and a self-signed certificate for it:
+
+```ts showLineNumbers title="ca.ts" x509-certificates.ts section-2
+```
+
+Without `subjectPublicKey`, the `authorityKey` signs its own certificate and `issuer` is also the subject. Passing `subject` for a self-signed certificate throws. `pathLenConstraint: 0` lets this CA sign end-entity certificates, but no intermediate CAs.
+
+`issuer` and `subject` take `commonName`, `countryName`, `stateOrProvinceName` and `organizationalUnit`. For other name attributes, pass a distinguished name string such as `'CN=Example Root CA, O=Example, C=NL'`.
+
+## Issue a certificate
+
+Sign a certificate for another key with the CA key. This one is an issuer certificate:
+
+```ts showLineNumbers title="ca.ts" x509-certificates.ts section-3
+```
+
+Credo signs with `authorityKey`, so it must be a key in the agent's KMS. The certificate gets the key id of `subjectPublicKey`, which lets the agent that holds that key sign with the certificate. The extensions depend on what the certificate is for:
+
+| Certificate | Requirements |
+| --- | --- |
+| mdoc issuer (document signer) | `DigitalSignature` key usage and the `MdlDs` extended key usage. See [mdoc](../credential-formats/mdoc.mdx). |
+| SD-JWT VC issuer | If the credential has an `iss`, it must be an HTTPS URL that matches a SAN URI, or whose host matches a SAN DNS name. See [SD-JWT VC](../credential-formats/sd-jwt-vc.mdx). |
+| OpenID4VP verifier (access certificate) | With the `x509_san_dns` client id prefix, the host of the verifier's `baseUrl` must be a SAN DNS name. See [Verifying credentials](../protocols/openid4vc/verifier.mdx). |
+
+## Configure the X.509 module
+
+`X509Module` is registered by default under the key `x509`. Register it yourself to pass options:
+
+```ts showLineNumbers title="verifier.ts" x509-certificates.ts section-4
+```
+
+| Option | Description |
+| --- | --- |
+| `trustedCertificates` | PEM or base64 DER strings, or `X509Certificate` instances. Credo uses them as trust anchors when nothing else decides trust, see [Trusted issuers](./trust.mdx). |
+| `getTrustedCertificatesForVerification` | Deprecated. Use the agent's `getTrustedIssuersForVerification` callback instead. |
+| `revocationCheck` | Enables CRL checking during chain validation. See [Revocation](#revocation). |
+| `parseOptions` | Limits for parsing certificates. See [Parse limits](#parse-limits). |
+
+To change the trusted certificates at runtime, use `agent.x509.config.addTrustedCertificate(certificate)` or `agent.x509.config.setTrustedCertificates(certificates)`.
+
+## Certificate signing requests
+
+When the key holder and the CA are different parties, the key holder sends a CSR. Here the verifier requests an access certificate:
+
+```ts showLineNumbers title="ca.ts" x509-certificates.ts section-5
+```
+
+`parseCertificateSigningRequest` doesn't check the CSR signature. Call `verify` to make sure the requester holds the private key. The CA decides which extensions go into the certificate: copy only the values from the CSR that you've checked.
+
+## Parse a certificate
+
+`X509Certificate.fromEncodedCertificate` parses a PEM or base64 DER certificate. A parsed certificate has no key id, so set `keyId` to the KMS key id before you sign with it:
+
+```ts showLineNumbers title="verifier.ts" x509-certificates.ts section-6
+```
+
+Getters include `subject`, `issuer`, `sanDnsNames`, `sanUriNames`, `keyUsage`, `extendedKeyUsage`, `isCertificateAuthority`, `crlDistributionPoints` and `publicJwk`. Encode a certificate with `toString('pem')` or `toString('base64')`, and compare two with `equal`.
+
+## Validate a certificate chain
+
+```ts showLineNumbers title="verifier.ts" x509-certificates.ts section-7
+```
+
+Pass the chain leaf first, as in an `x5c` header. The chain may leave out the root if it's in `trustedCertificates`. On success Credo returns the chain from the trust anchor to the leaf. On failure it throws an `X509ValidationError`, whose `validationResult.validations` shows which check failed.
+
+Credo checks the signatures and validity periods, basic constraints, the `keyCertSign` key usage of CA certificates, path length constraints, critical extensions, and revocation when enabled. It doesn't check OCSP, name constraints or certificate policies, and it doesn't enforce extended key usage.
+
+:::caution
+- Without `trustedCertificates`, Credo validates the chain but doesn't check that it ends at a certificate you trust. The module's `trustedCertificates` aren't used here.
+- `allowNonRootTrustedCertificate` defaults to `true`: a trusted intermediate or leaf certificate acts as the trust anchor, and Credo doesn't verify its signature. ISO 18013-5 needs this, because mdoc issuers don't include the root. Set it to `false` to require that trusted certificates are verified up to a self-signed root. The default may change in a future version.
+:::
+
+## Revocation
+
+Credo checks revocation with CRLs, from the URLs in a certificate's `crlDistributionPoints`. Revocation checking is off unless you set `revocationCheck` on the module:
+
+| Mode | Behaviour |
+| --- | --- |
+| `X509RevocationCheckMode.SoftFail` | Default when `revocationCheck` is set. Rejects revoked certificates, and skips the check when the CRL can't be downloaded. |
+| `X509RevocationCheckMode.Require` | Also fails when the CRL can't be downloaded. |
+| `X509RevocationCheckMode.Disabled` | No revocation checks. |
+
+Certificates without a CRL distribution point pass the check. Credo checks every certificate in the chain except the root (`checkFullChain`), and caches a CRL for an hour (`crlCacheExpirySeconds`), but never past its `nextUpdate`.
+
+To revoke certificates, create a CRL signed by the CA key and publish it at the distribution point URL:
+
+```ts showLineNumbers title="ca.ts" x509-certificates.ts section-8
+```
+
+Validating the revoked certificate now fails on the revocation check:
+
+```ts showLineNumbers title="verifier.ts" x509-certificates.ts section-9
+```
+
+## Parse limits
+
+Credo limits how much work parsing a certificate or CRL may take, as these often come from untrusted input. `X509ParseOptions` has three limits:
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `maxDepth` | 100 | Maximum ASN.1 nesting depth. |
+| `maxNodes` | 1,500,000 | Maximum number of ASN.1 nodes. A CRL entry takes about three nodes. |
+| `maxContentLength` | 16 MB | Maximum size of a single ASN.1 value. |
+
+Set them on the module with `parseOptions`, per call on `validateCertificateChain`, `parseCertificateSigningRequest`, `checkCertificateRevocation` and `fetchCertificateRevocationList`, or as the second argument of `X509Certificate.fromEncodedCertificate`. Options replace the defaults as a whole: a limit you leave out falls back to the parser's own default (10,000 nodes for `maxNodes`), not to Credo's. Spread `defaultX509ParseOptions` to change one limit:
+
+```ts
+import { defaultX509ParseOptions, X509Module } from '@credo-ts/core'
+
+new X509Module({ parseOptions: { ...defaultX509ParseOptions, maxDepth: 50 } })
+```
+
+The module's `parseOptions` only apply to parsing done by the X.509 module. Certificates in the `x5c` of an SD-JWT VC or the issuer data of an mdoc are parsed with `defaultX509ParseOptions`.

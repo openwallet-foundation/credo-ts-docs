@@ -1,2 +1,9 @@
 packages:
- - snippets/*
+  - snippets/*
+
+onlyBuiltDependencies:
+  - '@hyperledger/anoncreds-nodejs'
+  - '@hyperledger/indy-vdr-nodejs'
+  - '@openwallet-foundation/askar-nodejs'
+  - '@swc/core'
+  - esbuild

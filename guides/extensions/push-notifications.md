@@ -1,4 +1,14 @@
+---
+title: Push Notifications
+---
+
 # Push Notifications
+
+:::caution
+
+`@credo-ts/push-notifications` 0.7.1, the latest release, requires Credo 0.5 (`@credo-ts/core@^0.5.0`) and hasn't been updated for later versions of Credo.
+
+:::
 
 The Push Notifications plugin package provides a way for you to register your APNs and Firebase push notification token at an agent, allowing you to use push notifications directly from Credo.
 
@@ -12,21 +22,25 @@ This document is for version **`0.5.x`** of the `@credo-ts/push-notifications` p
 
 To add the Push Notifications plugin package to your existing project simply run:
 
-<!--tabs-->
+<Tabs>
 
-## npm
+<TabItem value="npm" label="npm">
 
 ```bash
 npm i @credo-ts/push-notifications
 ```
 
-## Yarn
+</TabItem>
+
+<TabItem value="yarn" label="Yarn">
 
 ```bash
 yarn add @credo-ts/push-notifications
 ```
 
-<!--tabs-->
+</TabItem>
+
+</Tabs>
 
 ## Usage
 

@@ -1,0 +1,47 @@
+---
+title: Storage
+description: Compare Askar and Drizzle, the two storage modules for a Credo agent, and pick the one that fits your platform and deployment.
+---
+
+Every Credo agent needs a storage module to keep its state between restarts. Credo ships two: Askar and Drizzle. This page compares them so you can pick one before you [configure your agent](../index.mdx).
+
+## What is stored
+
+Credo modules save their state as records: DIDs, credentials (SD-JWT VC, mdoc, W3C, AnonCreds), OpenID4VC issuers, verifiers and sessions, DIDComm connections and exchanges, tenants, generic records and the storage version. All records go through the one storage service you register.
+
+Keys aren't records. The [key management](../key-management.mdx) backend stores them. Askar provides both storage and a key management backend, Drizzle only storage.
+
+A storage module is required. Without one, the agent throws when you construct it:
+
+```text
+Missing required dependency: 'StorageService'. You can register it using the AskarModule, DrizzleStorageModule, or implement your own.
+```
+
+You can register only one storage module. To use a different backend, implement the `StorageService` interface from `@credo-ts/core`.
+
+## Askar or Drizzle
+
+|  | Askar | Drizzle |
+| --- | --- | --- |
+| Package | `@credo-ts/askar` | `@credo-ts/drizzle-storage` |
+| Encryption at rest | Record values and tags are encrypted with the store key | None. Use encryption of the database or disk |
+| Key management included | Yes, on by default | No, add a backend such as Askar |
+| Databases | SQLite, PostgreSQL | PostgreSQL (`pg` driver), SQLite (`libsql` or `expo-sqlite` driver) |
+| Platforms | Node.js, React Native | Node.js, React Native (with `expo-sqlite`) |
+| Schema and migrations | No schema, nothing to migrate | SQL tables. Run migrations on every Credo upgrade |
+| Multi-tenancy | A database or a profile per tenant | One database, rows scoped per tenant |
+| Read records outside Credo | No, the data is encrypted | Yes, a table per record type |
+| Cursor pagination in queries | No, only `limit` and `offset` | Yes |
+
+## Which one to choose
+
+| You're building | Use | Why |
+| --- | --- | --- |
+| A mobile wallet | Askar | Encrypts the wallet with a key you keep in the device keychain, and includes key management. |
+| A server, and you want SQL access to the data | Drizzle on PostgreSQL, with Askar for the keys | Query, inspect and back up records with your usual database tools. |
+| A server that can't run migrations on every deploy | Askar | Drizzle storage adds SQL migrations in non-breaking Credo releases, and Credo doesn't work until you run them. |
+| Tests | Askar with in-memory SQLite | Nothing to set up or clean up. |
+
+If you start with Askar, you can move your records to Drizzle later. See [Migrate from Askar](./drizzle.mdx#migrate-from-askar).
+
+<DocCardList />

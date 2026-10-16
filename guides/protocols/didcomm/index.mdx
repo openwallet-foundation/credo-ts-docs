@@ -1,0 +1,128 @@
+---
+title: DIDComm
+description: Set up DIDComm messaging in Credo with the DidCommModule, choose protocols and transports, and listen for state changes.
+---
+
+DIDComm is a messaging protocol for agents that keep a long-lived, encrypted connection with each other. Once two agents are connected, either side can start a protocol over that connection: issue a credential, request a proof, or send a message. Credo implements DIDComm v1 and the Aries RFCs built on it in `@credo-ts/didcomm`. This page explains when to use DIDComm and how to set up the module.
+
+## When to use DIDComm
+
+Use DIDComm when the parties have an ongoing relationship, because the connection stays usable after the first exchange. It is also the protocol for [AnonCreds](../../credential-formats/anoncreds.mdx) credentials and for working with other Aries-based agents.
+
+For one-off issuance or verification with wallets that implement OpenID4VC, such as wallets built for the EU Digital Identity Wallet ecosystem, use [OpenID4VC](../openid4vc/index.mdx) instead. An agent can register both modules. [DIDs and DIDComm](../../concepts/did-and-didcomm.md) explains the concepts.
+
+## Supported protocols
+
+| Protocol | Aries RFC | API |
+| --- | --- | --- |
+| Out-of-band 1.1 | [0434](https://github.com/hyperledger/aries-rfcs/tree/main/features/0434-outofband) | `agent.didcomm.oob` |
+| DID Exchange 1.1 | [0023](https://github.com/hyperledger/aries-rfcs/tree/main/features/0023-did-exchange) | `agent.didcomm.connections` |
+| DID Rotate 1.0 | [0794](https://github.com/hyperledger/aries-rfcs/tree/main/features/0794-did-rotate) | `agent.didcomm.connections` |
+| Trust Ping 1.0 | [0048](https://github.com/hyperledger/aries-rfcs/tree/main/features/0048-trust-ping) | `agent.didcomm.connections` |
+| Issue Credential 2.0 | [0453](https://github.com/hyperledger/aries-rfcs/tree/main/features/0453-issue-credential-v2) | `agent.didcomm.credentials` |
+| Revocation Notification 1.0 and 2.0 | [0183](https://github.com/hyperledger/aries-rfcs/tree/main/features/0183-revocation-notification), [0721](https://github.com/hyperledger/aries-rfcs/tree/main/features/0721-revocation-notification-v2) | `agent.didcomm.credentials` |
+| Present Proof 2.0 | [0454](https://github.com/hyperledger/aries-rfcs/tree/main/features/0454-present-proof-v2) | `agent.didcomm.proofs` |
+| Coordinate Mediation 1.0 | [0211](https://github.com/hyperledger/aries-rfcs/tree/main/features/0211-route-coordination) | `agent.didcomm.mediator`, `agent.didcomm.mediationRecipient` |
+| Pickup 1.0 and 2.0 | [0212](https://github.com/hyperledger/aries-rfcs/tree/main/features/0212-pickup), [0685](https://github.com/hyperledger/aries-rfcs/tree/main/features/0685-pickup-v2) | `agent.didcomm.messagePickup` |
+| Discover Features 1.0 and 2.0 | [0031](https://github.com/hyperledger/aries-rfcs/tree/main/features/0031-discover-features), [0557](https://github.com/hyperledger/aries-rfcs/tree/main/features/0557-discover-features-v2) | `agent.didcomm.discovery` |
+| Basic Message 1.0 | [0095](https://github.com/hyperledger/aries-rfcs/tree/main/features/0095-basic-message) | `agent.didcomm.basicMessages` |
+| Action Menu 1.0 | [0509](https://github.com/hyperledger/aries-rfcs/tree/main/features/0509-action-menu) | `@credo-ts/action-menu` |
+| Question Answer 1.0 | [0113](https://github.com/hyperledger/aries-rfcs/tree/main/features/0113-question-answer) | `@credo-ts/question-answer` |
+| DIDComm RPC 1.0 | [0804](https://github.com/hyperledger/aries-rfcs/tree/main/features/0804-didcomm-rpc) | `@credo-ts/drpc` |
+
+Credo doesn't implement DIDComm v2.
+
+## Install
+
+<InstallTabs packages="@credo-ts/didcomm" />
+
+On Node.js the inbound transports come from `@credo-ts/node`, which you install when you [set up the agent](../../getting-started/installation.mdx).
+
+## Configure the module
+
+Register a `DidCommModule` under the key `didcomm`. Credo only exposes the API as `agent.didcomm` under that key. Under any other key it is available as `agent.modules.<key>`.
+
+<Tabs groupId="platform" queryString>
+<TabItem value="node" label="Node.js">
+
+A server agent listens for incoming messages and advertises the URLs where other agents reach it.
+
+```ts showLineNumbers title="agent.ts" didcomm-setup.ts section-1
+```
+
+</TabItem>
+<TabItem value="react-native" label="React Native">
+
+A mobile agent has no public address, so it only sends messages and receives them through a [mediator](./mediation.mdx).
+
+```ts showLineNumbers title="agent.ts" didcomm-setup-rn.ts section-1
+```
+
+</TabItem>
+</Tabs>
+
+The examples use Askar for storage. See [Storage](../../agent-setup/storage/index.mdx) for the options and for handling the store key.
+
+### Endpoints and transports
+
+`endpoints` lists the public URLs that go into your invitations and DID documents, in order of preference. Behind a reverse proxy, use the public URL (for example `https://agent.example.com/didcomm`), not the local port. An agent without endpoints can only receive messages through a mediator, or over a WebSocket it opened itself.
+
+| Transport | Package | Platforms |
+| --- | --- | --- |
+| `DidCommHttpOutboundTransport` | `@credo-ts/didcomm` | Node.js, React Native |
+| `DidCommWsOutboundTransport` | `@credo-ts/didcomm` | Node.js, React Native |
+| `DidCommHttpInboundTransport` | `@credo-ts/node` | Node.js |
+| `DidCommWsInboundTransport` | `@credo-ts/node` | Node.js |
+
+`DidCommHttpInboundTransport` takes a `port` and an optional `path`. Pass `app` instead of `port` to mount it on an Express app you start yourself. `DidCommWsInboundTransport` takes a `port`, or a `server` (a `WebSocketServer` from `ws`). To serve HTTP and WebSocket on one port, give the WebSocket server `noServer: true` and forward the HTTP server's `upgrade` events to it, as the [sample mediator](https://github.com/openwallet-foundation/credo-ts/blob/main/samples/mediator.ts) does.
+
+### Protocols
+
+The connection, out-of-band and discover features protocols are always on. The other protocols are on by default. Pass `false` to turn one off, which also removes its API from `agent.didcomm`, or pass an object to configure it.
+
+| Option | Configures | Details |
+| --- | --- | --- |
+| `connections` | Connections and DID Exchange | [Connections](./connections.mdx) |
+| `credentials` | Issue Credential 2.0 | [Issuing credentials](./issue-credential.mdx) |
+| `proofs` | Present Proof 2.0 | [Requesting proofs](./present-proof.mdx) |
+| `mediator` | Acting as a mediator | [Mediation](./mediation.mdx) |
+| `mediationRecipient` | Using a mediator | [Mediation](./mediation.mdx) |
+| `messagePickup` | Pickup 1.0 and 2.0 | [Mediation](./mediation.mdx) |
+| `basicMessages` | Basic messages | [Messaging](./messaging.mdx) |
+
+:::warning
+By default, `credentials` and `proofs` register the 2.0 protocols without any credential formats, so the agent can't issue or verify anything. Configure the formats you need as described in [Issuing credentials](./issue-credential.mdx) and [Requesting proofs](./present-proof.mdx).
+:::
+
+### Other options
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `processDidCommMessagesConcurrently` | `false` | Process incoming messages in parallel instead of one at a time. |
+| `queueTransportRepository` | in memory | Where messages for agents without an endpoint wait until they are picked up. Mediators need a persistent queue. |
+| `didCommMimeType` | `DidCommMimeType.V1` | Content type for sent messages. `DidCommMimeType.V0` (`application/ssi-agent-wire`) is for older agents. |
+| `useDidKeyInProtocols` | `true` | Encode keys as `did:key` in protocol messages (RFC 0360). |
+| `useDidSovPrefixWhereAllowed` | `false` | Use the legacy `did:sov:BzCbsNYhMrjHiqZDTUASHg;spec` message type prefix for older agents. |
+
+## Events
+
+Credo emits an event for every state change, such as a connection being completed or a message arriving. Listen with `agent.events.on()`, and remove the listener with `agent.events.off()`. `agent.events.observable()` returns the same events as an RxJS observable.
+
+```ts showLineNumbers title="agent.ts" didcomm-setup.ts section-2
+```
+
+The event type enums and payload types are exported from `@credo-ts/didcomm`.
+
+| Event type | Payload |
+| --- | --- |
+| `DidCommConnectionEventTypes.DidCommConnectionStateChanged` | `connectionRecord`, `previousState` |
+| `DidCommOutOfBandEventTypes.OutOfBandStateChanged` | `outOfBandRecord`, `previousState` |
+| `DidCommCredentialEventTypes.DidCommCredentialStateChanged` | `credentialExchangeRecord`, `previousState` |
+| `DidCommProofEventTypes.ProofStateChanged` | `proofRecord`, `previousState` |
+| `DidCommBasicMessageEventTypes.DidCommBasicMessageStateChanged` | `basicMessageRecord`, `message` |
+| `DidCommRoutingEventTypes.MediationStateChanged` | `mediationRecord`, `previousState` |
+| `DidCommEventTypes.DidCommMessageProcessingFailed` | `error`, `message`, `connection` |
+
+Each event also has `metadata.contextCorrelationId`, which tells you which tenant it belongs to when you use [multi-tenancy](../../agent-setup/multi-tenancy.mdx).
+
+<DocCardList />
