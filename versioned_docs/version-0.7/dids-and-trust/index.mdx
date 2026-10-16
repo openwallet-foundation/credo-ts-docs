@@ -1,0 +1,85 @@
+---
+title: DIDs
+description: Create, resolve and import DIDs with agent.dids, configure DID registrars and resolvers, and see which DID methods Credo supports.
+---
+
+Credo uses DIDs to sign and verify credentials, as AnonCreds issuer identifiers, and for DIDComm connections. `agent.dids` creates, resolves and imports DIDs, and keeps track of the ones your agent controls. This page covers that API and the supported DID methods. The other pages in this section cover the ledger and web methods, X.509 certificates and trusted issuers. For what DIDs are, see [DIDs and DIDComm](../concepts/did-and-didcomm.md).
+
+## DID methods
+
+| Method | Create | Update | Deactivate | Resolve | Package |
+| --- | --- | --- | --- | --- | --- |
+| `did:key` | Yes | No | No | Yes | `@credo-ts/core` |
+| `did:jwk` | Yes | No | No | Yes | `@credo-ts/core` |
+| `did:peer` | Yes | No | No | Yes | `@credo-ts/core` |
+| `did:web` | Import only | No | No | Yes | `@credo-ts/core` |
+| `did:webvh` | Yes | Yes | No | Yes | [`@credo-ts/webvh`](./webvh.mdx) |
+| `did:cheqd` | Yes | Yes | Yes | Yes | [`@credo-ts/cheqd`](./cheqd.mdx) |
+| `did:indy` | Yes | No | No | Yes | [`@credo-ts/indy-vdr`](./indy-vdr.mdx) |
+| `did:sov` | No | No | No | Yes | [`@credo-ts/indy-vdr`](./indy-vdr.mdx) |
+| `did:hedera` | Yes | Yes | Yes | Yes | [`@credo-ts/hedera`](./hedera.mdx) |
+
+DIDComm creates the `did:peer` DIDs for connections itself, so you rarely create them by hand.
+
+## Create a DID
+
+`agent.dids.create` creates the DID and its keys, registers it when the method needs that, and stores a `DidRecord`. The record links the verification methods to the keys in the [KMS](../agent-setup/key-management.mdx), so the agent can sign with the DID later.
+
+```ts showLineNumbers title="dids.ts" dids-create.ts section-1
+```
+
+The generic parameter (`KeyDidCreateOptions`, `JwkDidCreateOptions`, `CheqdDidCreateOptions`, and so on) types the options for the method. Registrars return failures instead of throwing, so always check `didState.state`:
+
+- `finished`: `didState.did` and `didState.didDocument` are set.
+- `failed`: `didState.reason` says why.
+- `action` or `wait`: the method needs another step, for example an endorsement of an Indy transaction.
+
+To use a key that's already in the KMS, pass its `keyId` instead of `createKey`:
+
+```ts showLineNumbers title="dids.ts" dids-create.ts section-2
+```
+
+## Resolve a DID
+
+```ts showLineNumbers title="dids.ts" dids-create.ts section-3
+```
+
+`resolve` returns the full resolution result, with `didResolutionMetadata.error` when resolution fails. `resolveDidDocument` returns only the document and throws on failure.
+
+Credo caches resolved documents for 5 minutes for methods whose resolver allows it (`did:web`, `did:webvh`, `did:cheqd`, `did:indy`, `did:sov` and `did:hedera`). Pass `{ useCache: false }` to `resolve` to skip the cache, or `cacheDurationInSeconds` to change the duration. For DIDs that you created or imported, these resolvers (except `did:sov`) return the document from your `DidRecord` instead of fetching it.
+
+## Import a DID
+
+Import a DID that you created outside Credo, such as a `did:web` (there's no `did:web` registrar) or an existing ledger DID. `keys` links verification methods in the document to keys in the KMS. Without it the agent can resolve the DID, but not sign with it.
+
+```ts showLineNumbers title="dids.ts" dids-create.ts section-4
+```
+
+`PublicJwk` comes from `@credo-ts/core/kms`. Without `didDocument`, Credo resolves the DID to get the document. Importing a DID that already exists throws, unless you pass `overwrite: true`.
+
+To list the DIDs your agent created or imported, use `getCreatedDids`, optionally filtered by `method` or `did`:
+
+```ts showLineNumbers title="dids.ts" dids-create.ts section-5
+```
+
+## Configure DID methods
+
+`DidsModule` is registered by default under the key `dids`, with these registrars and resolvers:
+
+- Registrars: `did:key`, `did:peer` and `did:jwk`.
+- Resolvers: `did:web`, `did:key`, `did:peer` and `did:jwk`.
+
+To add a method, register `DidsModule` yourself. The packages for ledger and web methods don't add their registrar and resolver to `DidsModule`, so you always list them:
+
+```ts showLineNumbers title="agent.ts" dids-module.ts section-1
+```
+
+:::warning[Your lists replace the defaults]
+Passing `registrars` or `resolvers` replaces the default list. Credo adds the `did:key` and `did:peer` registrar and resolver back, because DIDComm needs them, but not `did:web` and `did:jwk`. Include `WebDidResolver`, `JwkDidResolver` and `JwkDidRegistrar` yourself if you still need them.
+:::
+
+`publicDidMethods` lists the methods whose documents are the same for every agent context. With [multi-tenancy](../agent-setup/multi-tenancy.mdx), their documents are cached once for all tenants instead of per tenant. The default is `['web', 'indy', 'sov', 'cheqd', 'hedera', 'webvh']`.
+
+## Next steps
+
+<DocCardList />

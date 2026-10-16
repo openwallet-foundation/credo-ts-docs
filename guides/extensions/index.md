@@ -1,6 +1,14 @@
-import DocCardList from '@theme/DocCardList';
+---
+title: Extensions
+---
 
 # Extensions
+
+:::caution
+
+All Credo Extensions packages require Credo 0.5 and haven't been updated for later versions of Credo.
+
+:::
 
 Credo Extensions is an extensions repository to Credo. It hosts libraries built on top of Credo that don't necessarily belong to the core of the project.
 

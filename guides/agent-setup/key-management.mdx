@@ -1,0 +1,117 @@
+---
+title: Key management
+description: Configure the key management backends of a Credo agent (Askar, Node.js, and hardware-backed keys on React Native) and use agent.kms to create keys and sign.
+---
+
+The key management service (KMS) creates and stores keys and does the cryptography with them: signing, verifying, encrypting and key agreement. Credo modules use it for DIDs, credentials, DIDComm and OpenID4VC, and you can call it directly through `agent.kms`. The KMS delegates the work to one or more backends. This page covers the backends, how Credo picks one, and the `agent.kms` API.
+
+## The `kms` module
+
+`KeyManagementModule` is a default module under the key `kms`, registered without backends. Backends come from two places:
+
+- `AskarModule` adds the `askar` backend, unless you set `enableKms: false`.
+- You register `new KeyManagementModule({ backends, defaultBackend })` yourself under the key `kms`, as in the examples below.
+
+Import `KeyManagementModule` and the other KMS classes from `@credo-ts/core/kms`. The `Kms` namespace export of `@credo-ts/core` is deprecated.
+
+Credo doesn't check for a backend at startup. Without one, the agent initializes, and every key operation throws `No key management service backend found that supports ...`.
+
+## Backends
+
+### Askar
+
+`AskarKeyManagementService` (backend `askar`) keeps keys in the Askar store, encrypted with the store key. `AskarModule` registers it by default, on Node.js and React Native. See [Askar](./storage/askar.mdx).
+
+### Node.js
+
+`NodeKeyManagementService` from `@credo-ts/node` (backend `node`) uses `node:crypto`. It supports more algorithms than Askar, such as RSA, P-521 and HMAC. It needs a key storage:
+
+```ts showLineNumbers title="agent.ts" kms-node.ts section-1
+```
+
+:::warning[Keys are kept in memory]
+`NodeInMemoryKeyManagementStorage` is the only key storage that Credo ships. Keys are lost when the process stops, while DIDs and credentials in storage still refer to them. Use it for tests, or for operations that don't need a stored key, such as verifying a signature with a public key. To keep keys, implement the `NodeKeyManagementStorage` interface (`get`, `has`, `set`, `delete`). It receives private keys as JWKs, so encrypt them at rest.
+:::
+
+### Secure environment (React Native)
+
+`SecureEnvironmentKeyManagementService` from `@credo-ts/react-native` (backend `secureEnvironment`) creates keys in the phone's secure hardware: the Secure Enclave on iOS and the Android Keystore. The private key never leaves the hardware, and keys are protected with biometrics. It needs `@animo-id/expo-secure-environment` 0.1 (version 0.2 doesn't match the peer dependency range):
+
+<InstallTabs packages="@animo-id/expo-secure-environment@^0.1.5" />
+
+It only creates P-256 keys, signs with ES256 and deletes keys. It can't verify, encrypt, import keys or generate random bytes, so you always use it next to Askar. See [the React Native setup below](#askar-and-the-secure-environment-on-react-native). The package lists its platform requirements, such as Android API 30 or higher, in its README.
+
+### Capabilities
+
+| | Askar | Node.js | Secure environment |
+| --- | --- | --- | --- |
+| Platforms | Node.js, React Native | Node.js | React Native |
+| Keys are stored | In the Askar store | In memory, or your own storage | In secure hardware |
+| EC curves | P-256, P-384, secp256k1 | P-256, P-384, P-521, secp256k1 | P-256 |
+| OKP curves | Ed25519, X25519 | Ed25519, X25519 | No |
+| RSA | No | Yes | No |
+| Symmetric keys | AES-128, AES-256, ChaCha20-Poly1305 | AES, HMAC | No |
+| Sign and verify | EdDSA, ES256, ES384, ES256K | EdDSA, ES256, ES384, ES512, ES256K, RS\*, PS\*, HS\* | ES256, sign only |
+| Encrypt and decrypt | AES-GCM, AES-CBC-HMAC, (X)ChaCha20, XSalsa20, AES key wrap, ECDH-ES, HPKE | AES-GCM, AES-CBC, AES-CBC-HMAC, ChaCha20, ECDH-ES, HPKE | No |
+| Import keys | EC and OKP keys | EC, OKP, RSA and symmetric keys | No |
+
+Neither Askar nor the secure environment supports RSA. On React Native, verifying an X.509 chain with an RSA certificate authority therefore needs an extra backend that can verify RSA signatures, which you implement yourself with the `KeyManagementService` interface.
+
+## Multiple backends
+
+Every backend has a name (`askar`, `node`, `secureEnvironment`). Credo decides which one handles an operation like this:
+
+1. If you pass `backend`, that backend handles it, or the call throws if it can't.
+2. For an operation on an existing key, Credo uses the backend that holds the key: `sign`, `verify`, `encrypt`, `decrypt` and `getPublicKey` look the key up by its key id.
+3. Otherwise, the default backend handles it if it supports the operation, and else the first other backend that does. This applies to `createKey`, `importKey`, `randomBytes` and `deleteKey`, and to `verify` with a `publicJwk`.
+
+`deleteKey` doesn't look up the key, so pass `backend` to delete a key that isn't in the default backend.
+
+The default backend is `defaultBackend`, or the first backend in the list. The list starts with the backends you pass to `KeyManagementModule`. `AskarModule` adds the `askar` backend after them. So `backends: [new NodeKeyManagementService(...)]` plus `AskarModule` makes `node` the default.
+
+`defaultBackend` must name a backend in your `backends` list, which Credo checks when it creates the module. To make Askar the default, add `AskarKeyManagementService` to `backends` yourself and set `enableKms: false` on `AskarModule`:
+
+```ts showLineNumbers title="agent.ts" kms-multiple-backends.ts section-1
+```
+
+Then each key goes to a backend that supports it:
+
+```ts showLineNumbers title="agent.ts" kms-multiple-backends.ts section-2
+```
+
+### Askar and the secure environment on React Native
+
+On a phone, use Askar as the default and the secure environment for the keys that need hardware protection:
+
+```ts showLineNumbers title="agent.ts" kms-secure-environment-rn.ts section-1
+```
+
+If you only list the secure environment in `backends` and let `AskarModule` add its backend, the secure environment comes first and becomes the default. Every P-256 key that Credo creates, for DIDs or credentials, then ends up in hardware behind biometrics.
+
+Create a hardware key by passing `backend`. Signing finds the key by its key id:
+
+```ts showLineNumbers title="hardware-key.ts" kms-secure-environment-rn.ts section-2
+```
+
+The secure environment can't verify. To verify a signature from a hardware key, pass the `publicJwk` instead of the key id, so another backend does it.
+
+## Use `agent.kms`
+
+```ts showLineNumbers title="kms.ts" kms-usage.ts section-1
+```
+
+| Method | What it does |
+| --- | --- |
+| `createKey({ type, keyId?, backend? })` | Creates a key and returns `{ keyId, publicJwk }`. `type` is for example `{ kty: 'EC', crv: 'P-256' }` or `{ kty: 'OKP', crv: 'Ed25519' }`. |
+| `createKeyForSignatureAlgorithm({ algorithm })` | Creates a key that fits a JWA signature algorithm, such as `ES256`. |
+| `importKey({ privateJwk })` | Imports a private JWK. Set `privateJwk.kid` to choose the key id. |
+| `getPublicKey({ keyId })` | Returns the public JWK of a key. |
+| `sign({ keyId, algorithm, data })` | Signs `data` (a `Uint8Array`). |
+| `verify({ key, algorithm, data, signature })` | Verifies with `key: { keyId }` or `key: { publicJwk }`. Returns `{ verified }`. |
+| `encrypt(...)`, `decrypt(...)` | Encrypts and decrypts with a key, a JWK or key agreement. |
+| `deleteKey({ keyId })` | Deletes a key. |
+| `randomBytes({ length })` | Returns random bytes. |
+| `supportedBackendsForOperation(operation)` | The backends that support an operation. |
+| `supportedJwaSignatureAlgorithms()` | The signature algorithms at least one backend supports. |
+
+To use a key in a DID, pass its `keyId` when you create the DID. See [DIDs](../dids-and-trust/index.mdx).

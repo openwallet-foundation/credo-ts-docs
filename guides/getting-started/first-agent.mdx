@@ -1,0 +1,100 @@
+---
+title: Your first agent
+description: Create, initialize and shut down a minimal Credo agent that stores its data in Askar and creates a did:key.
+---
+
+This page builds the smallest complete agent: it stores data and keys in an Askar SQLite database, creates a `did:key`, resolves it and shuts down. You need the packages from [Installation](./installation.mdx).
+
+## Create the agent
+
+<Tabs groupId="platform" queryString>
+<TabItem value="node" label="Node.js">
+
+```ts showLineNumbers title="src/index.ts" first-agent.ts section-1
+```
+
+</TabItem>
+<TabItem value="react-native" label="React Native">
+
+```ts showLineNumbers title="agent.ts" first-agent-rn.ts section-1
+```
+
+</TabItem>
+</Tabs>
+
+The `Agent` constructor takes three options:
+
+- `dependencies` are the platform implementations of the file system, `fetch`, WebSocket and events. Import `agentDependencies` from `@credo-ts/node` or `@credo-ts/react-native`.
+- `modules` adds features to the agent. The `AskarModule` registers Askar as the storage and as a [key management](../agent-setup/key-management.mdx) backend. An agent needs a storage module: without one, `new Agent()` throws `Missing required dependency: 'StorageService'`.
+- `config` holds agent-wide settings, such as the logger. See [Agent configuration](../agent-setup/index.mdx).
+
+`store.id` names the database and `store.key` encrypts it. On Node.js the database is created at `~/.afj/data/wallet/<id>/sqlite.db`. See [Askar](../agent-setup/storage/askar.mdx) for the options, PostgreSQL, and how to choose the key.
+
+## Modules and their APIs
+
+Each key in `modules` is the name of the module's API on the agent. Modules from packages such as `@credo-ts/askar` or `@credo-ts/tenants` are available as `agent.modules.<key>`, for example `agent.modules.askar`. The `didcomm` and `openid4vc` modules are also available as `agent.didcomm` and `agent.openid4vc`, as long as you register them under exactly those keys.
+
+Credo also registers a set of default modules, such as DIDs, key management and SD-JWT VC. Their APIs are at the top level, for example `agent.dids` and `agent.kms`.
+
+TypeScript infers all of these from the `modules` object you pass, so `agent.modules.askar` is typed and a module you didn't register is a type error. [Agent configuration](../agent-setup/index.mdx) lists the default modules and shows how to type an agent you pass around.
+
+## Initialize
+
+```ts showLineNumbers first-agent.ts section-2
+```
+
+`initialize()` opens the Askar store, or creates it on the first run, and checks that the storage is up to date for this version of Credo. Call it once, before you use the agent.
+
+## Create and resolve a DID
+
+```ts showLineNumbers first-agent.ts section-3
+```
+
+`agent.dids.create()` creates an Ed25519 key in Askar, stores a DID record that links the DID to the key, and returns the `did:key`. `resolveDidDocument()` resolves the DID to its DID document, and throws if that fails. See [DIDs](../dids-and-trust/index.mdx) for other DID methods.
+
+## Shut down
+
+```ts showLineNumbers first-agent.ts section-4
+```
+
+`shutdown()` stops the modules and closes the store. Call it before your process exits or your app is closed.
+
+## Run it
+
+<Tabs groupId="platform" queryString>
+<TabItem value="node" label="Node.js">
+
+```bash
+npx tsx src/index.ts
+```
+
+The agent logs its startup at the info level and prints the DID document:
+
+```text
+INFO: Creating agent with config { ... }
+INFO: Agent storage is up to date.
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    ...
+  ],
+  "id": "did:key:z6Mkg...",
+  "verificationMethod": [ ... ],
+  ...
+}
+```
+
+Run it again and the agent opens the existing store and adds a second DID.
+
+</TabItem>
+<TabItem value="react-native" label="React Native">
+
+Metro doesn't support top-level `await`, so the React Native version wraps the steps in `runFirstAgent()`. Call it from your app, for example in a `useEffect` of your root component, and check the Metro logs for the DID document.
+
+</TabItem>
+</Tabs>
+
+## Next steps
+
+- [Example setups](./example-setups.mdx) shows complete configurations for wallets, issuers, verifiers and mediators.
+- [Agent configuration](../agent-setup/index.mdx) describes all agent options.

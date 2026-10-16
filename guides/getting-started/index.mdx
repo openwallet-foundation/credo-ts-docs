@@ -1,0 +1,34 @@
+---
+title: Getting started
+description: What you need to build with Credo, and the order to read the getting started pages in.
+---
+
+Credo is a TypeScript framework for issuing, holding and verifying verifiable credentials. It supports OpenID4VC and DIDComm, and formats such as SD-JWT VC, mdoc, W3C Verifiable Credentials and AnonCreds. This section takes you from an empty project to a running agent.
+
+## Prerequisites
+
+- Node.js 22 or later (Credo is tested on Node.js 22, 24 and 26), or React Native. These pages use Expo for React Native.
+- A TypeScript project that uses ES modules. Credo is published as ES modules only.
+
+Browsers aren't supported, and Bun and Deno aren't tested. See [Platforms](../concepts/platform-and-environment.md).
+
+## Read in this order
+
+<Cards>
+  <Card to="getting-started/installation" title="1. Installation">Set up a Node.js or Expo project and install Credo with Askar.</Card>
+  <Card to="getting-started/first-agent" title="2. Your first agent">Create an agent, initialize it, create a DID and shut it down.</Card>
+  <Card to="getting-started/example-setups" title="3. Example setups">Complete configurations for wallets, issuers, verifiers, mediators and tests.</Card>
+</Cards>
+
+## Where to go next
+
+Once your agent runs, pick the guide for what you're building:
+
+<Cards>
+  <Card to="protocols/openid4vc/issuer" title="Issue credentials">Run an OpenID4VCI issuer that wallets receive credentials from.</Card>
+  <Card to="protocols/openid4vc/verifier" title="Verify credentials">Request and verify presentations with OpenID4VP.</Card>
+  <Card to="protocols/openid4vc/holder" title="Build a wallet">Receive, store and present credentials in a mobile or server wallet.</Card>
+  <Card to="protocols/didcomm" title="Use DIDComm">Connect to other agents and exchange messages and credentials over DIDComm.</Card>
+</Cards>
+
+If you're new to verifiable credentials, start with [Concepts](../concepts/index.md). If you use an AI coding assistant, see [AI coding agents](./ai-agents.mdx).

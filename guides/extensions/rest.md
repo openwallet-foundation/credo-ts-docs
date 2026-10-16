@@ -1,4 +1,14 @@
+---
+title: REST API
+---
+
 # REST API
+
+:::caution
+
+`@credo-ts/rest` 0.10.0, the latest release, runs on Credo 0.5 (`@credo-ts/core@^0.5.1`) and hasn't been updated for later versions of Credo.
+
+:::
 
 The Credo REST API provides simple RESTful endpoints for Credo methods, to allow you stand up an agent for communication over the internet instantly. You simply provide your agent configuration. The REST endpoints allow you to interact with your agent over HTTP and WebSockets.
 
@@ -18,7 +28,7 @@ The `@credo-ts/rest` package has not been updated to work with the latest versio
 
 :::info
 
-This guide assumes you have followed the install guides for the framework (See [Getting Started](../getting-started/index.md) section) for your platform and a valid [Node.js](https://nodejs.org) project setup.
+This guide assumes you have followed the install guides for the framework (See [Getting Started](../getting-started/index.mdx) section) for your platform and a valid [Node.js](https://nodejs.org) project setup.
 
 :::
 

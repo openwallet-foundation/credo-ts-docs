@@ -1,0 +1,140 @@
+---
+title: Askar
+description: Configure Askar for encrypted storage and key management in a Credo agent, on SQLite or PostgreSQL, in Node.js and React Native.
+---
+
+[Askar](https://github.com/openwallet-foundation/askar) is an encrypted store for records and keys. `AskarModule` registers it as the agent's storage and as a [key management](../key-management.mdx) backend. It runs on SQLite or PostgreSQL, in Node.js and React Native. This page covers the module options, the store key and the databases.
+
+## Install
+
+<Tabs groupId="platform" queryString>
+<TabItem value="node" label="Node.js">
+
+<InstallTabs packages="@credo-ts/askar @openwallet-foundation/askar-nodejs@0.6.1" />
+
+</TabItem>
+<TabItem value="react-native" label="React Native">
+
+<InstallTabs packages="@credo-ts/askar @openwallet-foundation/askar-react-native@0.6.1" />
+
+Askar is a native module, so it doesn't run in Expo Go. Use a [development build](https://docs.expo.dev/develop/development-builds/introduction/).
+
+</TabItem>
+</Tabs>
+
+The platform package pins `@openwallet-foundation/askar-shared` to its own version, so install a single Askar version across your project. `@credo-ts/askar-to-drizzle-storage-migration` requires exactly `0.6.1`.
+
+## Configure
+
+<Tabs groupId="platform" queryString>
+<TabItem value="node" label="Node.js">
+
+```ts showLineNumbers title="agent.ts" storage-askar.ts section-1
+```
+
+</TabItem>
+<TabItem value="react-native" label="React Native">
+
+```ts showLineNumbers title="agent.ts" storage-askar-rn.ts section-1
+```
+
+</TabItem>
+</Tabs>
+
+Pass the `NativeAskar` class as `askar`. Credo resolves the native binding when it needs it. The `askar` instance export from the platform package is deprecated: it's only set after the platform package has run, which depends on import order.
+
+`store.id` names the store. It's also the root agent's profile, the SQLite directory and the PostgreSQL database name.
+
+## What `initialize()` does with the store
+
+`agent.initialize()` opens the store. If it doesn't exist yet, Askar creates it, so the first start creates an empty store and later starts open it. `agent.shutdown()` closes it.
+
+- With the wrong key, `initialize()` throws a `CredoError` caused by `AskarStoreInvalidKeyError: Incorrect key for store`.
+- A different `id` or SQLite `path` doesn't fail: it creates a new, empty store. If you open an existing wallet, check that the database exists before you initialize, for example with the file system on a phone.
+
+## Store key
+
+Askar encrypts the store with `store.key`. How it turns the key into the encryption key depends on `keyDerivationMethod`:
+
+| `keyDerivationMethod` | Use it for |
+| --- | --- |
+| `kdf:argon2i:mod` (default) | Passwords and PINs. Argon2i makes guessing the key slow. |
+| `kdf:argon2i:int` | The same, faster and less secure. |
+| `raw` | Random keys that you keep somewhere safe, such as the device keychain or a secret manager. Skips key derivation, so opening the store is fast. |
+
+A `raw` key must be an Askar key: generate it once with `Store.generateRawKey()` from the platform package. Any other string fails when Askar creates the store.
+
+To change the key of an existing store, call `agent.modules.askar.rotateStoreKey({ newKey, newKeyDerivationMethod })` and then update the key in your configuration.
+
+## Databases
+
+### SQLite
+
+SQLite is the default. The store is a file at `<data path>/wallet/<store id>/sqlite.db`:
+
+- Node.js: the data path is `~/.afj/data`.
+- React Native: the data path is `.afj` in the app's document directory.
+
+To use another file, set the full path of the database file:
+
+```ts
+database: { type: 'sqlite', config: { path: '/var/lib/my-agent/agent.db' } }
+```
+
+`config` also takes `maxConnections` and `minConnections`.
+
+### In-memory SQLite
+
+For tests, keep the store in memory. The data is gone when the agent shuts down:
+
+```ts showLineNumbers title="test-agent.ts" storage-askar-in-memory.ts section-1
+```
+
+### PostgreSQL
+
+```ts showLineNumbers title="agent.ts" storage-askar-postgres.ts section-1
+```
+
+The store `id` is the database name. On the first `initialize()` Askar creates that database, so the account needs permission to create databases. You can pass `adminAccount` and `adminPassword` in `credentials` to use a separate account for creating and deleting databases.
+
+| Option | Description |
+| --- | --- |
+| `config.host` | Host and port, for example `localhost:5432`. |
+| `config.maxConnections`, `config.minConnections` | Size of the connection pool. |
+| `config.connectTimeout`, `config.idleTimeout` | Timeouts, passed to the connection string. |
+| `config.connectionParameters` | Extra connection string parameters, such as `sslmode`, `sslrootcert`, `sslcert`, `sslkey` and `application_name`. Parameters that Credo sets itself (`host`, `user`, `password`, `dbname`, the timeouts and pool sizes) throw. |
+| `credentials.account`, `credentials.password` | The account to connect with. |
+| `credentials.adminAccount`, `credentials.adminPassword` | Optional account for creating and deleting databases. |
+
+## Storage and key management
+
+`AskarModule` registers storage and a key management backend named `askar`. Turn either off:
+
+| `enableStorage` | `enableKms` | Use it when |
+| --- | --- | --- |
+| `true` | `true` | Askar stores records and keys. The default. |
+| `false` | `true` | Another module stores records, such as [Drizzle](./drizzle.mdx). Askar still creates its store, for the keys. |
+| `true` | `false` | You register `AskarKeyManagementService` yourself in the `KeyManagementModule`, for example to make Askar the default next to another backend. See [Key management](../key-management.mdx#multiple-backends). |
+
+If you add `AskarKeyManagementService` to the `KeyManagementModule` backends and keep `enableKms` on, registering the module throws.
+
+## Multi-tenancy
+
+With the [tenants module](../multi-tenancy.mdx), `multiWalletDatabaseScheme` decides where tenant data goes:
+
+- `AskarMultiWalletDatabaseScheme.DatabasePerWallet` (default): a store per tenant, with a generated raw key that Credo saves in the tenant record. On SQLite each tenant gets its own file, on PostgreSQL its own database. Don't set a SQLite `path` in this mode: all tenants would resolve to the same file, and creating a tenant fails.
+- `AskarMultiWalletDatabaseScheme.ProfilePerWallet`: one store with a profile per tenant. Recommended, because it performs better with many tenants.
+
+## Manage the store
+
+`agent.modules.askar` (the module's key in `modules`) has methods for store-level tasks:
+
+| Method | What it does |
+| --- | --- |
+| `rotateStoreKey({ newKey, newKeyDerivationMethod? })` | Changes the store key. Update your configuration afterwards. |
+| `exportStore({ exportToStore })` | Copies the open store to a new store, for example a backup with its own id, key and path. On SQLite, the target file must not exist yet. |
+| `importStore({ importFromStore })` | Copies another store, such as a backup, to the configured store location. Call `closeStore()` first. On SQLite, the configured file must not exist yet. |
+| `deleteStore()` | Deletes the store and all its data. |
+| `closeStore()`, `openStore()`, `provisionStore()`, `isStoreOpen` | Manual control. `initialize()` and `shutdown()` already do this. |
+
+With `ProfilePerWallet`, these methods affect the whole store, including all tenants, so they throw when you call them from a tenant agent.

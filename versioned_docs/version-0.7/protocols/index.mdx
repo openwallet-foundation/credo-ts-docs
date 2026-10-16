@@ -1,0 +1,52 @@
+---
+title: Protocols
+description: How OpenID4VC, DIDComm and the ISO mdoc protocols differ, which credential formats each one carries, and how the protocol pages are organised.
+---
+
+An exchange protocol defines how issuers, holders and verifiers talk to each other. Credo supports OpenID4VC, DIDComm and the ISO mdoc protocols. This page compares them and explains how the protocol pages are organised.
+
+## OpenID4VC
+
+[OpenID4VC](./openid4vc/index.mdx) builds on OAuth 2.0 and plain HTTPS. OpenID4VCI covers issuance and OpenID4VP covers presentation. An issuer or verifier starts each exchange with a QR code or link, and the wallet completes it with a few HTTPS requests. Nothing persists between exchanges. This is the protocol family of the EU Digital Identity Wallet and its HAIP profile, and of mobile driving licences (mDL) presented online.
+
+## DIDComm
+
+[DIDComm](./didcomm/index.mdx) is a messaging protocol between agents that identify each other with DIDs. Two agents first set up a connection, usually from an out-of-band invitation. Over that connection either side can then offer credentials, request proofs or send other messages, for as long as the connection lasts. Mobile wallets can't accept incoming connections, so they receive messages through a mediator. DIDComm is used in ecosystems built on Hyperledger Aries and AnonCreds.
+
+## ISO mdoc
+
+[ISO mdoc](./mdoc/index.mdx) covers the presentation protocols of ISO/IEC 18013-5 and 18013-7, which carry only mdocs, such as the mobile driving licence. A wallet presents in person to a reader over BLE or NFC (proximity), or to a website through the browser (ISO 18013-7 Annex C). Like OpenID4VC, each presentation stands alone. These protocols don't cover issuance.
+
+## Digital Credentials API
+
+The W3C Digital Credentials API lets a website request credentials through the browser, which passes the request to a wallet. It's a channel for other protocols: Credo supports it with [OpenID4VP](./openid4vc/dc-api.mdx) and with [ISO 18013-7 Annex C](./mdoc/dc-api.mdx).
+
+## Comparison
+
+| | OpenID4VC | DIDComm | ISO mdoc |
+| --- | --- | --- | --- |
+| Transport | HTTPS requests from the wallet to the issuer or verifier | Encrypted messages over HTTP or WebSocket, through a mediator for mobile wallets | BLE or NFC in person, or the browser with the Digital Credentials API |
+| Relationship | None: each exchange stands alone | A connection that both agents keep | None: each presentation stands alone |
+| Starts with | A credential offer or authorization request | An out-of-band invitation | A QR code or NFC tap, or a website calling the Digital Credentials API |
+| Issuer and verifier | Node.js | Node.js | No issuer. Verifier on Node.js |
+| Holder | Node.js and React Native | Node.js and React Native | Node.js and React Native |
+| Typical ecosystems | EU Digital Identity Wallet, HAIP, mDL | Aries and AnonCreds ecosystems | mDL and EU PID, in person and online |
+
+## Credential formats
+
+| Format | OpenID4VC | DIDComm | ISO mdoc |
+| --- | --- | --- | --- |
+| SD-JWT VC | Yes | No | No |
+| mdoc | Yes | No | Yes |
+| W3C VC | Yes | Yes | No |
+| AnonCreds | No | Yes | No |
+
+Which W3C data models and proof types work depends on the protocol and on whether you issue or present. [Supported standards](../supported-standards.mdx) has the full matrix.
+
+## How these pages are organised
+
+- Protocol pages cover each role. For OpenID4VC these are [Issuing credentials](./openid4vc/issuer.mdx), [Receiving and presenting](./openid4vc/holder.mdx) and [Verifying credentials](./openid4vc/verifier.mdx). For DIDComm they're [Connections](./didcomm/connections.mdx), [Issuing credentials](./didcomm/issue-credential.mdx) and [Requesting proofs](./didcomm/present-proof.mdx). The ISO mdoc pages cover each way to present: [Proximity (ISO 18013-5)](./mdoc/proximity.mdx) and [Digital Credentials API (ISO 18013-7)](./mdoc/dc-api.mdx).
+- Pages named "… with OpenID4VC" or "… with DIDComm", such as [SD-JWT VC with OpenID4VC](./openid4vc/sd-jwt-vc.mdx) and [AnonCreds with DIDComm](./didcomm/anoncreds.mdx), cover what's specific to one format on one protocol.
+- What you can do with a format on its own, such as signing, storing and verifying credentials or checking their status, is under [Credential formats](../credential-formats/index.mdx).
+
+<DocCardList />
