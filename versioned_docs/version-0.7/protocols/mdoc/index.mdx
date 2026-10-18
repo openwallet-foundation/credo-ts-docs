@@ -20,7 +20,7 @@ The wallet holds the mdoc, and the verifier is called the mdoc reader. A present
 
 Credo supports two ways to present an mdoc with these protocols:
 
-| | [Proximity](./proximity.mdx) | [Digital Credentials API](./dc-api.mdx) |
+| | [Proximity](./proximity.mdx) | [Digital Credentials API](../dc-api/index.mdx) |
 | --- | --- | --- |
 | Standard | ISO/IEC 18013-5 | ISO/IEC TS 18013-7 Annex C |
 | Use | In person, for example at a counter or a gate | A website, through the browser and the operating system |
@@ -28,7 +28,9 @@ Credo supports two ways to present an mdoc with these protocols:
 | Transport | BLE, NFC or Wi-Fi Aware | The browser and the operating system |
 | Encryption | Session keys from the engagement | The response is encrypted to the verifier with HPKE |
 
-The Digital Credentials API is a channel, and it also carries OpenID4VP requests. See [Digital Credentials API](../openid4vc/dc-api.mdx) under OpenID4VC.
+The Digital Credentials API also carries OpenID4VP requests. [Digital Credentials API](../dc-api/index.mdx) covers both protocols, with a guide for the verifier and one for the wallet.
+
+Which to use depends on where the presentation happens. In person, use proximity. On a website, use the Digital Credentials API, and pass an OpenID4VP and an `org-iso-mdoc` request in one call, as iOS only accepts `org-iso-mdoc`. Where the browser doesn't support the API, fall back to OpenID4VP with a QR code or a link, see [mdoc with OpenID4VC](../openid4vc/mdoc.mdx).
 
 ## How it differs from OpenID4VP
 

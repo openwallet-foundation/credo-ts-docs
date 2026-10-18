@@ -3,46 +3,59 @@ title: mdoc with OpenID4VC
 description: Issue, receive and verify ISO 18013-5 mdocs, such as mobile driving licences, over OpenID4VCI and OpenID4VP with Credo.
 ---
 
-This page covers what is specific to mdoc (ISO/IEC 18013-5, `mso_mdoc`) in each OpenID4VC step: the credential configuration, the issuer certificate, signing in the credential mapper, trust, requesting data elements with DCQL, and reading the result. [Issuing credentials](./issuer.mdx), [Receiving and presenting](./holder.mdx) and [Verifying credentials](./verifier.mdx) explain the flow itself, and [mdoc](../../credential-formats/mdoc.mdx) explains the format. To request mdocs from a website with ISO 18013-7 Annex C, see [Digital Credentials API (ISO 18013-7)](../mdoc/dc-api.mdx).
+This page covers what is specific to mdoc (ISO/IEC 18013-5, `mso_mdoc`) in OpenID4VC, in the order of the flow. Issuance covers the issuer's credential configuration, certificate and signing, and the holder's trust and storage. Presentation covers the verifier's DCQL query and the result. [Issuing credentials](./issuer.mdx), [Receiving credentials](./receive.mdx), [Presenting credentials](./present.mdx) and [Verifying credentials](./verifier.mdx) explain the flow itself, and [mdoc](../../credential-formats/mdoc.mdx) explains the format.
 
-## Configure the credential
+Use mdoc for credentials that follow an ISO document type, such as the mobile driving licence, or that holders also present in person ([ISO mdoc](../mdoc/index.mdx)). To request mdocs from a website, see [Digital Credentials API](../dc-api/index.mdx).
+
+## Issuance
+
+### Configure the credential
 
 Add an `mso_mdoc` entry to the `credentialConfigurationsSupported` of the issuer:
+
+:::issuer
 
 ```ts showLineNumbers title="issuer.ts" openid4vc-mdoc.ts section-1
 ```
 
+:::
+
 - `doctype` is the document type, such as `org.iso.18013.5.1.mDL` for a mobile driving licence. Credo checks that every mdoc the mapper returns has this doctype.
 - An mdoc is always bound to a key of the holder, never to a DID. `cose_key` (or `jwk`) in `cryptographic_binding_methods_supported` tells the wallet so.
-- In `credential_metadata.claims`, the `path` of a data element is its namespace and element identifier.
-- Add a `scope` if you offer the credential through the [authorization code flow](./authorization.mdx).
 
-## Create the issuer certificate
+In `credential_metadata.claims`, the `path` of a data element is its namespace and element identifier. Add a `scope` if you offer the credential through the [authorization code flow](./authorization.mdx).
+
+### Create the issuer certificate
 
 mdocs are signed with an X.509 certificate, the document signer certificate:
+
+:::issuer
 
 ```ts showLineNumbers title="issuer.ts" openid4vc-mdoc.ts section-3
 ```
 
-- The subject must have a country (`countryName`). Verification fails without it, and checks that `issuing_country` in the mdoc matches it (and `issuing_jurisdiction` the state, if present).
-- In production, the document signer certificate is issued by your issuing authority CA (IACA), and verifiers trust the IACA certificate. Pass the chain as an array, leaf first, to include it in the mdoc.
-- The signing certificate needs the KMS key id of its key, which `agent.x509.createCertificate` sets.
+:::
 
-[X.509 certificates](../../dids-and-trust/x509.mdx) explains creating certificates and certificate chains.
+The subject must have a country (`countryName`): verification fails without it, and checks that `issuing_country` in the mdoc matches it (and `issuing_jurisdiction` the state, if present). In production, your issuing authority CA (IACA) issues the document signer certificate, and verifiers trust the IACA certificate. Pass the chain as an array, leaf first, to include it in the mdoc. [X.509 certificates](../../dids-and-trust/x509.mdx) explains creating certificates and chains.
 
-## Sign the credential
+### Sign the credential
 
 The mapper returns the mdoc sign options, one entry for each holder key:
+
+:::issuer
 
 ```ts showLineNumbers title="issuer.ts" openid4vc-mdoc.ts section-2
 ```
 
-- `docType` must be the `doctype` of the configuration, and `holderKey` is the key from `holderBinding`.
-- `validityInfo` needs `validUntil`. `signed` and `validFrom` default to now, and `expectedUpdate` is optional.
-- `namespaces` maps each namespace to its data elements. Use `DateOnly` for elements of type `full-date`, such as `birth_date`. Every data element can be disclosed on its own.
-- Optional: `keyAuthorizations` for data elements the wallet may sign itself (device signed), and `statusInfo` for revocation with a [status list](../../credential-formats/status-lists.mdx).
+:::
 
-## Trust the issuer
+- `docType` must be the `doctype` of the configuration, and `holderKey` is the key from `holderBinding`.
+- `validityInfo` needs `validUntil`. Leave `signed` and `validFrom` out so they default to now: Credo rejects a `validFrom` that is even a few milliseconds before `signed`, which happens if you pass `new Date()`.
+- `namespaces` maps each namespace to its data elements. Use `DateOnly` for elements of type `full-date`, such as `birth_date`. Every data element can be disclosed on its own.
+
+For revocation, add `statusInfo` with a [status list](../../credential-formats/status-lists.mdx). `keyAuthorizations` lists data elements the wallet may sign itself (device signed).
+
+### Trust the issuer
 
 The holder verifies the mdoc when it receives it, and the verifier verifies it again in the presentation. Both need the issuer certificate or its IACA root:
 
@@ -51,40 +64,57 @@ The holder verifies the mdoc when it receives it, and the verifier verifies it a
 
 Without a trusted certificate, verification fails. To decide per verification, for example from a list of IACAs, use `getTrustedIssuersForVerification` in the agent config. See [Trusted issuers](../../dids-and-trust/trust.mdx).
 
-## Receive and store
+### Receive and store
 
 The binding resolver must return keys (`method: 'jwk'`):
+
+:::holder
 
 ```ts showLineNumbers title="holder.ts" openid4vc-mdoc.ts section-5
 ```
 
+:::
+
 `requestCredentials` doesn't store anything. The `MdocRecord` has one instance per mdoc the issuer returned. `record.firstCredential.issuerSignedNamespaces` has the data elements per namespace.
 
-## Request data elements with DCQL
+## Presentation
+
+The verifier needs the same trust configuration as the holder, see [Trust the issuer](#trust-the-issuer).
+
+### Request data elements with DCQL
 
 The verifier asks for an mdoc by doctype and lists the data elements it needs:
+
+:::verifier
 
 ```ts showLineNumbers title="verifier.ts" openid4vc-mdoc.ts section-6
 ```
 
-- `format` is `mso_mdoc` and `meta.doctype_value` the doctype.
-- Each claim `path` is a namespace and a data element identifier. `intent_to_retain` tells the wallet whether you store the element.
-- The wallet discloses only the requested data elements.
-- With OpenID4VP 1.0 (the default `version`), both `direct_post` and `direct_post.jwt` work. With drafts 21 and 24, mdoc requires `direct_post.jwt`.
+:::
 
-## Present
+`format` is `mso_mdoc` and `meta.doctype_value` the doctype. Each claim `path` is a namespace and a data element identifier, and `intent_to_retain` tells the wallet whether you store the element. The wallet discloses only the requested data elements. Keep the default response mode `direct_post.jwt`: with OpenID4VP drafts 21 and 24, mdoc requests require it.
 
-The holder side is the same as for other formats. Credo creates an ISO 18013-5 device response, signed with the key the mdoc is bound to:
+### Present
+
+Presenting works as for other formats. Credo creates an ISO 18013-5 device response, signed with the key the mdoc is bound to:
+
+:::holder
 
 ```ts showLineNumbers title="holder.ts" openid4vc-mdoc.ts section-7
 ```
 
-## Read the disclosed data elements
+:::
+
+### Read the disclosed data elements
 
 After the session reaches `ResponseVerified`, the presentation is an `MdocDeviceResponse`:
 
+:::verifier
+
 ```ts showLineNumbers title="verifier.ts" openid4vc-mdoc.ts section-8
 ```
+
+:::
 
 `issuerClaims` has the issuer-signed data elements per doctype and namespace. `deviceClaims` has the data elements the wallet signed itself, if any.
 
@@ -103,6 +133,6 @@ The issuer, holder and verifier from this page in one process:
 ## Next steps
 
 - [mdoc](../../credential-formats/mdoc.mdx): signing, presenting and verifying outside OpenID4VC.
-- [Digital Credentials API](./dc-api.mdx): request mdocs from a website with OpenID4VP.
-- [ISO mdoc](../mdoc/index.mdx): present mdocs in person, or from a website with ISO 18013-7 Annex C.
+- [Digital Credentials API](../dc-api/index.mdx): request mdocs from a website, with OpenID4VP or ISO 18013-7 Annex C.
+- [ISO mdoc](../mdoc/index.mdx): present mdocs in person.
 - [Authorization and wallet security](./authorization.mdx): DPoP, wallet attestations and key attestations.

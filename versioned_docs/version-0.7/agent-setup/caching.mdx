@@ -3,23 +3,11 @@ title: Caching
 description: Choose and configure the cache a Credo agent uses for resolved DID documents, ledger objects and certificate revocation lists.
 ---
 
-Credo caches data that is slow to fetch: resolved DID documents, AnonCreds objects from ledgers and revocation lists of X.509 certificates. A cache is always registered. This page covers what's cached, which cache to use, and when you have to replace the default, which is always the case with [multi-tenancy](./multi-tenancy.mdx).
+Credo caches data that is slow to fetch: resolved DID documents, AnonCreds objects from ledgers and revocation lists of X.509 certificates. A cache is always registered, and you only replace it in two cases: when you use [multi-tenancy](./multi-tenancy.mdx), and when several instances of the agent run side by side.
 
-## What is cached
+## Which should I use?
 
-| Data | Cached for | Scope |
-| --- | --- | --- |
-| Resolved DID documents, for methods whose resolver allows caching (`did:web`, `did:webvh`, `did:cheqd`, `did:indy`, `did:sov`, `did:hedera`). `did:key`, `did:jwk` and `did:peer` aren't cached. | 5 minutes, change it with `cacheDurationInSeconds` when resolving | Global for methods in `DidsModule({ publicDidMethods })`, otherwise per agent context |
-| AnonCreds schemas, credential definitions, revocation registry definitions and status lists | 5 minutes | Global |
-| Summaries of X.509 certificate revocation lists | Until the list's next update | Global |
-| Indy VDR: which ledger a DID is on | Until evicted | Global |
-| DIDComm connection, mediation and mediator routing records, with `useCachedStorageService: true` | Until evicted | Per agent context |
-
-Entries in the global scope are public data that all [tenants](./multi-tenancy.mdx) share. `publicDidMethods` defaults to `web`, `indy`, `sov`, `cheqd`, `hedera` and `webvh`.
-
-## Choose a cache
-
-The default is `SingleContextStorageLruCache` with a limit of 500 entries. It keeps the entries in memory and saves them as a record in the agent's storage, so they survive a restart. It only works with one agent context: as soon as a tenant uses it, it throws `SingleContextStorageLruCache can not be used with multiple agent context instances`.
+Keep the default for a single agent without tenants, such as a mobile wallet: nothing to configure, and entries survive a restart. Use `InMemoryLruCache` when the agent has tenants, because the default throws as soon as a tenant uses it. Use `RedisCache` when several instances of the agent run behind a load balancer, so they share one cache. With the default, instances overwrite each other's cache record in the shared storage, and with `InMemoryLruCache` each instance fetches and caches everything on its own.
 
 | Cache | Package | Tenants | Several processes share it | Survives a restart |
 | --- | --- | --- | --- | --- |
@@ -27,7 +15,7 @@ The default is `SingleContextStorageLruCache` with a limit of 500 entries. It ke
 | `InMemoryLruCache` | `@credo-ts/core` | Yes | No | No |
 | `RedisCache` | `@credo-ts/redis-cache` | Yes | Yes | Yes |
 
-Keep the default for a single agent, such as a mobile wallet. Use `InMemoryLruCache` for multi-tenancy in one process, and `RedisCache` when several instances of the agent run behind a load balancer.
+The default keeps up to 500 entries in memory and saves them as a record in the agent's storage. When a tenant uses it, it throws `SingleContextStorageLruCache can not be used with multiple agent context instances`.
 
 ## Configure the cache
 
@@ -42,7 +30,7 @@ Register a `CacheModule` under the key `cache` to replace the default:
 | --- | --- |
 | `cache` | The cache to use. Required. |
 | `defaultExpiryInSeconds` | Expiry for entries set without one. `RedisCache` uses it. Default `60`. |
-| `useCachedStorageService` | Also caches DIDComm connection, mediation and mediator routing records, to save storage reads on busy DIDComm agents such as mediators. Default `false`. Only use it with a cache that all instances share, such as Redis, or with a single instance. |
+| `useCachedStorageService` | Also caches DIDComm connection, mediation and mediator routing records, to save storage reads on busy DIDComm agents such as mediators. Default `false`. With several instances, only turn it on with a cache they share, such as Redis. |
 
 ## Redis
 
@@ -51,16 +39,28 @@ Register a `CacheModule` under the key `cache` to replace the default:
 ```ts showLineNumbers title="agent.ts" caching-redis.ts section-1
 ```
 
-`RedisCache` takes an `ioredis` client or `ioredis` options. Keys are prefixed with the agent context, or with `global:` for the global scope, so tenants and instances can share one Redis database. When you create the client yourself, close it after the agent shuts down:
+`RedisCache` takes an `ioredis` client or `ioredis` options. Keys are prefixed with the agent context, or with `global:` for shared entries, so tenants and instances can share one Redis database. When you create the client yourself, close it after the agent shuts down:
 
 ```ts showLineNumbers title="agent.ts" caching-redis.ts section-2
 ```
 
 `cache.destroy(agentContext)` removes all entries of one agent context, for example after you delete a tenant.
 
+## What is cached
+
+| Data | Cached for | Scope |
+| --- | --- | --- |
+| Resolved DID documents, for methods whose resolver allows caching (`did:web`, `did:webvh`, `did:cheqd`, `did:indy`, `did:sov`, `did:hedera`). `did:key`, `did:jwk` and `did:peer` aren't cached. | 5 minutes, change it with `cacheDurationInSeconds` when resolving | Global for methods in `DidsModule({ publicDidMethods })`, otherwise per agent context |
+| AnonCreds schemas, credential definitions, revocation registry definitions and status lists | 5 minutes | Global |
+| Summaries of X.509 certificate revocation lists | Until the list's next update | Global |
+| Indy VDR: which ledger a DID is on | Until evicted | Global |
+| DIDComm connection, mediation and mediator routing records, with `useCachedStorageService: true` | Until evicted | Per agent context |
+
+Global entries are public data that all tenants share. `publicDidMethods` defaults to `web`, `indy`, `sov`, `cheqd`, `hedera` and `webvh`.
+
 ## Custom cache
 
-Implement the `Cache` interface: `get`, `set` and `remove`. Each method receives the agent context and an optional `scope`. Keep entries of different agent contexts apart, and only share entries when `scope` is `'global'`. Without a scope, use the agent context:
+Implement the `Cache` interface: `get`, `set` and `remove`. Each method receives the agent context and an optional `scope`. Keep entries of different agent contexts apart, and only share entries when `scope` is `'global'`:
 
 ```ts showLineNumbers title="map-cache.ts" caching-custom.ts section-1
 ```

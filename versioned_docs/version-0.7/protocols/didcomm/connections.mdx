@@ -3,7 +3,7 @@ title: Connections
 description: Create and accept out-of-band invitations, connect agents with DID Exchange, reuse connections and track connection state in Credo.
 ---
 
-A DIDComm connection links two agents through a pair of DIDs, one for each side. Most DIDComm protocols run over a connection. This page covers creating and accepting invitations, connection states and events, multi-use invitations, reusing connections and implicit invitations with a public DID.
+A DIDComm connection links two agents through a pair of DIDs, one for each side. Most DIDComm protocols run over a connection. This page covers invitations, connection states and events, and reusing connections.
 
 ## How a connection is made
 
@@ -27,12 +27,24 @@ The examples on this page run Acme and Bob as two Node.js agents that reach each
 
 With `autoAcceptConnections: true`, the inviter accepts DID Exchange requests automatically. On the invitee side, receiving an invitation accepts it by default. [Accept requests manually](#accept-requests-manually) shows how to approve each request yourself.
 
+## Which invitation should I use?
+
+| Invitation | Use it when |
+| --- | --- |
+| [Out-of-band invitation](#create-an-invitation) | You show a link or QR code to one user, for example during a web session. This is the default. |
+| [Multi-use invitation](#multi-use-invitations) | You print or publish one QR code for everyone. Each invitee gets its own connection. |
+| Connectionless, with `handshake: false` and `messages` | You only want to issue one credential or request one proof, without keeping a connection. See [Issuing credentials](./issue-credential.mdx#offer-a-credential) and [Requesting proofs](./present-proof.mdx#request-a-proof). |
+| [Invitation with a public DID](#reuse-a-connection) | Returning users should reuse their existing connection instead of creating a new one. |
+| [Implicit invitation](#implicit-invitations) | The invitee already knows your public DID and connects without an invitation. You accept each request manually. |
+
+With DID Exchange, each side of the connection uses a new `did:peer` that only the other party knows, so connections with different parties can't be linked. A public DID, such as a `did:web`, only identifies the inviter in the invitation. You need one only to reuse connections or to accept implicit invitations.
+
 ## Create an invitation
 
 ```ts showLineNumbers title="acme.ts" didcomm-connections.ts section-2
 ```
 
-`toUrl()` encodes the invitation in the `oob` query parameter of the URL you pass as `domain`. Use a URL you control, for example a page that opens your wallet app. Render the URL as a QR code with any QR code library.
+`toUrl()` encodes the invitation in the `oob` query parameter of the URL you pass as `domain`. Use a domain you control. Render the URL as a QR code with any QR code library.
 
 Long invitations make dense QR codes. You can also share a short URL: when an invitation URL has no `oob` parameter, Credo fetches it and accepts either a JSON response with the invitation, or a redirect to the full invitation URL.
 
@@ -146,7 +158,7 @@ If you know an agent's public DID, you can connect without an invitation. Credo 
 ```ts showLineNumbers title="bob.ts" didcomm-connections-public-did.ts section-5
 ```
 
-`did` can also be a DID URL that points to one service, for example `did:web:acme.example.com#didcomm`. The inviter must have created the DID in its own wallet, and it [accepts the request manually](#accept-requests-manually): Credo never accepts requests from implicit invitations automatically.
+`did` can also be a DID URL that points to one service, for example `did:web:acme.example.com#didcomm`. The inviter must have created the DID in its own agent, and it [accepts the request manually](#accept-requests-manually): Credo never accepts requests from implicit invitations automatically.
 
 ## Legacy connection invitations
 

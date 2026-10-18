@@ -5,6 +5,8 @@ description: Create, update and resolve did:webvh DIDs with @credo-ts/webvh, hos
 
 [did:webvh](https://identity.foundation/didwebvh/) is hosted on your own web server, like `did:web`, but every version of the DID document is recorded in a signed log. Resolvers verify the whole log, so they can check the history of the DID and who changed it. `@credo-ts/webvh` creates and updates `did:webvh` DIDs and their log, resolves them, and provides an AnonCreds registry. You host the log yourself.
 
+Use `did:webvh` instead of `did:web` when verifiers should be able to check how your DID document changed over time, or when you want to publish AnonCreds objects without a ledger.
+
 ## Install
 
 <InstallTabs packages="@credo-ts/webvh" />

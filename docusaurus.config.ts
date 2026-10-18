@@ -28,13 +28,16 @@ const movedPages: Record<string, string> = {
   '/tutorials/hedera': '/dids-and-trust/hedera',
   '/tutorials/openid4vc': '/protocols/openid4vc',
   '/tutorials/openid4vc/issuing-credentials-using-openid4vc-issuer-module': '/protocols/openid4vc/issuer',
-  '/tutorials/openid4vc/receiving-and-proving-credentials-using-openid4vc-holder-module': '/protocols/openid4vc/holder',
+  '/tutorials/openid4vc/receiving-and-proving-credentials-using-openid4vc-holder-module':
+    '/protocols/openid4vc/receive',
   '/tutorials/openid4vc/verifying-credentials-using-openid4vc-verifier-module': '/protocols/openid4vc/verifier',
   '/features': '/supported-standards',
   '/features/aries': '/protocols/didcomm',
   '/features/openid4vc': '/protocols/openid4vc',
   '/features/dids': '/dids-and-trust',
   '/features/credentials': '/credential-formats',
+  '/protocols/openid4vc/dc-api': '/protocols/dc-api',
+  '/protocols/mdoc/dc-api': '/protocols/dc-api',
 }
 
 const redirects = [

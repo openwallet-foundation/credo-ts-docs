@@ -1,37 +1,63 @@
 ---
 title: Credential formats
-description: The credential formats Credo supports, how they compare, and which protocols carry them.
+description: The credential formats Credo supports, how they compare, and which one to use.
 ---
 
 A credential format defines what a credential looks like, how the issuer signs it and how the holder presents it. Formats are separate from exchange protocols: you can sign, store, present and verify a credential with the agent APIs alone, and most formats work over more than one protocol. The pages in this section cover each format on its own. For the flows, see [Protocols](../protocols/index.mdx).
 
 ## Compare the formats
 
-| Format | Selective disclosure | Holder binding | Unlinkable presentations | Issuer identified by | Standard | Used in |
-| --- | --- | --- | --- | --- | --- | --- |
-| [SD-JWT VC](./sd-jwt-vc.mdx) | Yes, per claim | Key (`cnf`) | No | DID or X.509 certificate | IETF | EUDI Wallet (PID and attestations) |
-| [mdoc](./mdoc.mdx) | Yes, per data element | Device key | No | X.509 certificate | ISO/IEC 18013-5 | Mobile driving licence, EUDI Wallet (PID) |
-| [W3C VC](./w3c-vc.mdx) | Only data model 2.0 as SD-JWT | DID of the subject, or key (`cnf`) in 2.0 | No | DID | W3C | Open Badges, EBSI |
-| [AnonCreds](./anoncreds.mdx) | Yes, per attribute, with predicates such as "over 18" | Link secret | Yes | DID and credential definition on a ledger | Hyperledger AnonCreds | Aries and Indy based ecosystems |
+| | [SD-JWT VC](./sd-jwt-vc.mdx) | [mdoc](./mdoc.mdx) | [W3C VC](./w3c-vc.mdx) | [AnonCreds](./anoncreds.mdx) |
+| --- | --- | --- | --- | --- |
+| Standard | IETF | ISO/IEC 18013-5 | W3C | Hyperledger AnonCreds |
+| Selective disclosure | Per claim | Per data element | Only data model 2.0 secured as SD-JWT | Per attribute, plus predicates such as "age at least 18" |
+| Unlinkable presentations | With batch issuance | With batch issuance | With batch issuance | Yes |
+| Holder binding | Key (`cnf`), as JWK or DID | Device key | DID of the subject, or key (`cnf`) in data model 2.0 | Link secret |
+| Issuer signs with | DID or X.509 certificate | X.509 certificate | DID | Keys of a credential definition on a registry |
+| Revocation in Credo | [Token Status List](./status-lists.mdx) | [Token Status List](./status-lists.mdx) | None | Revocation registry |
+| Exchange in Credo | OpenID4VC, Digital Credentials API | OpenID4VC, Digital Credentials API, ISO 18013-5 proximity | OpenID4VC, DIDComm, depending on the variant | DIDComm |
+| Used in | EUDI Wallet (PID and attestations) | Mobile driving licence, EUDI Wallet (PID) | Open Badges, EBSI | Aries and Indy based ecosystems |
 
-For SD-JWT VC, mdoc and W3C VCs, every presentation of a credential carries the same issuer signature, so verifiers that compare notes can link presentations of it. Issuers avoid that with batch issuance: the holder gets several copies, each bound to its own key, and presents each copy once. AnonCreds presentations are zero-knowledge proofs and don't have this problem.
+For SD-JWT VC, mdoc and W3C VCs, every presentation of a credential carries the same issuer signature, so verifiers that compare notes can link presentations of it. Batch issuance avoids that: the holder gets several copies, each bound to its own key, and presents each copy once. AnonCreds presentations are zero-knowledge proofs and don't need this.
 
-## Protocols and APIs
-
-| Format | Exchanged over | Agent API | Record |
-| --- | --- | --- | --- |
-| SD-JWT VC | OpenID4VC, Digital Credentials API | `agent.sdJwtVc` | `SdJwtVcRecord` |
-| mdoc | OpenID4VC, Digital Credentials API | `agent.mdoc` | `MdocRecord` |
-| W3C VC 1.1 | OpenID4VC, DIDComm | `agent.w3cCredentials` | `W3cCredentialRecord` |
-| W3C VC 2.0 | OpenID4VC, DIDComm (depends on how it's secured) | `agent.w3cV2Credentials` | `W3cV2CredentialRecord` |
-| AnonCreds | DIDComm | `agent.modules.anoncreds` (the key you register it under) | `W3cCredentialRecord` |
-
-All formats except AnonCreds are part of `@credo-ts/core`, and their modules are registered on every agent. AnonCreds needs `@credo-ts/anoncreds` and a ledger. For the protocol versions and the full matrix, see [Supported standards](../supported-standards.mdx).
+For the protocol versions and the full matrix, see [Supported standards](../supported-standards.mdx).
 
 ## Which one should I use?
 
-- Follow your ecosystem first. The EUDI Wallet uses SD-JWT VC and mdoc, a mobile driving licence is an mdoc, Open Badges are W3C VCs, and Aries networks use AnonCreds.
-- For a new OpenID4VC deployment without such a requirement, start with SD-JWT VC. It has selective disclosure and works with both DIDs and X.509 certificates.
-- If you use DIDComm and need unlinkable presentations or predicates, use AnonCreds.
+Follow your ecosystem first. Without a required format:
+
+| You're building | Use |
+| --- | --- |
+| An issuer, wallet or verifier for the EUDI Wallet | SD-JWT VC and mdoc. The EUDI Wallet uses both, including for the PID. |
+| A mobile driving licence, or in-person presentation over NFC or Bluetooth | mdoc. It's the only format Credo presents with ISO 18013-5. |
+| A new OpenID4VC deployment | SD-JWT VC. It has selective disclosure, plain JSON claims, and works with both DIDs and X.509 certificates. |
+| Something for an ecosystem built on W3C VCs, such as EBSI or Open Badges | W3C VC. [Choose a variant](./w3c-vc.mdx#choose-a-variant) explains which one. |
+| A DIDComm deployment that needs predicates, or unlinkable presentations without batch issuance | AnonCreds. |
+
+## Choices for every format
+
+### Holder binding
+
+Bind credentials to a key of the holder, so that a copy of a credential is useless to someone else. For SD-JWT VC and W3C data model 2.0, bind to a JWK by default: the holder needs no DID, and the key can stay in the secure hardware of a phone. Bind to a DID when holders and verifiers already use DIDs. mdocs are always bound to a device key, AnonCreds credentials to the link secret, and W3C data model 1.1 credentials to the DID in `credentialSubject.id`.
+
+### Key type
+
+For SD-JWT VC and mdoc, use P-256 keys (ES256) for both issuer and holder. HAIP requires every party to support ES256, and it's the curve that the secure hardware of phones supports. W3C JSON-LD and Data Integrity credentials need Ed25519 keys, because all signature suites that Credo has for them use Ed25519.
+
+### Revocation
+
+Use a status list or revocation registry only if you must be able to revoke credentials before they expire. Short-lived credentials that you reissue don't need one. See [Status lists](./status-lists.mdx) and [AnonCreds revocation](./anoncreds.mdx#revocation).
+
+## Agent APIs
+
+| Format | Agent API | Record |
+| --- | --- | --- |
+| SD-JWT VC | `agent.sdJwtVc` | `SdJwtVcRecord` |
+| mdoc | `agent.mdoc` | `MdocRecord` |
+| W3C VC 1.1 | `agent.w3cCredentials` | `W3cCredentialRecord` |
+| W3C VC 2.0 | `agent.w3cV2Credentials` | `W3cV2CredentialRecord` |
+| AnonCreds | `agent.modules.anoncreds` (the key you register it under) | `W3cCredentialRecord` |
+
+All formats except AnonCreds are part of `@credo-ts/core`, and their modules are registered on every agent. AnonCreds needs `@credo-ts/anoncreds` and a registry such as a ledger.
 
 <DocCardList />

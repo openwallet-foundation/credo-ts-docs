@@ -3,7 +3,16 @@ title: Agent configuration
 description: The options of the Credo Agent class, the modules every agent has, and how to start, stop and update an agent.
 ---
 
-This page describes what you pass to `new Agent()`, the modules every agent has, and how to start and stop an agent. The pages in this section cover storage, key management, caching, multi-tenancy and logging.
+This page describes what you pass to `new Agent()`, the modules every agent has, and how to start and stop an agent. The other pages in this section cover the choices you make when you set up an agent.
+
+## Choices to make
+
+| Choice | Mobile wallet | Server | Details |
+| --- | --- | --- | --- |
+| Storage | Askar on SQLite | Askar for a single instance. Drizzle or Askar on PostgreSQL when you run several instances or many tenants. | [Storage](./storage/index.mdx) |
+| Key management | Askar, plus the secure environment for keys that must stay in hardware | Askar | [Key management](./key-management.mdx) |
+| Cache | The default | The default for one agent, `InMemoryLruCache` with tenants, Redis with several instances | [Caching](./caching.mdx) |
+| Multi-tenancy | Not needed | Only when one service hosts many isolated issuers, verifiers or wallets | [Multi-tenancy](./multi-tenancy.mdx) |
 
 ## Agent options
 
@@ -19,7 +28,7 @@ This page describes what you pass to `new Agent()`, the modules every agent has,
 | --- | --- | --- |
 | `logger` | `ConsoleLogger` at `LogLevel.Off` | The logger of the agent and its modules. See [Logging](./logging.mdx). |
 | `autoUpdateStorageOnStartup` | `false` | Update the storage during `initialize()` when it was written by an older version of Credo. See [Storage updates](#storage-updates). |
-| `allowInsecureHttpUrls` | `false` | Accept `http://` URLs where HTTPS is otherwise required, such as OpenID4VC endpoints and the issuer URL of X.509-signed SD-JWT VCs. For local development only. The OpenID4VC module turns this on for the whole process, so it also affects other agents in it. |
+| `allowInsecureHttpUrls` | `false` | Accept `http://` URLs where HTTPS is otherwise required, such as OpenID4VC endpoints. For local development only. The OpenID4VC module applies it to the whole process, so it also affects other agents in it. |
 | `validitySkewSeconds` | `30` | The clock skew, in seconds, allowed when checking the validity period of credentials, status lists and other signed objects. Phones often run a little behind. |
 | `getTrustedIssuersForVerification` | none | A callback that returns the DIDs and X.509 certificates to trust for a verification. See [Trusted issuers](../dids-and-trust/trust.mdx). |
 
@@ -43,9 +52,7 @@ Credo registers these modules on every agent:
 | `dcql` | `DcqlModule` | none |
 | `pex` | `DifPresentationExchangeModule` | none |
 
-The `kms` module starts without a backend. The `AskarModule` adds one; without Askar, configure a backend yourself. See [Key management](./key-management.mdx).
-
-The default cache throws once a second agent context uses it, so replace it when you use [multi-tenancy](./multi-tenancy.mdx). See [Caching](./caching.mdx).
+The `kms` module starts without a backend. `AskarModule` adds one. Without Askar, configure a backend yourself (see [Key management](./key-management.mdx)). The default cache doesn't work with [multi-tenancy](./multi-tenancy.mdx), so replace it when you use tenants (see [Caching](./caching.mdx)).
 
 ## Replace a default module
 
@@ -58,12 +65,7 @@ The API stays where it was, at `agent.dids`. When you pass `resolvers` or `regis
 
 ## Module APIs and types
 
-Where a module's API ends up depends on its key:
-
-- Default modules are at the top level, for example `agent.dids`, also when you replace them.
-- Other modules are under `agent.modules`, for example `agent.modules.askar` or `agent.modules.tenants`.
-- `didcomm` and `openid4vc` are also at the top level, as `agent.didcomm` and `agent.openid4vc`, when you register them under exactly those keys.
-- Modules without an API, such as `cache`, have no property on the agent.
+Default modules are at the top level, for example `agent.dids`, also when you replace them. Other modules are under `agent.modules`, for example `agent.modules.askar` or `agent.modules.tenants`. The exceptions are `didcomm` and `openid4vc`: registered under exactly those keys, they're also at `agent.didcomm` and `agent.openid4vc`. Modules without an API, such as `cache`, have no property on the agent.
 
 The `Agent` class infers these types from the `modules` you pass to the constructor. To type an agent you pass to other functions, derive the type from a function that returns the modules:
 
@@ -85,7 +87,7 @@ The `Agent` class infers these types from the `modules` you pass to the construc
 
 Credo stores the version of its storage format. When you start a newer version of Credo on storage that needs an update, `initialize()` throws `Current agent storage is not up to date`. Set `autoUpdateStorageOnStartup: true` to run the update during `initialize()`, or run it yourself. Credo doesn't back up the storage first, so make a backup before you upgrade. See [Updating](../updating/index.md).
 
-With Drizzle, the database schema has its own SQL migrations, which you run separately. See [Drizzle](./storage/drizzle.mdx).
+With Drizzle, the database schema has its own SQL migrations, which you run separately. See [Drizzle](./storage/drizzle.mdx#run-migrations).
 
 ## In this section
 

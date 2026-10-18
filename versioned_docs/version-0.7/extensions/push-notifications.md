@@ -1,85 +1,49 @@
 ---
-title: Push Notifications
+title: Push notifications
+description: Share an APNs or Firebase push notification token with another agent over DIDComm, with @credo-ts/push-notifications for Credo 0.5.
 ---
 
-# Push Notifications
-
-:::caution
+:::warning
 
 `@credo-ts/push-notifications` 0.7.1, the latest release, requires Credo 0.5 (`@credo-ts/core@^0.5.0`) and hasn't been updated for later versions of Credo.
 
 :::
 
-The Push Notifications plugin package provides a way for you to register your APNs and Firebase push notification token at an agent, allowing you to use push notifications directly from Credo.
+`@credo-ts/push-notifications` lets a mobile agent send its push notification token to another agent, usually its mediator, over a DIDComm connection. The other agent can then wake the app with a push notification when a message arrives. It implements [Aries RFC 0699](https://github.com/hyperledger/aries-rfcs/tree/main/features/0699-push-notifications-apns) for Apple Push Notification service (APNs) and [Aries RFC 0734](https://github.com/hyperledger/aries-rfcs/tree/main/features/0734-push-notifications-fcm) for Firebase Cloud Messaging (FCM).
 
-:::note
-
-This document is for version **`0.5.x`** of the `@credo-ts/push-notifications` package, that works with `@credo-ts/core` version **`0.4.x`**. Extension packages (such as Push Notifications) are versioned separately from the core packages.
-
-:::
-
-## Installation
-
-To add the Push Notifications plugin package to your existing project simply run:
-
-<Tabs>
-
-<TabItem value="npm" label="npm">
+## Install
 
 ```bash
-npm i @credo-ts/push-notifications
+npm install @credo-ts/push-notifications@0.7.1
 ```
 
-</TabItem>
+## Send the device token
 
-<TabItem value="yarn" label="Yarn">
-
-```bash
-yarn add @credo-ts/push-notifications
-```
-
-</TabItem>
-
-</Tabs>
-
-## Usage
+Register the module for each service you use:
 
 ```ts
+import { Agent } from '@credo-ts/core'
 import { PushNotificationsApnsModule, PushNotificationsFcmModule } from '@credo-ts/push-notifications'
-import {  } from '@credo-ts/core'
 
 const agent = new Agent({
-    /** agent config... */,
-    // Register the modules
-    modules: {
-        pushNotificationsApns: new PushNotificationsApnsModule(),
-        pushNotificationsFcm: new PushNotificationsFcmModule(),
-    },
-    }
+  // ...config and dependencies
+  modules: {
+    pushNotificationsApns: new PushNotificationsApnsModule(),
+    pushNotificationsFcm: new PushNotificationsFcmModule(),
+  },
 })
 
 await agent.initialize()
-
-/* -- iOS -- */
-
-// To send apns device info to another agent you have to acquire the device token and send it.
-await agent.modules.pushNotificationsApns.sendDeviceInfo(
-  'a-valid-connection-id'
-  { deviceToken: '123' },
-)
-
-// To get the device info and the used service back from the other agent
-await agent.modules.pushNotificationsApns.getDeviceInfo('a-valid-connection')
-
-/* -- fcm / Android -- */
-
-// To send fcm, primarily Android, device info to another agent you have to acquire the device token and send it.
-await agent.modules.pushNotificationsFcm.sendDeviceInfo(
-  'a-valid-connection-id'
-  { deviceToken: '123' },
-)
-
-// To get the device info and the used service back from the other agent
-await agent.modules.pushNotificationsFcm.getDeviceInfo('a-valid-connection')
-
 ```
+
+Then send the token that you got from the operating system over a connection:
+
+```ts
+// iOS
+await agent.modules.pushNotificationsApns.setDeviceInfo(connectionId, { deviceToken })
+
+// Android, or iOS through Firebase
+await agent.modules.pushNotificationsFcm.setDeviceInfo(connectionId, { deviceToken, devicePlatform: 'android' })
+```
+
+`getDeviceInfo(connectionId)` asks the other agent for the device info it has stored for the connection.

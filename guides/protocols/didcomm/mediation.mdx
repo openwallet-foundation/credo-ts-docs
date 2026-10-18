@@ -3,11 +3,13 @@ title: Mediation
 description: Run a DIDComm mediator with Credo and connect mobile agents to it, with message pickup, live delivery and keylist updates.
 ---
 
-A mediator is an agent that receives messages on behalf of agents that can't be reached directly, and holds them until they are picked up. Mobile wallets need one. This page covers running a mediator, connecting an agent to it as a recipient, choosing a pickup strategy, and how routing keys stay in sync.
+A mediator is an agent that receives messages on behalf of agents that can't be reached directly, and holds them until they are picked up. This page covers running a mediator, connecting an agent to it as a recipient, choosing a pickup strategy, and how routing keys stay in sync.
 
-## Why mobile agents need a mediator
+## When you need a mediator
 
-A phone has no public address, and the app is often closed. Other agents can't send messages to it. A wallet with a mediator puts the mediator's endpoint and routing key in its invitations and DID documents. Senders wrap their messages in a forward message to the mediator, and the mediator delivers them to the wallet over a WebSocket, or queues them until the wallet picks them up.
+An agent needs a mediator when other agents can't reach it. A mobile wallet always needs one when it uses DIDComm: a phone has no public address, and the app is often closed. A server agent with public `endpoints` doesn't need one.
+
+A wallet with a mediator puts the mediator's endpoint and routing key in its invitations and DID documents. Senders wrap their messages in a forward message to the mediator, and the mediator delivers them to the wallet over a WebSocket, or queues them until the wallet picks them up.
 
 ```mermaid
 sequenceDiagram
@@ -89,10 +91,12 @@ To use another mediator for one connection, create routing with `agent.didcomm.m
 | `PickUpV2LiveMode` | Opens a WebSocket, picks up queued messages, then asks the mediator to push new messages as they arrive (Pickup 2.0 live mode). |
 | `PickUpV2` | Polls with Pickup 2.0 every `mediatorPollingInterval` milliseconds. |
 | `PickUpV1` | Polls with Pickup 1.0 every `mediatorPollingInterval` milliseconds. |
-| `Implicit` | Opens a WebSocket and keeps it open, so the mediator can send messages over it. Mediators built on ACA-Py work this way. |
+| `Implicit` | Opens a WebSocket and keeps it open, so the mediator can send messages over it. |
 | `None` | Doesn't pick up messages automatically. |
 
-Without a strategy, Credo asks the mediator which pickup protocols it supports and uses `PickUpV2`, `PickUpV1` or `Implicit`, in that order, and stores the choice on the mediation record. It never chooses live mode on its own, so set `PickUpV2LiveMode` if you want messages to arrive right away.
+For a mobile wallet, use `PickUpV2LiveMode`: messages arrive as soon as the mediator receives them, and Credo reopens the WebSocket when it drops. It needs a WebSocket endpoint on the mediator and `DidCommWsOutboundTransport` on the wallet. Use `PickUpV2` if the mediator has no WebSocket endpoint, and `Implicit` for mediators that don't support a pickup protocol.
+
+Without a strategy, Credo asks the mediator which pickup protocols it supports and uses `PickUpV2`, `PickUpV1` or `Implicit`, in that order. It never chooses live mode on its own. Credo stores the choice on the mediation record, and the stored choice wins over `mediatorPickupStrategy` from then on, so set the strategy before the agent first connects to the mediator.
 
 | Option | Default | Description |
 | --- | --- | --- |

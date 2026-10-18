@@ -8,6 +8,8 @@ Credo is an open source TypeScript framework for verifiable credentials. You use
 
 ## Start here
 
+[Choose your setup](./getting-started/index.mdx#choose-your-setup) recommends a platform, protocol, credential format and storage to start with.
+
 <Cards>
   <Card to="getting-started/installation" title="Installation">
     Set up a Node.js or React Native project and install Credo.
@@ -19,7 +21,7 @@ Credo is an open source TypeScript framework for verifiable credentials. You use
     Issuers, holders and verifiers, and how protocols and formats fit together.
   </Card>
   <Card to="getting-started/example-setups" title="Example setups">
-    Complete agent configurations for a wallet, an issuer and verifier service, and a mediator.
+    Complete agent configurations for a mobile wallet, an issuer and verifier service, a multi-tenant service, a mediator and tests.
   </Card>
 </Cards>
 
@@ -29,14 +31,14 @@ Credo is an open source TypeScript framework for verifiable credentials. You use
   <Card to="protocols/openid4vc/issuer" title="Issue credentials">
     Run an OpenID4VCI issuer and offer credentials to any compliant wallet.
   </Card>
-  <Card to="protocols/openid4vc/holder" title="Build a wallet">
+  <Card to="protocols/openid4vc/receive" title="Build a wallet">
     Receive, store and present credentials from a mobile or cloud wallet.
   </Card>
   <Card to="protocols/openid4vc/verifier" title="Verify credentials">
     Request claims with DCQL and verify presentations with OpenID4VP.
   </Card>
   <Card to="protocols/didcomm/mediation" title="Run a mediator">
-    Relay DIDComm messages for mobile agents that can't receive them directly.
+    Relay DIDComm messages for mobile wallets that can't receive them directly.
   </Card>
 </Cards>
 

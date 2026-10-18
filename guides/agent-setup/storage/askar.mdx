@@ -3,7 +3,9 @@ title: Askar
 description: Configure Askar for encrypted storage and key management in a Credo agent, on SQLite or PostgreSQL, in Node.js and React Native.
 ---
 
-[Askar](https://github.com/openwallet-foundation/askar) is an encrypted store for records and keys. `AskarModule` registers it as the agent's storage and as a [key management](../key-management.mdx) backend. It runs on SQLite or PostgreSQL, in Node.js and React Native. This page covers the module options, the store key and the databases.
+[Askar](https://github.com/openwallet-foundation/askar) is an encrypted store for records and keys. `AskarModule` registers it as the agent's storage and as a [key management](../key-management.mdx) backend. It runs on SQLite or PostgreSQL, in Node.js and React Native.
+
+Use SQLite, the default, on phones and for a server with one instance. Use PostgreSQL when several instances share the agent's data, or when PostgreSQL is what you already back up and monitor. To choose between Askar and Drizzle, see [Storage](./index.mdx).
 
 ## Install
 
@@ -41,28 +43,23 @@ The platform package pins `@openwallet-foundation/askar-shared` to its own versi
 </TabItem>
 </Tabs>
 
-Pass the `NativeAskar` class as `askar`. Credo resolves the native binding when it needs it. The `askar` instance export from the platform package is deprecated: it's only set after the platform package has run, which depends on import order.
+Pass the `NativeAskar` class as `askar`. The `askar` instance export of the platform package is deprecated: it's only set once the platform package has run, which depends on import order.
 
-`store.id` names the store. It's also the root agent's profile, the SQLite directory and the PostgreSQL database name.
+`store.id` names the store. It's also the root agent's profile, the SQLite directory and the PostgreSQL database name. `agent.initialize()` opens the store, and creates it if it doesn't exist yet. `agent.shutdown()` closes it.
 
-## What `initialize()` does with the store
-
-`agent.initialize()` opens the store. If it doesn't exist yet, Askar creates it, so the first start creates an empty store and later starts open it. `agent.shutdown()` closes it.
-
-- With the wrong key, `initialize()` throws a `CredoError` caused by `AskarStoreInvalidKeyError: Incorrect key for store`.
-- A different `id` or SQLite `path` doesn't fail: it creates a new, empty store. If you open an existing wallet, check that the database exists before you initialize, for example with the file system on a phone.
+With the wrong key, `initialize()` throws a `CredoError` caused by `AskarStoreInvalidKeyError`. A different `id` or SQLite `path` doesn't fail: it creates a new, empty store. To open an existing wallet, check that the database exists before you initialize.
 
 ## Store key
 
-Askar encrypts the store with `store.key`. How it turns the key into the encryption key depends on `keyDerivationMethod`:
+Askar encrypts the store with `store.key`. `keyDerivationMethod` decides how it turns the key into the encryption key:
 
 | `keyDerivationMethod` | Use it for |
 | --- | --- |
+| `raw` | Random keys that you keep somewhere safe, such as the device keychain or a secret manager. Skips key derivation, so opening the store is fast. |
 | `kdf:argon2i:mod` (default) | Passwords and PINs. Argon2i makes guessing the key slow. |
 | `kdf:argon2i:int` | The same, faster and less secure. |
-| `raw` | Random keys that you keep somewhere safe, such as the device keychain or a secret manager. Skips key derivation, so opening the store is fast. |
 
-A `raw` key must be an Askar key: generate it once with `Store.generateRawKey()` from the platform package. Any other string fails when Askar creates the store.
+Use `raw` when you can keep a random key in a keychain or secret manager, and Argon2i when the key is something a person types. Generate a `raw` key once with `Store.generateRawKey()` from the platform package: any other string fails when Askar creates the store.
 
 To change the key of an existing store, call `agent.modules.askar.rotateStoreKey({ newKey, newKeyDerivationMethod })` and then update the key in your configuration.
 
@@ -70,18 +67,11 @@ To change the key of an existing store, call `agent.modules.askar.rotateStoreKey
 
 ### SQLite
 
-SQLite is the default. The store is a file at `<data path>/wallet/<store id>/sqlite.db`:
-
-- Node.js: the data path is `~/.afj/data`.
-- React Native: the data path is `.afj` in the app's document directory.
-
-To use another file, set the full path of the database file:
+The store is a file at `<data path>/wallet/<store id>/sqlite.db`. The data path is `~/.afj/data` on Node.js, and `.afj` in the app's document directory on React Native. To use another file, set the full path of the database file:
 
 ```ts
 database: { type: 'sqlite', config: { path: '/var/lib/my-agent/agent.db' } }
 ```
-
-`config` also takes `maxConnections` and `minConnections`.
 
 ### In-memory SQLite
 
@@ -95,14 +85,14 @@ For tests, keep the store in memory. The data is gone when the agent shuts down:
 ```ts showLineNumbers title="agent.ts" storage-askar-postgres.ts section-1
 ```
 
-The store `id` is the database name. On the first `initialize()` Askar creates that database, so the account needs permission to create databases. You can pass `adminAccount` and `adminPassword` in `credentials` to use a separate account for creating and deleting databases.
+The store `id` is the database name. On the first `initialize()` Askar creates that database, so the account needs permission to create databases, or you pass a separate `adminAccount` and `adminPassword` in `credentials` for that.
 
 | Option | Description |
 | --- | --- |
 | `config.host` | Host and port, for example `localhost:5432`. |
-| `config.maxConnections`, `config.minConnections` | Size of the connection pool. |
-| `config.connectTimeout`, `config.idleTimeout` | Timeouts, passed to the connection string. |
-| `config.connectionParameters` | Extra connection string parameters, such as `sslmode`, `sslrootcert`, `sslcert`, `sslkey` and `application_name`. Parameters that Credo sets itself (`host`, `user`, `password`, `dbname`, the timeouts and pool sizes) throw. |
+| `config.maxConnections`, `config.minConnections` | Size of the connection pool. Also available for SQLite. |
+| `config.connectTimeout`, `config.idleTimeout` | Timeouts. |
+| `config.connectionParameters` | Extra connection string parameters, such as `sslmode`, `sslrootcert` and `application_name`. Parameters that Credo sets itself, such as `host`, `user` and `dbname`, throw. |
 | `credentials.account`, `credentials.password` | The account to connect with. |
 | `credentials.adminAccount`, `credentials.adminPassword` | Optional account for creating and deleting databases. |
 
@@ -120,10 +110,7 @@ If you add `AskarKeyManagementService` to the `KeyManagementModule` backends and
 
 ## Multi-tenancy
 
-With the [tenants module](../multi-tenancy.mdx), `multiWalletDatabaseScheme` decides where tenant data goes:
-
-- `AskarMultiWalletDatabaseScheme.DatabasePerWallet` (default): a store per tenant, with a generated raw key that Credo saves in the tenant record. On SQLite each tenant gets its own file, on PostgreSQL its own database. Don't set a SQLite `path` in this mode: all tenants would resolve to the same file, and creating a tenant fails.
-- `AskarMultiWalletDatabaseScheme.ProfilePerWallet`: one store with a profile per tenant. Recommended, because it performs better with many tenants.
+With the [tenants module](../multi-tenancy.mdx), `multiWalletDatabaseScheme` decides where tenant data goes: `AskarMultiWalletDatabaseScheme.ProfilePerWallet` keeps all tenants in the root store with a profile each, `DatabasePerWallet` (the default) gives each tenant its own store. Use `ProfilePerWallet`. See [Where tenant data is stored](../multi-tenancy.mdx#where-tenant-data-is-stored) for the trade-offs, and for why you shouldn't set a SQLite `path` with `DatabasePerWallet`.
 
 ## Manage the store
 
@@ -137,4 +124,4 @@ With the [tenants module](../multi-tenancy.mdx), `multiWalletDatabaseScheme` dec
 | `deleteStore()` | Deletes the store and all its data. |
 | `closeStore()`, `openStore()`, `provisionStore()`, `isStoreOpen` | Manual control. `initialize()` and `shutdown()` already do this. |
 
-With `ProfilePerWallet`, these methods affect the whole store, including all tenants, so they throw when you call them from a tenant agent.
+With `ProfilePerWallet` these methods act on the whole store, including all tenants, so they throw when you call them from a tenant agent.

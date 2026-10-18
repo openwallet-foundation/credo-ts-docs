@@ -236,7 +236,7 @@ const roles = [
     title: 'Wallet',
     text: 'Build mobile and cloud wallets that receive, store and present credentials, online and in person, with keys in secure hardware.',
     tags: ['React Native', 'OpenID4VC', 'DIDComm'],
-    to: '/guides/protocols/openid4vc/holder',
+    to: '/guides/protocols/openid4vc/receive',
   },
   {
     icon: 'verifier',

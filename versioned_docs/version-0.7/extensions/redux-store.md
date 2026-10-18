@@ -1,45 +1,18 @@
 ---
-title: Redux Store
+title: Redux store
+description: Keep the state of a Credo 0.5 agent in a Redux Toolkit store with @credo-ts/redux-store.
 ---
 
-# Redux Store
-
-:::caution
+:::warning
 
 `@credo-ts/redux-store` 0.5.1, the latest release, requires Credo 0.5 (`@credo-ts/core@^0.5.0`) and hasn't been updated for later versions of Credo.
 
 :::
 
-The Redux Store is an implementation of state management that can be used to build React & React Native SSI clients using Credo.
+`@credo-ts/redux-store` keeps the DIDComm state of a Credo agent in a [Redux Toolkit](https://redux-toolkit.js.org/) store, so the UI of a React or React Native app stays in sync with the agent. It has slices, thunks and selectors for connections, credentials, proofs and mediation. `initializeStore(agent)` creates the store, and `startRecordListeners` keeps it in sync with the agent's records.
 
-The Redux Store allows you to integrate state management for the most important parts of using Credo in a client application (mediation, connections, credentials and proofs), allowing you to sync UI state with the state of the agent as it interacts with other agents through the framework.
-
-:::note
-
-This document is for version **`0.4.x`** of the `@credo-ts/redux-store` package, that works with `@credo-ts/core` version **`0.4.x`**. Extension packages (such as Redux Store) are versioned separately from the core packages.
-
-:::
-
-## Installation
-
-To add the Redux Store package to your existing project simply run:
-
-<Tabs>
-
-<TabItem value="npm" label="npm">
+## Install
 
 ```bash
-npm i @credo-ts/redux-store
+npm install @credo-ts/redux-store@0.5.1
 ```
-
-</TabItem>
-
-<TabItem value="yarn" label="Yarn">
-
-```bash
-yarn add @credo-ts/redux-store
-```
-
-</TabItem>
-
-</Tabs>

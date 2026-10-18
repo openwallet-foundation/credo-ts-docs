@@ -12,6 +12,19 @@ Credo is a TypeScript framework for issuing, holding and verifying verifiable cr
 
 Browsers aren't supported, and Bun and Deno aren't tested. See [Platforms](../concepts/platform-and-environment.md).
 
+## Choose your setup
+
+Four choices come up before you write any code. If you're not sure, start with the default. You can add a protocol or format later, and an agent can use several at once.
+
+| Choice | Default | Pick the other option when | Details |
+| --- | --- | --- | --- |
+| Platform | Node.js, for issuers, verifiers, mediators and cloud wallets | You build a mobile wallet: use React Native with Expo | [Platforms](../concepts/platform-and-environment.md) |
+| Protocol | OpenID4VC | Use DIDComm if you need a lasting connection with messaging between agents, or AnonCreds, or your ecosystem is built on Aries. A wallet can support both | [Protocols](../protocols/index.mdx) |
+| Credential format | SD-JWT VC | Your ecosystem asks for another one: mdoc for mobile driving licences, W3C VCs for Open Badges or EBSI, AnonCreds (DIDComm only) for predicates and unlinkable presentations. The EUDI Wallet uses SD-JWT VC and mdoc | [Credential formats](../credential-formats/index.mdx) |
+| Storage | Askar, which encrypts the data and also stores the keys | Use Drizzle on PostgreSQL for a server whose records you want to query with SQL. Drizzle doesn't store keys, so keep Askar for those | [Storage](../agent-setup/storage/index.mdx) |
+
+The getting started pages use Askar and work for any protocol and format.
+
 ## Read in this order
 
 <Cards>
@@ -27,7 +40,7 @@ Once your agent runs, pick the guide for what you're building:
 <Cards>
   <Card to="protocols/openid4vc/issuer" title="Issue credentials">Run an OpenID4VCI issuer that wallets receive credentials from.</Card>
   <Card to="protocols/openid4vc/verifier" title="Verify credentials">Request and verify presentations with OpenID4VP.</Card>
-  <Card to="protocols/openid4vc/holder" title="Build a wallet">Receive, store and present credentials in a mobile or server wallet.</Card>
+  <Card to="protocols/openid4vc/receive" title="Build a wallet">Receive, store and present credentials in a mobile or server wallet.</Card>
   <Card to="protocols/didcomm" title="Use DIDComm">Connect to other agents and exchange messages and credentials over DIDComm.</Card>
 </Cards>
 

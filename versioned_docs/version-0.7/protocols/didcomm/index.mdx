@@ -7,9 +7,17 @@ DIDComm is a messaging protocol for agents that keep a long-lived, encrypted con
 
 ## When to use DIDComm
 
-Use DIDComm when the parties have an ongoing relationship, because the connection stays usable after the first exchange. It is also the protocol for [AnonCreds](../../credential-formats/anoncreds.mdx) credentials and for working with other Aries-based agents.
+Use DIDComm when the parties have an ongoing relationship, because the connection stays usable after the first exchange. It is also the only protocol Credo supports for [AnonCreds](../../credential-formats/anoncreds.mdx) credentials, and the one other Aries-based agents use.
 
-For one-off issuance or verification with wallets that implement OpenID4VC, such as wallets built for the EU Digital Identity Wallet ecosystem, use [OpenID4VC](../openid4vc/index.mdx) instead. An agent can register both modules. [DIDs and DIDComm](../../concepts/did-and-didcomm.md) explains the concepts.
+For one-off issuance or verification, and for wallets built for the EU Digital Identity Wallet ecosystem, use [OpenID4VC](../openid4vc/index.mdx) instead. An agent can register both modules.
+
+| | DIDComm | OpenID4VC |
+| --- | --- | --- |
+| Relationship | A connection that either side can use at any time | One exchange per offer or request |
+| Credential formats | AnonCreds, W3C VCs | SD-JWT VC, mdoc, W3C VCs |
+| Mobile wallet | Needs a [mediator](./mediation.mdx) to receive messages | Calls the issuer and verifier over HTTPS |
+
+[DIDs and DIDComm](../../concepts/did-and-didcomm.md) explains the concepts.
 
 ## Supported protocols
 
@@ -33,7 +41,7 @@ For one-off issuance or verification with wallets that implement OpenID4VC, such
 | Question Answer 1.0 | [0113](https://github.com/hyperledger/aries-rfcs/tree/main/features/0113-question-answer) | `@credo-ts/question-answer` |
 | DIDComm RPC 1.0 | [0804](https://github.com/hyperledger/aries-rfcs/tree/main/features/0804-didcomm-rpc) | `@credo-ts/drpc` |
 
-The deprecated protocols are removed in Credo 0.8. Credo doesn't implement DIDComm v2.
+Use DID Exchange and the 2.0 protocols. The deprecated protocols are removed in Credo 0.8, so only use them for agents that support nothing else. Credo doesn't implement DIDComm v2.
 
 ## Install
 

@@ -80,9 +80,11 @@ A credential definition binds a schema to an issuer and holds the issuer's publi
 
 :::
 
-Credo keeps the private keys in the issuer's wallet. Without that wallet you can no longer issue with this credential definition. Use `tag` to create several credential definitions for one schema. Set `supportRevocation: true` if you want to revoke credentials later: you can't add revocation afterwards.
+Credo keeps the private keys in the issuer's storage. Without them you can no longer issue with this credential definition. Use `tag` to create several credential definitions for one schema. Set `supportRevocation: true` if you want to revoke credentials later: you can't add revocation afterwards.
 
 ## Revocation
+
+Revocation is optional and adds work on both sides. The issuer hosts a tails file and writes to the registry for every status list update, and holders download the tails file to prove non-revocation. Enable it when a credential can stop being valid while the holder still has it, such as an employee or membership credential. Leave it off for credentials that stay true, such as a diploma.
 
 A revocable credential definition needs a revocation registry and a status list. The revocation registry has a tails file that holders download to prove non-revocation, so the issuer must publish it. The default `BasicTailsFileService` only downloads tails files. Give issuers a tails file service that uploads:
 

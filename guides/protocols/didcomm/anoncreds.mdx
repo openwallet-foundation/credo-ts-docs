@@ -3,7 +3,7 @@ title: AnonCreds with DIDComm
 description: Issue AnonCreds credentials and request proofs with predicates over DIDComm, and handle revocation.
 ---
 
-You exchange AnonCreds credentials over DIDComm, with [Issue Credential v2](./issue-credential.mdx) and [Present Proof v2](./present-proof.mdx). This page issues a credential and requests a proof with a predicate, then covers revocation. Both agents need the `AnonCredsModule` with a registry, and the issuer needs a registered credential definition: see [AnonCreds](../../credential-formats/anoncreds.mdx).
+You exchange AnonCreds credentials over DIDComm, with [Issue Credential v2](./issue-credential.mdx) and [Present Proof v2](./present-proof.mdx). This page issues a credential and requests a proof with a predicate, then covers revocation. The AnonCreds specification calls the holder the prover when it presents. Both agents need the `AnonCredsModule` with a registry, and the issuer needs a registered credential definition: see [AnonCreds](../../credential-formats/anoncreds.mdx).
 
 ## Register the format services
 
@@ -43,11 +43,9 @@ The holder binds the credential to its link secret. Credo creates a default link
 
 :::
 
-- The keys of `requested_attributes` and `requested_predicates` (`name`, `role`, `adult`) are referents: names you choose to find the values in the presentation.
-- `restrictions` decide which credentials qualify. Restrict on `cred_def_id`, `issuer_id`, `schema_id` and more. Without restrictions, the holder can use any credential with that attribute.
-- A predicate (`>=`, `>`, `<=` or `<` with an integer `p_value`) proves a comparison without revealing the value.
-- Use `names: ['name', 'role']` instead of `name` to require attributes from the same credential.
-- Credo generates the `nonce` of the request when you leave it out.
+The keys of `requested_attributes` and `requested_predicates` (`name`, `role`, `adult`) are referents: names you choose to find the values in the presentation. Use `names: ['name', 'role']` instead of `name` to require attributes from the same credential. A predicate (`>=`, `>`, `<=` or `<` with an integer `p_value`) proves a comparison without revealing the value. Credo generates the `nonce` of the request when you leave it out.
+
+`restrictions` decide which credentials qualify, for example by `cred_def_id`, `issuer_id` or `schema_id`. Without restrictions, the holder can use any credential with that attribute, including one it issued itself, so restrict every item to the issuers you trust.
 
 :::holder
 

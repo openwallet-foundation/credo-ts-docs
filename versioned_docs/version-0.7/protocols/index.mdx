@@ -1,9 +1,17 @@
 ---
 title: Protocols
-description: How OpenID4VC, DIDComm and the ISO mdoc protocols differ, which credential formats each one carries, and how the protocol pages are organised.
+description: How OpenID4VC, DIDComm and the ISO mdoc protocols differ, which credential formats each one carries, and which one to use.
 ---
 
-An exchange protocol defines how issuers, holders and verifiers talk to each other. Credo supports OpenID4VC, DIDComm and the ISO mdoc protocols. This page compares them and explains how the protocol pages are organised.
+An exchange protocol defines how issuers, holders and verifiers talk to each other. Credo supports OpenID4VC, DIDComm and the ISO mdoc protocols.
+
+## Which protocol should I use?
+
+| Use | When |
+| --- | --- |
+| [OpenID4VC](./openid4vc/index.mdx) | By default, for new issuers, wallets and verifiers. It only needs HTTPS, carries SD-JWT VC and mdoc, and is what the EU Digital Identity Wallet and the HAIP profile use. |
+| [ISO mdoc](./mdoc/index.mdx) | A wallet presents mdocs, such as a mobile driving licence, in person to a reader over BLE or NFC. A wallet usually receives those mdocs with OpenID4VCI. |
+| [DIDComm](./didcomm/index.mdx) | You join an ecosystem built on DIDComm and AnonCreds, or the parties need a lasting connection to exchange messages beyond a single issuance or presentation. |
 
 ## OpenID4VC
 
@@ -19,7 +27,7 @@ An exchange protocol defines how issuers, holders and verifiers talk to each oth
 
 ## Digital Credentials API
 
-The W3C Digital Credentials API lets a website request credentials through the browser, which passes the request to a wallet. It's a channel for other protocols: Credo supports it with [OpenID4VP](./openid4vc/dc-api.mdx) and with [ISO 18013-7 Annex C](./mdoc/dc-api.mdx).
+The W3C [Digital Credentials API](./dc-api/index.mdx) lets a website request credentials through the browser, which passes the request to a wallet. It's a channel for other protocols: Credo supports it with OpenID4VP and with ISO 18013-7 Annex C.
 
 ## Comparison
 
@@ -45,7 +53,7 @@ Which W3C data models and proof types work depends on the protocol and on whethe
 
 ## How these pages are organised
 
-- Protocol pages cover each role. For OpenID4VC these are [Issuing credentials](./openid4vc/issuer.mdx), [Receiving and presenting](./openid4vc/holder.mdx) and [Verifying credentials](./openid4vc/verifier.mdx). For DIDComm they're [Connections](./didcomm/connections.mdx), [Issuing credentials](./didcomm/issue-credential.mdx) and [Requesting proofs](./didcomm/present-proof.mdx). The ISO mdoc pages cover each way to present: [Proximity (ISO 18013-5)](./mdoc/proximity.mdx) and [Digital Credentials API (ISO 18013-7)](./mdoc/dc-api.mdx).
+- Protocol pages cover each role. For OpenID4VC these are [Issuing credentials](./openid4vc/issuer.mdx), [Receiving credentials](./openid4vc/receive.mdx), [Presenting credentials](./openid4vc/present.mdx) and [Verifying credentials](./openid4vc/verifier.mdx). For DIDComm they're [Connections](./didcomm/connections.mdx), [Issuing credentials](./didcomm/issue-credential.mdx) and [Requesting proofs](./didcomm/present-proof.mdx). The ISO mdoc pages cover [proximity presentation (ISO 18013-5)](./mdoc/proximity.mdx).
 - Pages named "… with OpenID4VC" or "… with DIDComm", such as [SD-JWT VC with OpenID4VC](./openid4vc/sd-jwt-vc.mdx) and [AnonCreds with DIDComm](./didcomm/anoncreds.mdx), cover what's specific to one format on one protocol.
 - What you can do with a format on its own, such as signing, storing and verifying credentials or checking their status, is under [Credential formats](../credential-formats/index.mdx).
 

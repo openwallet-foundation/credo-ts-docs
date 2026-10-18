@@ -32,11 +32,9 @@ The `Agent` constructor takes three options:
 
 ## Modules and their APIs
 
-Each key in `modules` is the name of the module's API on the agent. Modules from packages such as `@credo-ts/askar` or `@credo-ts/tenants` are available as `agent.modules.<key>`, for example `agent.modules.askar`. The `didcomm` and `openid4vc` modules are also available as `agent.didcomm` and `agent.openid4vc`, as long as you register them under exactly those keys.
+The key you register a module under is the name of its API: `agent.modules.askar` for the module above. `didcomm` and `openid4vc` are also available as `agent.didcomm` and `agent.openid4vc` when you register them under those keys. Default modules, such as DIDs, key management and SD-JWT VC, are always registered and have their APIs at the top level, for example `agent.dids` and `agent.kms`.
 
-Credo also registers a set of default modules, such as DIDs, key management and SD-JWT VC. Their APIs are at the top level, for example `agent.dids` and `agent.kms`.
-
-TypeScript infers all of these from the `modules` object you pass, so `agent.modules.askar` is typed and a module you didn't register is a type error. [Agent configuration](../agent-setup/index.mdx) lists the default modules and shows how to type an agent you pass around.
+TypeScript infers these APIs from the `modules` you pass, so using a module you didn't register is a type error. [Agent configuration](../agent-setup/index.mdx) lists the default modules and shows how to type an agent you pass around.
 
 ## Initialize
 

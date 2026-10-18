@@ -16,56 +16,84 @@ Everything on this page is in `@credo-ts/core`. `SdJwtVcModule` is a default mod
 
 The issuer signs with a key of a DID it created (or imported with its keys), and binds the credential to the holder's public key:
 
+:::issuer
+
 ```ts showLineNumbers title="sd-jwt-vc.ts" format-sd-jwt-vc.ts section-2
 ```
 
-- `payload` holds the claims. `vct` (the credential type) is required. Credo sets `iss`, `cnf` and `iat`; pass `iat: null` to leave `iat` out. Add `exp`, `nbf` or `status` yourself.
+:::
+
+- `payload` holds the claims and needs a `vct`, the credential type. Credo sets `iss`, `cnf` and `iat` (pass `iat: null` to leave `iat` out). Add `exp`, `nbf` or `status` yourself.
 - `issuer` is `{ method: 'did', didUrl }` with a DID URL that points to a key, or `{ method: 'x5c', x5c }` with a certificate chain (see below).
-- `holder` is `{ method: 'jwk', jwk }` (sets `cnf.jwk`) or `{ method: 'did', didUrl }` (sets `cnf.kid`). Without `holder` the credential isn't bound to a key, and anyone who has it can present it.
-- `disclosureFrame` lists the selectively disclosable claims per object in `_sd`: property names, or positions for array elements. `_sd_decoy` adds fake digests so the number of claims doesn't leak. `iss`, `nbf`, `exp`, `cnf`, `vct` and `status` can't be selectively disclosable.
-- `hashingAlgorithm` is the digest algorithm for disclosures: `sha-256` (default), `sha-384` or `sha-512`.
-- `headerType` sets the `typ` header. The default is `dc+sd-jwt`. Use `vc+sd-jwt` only for verifiers that don't support `dc+sd-jwt` yet.
+- `holder` is `{ method: 'jwk', jwk }`, which sets `cnf.jwk`, or `{ method: 'did', didUrl }`, which sets `cnf.kid`.
+- `disclosureFrame` lists the claims the holder can disclose one by one (see below).
+
+`hashingAlgorithm` sets the digest algorithm of the disclosures: `sha-256` (default), `sha-384` or `sha-512`. `headerType` sets the `typ` header. Keep the default `dc+sd-jwt`, and use `vc+sd-jwt` only for verifiers that don't support `dc+sd-jwt` yet.
+
+### Choose the holder binding
+
+Bind to a JWK by default. The holder doesn't need a DID, and the key can stay in the secure hardware of a phone. Bind to a DID when holders and verifiers already work with DIDs. Without `holder` the credential is a bearer credential: anyone with a copy can present it, and a verifier can't require key binding.
+
+### Design the disclosure frame
+
+Each `_sd` lists the claims of one object that the holder can disclose separately: property names, or positions for array elements. Claims that aren't listed are always disclosed, and `iss`, `nbf`, `exp`, `cnf`, `vct` and `status` can't be listed.
+
+- List every claim about the person, so the holder shares only what a verifier asks for. Leave claims visible that every verifier needs and that say nothing about the person.
+- For a nested object, give it its own `_sd`, as for `address` above, so the holder can disclose the locality without the street. Also list the object in the parent `_sd` if even its presence says something about the person.
+- Set `_sd_decoy` to add fake digests, so verifiers can't tell how many claims are hidden.
 
 ### Sign with an X.509 certificate
 
-Put the certificate chain in `x5c`, leaf certificate first. Credo signs with the leaf certificate's key, so that key must be in the agent's KMS. A certificate you create with `agent.x509.createCertificate` from a KMS key is ready to use. For certificate chains and trust anchors, see [X.509 certificates](../dids-and-trust/x509.mdx).
+Sign with X.509 when your verifiers expect certificates, as HAIP and the EUDI Wallet do. Otherwise a DID is simpler. Put the certificate chain in `x5c`, leaf certificate first. Credo signs with the leaf certificate's key, so that key must be in the agent's KMS. A certificate you create with `agent.x509.createCertificate` from a KMS key is ready to use. For certificate chains and trust anchors, see [X.509 certificates](../dids-and-trust/x509.mdx).
+
+:::issuer
 
 ```ts showLineNumbers title="sd-jwt-vc.ts" format-sd-jwt-vc.ts section-3
 ```
+
+:::
 
 ## Store and query
 
 The holder verifies a received credential, then stores it as an `SdJwtVcRecord`:
 
+:::holder
+
 ```ts showLineNumbers title="sd-jwt-vc.ts" format-sd-jwt-vc.ts section-4
 ```
 
-- `kmsKeyId` is the KMS key the credential is bound to. Credo uses it to sign the key binding JWT when presenting. For a DID-bound credential, Credo finds the key through the DID instead.
-- `credentialInstances` can hold several copies of the same credential, each bound to its own key. Issuers do this with batch issuance so the holder can present a fresh copy each time.
-- Records are tagged with `vct`, `alg` and `sdAlg`, so you can query on them. `agent.sdJwtVc` also has `getById`, `getAll`, `update` and `deleteById`.
-- `agent.sdJwtVc.fromCompact(compact)` decodes a credential without verifying it.
+:::
 
-With OpenID4VCI, the holder flow returns the `SdJwtVcRecord` for you, with `kmsKeyId` set. You only store it.
+`kmsKeyId` is the KMS key the credential is bound to. Credo signs the key binding JWT with it when presenting. A DID-bound credential doesn't need it, because Credo finds the key through the DID. `credentialInstances` can hold several copies of the same credential, each bound to its own key, as issued with batch issuance.
+
+Records are tagged with `vct`, `alg` and `sdAlg` for queries. `agent.sdJwtVc` also has `getById`, `getAll`, `update` and `deleteById`, and `fromCompact` decodes a credential without verifying it. With [OpenID4VCI](../protocols/openid4vc/sd-jwt-vc.mdx), the holder flow returns the `SdJwtVcRecord` with `kmsKeyId` set, and you only store it.
 
 ## Present
 
 The holder chooses which claims to disclose with a presentation frame, and adds a key binding JWT for the verifier:
 
+:::holder
+
 ```ts showLineNumbers title="sd-jwt-vc.ts" format-sd-jwt-vc.ts section-5
 ```
 
+:::
+
 - `presentationFrame` sets `true` for each selectively disclosable claim to disclose, nested like the payload. Claims that aren't selectively disclosable are always included.
-- `verifierMetadata` creates the key binding JWT with the verifier's `audience` and `nonce`. It fails for a credential without `cnf`. Leave it out to present without key binding.
-- `additionalPayload` adds claims to the key binding JWT.
+- `verifierMetadata` creates the key binding JWT with the verifier's `audience` and `nonce`, and `additionalPayload` adds claims to it. Key binding fails for a credential without `cnf`. Leave `verifierMetadata` out to present without key binding.
 
 Pass `record.firstCredential` rather than the compact string, so Credo knows which key to sign with. For records with several instances, `useInstanceFromCredentialRecord` from `@credo-ts/core` picks an unused one.
 
 ## Verify
 
+:::verifier
+
 ```ts showLineNumbers title="sd-jwt-vc.ts" format-sd-jwt-vc.ts section-6
 ```
 
-`verify` returns `{ isValid: true, sdJwtVc }` or `{ isValid: false, error }`. `sdJwtVc.prettyClaims` holds the disclosed claims. It checks the issuer signature, the digests of the disclosures, `iat`, `nbf` and `exp` (with the agent's `validitySkewSeconds`), the `typ` header and the status. Options:
+:::
+
+`verify` returns `{ isValid: true, sdJwtVc }` or `{ isValid: false, error }`, and `sdJwtVc.prettyClaims` holds the disclosed claims. Verification checks the issuer signature, the digests of the disclosures, `iat`, `nbf` and `exp` (with the agent's `validitySkewSeconds`), the `typ` header and the status. Options:
 
 | Option | Effect |
 | --- | --- |
@@ -81,8 +109,12 @@ Trust depends on how the credential is signed:
 - DID: any issuer DID is accepted unless `trustedIssuers` or the agent's `getTrustedIssuersForVerification` callback returns a list. With a list, the issuer DID must be on it.
 - X.509: verification fails unless a trust anchor is configured, per call or on the agent.
 
+:::verifier
+
 ```ts showLineNumbers title="sd-jwt-vc.ts" format-sd-jwt-vc.ts section-8
 ```
+
+:::
 
 To configure trust once for all verifications, see [Trusted issuers](../dids-and-trust/trust.mdx).
 

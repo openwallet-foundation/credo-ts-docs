@@ -7,7 +7,7 @@ Each recipe on this page is a complete, type-checked agent configuration for a c
 
 ## Mobile wallet
 
-A React Native app that receives and presents credentials with [OpenID4VC](../protocols/openid4vc/holder.mdx), and optionally connects to other agents over [DIDComm](../protocols/didcomm/index.mdx) through a mediator. Askar stores the data and keys. Keys that must stay on the device's secure hardware use the secure environment backend.
+Start here if you build a wallet app for phones. This React Native app [receives](../protocols/openid4vc/receive.mdx) and [presents](../protocols/openid4vc/present.mdx) credentials with OpenID4VC, and connects to other agents over [DIDComm](../protocols/didcomm/index.mdx) through a mediator. Askar stores the data and keys, and keys that must stay in the device's secure hardware use the secure environment backend.
 
 Install the packages from [Installation](./installation.mdx), and:
 
@@ -16,14 +16,13 @@ Install the packages from [Installation](./installation.mdx), and:
 ```ts showLineNumbers title="agent.ts" example-mobile-wallet-rn.ts section-1
 ```
 
-- Askar is the default [key management](../agent-setup/key-management.mdx) backend. A key goes to the secure environment only when you create it with `backend: 'secureEnvironment'`, which supports P-256 keys and ES256 signatures.
-- `walletKey` is a raw key that you generate once and keep in the device keychain. See [Askar](../agent-setup/storage/askar.mdx) for how to create it.
-- If the wallet only uses OpenID4VC, leave out the `didcomm` module and package. The [mediation](../protocols/didcomm/mediation.mdx) page explains the pickup strategies.
-- [Drizzle](../agent-setup/storage/drizzle.mdx) with expo-sqlite is an alternative to Askar storage.
+Askar is the default [key management](../agent-setup/key-management.mdx) backend. A key goes to the secure environment only when you create it with `backend: 'secureEnvironment'`, which supports P-256 keys and ES256 signatures. `walletKey` is a raw key that you generate once and keep in the device keychain, see [Askar](../agent-setup/storage/askar.mdx).
+
+If the wallet only uses OpenID4VC, leave out the `didcomm` module and package. [Mediation](../protocols/didcomm/mediation.mdx) explains the pickup strategies.
 
 ## Issuer and verifier service
 
-A Node.js service that issues credentials with [OpenID4VCI](../protocols/openid4vc/issuer.mdx) and verifies presentations with [OpenID4VP](../protocols/openid4vc/verifier.mdx). It stores its data in PostgreSQL and its cache in Redis, which all instances of the service share.
+Start here if your organization issues or verifies credentials from its own backend. This Node.js service issues credentials with [OpenID4VCI](../protocols/openid4vc/issuer.mdx) and verifies presentations with [OpenID4VP](../protocols/openid4vc/verifier.mdx). It stores its data in PostgreSQL and its cache in Redis, so you can run several instances of it.
 
 <InstallTabs packages="@credo-ts/core @credo-ts/node @credo-ts/askar @credo-ts/openid4vc @credo-ts/redis-cache @openwallet-foundation/askar-nodejs@0.6.1 express@^5 ioredis" />
 <InstallTabs packages="@types/express@^5" dev />
@@ -31,9 +30,9 @@ A Node.js service that issues credentials with [OpenID4VCI](../protocols/openid4
 ```ts showLineNumbers title="server.ts" example-issuer-verifier.ts section-1
 ```
 
-- `credentialRequestToCredentialMapper` decides which credential the issuer signs for a request. This one signs SD-JWT VCs with a DID that the agent created before, set in `ISSUER_DID_URL`. [Issuing credentials](../protocols/openid4vc/issuer.mdx) covers the mapper, issuer records and offers.
-- `agent.initialize()` adds the OpenID4VC routes to the Express app, so start the server after it.
-- The agent doesn't close the Redis connection on shutdown. See [Caching](../agent-setup/caching.mdx).
+`credentialRequestToCredentialMapper` decides which credential the issuer signs for a request. This one signs SD-JWT VCs with a DID that the agent created before, set in `ISSUER_DID_URL`. Before you can offer credentials, create an issuer record. [Issuing credentials](../protocols/openid4vc/issuer.mdx) covers the mapper, issuer records and offers.
+
+`agent.initialize()` adds the OpenID4VC routes to the Express app, so start the server after it.
 
 To store the records in PostgreSQL with [Drizzle](../agent-setup/storage/drizzle.mdx) instead, replace the `askar` module with these two modules, and install `@credo-ts/drizzle-storage`, `drizzle-orm@^0.44.6` and `pg`:
 
@@ -48,7 +47,7 @@ npx drizzle-storage --bundle core --bundle openid4vc migrate --dialect postgres 
 
 ## Multi-tenant service
 
-One deployment that serves many organizations. Each tenant has its own DIDs, keys and records. Use it when you host issuers or verifiers for others. See [Multi-tenancy](../agent-setup/multi-tenancy.mdx).
+Start here if you host issuers or verifiers for many organizations in one deployment. Each organization is a tenant with its own DIDs, keys and records. See [Multi-tenancy](../agent-setup/multi-tenancy.mdx).
 
 Install the packages of the issuer and verifier service, and:
 
@@ -57,18 +56,16 @@ Install the packages of the issuer and verifier service, and:
 ```ts showLineNumbers title="server.ts" example-multi-tenant.ts section-1
 ```
 
-- Replace the default cache. It works with one agent context only, and throws as soon as a tenant uses it. Use `InMemoryLruCache` for a single instance or `RedisCache` for several. See [Caching](../agent-setup/caching.mdx).
-- `ProfilePerWallet` keeps all tenants in one PostgreSQL database, with an Askar profile per tenant.
-- Tenant agents use the modules of the root agent. The OpenID4VC endpoints route each request to the tenant that owns the issuer or verifier.
+Replace the default cache: it works with one agent context only, and throws as soon as a tenant uses it. Use `InMemoryLruCache` for a single instance or `RedisCache` for several, see [Caching](../agent-setup/caching.mdx). `ProfilePerWallet` keeps all tenants in one PostgreSQL database, with an Askar profile per tenant.
 
-Create a tenant and set it up through a tenant agent:
+Tenant agents use the modules of the root agent, and the OpenID4VC endpoints route each request to the tenant that owns the issuer or verifier. Create a tenant and set it up through a tenant agent:
 
 ```ts showLineNumbers example-multi-tenant.ts section-2
 ```
 
 ## DIDComm mediator
 
-A public Node.js service that receives DIDComm messages for wallets without an endpoint of their own, and holds them until the wallet picks them up. It stores records in PostgreSQL with Drizzle, keeps keys in Askar and caches in Redis. See [Mediation](../protocols/didcomm/mediation.mdx).
+Start here if the mobile wallets in your DIDComm ecosystem need a mediator. This public Node.js service receives DIDComm messages for wallets without an endpoint of their own, and holds them until the wallet picks them up. It stores records in PostgreSQL with Drizzle, keeps keys in Askar and caches in Redis. See [Mediation](../protocols/didcomm/mediation.mdx).
 
 <InstallTabs packages="@credo-ts/core @credo-ts/node @credo-ts/askar @credo-ts/didcomm @credo-ts/drizzle-storage @credo-ts/redis-cache @openwallet-foundation/askar-nodejs@0.6.1 drizzle-orm@^0.44.6 pg ioredis" />
 
@@ -81,14 +78,13 @@ Run the migrations before you start it:
 npx drizzle-storage --bundle core --bundle didcomm migrate --dialect postgres --database-url "$DATABASE_URL"
 ```
 
-- Message pickup (versions 1 and 2, including live mode over WebSocket) is part of the DIDComm module and on by default.
-- Queued messages are kept in memory by default, so they're lost on restart and not shared between instances. For production, pass a persistent `queueTransportRepository` to the `DidCommModule`. [DIDComm Mediator Credo](https://github.com/openwallet-foundation/didcomm-mediator-credo) is a complete mediator with PostgreSQL and DynamoDB queues.
-- `autoUpdateStorageOnStartup` migrates the storage when you upgrade Credo. Back up the database first, see [Updating](../updating/index.md).
-- Wallets connect with an out-of-band invitation from the mediator, see [Mediation](../protocols/didcomm/mediation.mdx).
+Queued messages are kept in memory by default, so they're lost on restart and not shared between instances. For production, pass a persistent `queueTransportRepository` to the `DidCommModule`. [DIDComm Mediator Credo](https://github.com/openwallet-foundation/didcomm-mediator-credo) is a complete mediator that can keep the queue in PostgreSQL or DynamoDB.
+
+`autoUpdateStorageOnStartup` migrates the storage when you upgrade Credo. Back up the database first, see [Updating](../updating/index.md).
 
 ## Tests
 
-An agent for unit and integration tests. Each agent gets its own in-memory database, so tests don't share state and nothing is written to disk.
+Start here for unit and integration tests of your own code. Each agent gets its own in-memory database, so tests don't share state and nothing is written to disk.
 
 ```ts showLineNumbers title="agent.test.ts" example-tests.ts section-1
 ```

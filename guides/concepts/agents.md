@@ -16,6 +16,12 @@ You pass three things to the constructor:
 - `config`: optional agent-wide settings, such as the logger.
 
 ```ts
+import { AskarModule } from '@credo-ts/askar'
+import { Agent } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/node'
+import { OpenId4VcModule } from '@credo-ts/openid4vc'
+import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+
 const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
@@ -41,7 +47,7 @@ The agent's type follows from the modules you pass, so TypeScript knows which AP
 
 ## Agent context
 
-Credo keeps the data of one wallet apart from others through an agent context. The context links storage, keys and configuration to an identifier, the `contextCorrelationId`. An agent has one root context. Credo passes the context along for you, so you only see it in callbacks, such as `getTrustedIssuersForVerification(agentContext, ...)`, and when you write your own modules.
+Credo keeps the data of one agent or tenant apart from others through an agent context. The context links storage, keys and configuration to an identifier, the `contextCorrelationId`. An agent has one root context. Credo passes the context along for you, so you only see it in callbacks, such as `getTrustedIssuersForVerification(agentContext, ...)`, and when you write your own modules.
 
 ## Tenants
 

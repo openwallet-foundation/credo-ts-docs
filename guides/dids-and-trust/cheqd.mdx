@@ -5,6 +5,8 @@ description: Create, update and deactivate did:cheqd DIDs, publish DID-linked re
 
 [cheqd](https://cheqd.io) is a Cosmos-based network for DIDs and DID-linked resources: data such as logos, schemas or status lists, published under a DID and controlled with its keys. `@credo-ts/cheqd` adds the `did:cheqd` method, DID-linked resources and an AnonCreds registry. Ledger writes cost CHEQ tokens, paid by a Cosmos account that you configure.
 
+Use `did:cheqd` when your ecosystem uses cheqd, for example to issue AnonCreds credentials on cheqd, or to publish resources under a DID on a public network. For a public issuer DID without a ledger, `did:web` is simpler, see [Choose a DID method](./index.mdx#choose-a-did-method).
+
 ## Install
 
 <InstallTabs packages="@credo-ts/cheqd" />
@@ -60,10 +62,7 @@ Create a resource under a DID with `agent.modules.cheqd`, where `cheqd` is the k
 ```ts showLineNumbers title="issuer.ts" cheqd-did.ts section-5
 ```
 
-- `id` must be a UUID.
-- `data` can be an object (stored as JSON), a `Uint8Array`, or a base64 string. A string is always decoded as base64.
-- All verification methods of the DID sign the resource, so the agent needs all their keys.
-- Creating a resource with the same `name` and `resourceType` adds a new version.
+`id` must be a UUID. `data` can be an object (stored as JSON), a `Uint8Array`, or a base64 string: Credo always decodes a string as base64. All verification methods of the DID sign the resource, so the agent needs all their keys. A resource with the same `name` and `resourceType` as an existing one becomes a new version of it.
 
 Resolve a resource by its id, or by name and type:
 

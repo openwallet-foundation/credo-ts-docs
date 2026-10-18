@@ -15,6 +15,8 @@ Credo issues W3C Verifiable Credentials over DIDComm with three credential forma
 
 `vc+sd-jwt` here is a W3C VCDM 2.0 credential secured with SD-JWT, not an IETF [SD-JWT VC](../../credential-formats/sd-jwt-vc.mdx) (`dc+sd-jwt`). There is no DIDComm format for SD-JWT VC, mdoc or VCDM 1.1 JWT credentials.
 
+Use `jsonld` when holders present the credential over DIDComm. Use `w3cV2SdJwt` for VCDM 2.0 credentials with selective disclosure, which holders present with OpenID4VP. Use `dataIntegrity` for [AnonCreds credentials in W3C format](./anoncreds.mdx#anoncreds-in-w3c-format), or for agents that only support RFC 0809.
+
 ## Set up
 
 Register the formats you need on both agents:
@@ -42,9 +44,10 @@ The issuer signs with a key of a DID it created in its own agent, for example a 
 
 The holder accepts the offer without format options, and stores the credential as a `W3cCredentialRecord`.
 
-- Credo signs with `Ed25519Signature2018` or `Ed25519Signature2020`, so the issuer needs an Ed25519 key. Each suite only accepts its own verification method type. A `did:key` has `Ed25519VerificationKey2018` methods, so use `Ed25519Signature2018`.
-- Set `proofPurpose` to `assertionMethod`. The issuer signs with the first verification method of the issuer DID that fits the proof type. Pass `jsonld: { verificationMethod }` to `acceptRequest` to choose another.
-- Every `@context` must resolve. Credo bundles common contexts, such as the VC data model, the security suites, Open Badges 3.0 and schema.org, and fetches others over the network. To add your own context, see [W3C Verifiable Credentials](../../credential-formats/w3c-vc.mdx).
+Credo signs with `Ed25519Signature2018` or `Ed25519Signature2020`, so the issuer needs an Ed25519 key. Each suite only accepts its own verification method type: a `did:key` has `Ed25519VerificationKey2018` methods, so use `Ed25519Signature2018`, with `proofPurpose: 'assertionMethod'`. Credo signs with the first verification method of the issuer DID that fits the proof type. Pass `jsonld: { verificationMethod }` to `acceptRequest` to choose another.
+
+Every `@context` must resolve. Credo bundles common contexts, such as the VC data model, the security suites, Open Badges 3.0 and schema.org, and fetches others over the network. [W3C Verifiable Credentials](../../credential-formats/w3c-vc.mdx) shows how to add your own.
+
 - Don't add `credentialStatus`. Credo can't check W3C credential status, so the holder fails to verify such a credential.
 - The holder proves control of the DID in `credentialSubject.id` when it presents the credential. To learn the holder's DID, let the holder [start with a proposal](./issue-credential.mdx#start-with-a-proposal) that contains it.
 
@@ -63,9 +66,9 @@ The RFC 0881 format issues a VCDM 2.0 credential secured with SD-JWT, with selec
 
 :::
 
-- `credential` is a VCDM 2.0 credential without proof. You can leave out `issuer` and pass it to `acceptRequest` instead.
-- `disclosureFrame` lists the claims the holder can disclose selectively. `@context`, `type`, `credentialStatus`, `credentialSchema` and `relatedResource` can't be selectively disclosable at the top level.
-- With `bindingRequired` and `didCommSignedAttachmentBinding`, the holder must sign a nonce with a key of one of its DIDs. Restrict the accepted keys with `didMethodsSupported` and `algsSupported`. Without binding, the holder gets a bearer credential.
+`credential` is a VCDM 2.0 credential without proof. You can leave out `issuer` and pass it to `acceptRequest` instead. `disclosureFrame` lists the claims the holder can disclose selectively. `@context`, `type`, `credentialStatus`, `credentialSchema` and `relatedResource` can't be selectively disclosable at the top level.
+
+With `bindingRequired` and `didCommSignedAttachmentBinding`, the holder must sign a nonce with a key of one of its DIDs. Restrict the accepted keys with `didMethodsSupported` and `algsSupported`. Without binding, anyone who has the credential can present it, so require binding unless you want a bearer credential.
 
 Auto-accept can't answer an offer that requires binding. The holder calls `acceptOffer` and picks the key:
 
@@ -78,10 +81,7 @@ Auto-accept can't answer an offer that requires binding. The holder calls `accep
 
 The issuer sets the holder's DID as `credentialSubject.id` and the key as `cnf`, signs the credential and sends it. With `ContentApproved` this happens automatically. Otherwise call `acceptRequest`, where you can also set `alg`, `issuerVerificationMethod`, `disclosureFrame` or `credentialSubjectId`. The holder verifies the credential, checks that it matches the offer and stores it as a `W3cV2CredentialRecord`.
 
-Limits:
-
-- The exchange always starts with an offer. Proposals and holder-initiated requests aren't supported.
-- You can't present these credentials over DIDComm. Present them with [OpenID4VP](../openid4vc/w3c.mdx).
+The exchange always starts with an offer: proposals and holder-initiated requests aren't supported. Holders can't present these credentials over DIDComm. They present them with [OpenID4VP](../openid4vc/w3c.mdx).
 
 ## Data Integrity credentials
 
@@ -94,14 +94,12 @@ The RFC 0809 format issues VCDM 1.1 and 2.0 credentials. The first `@context` en
 
 :::
 
-- A VCDM 1.1 credential gets a Linked Data signature, as with the JSON-LD format. A VCDM 2.0 credential gets a Data Integrity proof. Credo registers one cryptosuite, `eddsa-jcs-2022` for Ed25519 keys, and you can name it with `cryptosuite` in `acceptRequest`.
-- Binding with `didCommSignedAttachmentBinding` works as in the RFC 0881 format, but the issuer doesn't derive `credentialSubject.id` from it. Put the holder's DID in the offer, or pass `credentialSubjectId` to `acceptRequest`. Credo doesn't issue a bound credential without subject id automatically.
-- For VCDM 2.0 credentials, Credo doesn't check the holder's binding proof. Put the holder's DID in `credentialSubject.id` instead.
-- The `anonCredsLinkSecretBinding` option issues AnonCreds credentials in W3C format, see [AnonCreds with DIDComm](./anoncreds.mdx#anoncreds-in-w3c-format).
+A VCDM 1.1 credential gets a Linked Data signature, as with the JSON-LD format. A VCDM 2.0 credential gets a Data Integrity proof with `eddsa-jcs-2022`, the only cryptosuite Credo registers, so the issuer needs an Ed25519 key. The exchange always starts with an offer.
 
-The holder stores VCDM 2.0 credentials as a `W3cV2CredentialRecord`, but the exchange record lists them with `credentialRecordType: 'w3c'`. Look them up with `agent.w3cV2Credentials.getById`.
+Binding with `didCommSignedAttachmentBinding` works as in the RFC 0881 format, but the issuer doesn't derive `credentialSubject.id` from it. Put the holder's DID in the offer, or pass `credentialSubjectId` to `acceptRequest`; without a subject id, auto-accept doesn't issue the credential. The `anonCredsLinkSecretBinding` option issues AnonCreds credentials in W3C format, see [AnonCreds with DIDComm](./anoncreds.mdx#anoncreds-in-w3c-format).
 
-Limits:
+For VCDM 2.0 credentials:
 
-- The exchange always starts with an offer.
-- VCDM 2.0 Data Integrity credentials can't be presented over DIDComm or OpenID4VC.
+- Credo doesn't check the holder's binding proof. Put the holder's DID in `credentialSubject.id` instead.
+- The holder stores the credential as a `W3cV2CredentialRecord`, but the exchange record lists it with `credentialRecordType: 'w3c'`. Look it up with `agent.w3cV2Credentials.getById`.
+- The credential can't be presented over DIDComm or OpenID4VC.

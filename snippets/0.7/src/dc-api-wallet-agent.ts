@@ -5,6 +5,7 @@
 import {
   type DcApiClaimValue,
   type DcApiCredential,
+  getRegistrationStatus,
   getSharedContainerPath,
   isSupported,
   registerCredentials,
@@ -60,6 +61,8 @@ export type WalletAgent = Awaited<ReturnType<typeof initializeWalletAgent>>
 // Each call replaces the credentials registered before.
 export async function registerWalletCredentials(agent: WalletAgent) {
   if (!isSupported()) return
+  // iOS asks the user for permission on the first registration. Registering after they denied it throws.
+  if ((await getRegistrationStatus()) === 'notAuthorized') return
 
   const mdocs = (await agent.mdoc.getAll()).map(
     (record): DcApiCredential => ({

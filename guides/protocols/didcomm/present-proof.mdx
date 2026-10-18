@@ -18,7 +18,7 @@ The proofs module that `DidCommModule` enables by default runs Present Proof v2 
 | AnonCreds with Hyperledger Indy attachments | `LegacyIndyDidCommProofFormatService` | `@credo-ts/anoncreds/didcomm` | `indy` | AnonCreds credentials |
 | DIF Presentation Exchange ([RFC 0510](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0510-dif-pres-exch-attach)) | `DidCommDifPresentationExchangeProofFormatService` | `@credo-ts/didcomm` | `presentationExchange` | W3C VCDM 1.1 credentials as JSON-LD (`ldp_vp`) or JWT (`jwt_vp`) presentations, and AnonCreds credentials issued in W3C format |
 
-DIDComm presentations don't support SD-JWT VC, mdoc or W3C VCDM 2.0 credentials, even the VCDM 2.0 credentials you can receive over DIDComm. Present `vc+sd-jwt` credentials with [OpenID4VC](../openid4vc/index.mdx) instead. Credo has no protocol for presenting Data Integrity VCDM 2.0 credentials. A Credo verifier fails on an SD-JWT presentation in the Presentation Exchange format.
+Use `anoncreds` for AnonCreds credentials and `presentationExchange` for W3C credentials. Present Proof doesn't support SD-JWT VC, mdoc or W3C VCDM 2.0 credentials, including the VCDM 2.0 credentials you can receive over DIDComm. Present SD-JWT VC, mdoc and VCDM 2.0 SD-JWT credentials with [OpenID4VC](../openid4vc/index.mdx) instead.
 
 The Presentation Exchange format uses version 1 presentation definitions, which need a `schema` on each input descriptor.
 
@@ -51,7 +51,7 @@ The verifier usually starts with a request. The holder can also propose what it 
 
 Credo looks up candidate credentials by the `schema` URI, which matches a JSON-LD context or an expanded type of the credential. The `constraints` then filter on the credential's content with JSONPath and JSON Schema. Credo adds a random challenge to the request, which the holder signs, unless you set `options.challenge` yourself.
 
-To request a proof without a connection, create it with `createRequest` and attach the returned `message` to an out-of-band invitation.
+To request a proof without a connection, create it with `createRequest` and attach the returned `message` to an out-of-band invitation, with `handshake: false` to skip creating a connection.
 
 ## Respond to a request
 
@@ -92,6 +92,8 @@ Set `autoAcceptProofs` on the proofs module, or `autoAcceptProof` on a single AP
 | `Always` | The holder answers every request with automatically selected credentials, without asking the user. |
 
 The verifier only acknowledges automatically when the request had `willConfirm` set, which is the default.
+
+For a verifier, `ContentApproved` saves the `acceptPresentation` call. For a wallet, use `ContentApproved` or `Never`, so the user approves each request. `Always` shares credentials without asking the user.
 
 ## States and events
 

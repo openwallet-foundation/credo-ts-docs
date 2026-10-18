@@ -5,6 +5,12 @@ description: Revoke and suspend SD-JWT VCs and mdocs with IETF Token Status List
 
 A [Token Status List](https://datatracker.ietf.org/doc/draft-ietf-oauth-status-list/) is a signed, compressed list with one status entry per credential, which the issuer publishes at a URL. Each credential points to its entry with the URL and an index, and the verifier fetches the list to check the entry. Credo uses status lists for [SD-JWT VC](./sd-jwt-vc.mdx) (as a JWT) and [mdoc](./mdoc.mdx) (as a CWT). This page covers creating and updating lists with `agent.tokenStatusList`, referencing them from credentials, and how verification checks them.
 
+## When you need one
+
+Use a status list when you must be able to revoke or suspend credentials before they expire. Credentials that are short-lived and reissued often don't need one: their expiry does the job, and you have no list to host. Use 1 bit per entry if you only revoke, and 2 bits if you also suspend.
+
+Credo supports Token Status Lists for SD-JWT VC and mdoc only. It doesn't support the W3C Bitstring Status List, so W3C credentials have no revocation in Credo (see [W3C Verifiable Credentials](./w3c-vc.mdx#status-and-revocation)). AnonCreds uses its own revocation registries, published on the ledger, and the holder proves non-revocation in the presentation (see [AnonCreds](./anoncreds.mdx#revocation)).
+
 ## What your app does
 
 `agent.tokenStatusList` creates, updates and fetches status list tokens, and verification checks them. Everything around that is up to your app:
@@ -20,23 +26,30 @@ The examples run an issuer, a holder and a verifier in one process, with a small
 
 ## Create a status list
 
+:::issuer
+
 ```ts showLineNumbers title="status-list.ts" format-status-list.ts section-2
 ```
+
+:::
 
 - `format` is `jwt` for SD-JWT VC and `cwt` for mdoc.
 - `statusList` sets the number of entries and the bits per entry (1, 2, 4 or 8). The statuses are 0 (valid), 1 (invalid) and 2 (suspended), so suspension needs at least 2 bits. Every entry starts at 0.
 - `statusListUri` is the URL where you host the token. It becomes the `sub` claim, and verification fails when it doesn't match the URL in the credential.
 - `signer` is `{ method: 'did', didUrl }` or `{ method: 'x5c', x5c }`, with a key in the agent's KMS. CWT lists need `x5c`.
-- `expiresAt` and `timeToLive` set `exp` and `ttl`. `ttl` tells verifiers how long they may cache the list.
 
-The result has the encoded token in `statusList` and the parsed token in `parsed`. Pass the format as type parameter, such as `createTokenStatusList<'jwt'>`, to get the matching result type.
+`expiresAt` and `timeToLive` set `exp` and `ttl`, where `ttl` tells verifiers how long they may cache the list. The result has the encoded token in `statusList` and the parsed token in `parsed`. Pass the format as type parameter, such as `createTokenStatusList<'jwt'>`, to get the matching result type.
 
 ## Reference the list from a credential
 
 For an SD-JWT VC, add a `status` claim to the payload:
 
+:::issuer
+
 ```ts showLineNumbers title="status-list.ts" format-status-list.ts section-3
 ```
+
+:::
 
 The `status` claim can't be selectively disclosable. For an mdoc, pass `statusInfo: { index, uri }` to `agent.mdoc.sign` (see [mdoc](#mdoc) below).
 
@@ -44,28 +57,36 @@ The `status` claim can't be selectively disclosable. For an mdoc, pass `statusIn
 
 Set the new status in the current token, and host the result:
 
+:::issuer
+
 ```ts showLineNumbers title="status-list.ts" format-status-list.ts section-5
 ```
 
-- `status` takes one `{ index, status }` or an array, so you can change many entries in one update.
-- The update keeps the URL, sets a new `iat`, and keeps `exp` and `ttl` unless you pass new values. Pass `expiresAt` again when the list should stay valid longer.
-- `fetchTokenStatusList` downloads and parses a token, but doesn't verify its signature.
+:::
+
+`status` takes one `{ index, status }` or an array, so you can change many entries in one update. The update keeps the URL, sets a new `iat`, and keeps `exp` and `ttl` unless you pass new values, so pass `expiresAt` again when the list should stay valid longer. `fetchTokenStatusList` downloads and parses a token, but doesn't verify its signature: load the current token from your own storage if you can.
 
 ## Verify
 
 `agent.sdJwtVc.verify` fetches the status list of a credential with a `status` claim, verifies its signature and reads the entry:
 
+:::verifier
+
 ```ts showLineNumbers title="status-list.ts" format-status-list.ts section-4
 ```
 
+:::
+
 After the update the same credential fails:
+
+:::verifier
 
 ```ts showLineNumbers title="status-list.ts" format-status-list.ts section-6
 ```
 
-- Any status other than 0 fails verification, including suspended.
-- Pass `disableStatusValidation: true` to skip the check.
-- Credo fetches the list on every verification, with the agent's `fetch`.
+:::
+
+Any status other than 0 fails verification, including suspended, and `disableStatusValidation: true` skips the check. Credo fetches the list on every verification, with the agent's `fetch`.
 
 Which key may sign the status list depends on the [trusted issuer](../dids-and-trust/trust.mdx) that matched the credential:
 
@@ -81,8 +102,3 @@ mdoc status lists are CWTs signed with an X.509 certificate, and need an expirat
 ```
 
 As with SD-JWT VC, the status list must be signed by the same certificate chain as the mdoc, unless you trust a separate status list certificate with `trustedCertificates: [{ issuance: [...], status: [...] }]`.
-
-## Other formats
-
-- AnonCreds uses its own revocation registries, published on the ledger, and the holder proves non-revocation in the presentation. See [AnonCreds](./anoncreds.mdx).
-- Credo doesn't check `credentialStatus` of W3C credentials. See [W3C Verifiable Credentials](./w3c-vc.mdx#status-and-revocation).

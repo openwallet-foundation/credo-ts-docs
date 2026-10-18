@@ -23,6 +23,7 @@ function DcApiScreen({ request }: { request: DcApiRequest }) {
       if (request.platform === 'ios') {
         // iOS only hands over the request once the user approved, and only as org-iso-mdoc
         const [isoMdocRequest] = await request.approve()
+        if (!isoMdocRequest) return request.decline('No org-iso-mdoc request')
         return await request.respond(await createIsoMdocResponse(agent, isoMdocRequest, origin))
       }
 

@@ -71,14 +71,24 @@ const sidebars = {
             id: 'protocols/openid4vc/index',
           },
           items: [
-            'protocols/openid4vc/issuer',
-            'protocols/openid4vc/holder',
-            'protocols/openid4vc/verifier',
-            'protocols/openid4vc/authorization',
-            'protocols/openid4vc/dc-api',
-            'protocols/openid4vc/sd-jwt-vc',
-            'protocols/openid4vc/mdoc',
-            'protocols/openid4vc/w3c',
+            {
+              type: 'category',
+              label: 'Issuance (OpenID4VCI)',
+              collapsed: false,
+              items: ['protocols/openid4vc/issuer', 'protocols/openid4vc/receive', 'protocols/openid4vc/authorization'],
+            },
+            {
+              type: 'category',
+              label: 'Presentation (OpenID4VP)',
+              collapsed: false,
+              items: ['protocols/openid4vc/verifier', 'protocols/openid4vc/present'],
+            },
+            {
+              type: 'category',
+              label: 'Formats',
+              collapsed: false,
+              items: ['protocols/openid4vc/sd-jwt-vc', 'protocols/openid4vc/mdoc', 'protocols/openid4vc/w3c'],
+            },
           ],
         },
         {
@@ -88,7 +98,16 @@ const sidebars = {
             type: 'doc',
             id: 'protocols/mdoc/index',
           },
-          items: ['protocols/mdoc/proximity', 'protocols/mdoc/dc-api'],
+          items: ['protocols/mdoc/proximity'],
+        },
+        {
+          type: 'category',
+          label: 'Digital Credentials API',
+          link: {
+            type: 'doc',
+            id: 'protocols/dc-api/index',
+          },
+          items: ['protocols/dc-api/verifier', 'protocols/dc-api/wallet'],
         },
         {
           type: 'category',

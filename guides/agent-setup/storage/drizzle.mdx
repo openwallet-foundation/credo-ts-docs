@@ -3,7 +3,9 @@ title: Drizzle
 description: Store Credo records in PostgreSQL or SQLite tables with Drizzle ORM, run the migrations, and move an existing Askar agent to Drizzle.
 ---
 
-`@credo-ts/drizzle-storage` stores the agent's records in regular SQL tables in PostgreSQL or SQLite, through [Drizzle ORM](https://orm.drizzle.team). You create the database connection, choose the record bundles and run migrations. Drizzle doesn't store keys, so you also need a [key management](../key-management.mdx) backend. To compare it with Askar, see [Storage](./index.mdx).
+`@credo-ts/drizzle-storage` stores the agent's records in regular SQL tables in PostgreSQL or SQLite, through [Drizzle ORM](https://orm.drizzle.team). You create the database connection, choose the record bundles and run migrations. Drizzle doesn't store keys, so you also need a [key management](../key-management.mdx) backend, usually Askar.
+
+Use it on a server when you want to query, inspect and back up records with your usual database tools, and you can run migrations on every deploy. To compare it with Askar, see [Storage](./index.mdx).
 
 ## Install
 
@@ -22,7 +24,7 @@ description: Store Credo records in PostgreSQL or SQLite tables with Drizzle ORM
 
 `@credo-ts/drizzle-storage` requires `drizzle-orm` `^0.45.4`. It includes `drizzle-kit` for the migration CLI, so you don't install that yourself. The Askar packages provide the key management backend.
 
-Use the `pg` driver for PostgreSQL, and `libsql` (Node.js) or `expo-sqlite` (React Native) for SQLite. For another driver, open an issue in the Credo repository: Credo has to map the driver's error codes.
+Use PostgreSQL with the `pg` driver on servers, and always when several instances share the data. SQLite works for a single instance or local development, with `libsql` on Node.js or `expo-sqlite` on React Native. For another driver, open an issue in the Credo repository: Credo has to map the driver's error codes.
 
 ## Configure
 
@@ -64,9 +66,7 @@ Order the bundles as in this table, so a bundle comes after the bundles it depen
 
 ## Key management
 
-Drizzle stores records only. Without a key management backend the agent still initializes, but every key operation throws. The examples above keep the keys in Askar: `enableStorage: false` turns off Askar storage, and Askar creates its own store for the keys only. Give that store a database that you back up together with the Drizzle database: records such as DIDs refer to keys in it.
-
-The Node.js backend from `@credo-ts/node` keeps keys in memory only, so it's only an option for tests. See [Key management](../key-management.mdx).
+Without a key management backend the agent still initializes, but every key operation throws. The examples above keep the keys in Askar with `enableStorage: false`, so Askar creates a store for the keys only. Back that store up together with the Drizzle database: records such as DIDs refer to keys in it. The Node.js backend from `@credo-ts/node` keeps keys in memory only, so it's for tests. See [Key management](../key-management.mdx).
 
 ## Run migrations
 
@@ -141,7 +141,7 @@ The migrations import `.sql` files, so the bundler has to inline them. Install `
 
 ## Migrate from Askar
 
-`@credo-ts/askar-to-drizzle-storage-migration` copies all records from an Askar store to an empty Drizzle database. It doesn't move keys: after the migration, Askar stays your key management backend with storage turned off.
+`@credo-ts/askar-to-drizzle-storage-migration` copies all records from an Askar store to an empty Drizzle database. Use it when a server that runs on Askar should move to Drizzle, for example to get SQL access to its records. It doesn't move keys: after the migration, Askar stays your key management backend with storage turned off.
 
 <InstallTabs packages="@credo-ts/askar-to-drizzle-storage-migration @openwallet-foundation/askar-shared@0.6.1" />
 

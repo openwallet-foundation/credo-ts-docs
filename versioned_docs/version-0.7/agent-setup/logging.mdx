@@ -3,7 +3,7 @@ title: Logging
 description: Log what a Credo agent does with the built-in ConsoleLogger or your own logger, and choose the log level.
 ---
 
-A Credo agent logs nothing until you give it a logger. This page shows the built-in `ConsoleLogger`, what Credo logs at each level, and how to send the logs to your own logging setup.
+A Credo agent logs nothing until you give it a logger. The agent and all its modules, including tenant agents, use that one logger.
 
 ## Console logger
 
@@ -14,42 +14,28 @@ Pass a logger as `config.logger`:
 
 `ConsoleLogger` prints each message with its level as a prefix, such as `INFO: Creating agent with config`, using the console method that matches the level. Data passed with a message is printed as JSON. Errors in the data keep their message and stack.
 
-Without a logger, the agent uses a `ConsoleLogger` at `LogLevel.Off`. The agent and all its modules, including tenant agents, use the same logger.
-
 ## Log levels
 
-A logger prints messages at its own level and above. `LogLevel` members are PascalCase, for example `LogLevel.Debug`:
+A logger prints messages at its own level and above:
 
 | Level | What Credo logs at this level |
 | --- | --- |
-| `Test` | Nothing. Set it to print every message. |
-| `Trace` | The most detailed steps, such as key imports, and requests to ledgers and their results. |
-| `Debug` | Processing steps of protocols, including the content of DIDComm messages the agent sends. |
-| `Info` | Lifecycle events: the agent's config when it's created, the storage version check and updates, received DIDComm messages, created tenants, and starting and stopping message pickup. |
-| `Warn` | Problems the agent recovers from, such as a credential that breaks a recommendation of its specification. |
-| `Error` | Failed operations, such as a DIDComm message that can't be delivered. |
-| `Fatal` | A storage update that failed. |
-| `Off` | Nothing. |
+| `LogLevel.Test` | Nothing. Set it to print every message. |
+| `LogLevel.Trace` | The most detailed steps, such as key imports, and requests to ledgers and their results. |
+| `LogLevel.Debug` | Processing steps of protocols, including the content of DIDComm messages the agent sends. |
+| `LogLevel.Info` | Lifecycle events, such as the agent's config when it's created, storage updates, received DIDComm messages and created tenants. |
+| `LogLevel.Warn` | Problems the agent recovers from, such as a credential that breaks a recommendation of its specification. |
+| `LogLevel.Error` | Failed operations, such as a DIDComm message that can't be delivered. |
+| `LogLevel.Fatal` | A storage update that failed. |
+| `LogLevel.Off` | Nothing. The default. |
 
-:::warning
-
-At `Debug` and `Trace`, logs can contain message contents, credential data and other personal data. Use `Info` or higher in production.
-
-:::
+Use `Info` or higher in production. At `Debug` and `Trace`, logs can contain message contents, credential data and other personal data.
 
 ## Your own logger
 
-To send logs to your own logging library, implement the `Logger` interface from `@credo-ts/core`: a `logLevel` property and the methods `test`, `trace`, `debug`, `info`, `warn`, `error` and `fatal`, each taking a `message` and optional `data`. Extending `BaseLogger` saves some work: it stores the level and has `isEnabled(level)` to check whether a message should be logged.
-
-This logger writes one JSON object per line:
+To send logs to your own logging library, implement the `Logger` interface from `@credo-ts/core`: a `logLevel` property and the methods `test`, `trace`, `debug`, `info`, `warn`, `error` and `fatal`, each taking a `message` and optional `data`. Extending `BaseLogger` saves some work: it stores the level and has `isEnabled(level)`. This logger writes one JSON object per line:
 
 ```ts showLineNumbers title="JsonLogger.ts" logging-custom.ts section-1
 ```
 
-Pass it like the console logger:
-
-```ts
-logger: new JsonLogger(LogLevel.Info),
-```
-
-`replaceError` is the `JSON.stringify` replacer that `ConsoleLogger` uses for errors. Use it when you serialize the data yourself.
+Pass it as `config.logger`, for example `new JsonLogger(LogLevel.Info)`.

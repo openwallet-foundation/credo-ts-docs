@@ -35,9 +35,9 @@ export const protocolGroups: ProtocolGroup[] = [
 export const protocolColumns: ProtocolColumn[] = [
   { id: 'oid4vci', label: 'OpenID4VCI', group: 'openid4vc', docs: 'protocols/openid4vc/issuer' },
   { id: 'oid4vp', label: 'OpenID4VP', group: 'openid4vc', docs: 'protocols/openid4vc/verifier' },
-  { id: 'dcApi', label: 'DC API', group: 'openid4vc', docs: 'protocols/openid4vc/dc-api' },
+  { id: 'dcApi', label: 'DC API', group: 'openid4vc', docs: 'protocols/dc-api' },
   { id: 'isoProximity', label: 'Proximity', group: 'mdoc', docs: 'protocols/mdoc/proximity' },
-  { id: 'isoDcApi', label: 'DC API', group: 'mdoc', docs: 'protocols/mdoc/dc-api' },
+  { id: 'isoDcApi', label: 'DC API', group: 'mdoc', docs: 'protocols/dc-api' },
   { id: 'didcommIssue', label: 'Issue Credential v2', group: 'didcomm', docs: 'protocols/didcomm/issue-credential' },
   { id: 'didcommPresent', label: 'Present Proof v2', group: 'didcomm', docs: 'protocols/didcomm/present-proof' },
 ]
@@ -96,15 +96,20 @@ export const formatRows: FormatRow[] = [
     detail: 'ldp_vc',
     docs: 'credential-formats/w3c-vc',
     support: {
-      oid4vci: 'yes',
-      oid4vp: 'yes',
-      dcApi: 'yes',
+      oid4vci: 'partial',
+      oid4vp: 'partial',
+      dcApi: 'partial',
       isoProximity: 'no',
       isoDcApi: 'no',
       didcommIssue: 'yes',
       didcommPresent: 'yes',
     },
-    notes: { didcommPresent: 'Through DIF Presentation Exchange' },
+    notes: {
+      oid4vci: 'Issuing between Credo agents needs workarounds',
+      oid4vp: 'Presenting with DCQL fails when Credo creates the presentation',
+      dcApi: 'Presenting with DCQL fails when Credo creates the presentation',
+      didcommPresent: 'Through DIF Presentation Exchange',
+    },
   },
   {
     id: 'w3c-v2-sd-jwt',
@@ -136,6 +141,7 @@ export const formatRows: FormatRow[] = [
       didcommIssue: 'yes',
       didcommPresent: 'no',
     },
+    notes: { didcommIssue: "The issuer doesn't verify the holder's binding proof" },
   },
   {
     id: 'anoncreds',
