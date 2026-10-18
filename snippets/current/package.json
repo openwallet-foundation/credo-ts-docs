@@ -5,6 +5,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@animo-id/expo-digital-credentials-api": "^0.5.1",
     "@animo-id/expo-secure-environment": "^0.1.5",
     "@credo-ts/action-menu": "0.8.0-alpha-20261016095718",
     "@credo-ts/anoncreds": "0.8.0-alpha-20261016095718",
@@ -35,13 +36,22 @@
     "@openwallet-foundation/askar-nodejs": "0.6.1",
     "@openwallet-foundation/askar-react-native": "0.6.1",
     "@openwallet-foundation/askar-shared": "0.6.1",
+    "@owf/mdoc": "^0.8.2",
     "drizzle-orm": "^0.45.4",
+    "expo": "~56.0.23",
+    "expo-mdoc-data-transfer": "^0.2.0",
+    "expo-secure-store": "~56.0.4",
     "express": "^5.2.1",
     "ioredis": "^5.10.1",
-    "pg": "^8.18.0"
+    "pg": "^8.18.0",
+    "react": "19.2.3",
+    "react-native": "0.85.3",
+    "react-native-qrcode-svg": "^6.3.21",
+    "react-native-svg": "15.16.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
-    "@types/pg": "^8.16.0"
+    "@types/pg": "^8.16.0",
+    "@types/react": "~19.2.18"
   }
 }

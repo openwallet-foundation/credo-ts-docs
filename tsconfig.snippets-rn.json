@@ -1,0 +1,11 @@
+{
+  // React Native screens, resolved the way Metro bundles them
+  "extends": "./tsconfig.snippets.json",
+  "compilerOptions": {
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx"
+  },
+  "include": ["snippets/*/src/**/*.tsx"],
+  "exclude": []
+}

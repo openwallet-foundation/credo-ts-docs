@@ -47,7 +47,7 @@ OpenID4VP can present the same mdoc, and the device response inside it has the s
 
 | Step | Proximity | Digital Credentials API |
 | --- | --- | --- |
-| Engagement and transport | A native module, such as `expo-mdoc-data-transfer` in a React Native wallet | The browser and the operating system |
+| Engagement and transport | A native module, such as `expo-mdoc-data-transfer` in a React Native wallet | The browser and the operating system. In the wallet, a native module such as `@animo-id/expo-digital-credentials-api` |
 | Encryption | The native module | Credo |
 | Create the device request | Not supported | `agent.mdoc.createDcApiVerificationSession` |
 | Read the request in the wallet | Decode it with `@owf/mdoc` | `agent.mdoc.resolveDcApiRequest`, which also finds matching mdocs |

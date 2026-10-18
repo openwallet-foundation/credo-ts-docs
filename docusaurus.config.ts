@@ -150,6 +150,9 @@ const config: Config = {
         docsRouteBasePath: 'guides',
         indexBlog: false,
         indexPages: false,
+        // The plugin starts each result's breadcrumb with the first active navbar link. All navbar doc links
+        // share one sidebar, so they are all active and every result would start with "Get started".
+        ignoreCssSelectors: ['.navbar'],
         highlightSearchTermsOnTargetPage: true,
         explicitSearchResultPath: true,
         searchBarShortcutHint: true,

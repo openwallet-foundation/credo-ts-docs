@@ -83,6 +83,16 @@
   },
   "overrides": [
     {
+      "includes": ["snippets/*/src/**/*.ts"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useHookAtTopLevel": "off"
+          }
+        }
+      }
+    },
+    {
       "includes": ["snippets/*/src/landing-*.ts"],
       "formatter": {
         "lineWidth": 76

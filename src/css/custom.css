@@ -207,10 +207,21 @@ h4 {
 
 /* Navbar */
 
+/* Prefixed first: with the unprefixed declaration first, the CSS minifier keeps only the prefixed one. */
 .navbar {
-  backdrop-filter: saturate(180%) blur(12px);
   -webkit-backdrop-filter: saturate(180%) blur(12px);
+  backdrop-filter: saturate(180%) blur(12px);
   border-bottom: 1px solid var(--border);
+}
+
+/* A backdrop-filter makes the navbar the containing block of the fixed mobile sidebar, which clips it to the navbar height. */
+.navbar.navbar-sidebar--show {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.navbar-sidebar {
+  background-color: var(--bg);
 }
 
 .navbar__brand {
@@ -246,6 +257,13 @@ h4 {
   align-items: center;
   justify-content: center;
   border-radius: 0.5rem;
+}
+
+/* Below the navbar breakpoint the links move to the mobile menu. */
+@media (max-width: 996px) {
+  .navbar__item.navbar-icon {
+    display: none;
+  }
 }
 
 .navbar-icon::before {

@@ -12,7 +12,7 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "types:check": "tsc -p tsconfig.snippets.json --noEmit",
+    "types:check": "tsc -p tsconfig.snippets.json --noEmit && tsc -p tsconfig.snippets-rn.json --noEmit",
     "style:check": "biome check --unsafe",
     "style:fix": "biome check --write --unsafe"
   },

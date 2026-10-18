@@ -9,7 +9,20 @@ import {
   TypedArrayEncoder,
   useInstanceFromCredentialRecord,
 } from '@credo-ts/core'
+import { DeviceRequest } from '@owf/mdoc'
 
+// The requested data elements per document type, with the reader's intent to retain each one
+export function decodeDeviceRequest(deviceRequest: Uint8Array): MdocDocumentRequest[] {
+  return DeviceRequest.decode(deviceRequest).docRequests.map(({ itemsRequest }) => ({
+    docType: itemsRequest.docType,
+    nameSpaces: Object.fromEntries(
+      Array.from(itemsRequest.namespaces, ([nameSpace, elements]) => [nameSpace, Object.fromEntries(elements)])
+    ),
+  }))
+}
+// end-section-1
+
+// start-section-2
 export async function createDeviceResponse(
   agent: Agent,
   options: { documentRequests: MdocDocumentRequest[]; sessionTranscript: Uint8Array }
@@ -52,9 +65,9 @@ export async function createDeviceResponse(
   // The encoded DeviceResponse, for the transport to encrypt and send
   return deviceResponse.deviceResponse.encode()
 }
-// end-section-1
+// end-section-2
 
-// start-section-2
+// start-section-3
 export async function verifyDeviceResponse(
   agent: Agent,
   options: { deviceResponse: Uint8Array; sessionTranscript: Uint8Array; trustedCertificates: string[] }
@@ -69,4 +82,4 @@ export async function verifyDeviceResponse(
 
   return deviceResponse.issuerClaims
 }
-// end-section-2
+// end-section-3

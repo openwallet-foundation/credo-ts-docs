@@ -32,7 +32,7 @@ const agent = new Agent({ ... })
 
 Without `section-N` the whole file is shown. A missing file or section fails the build. Pages under `versioned_docs/version-<x>/` read `snippets/<x>/`, pages under `guides/` read `snippets/current/`.
 
-Write snippets as the code you would want users to copy: self-contained, typed, no casts to silence errors, comments only where they explain a why. Run a Node snippet from its package:
+Write snippets as the code you would want users to copy: self-contained, typed, no casts to silence errors, comments only where they explain a why. React Native screens are `.tsx` files, checked with `tsconfig.snippets-rn.json`, which resolves modules the way Metro does. Run a Node snippet from its package:
 
 ```bash
 cd snippets/0.7
