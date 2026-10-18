@@ -20,6 +20,8 @@ You don't need tenants for a mobile wallet, which has one user. You don't need t
 ```ts showLineNumbers title="agent.ts" tenants.ts section-1
 ```
 
+The example stores the records of all tenants in one [Drizzle](./storage/drizzle.mdx) database and their keys in one Askar store. Add `tenantsBundle` to `bundles`, pass `--bundle tenants` when you run the migrations, and use PostgreSQL in production.
+
 Replace the default cache: it throws as soon as a tenant uses it. Use `InMemoryLruCache`, or `RedisCache` when several instances run the agent. See [Caching](./caching.mdx).
 
 | `TenantsModule` option | Description |
@@ -31,21 +33,22 @@ Tenant agents get the modules you register on the root agent. To type them, pass
 
 ## Where tenant data is stored
 
-| Storage | Tenant records | Tenant keys (Askar) |
-| --- | --- | --- |
-| Askar, `ProfilePerWallet` | A profile per tenant in the root store | In the tenant's profile |
-| Askar, `DatabasePerWallet` (default) | A store per tenant: a SQLite file or a PostgreSQL database each | In the tenant's store |
-| Drizzle | The one database, each row tagged with the tenant | Askar, following `multiWalletDatabaseScheme` |
+With Drizzle, all tenants share the one database, and each row is tagged with its tenant. Tenant keys are in Askar, where `multiWalletDatabaseScheme` decides where they go. Set it to `AskarMultiWalletDatabaseScheme.ProfilePerWallet`, as in the example: all tenants in one Askar store, with a profile each.
 
-Set `multiWalletDatabaseScheme: AskarMultiWalletDatabaseScheme.ProfilePerWallet` on the `AskarModule`, as in the example above, also when Askar only holds the keys. It keeps all tenants in one database, performs better with many tenants, and doesn't create a PostgreSQL database per tenant. Store-level tasks, such as rotating the store key or exporting the store, then cover all tenants at once.
+### With Askar storage
 
-`DatabasePerWallet` is the default for backwards compatibility. It gives each tenant a store with its own generated key, which Credo saves in the tenant record. Use it only if you need each tenant in its own SQLite file or PostgreSQL database, for example to back up or delete tenants one by one.
+When Askar also stores the records, `multiWalletDatabaseScheme` decides where all tenant data goes:
+
+| `multiWalletDatabaseScheme` | Tenant records and keys |
+| --- | --- |
+| `ProfilePerWallet` | A profile per tenant in the root store |
+| `DatabasePerWallet` (default) | A store per tenant, a SQLite file or a PostgreSQL database each, with a generated key that Credo saves in the tenant record |
+
+Use `ProfilePerWallet`. It keeps all tenants in one database, performs better with many tenants, and doesn't create a PostgreSQL database per tenant. Store-level tasks, such as rotating the store key or exporting the store, then cover all tenants at once. `DatabasePerWallet` is the default for backwards compatibility: use it only to back up or delete tenants one by one.
 
 :::warning[No SQLite `path` with `DatabasePerWallet`]
 Tenant stores reuse the root store's `database` config. With an explicit SQLite `path`, all tenants resolve to the root store's file, and `createTenant` fails. Leave `path` unset so each tenant gets its own file in the data directory.
 :::
-
-With [Drizzle](./storage/drizzle.mdx), add `tenantsBundle` from `@credo-ts/drizzle-storage/tenants` to `bundles`, and pass `--bundle tenants` when you run the migrations.
 
 ## Create a tenant
 

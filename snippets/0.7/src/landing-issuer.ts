@@ -1,11 +1,14 @@
 import { AskarModule } from '@credo-ts/askar'
 import { Agent, ClaimFormat, type SdJwtVcIssuer } from '@credo-ts/core'
+import { DrizzleStorageModule } from '@credo-ts/drizzle-storage'
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
 import { agentDependencies } from '@credo-ts/node'
 import {
   type OpenId4VciCredentialRequestToCredentialMapper,
   OpenId4VcModule,
 } from '@credo-ts/openid4vc'
 import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { drizzle } from 'drizzle-orm/node-postgres'
 import express from 'express'
 
 const signer: SdJwtVcIssuer = {
@@ -26,13 +29,25 @@ const credentialRequestToCredentialMapper: OpenId4VciCredentialRequestToCredenti
   })
 
 const app = express()
-const store = { id: 'issuer', key: process.env.STORE_KEY ?? '' }
+const database = drizzle(process.env.DATABASE_URL ?? '')
+const store = { id: 'issuer-keys', key: process.env.STORE_KEY ?? '' }
+
+const storage = new DrizzleStorageModule({
+  database,
+  bundles: [openid4vcBundle],
+})
+const askar = new AskarModule({
+  askar: NativeAskar,
+  enableStorage: false,
+  store,
+})
 
 // start-section-1
 const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({ askar: NativeAskar, store }),
+    storage, // records in Drizzle
+    askar, // keys in Askar
     openid4vc: new OpenId4VcModule({
       app,
       issuer: {

@@ -1,25 +1,30 @@
 // start-section-1
-import { randomUUID } from 'node:crypto'
 import { after, before, test } from 'node:test'
-import { AskarModule } from '@credo-ts/askar'
 import { Agent, type KeyDidCreateOptions } from '@credo-ts/core'
-import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar, Store } from '@openwallet-foundation/askar-nodejs'
+import { KeyManagementModule } from '@credo-ts/core/kms'
+import { DrizzleStorageModule } from '@credo-ts/drizzle-storage'
+import { coreBundle } from '@credo-ts/drizzle-storage/core'
+import { agentDependencies, NodeInMemoryKeyManagementStorage, NodeKeyManagementService } from '@credo-ts/node'
+import { createClient } from '@libsql/client'
+import { drizzle } from 'drizzle-orm/libsql'
+import { migrate } from 'drizzle-orm/libsql/migrator'
 
-export function createTestAgent() {
+export async function createTestAgent() {
+  // A new in-memory database for every agent keeps parallel tests apart
+  const database = drizzle(createClient({ url: ':memory:' }))
+  await migrate(database, {
+    migrationsFolder: coreBundle.migrations.sqlite.migrationsPath,
+    // Give every bundle you add its own migrations table
+    migrationsTable: 'credo_migrations__core',
+  })
+
   return new Agent({
     dependencies: agentDependencies,
     modules: {
-      askar: new AskarModule({
-        askar: NativeAskar,
-        store: {
-          // A unique id keeps parallel tests apart
-          id: `test-${randomUUID()}`,
-          // A raw key skips the slow key derivation
-          key: Store.generateRawKey(),
-          keyDerivationMethod: 'raw',
-          database: { type: 'sqlite', config: { inMemory: true } },
-        },
+      storage: new DrizzleStorageModule({ database, bundles: [] }),
+      // Keeps the keys in memory
+      kms: new KeyManagementModule({
+        backends: [new NodeKeyManagementService(new NodeInMemoryKeyManagementStorage())],
       }),
     },
   })
@@ -27,7 +32,7 @@ export function createTestAgent() {
 // end-section-1
 
 // start-section-2
-const agent = createTestAgent()
+const agent = await createTestAgent()
 
 before(() => agent.initialize())
 after(() => agent.shutdown())

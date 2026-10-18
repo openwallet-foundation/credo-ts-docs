@@ -5,7 +5,7 @@ description: Store Credo records in PostgreSQL or SQLite tables with Drizzle ORM
 
 `@credo-ts/drizzle-storage` stores the agent's records in regular SQL tables in PostgreSQL or SQLite, through [Drizzle ORM](https://orm.drizzle.team). You create the database connection, choose the record bundles and run migrations. Drizzle doesn't store keys, so you also need a [key management](../key-management.mdx) backend, usually Askar.
 
-Use it on a server when you want to query, inspect and back up records with your usual database tools, and you can run migrations on every deploy. To compare it with Askar, see [Storage](./index.mdx).
+Drizzle is the storage for servers: records are SQL tables with indexes that the database can query, and many tenants and instances share one database. It doesn't encrypt records, and you run its migrations on every Credo upgrade. To compare it with Askar, see [Storage](./index.mdx).
 
 ## Install
 
@@ -66,7 +66,7 @@ Order the bundles as in this table, so a bundle comes after the bundles it depen
 
 ## Key management
 
-Without a key management backend the agent still initializes, but every key operation throws. The examples above keep the keys in Askar with `enableStorage: false`, so Askar creates a store for the keys only. Back that store up together with the Drizzle database: records such as DIDs refer to keys in it. The Node.js backend from `@credo-ts/node` keeps keys in memory only, so it's for tests. See [Key management](../key-management.mdx).
+Without a key management backend the agent still initializes, but every key operation throws. The examples above keep the keys in Askar with `enableStorage: false`, so Askar creates a store for the keys only. Back that store up together with the Drizzle database: records such as DIDs refer to keys in it. The Node.js backend from `@credo-ts/node` keeps keys in memory only, so it's for [tests](#in-memory-database-for-tests). See [Key management](../key-management.mdx).
 
 ## Run migrations
 
@@ -138,6 +138,15 @@ The migrations import `.sql` files, so the bundler has to inline them. Install `
 
 </TabItem>
 </Tabs>
+
+## In-memory database for tests
+
+For tests, use an in-memory SQLite database and keep the keys in memory with the Node.js backend, so there's nothing to set up or clean up. A new in-memory database is empty, so apply the migrations each time you create an agent:
+
+```ts showLineNumbers title="test-agent.ts" storage-drizzle-in-memory.ts section-1
+```
+
+The Node.js backend can't encrypt DIDComm messages, which need XSalsa20-Poly1305. For DIDComm tests, keep the keys in Askar on [in-memory SQLite](./askar.mdx#in-memory-sqlite), with `enableStorage: false`.
 
 ## Migrate from Askar
 

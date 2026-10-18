@@ -1,19 +1,17 @@
+import { exampleStorage } from './example-storage.js'
+
+type ExampleStorage = Awaited<ReturnType<typeof exampleStorage>>
+
 // start-section-1
-import { AskarModule } from '@credo-ts/askar'
 import { Agent, DidKey, type KeyDidCreateOptions, SdJwtVcModule, SdJwtVcRecord } from '@credo-ts/core'
 import { PublicJwk } from '@credo-ts/core/kms'
 import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
-function createAgent(id: string, sdJwtVc?: SdJwtVcModule) {
+function createAgent(storage: ExampleStorage, sdJwtVc?: SdJwtVcModule) {
   return new Agent({
-    config: {},
     dependencies: agentDependencies,
     modules: {
-      askar: new AskarModule({
-        askar: NativeAskar,
-        store: { id, key: id, database: { type: 'sqlite', config: { inMemory: true } } },
-      }),
+      ...storage, // Storage and key management, see Agent setup
       // SdJwtVcModule is a default module. Register it yourself only to configure it.
       ...(sdJwtVc ? { sdJwtVc } : {}),
     },
@@ -43,9 +41,9 @@ const sdJwtVcModule = new SdJwtVcModule({
 })
 // end-section-7
 
-const issuer = createAgent('format-sd-jwt-vc-issuer')
-const holder = createAgent('format-sd-jwt-vc-holder')
-const verifier = createAgent('format-sd-jwt-vc-verifier', sdJwtVcModule)
+const issuer = createAgent(await exampleStorage())
+const holder = createAgent(await exampleStorage())
+const verifier = createAgent(await exampleStorage(), sdJwtVcModule)
 await issuer.initialize()
 await holder.initialize()
 await verifier.initialize()

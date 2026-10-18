@@ -1,9 +1,9 @@
 ---
 title: Your first agent
-description: Create, initialize and shut down a minimal Credo agent that stores its data in Askar and creates a did:key.
+description: Create, initialize and shut down a minimal Credo agent that stores records with Drizzle in SQLite and keys in Askar, and creates a did:key.
 ---
 
-This page builds the smallest complete agent: it stores data and keys in an Askar SQLite database, creates a `did:key`, resolves it and shuts down. You need the packages from [Installation](./installation.mdx).
+This page builds the smallest complete agent: it stores records in an SQLite file with Drizzle and keys in Askar, creates a `did:key`, resolves it and shuts down. On React Native, Askar stores both. You need the packages from [Installation](./installation.mdx).
 
 ## Create the agent
 
@@ -25,10 +25,10 @@ This page builds the smallest complete agent: it stores data and keys in an Aska
 The `Agent` constructor takes three options:
 
 - `dependencies` are the platform implementations of the file system, `fetch`, WebSocket and events. Import `agentDependencies` from `@credo-ts/node` or `@credo-ts/react-native`.
-- `modules` adds features to the agent. The `AskarModule` registers Askar as the storage and as a [key management](../agent-setup/key-management.mdx) backend. An agent needs a storage module: without one, `new Agent()` throws `Missing required dependency: 'StorageService'`.
+- `modules` adds features to the agent. On Node.js, the `DrizzleStorageModule` stores the records, and the `AskarModule` with `enableStorage: false` is the [key management](../agent-setup/key-management.mdx) backend. On React Native, the `AskarModule` does both. An agent needs a storage module: without one, `new Agent()` throws `Missing required dependency: 'StorageService'`.
 - `config` holds agent-wide settings, such as the logger. See [Agent configuration](../agent-setup/index.mdx).
 
-`store.id` names the database and `store.key` encrypts it. On Node.js the database is created at `~/.afj/data/wallet/<id>/sqlite.db`. See [Askar](../agent-setup/storage/askar.mdx) for the options, PostgreSQL, and how to choose the key.
+`drizzle('file:agent.db')` opens `agent.db` in the current directory. For PostgreSQL and the record bundles of other modules, see [Drizzle](../agent-setup/storage/drizzle.mdx). `store.id` names the Askar database and `store.key` encrypts it. On Node.js the Askar database is created at `~/.afj/data/wallet/<id>/sqlite.db`. See [Askar](../agent-setup/storage/askar.mdx) for the options and how to choose the key.
 
 ## Modules and their APIs
 
@@ -41,7 +41,7 @@ TypeScript infers these APIs from the `modules` you pass, so using a module you 
 ```ts showLineNumbers first-agent.ts section-2
 ```
 
-`initialize()` opens the Askar store, or creates it on the first run, and checks that the storage is up to date for this version of Credo. Call it once, before you use the agent.
+`initialize()` opens the storage and the Askar store, creates the store on the first run, and checks that the storage is up to date for this version of Credo. Call it once, before you use the agent.
 
 ## Create and resolve a DID
 
@@ -55,12 +55,20 @@ TypeScript infers these APIs from the `modules` you pass, so using a module you 
 ```ts showLineNumbers first-agent.ts section-4
 ```
 
-`shutdown()` stops the modules and closes the store. Call it before your process exits or your app is closed.
+`shutdown()` stops the modules and closes the storage. Call it before your process exits or your app is closed.
 
 ## Run it
 
 <Tabs groupId="platform" queryString>
 <TabItem value="node" label="Node.js">
+
+Drizzle doesn't create tables, so apply the migrations of the core bundle first, and again after every Credo upgrade. Without them, `initialize()` fails with `no such table: StorageVersion`.
+
+```bash
+npx drizzle-storage --bundle core migrate --dialect sqlite --database-url file:agent.db
+```
+
+Then run the agent:
 
 ```bash
 npx tsx src/index.ts
@@ -82,7 +90,7 @@ INFO: Agent storage is up to date.
 }
 ```
 
-Run it again and the agent opens the existing store and adds a second DID.
+Run it again and the agent adds a second DID to the same database.
 
 </TabItem>
 <TabItem value="react-native" label="React Native">

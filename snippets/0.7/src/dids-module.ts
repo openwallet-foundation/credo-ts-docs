@@ -1,4 +1,7 @@
-import { AskarModule } from '@credo-ts/askar'
+import { exampleStorage } from './example-storage.js'
+
+const storage = await exampleStorage()
+
 // start-section-1
 import {
   Agent,
@@ -13,7 +16,6 @@ import {
 } from '@credo-ts/core'
 import { agentDependencies } from '@credo-ts/node'
 import { WebVhDidRegistrar, WebVhDidResolver, WebVhModule } from '@credo-ts/webvh'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
 const didModules = {
   webvh: new WebVhModule(),
@@ -35,10 +37,7 @@ const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
     ...didModules,
-    askar: new AskarModule({
-      askar: NativeAskar,
-      store: { id: 'dids-module', key: 'dids-module', database: { type: 'sqlite', config: { inMemory: true } } },
-    }),
+    ...storage,
   },
 })
 

@@ -1,4 +1,3 @@
-import { AskarModule } from '@credo-ts/askar'
 // start-section-1
 import {
   Agent,
@@ -14,17 +13,13 @@ import {
 } from '@credo-ts/core'
 // end-section-1
 import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { exampleStorage } from './example-storage.js'
 
-function createAgent(id: string) {
+async function createAgent() {
   return new Agent({
-    config: {},
     dependencies: agentDependencies,
     modules: {
-      askar: new AskarModule({
-        askar: NativeAskar,
-        store: { id, key: id, database: { type: 'sqlite', config: { inMemory: true } } },
-      }),
+      ...(await exampleStorage()), // Storage and key management, see Agent setup
     },
   })
 }
@@ -38,9 +33,9 @@ async function createDidKey(agent: Agent) {
   return { did: didState.did, didUrl: `${didState.did}#${DidKey.fromDid(didState.did).publicJwk.fingerprint}` }
 }
 
-const issuer = createAgent('format-w3c-v2-issuer')
-const holder = createAgent('format-w3c-v2-holder')
-const verifier = createAgent('format-w3c-v2-verifier')
+const issuer = await createAgent()
+const holder = await createAgent()
+const verifier = await createAgent()
 await issuer.initialize()
 await holder.initialize()
 await verifier.initialize()

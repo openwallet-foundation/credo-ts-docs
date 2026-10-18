@@ -1,8 +1,5 @@
-import { AskarModule } from '@credo-ts/askar'
 // start-section-1
-import { Agent, BaseLogger, LogLevel, replaceError } from '@credo-ts/core'
-import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { BaseLogger, LogLevel, replaceError } from '@credo-ts/core'
 
 type LogData = Record<string, unknown>
 
@@ -42,19 +39,19 @@ export class JsonLogger extends BaseLogger {
     this.log(LogLevel.Fatal, message, data)
   }
 }
+
 // end-section-1
+
+import { Agent } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/node'
+import { exampleStorage } from './example-storage.js'
 
 const agent = new Agent({
   config: {
     logger: new JsonLogger(LogLevel.Info),
   },
   dependencies: agentDependencies,
-  modules: {
-    askar: new AskarModule({
-      askar: NativeAskar,
-      store: { id: 'logging-example', key: 'logging-example-key' },
-    }),
-  },
+  modules: await exampleStorage(),
 })
 
 await agent.initialize()

@@ -7,7 +7,7 @@ An SD-JWT VC ([IETF SD-JWT VC](https://datatracker.ietf.org/doc/draft-ietf-oauth
 
 ## Set up
 
-Everything on this page is in `@credo-ts/core`. `SdJwtVcModule` is a default module, so every agent has `agent.sdJwtVc`. The agent needs storage and a KMS, here [Askar](../agent-setup/storage/askar.mdx). The examples use three agents: an issuer, a holder and a verifier.
+Everything on this page is in `@credo-ts/core`. `SdJwtVcModule` is a default module, so every agent has `agent.sdJwtVc`. The agent also needs [storage](../agent-setup/storage/index.mdx) and key management. The examples use three agents: an issuer, a holder and a verifier.
 
 ```ts showLineNumbers title="sd-jwt-vc.ts" format-sd-jwt-vc.ts section-1
 ```

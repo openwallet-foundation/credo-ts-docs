@@ -9,17 +9,19 @@ This page describes what you pass to `new Agent()`, the modules every agent has,
 
 | Choice | Mobile wallet | Server | Details |
 | --- | --- | --- | --- |
-| Storage | Askar on SQLite | Askar for a single instance. Drizzle or Askar on PostgreSQL when you run several instances or many tenants. | [Storage](./storage/index.mdx) |
-| Key management | Askar, plus the secure environment for keys that must stay in hardware | Askar | [Key management](./key-management.mdx) |
+| Storage | Askar on SQLite | Drizzle on PostgreSQL, or on SQLite for a single instance or development | [Storage](./storage/index.mdx) |
+| Key management | Askar, plus the secure environment for keys that must stay in hardware | Askar, with its storage turned off | [Key management](./key-management.mdx) |
 | Cache | The default | The default for one agent, `InMemoryLruCache` with tenants, Redis with several instances | [Caching](./caching.mdx) |
 | Multi-tenancy | Not needed | Only when one service hosts many isolated issuers, verifiers or wallets | [Multi-tenancy](./multi-tenancy.mdx) |
+
+For tests, use Drizzle on an in-memory SQLite database and keep the keys in memory with the Node.js backend.
 
 ## Agent options
 
 | Option | Description |
 | --- | --- |
 | `dependencies` | Required. The platform implementations of the file system, `fetch`, WebSocket and events: `agentDependencies` from `@credo-ts/node` or `@credo-ts/react-native`. |
-| `modules` | The modules of the agent, keyed by the name of their API. Include a storage module, [Askar](./storage/askar.mdx) or [Drizzle](./storage/drizzle.mdx): without one, `new Agent()` throws `Missing required dependency: 'StorageService'`. |
+| `modules` | The modules of the agent, keyed by the name of their API. Include a storage module, [Drizzle](./storage/drizzle.mdx) or [Askar](./storage/askar.mdx): without one, `new Agent()` throws `Missing required dependency: 'StorageService'`. |
 | `config` | Agent-wide settings, described below. |
 
 ## Config
@@ -52,7 +54,7 @@ Credo registers these modules on every agent:
 | `dcql` | `DcqlModule` | none |
 | `pex` | `DifPresentationExchangeModule` | none |
 
-The `kms` module starts without a backend. `AskarModule` adds one. Without Askar, configure a backend yourself (see [Key management](./key-management.mdx)). The default cache doesn't work with [multi-tenancy](./multi-tenancy.mdx), so replace it when you use tenants (see [Caching](./caching.mdx)).
+The `kms` module starts without a backend. `AskarModule` adds one, also when Drizzle stores the records. Without Askar, configure a backend yourself (see [Key management](./key-management.mdx)). The default cache doesn't work with [multi-tenancy](./multi-tenancy.mdx), so replace it when you use tenants (see [Caching](./caching.mdx)).
 
 ## Replace a default module
 

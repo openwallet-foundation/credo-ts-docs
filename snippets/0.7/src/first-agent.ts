@@ -1,8 +1,10 @@
 // start-section-1
 import { AskarModule } from '@credo-ts/askar'
 import { Agent, ConsoleLogger, type KeyDidCreateOptions, LogLevel } from '@credo-ts/core'
+import { DrizzleStorageModule } from '@credo-ts/drizzle-storage'
 import { agentDependencies } from '@credo-ts/node'
 import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { drizzle } from 'drizzle-orm/libsql'
 
 const agent = new Agent({
   config: {
@@ -10,8 +12,15 @@ const agent = new Agent({
   },
   dependencies: agentDependencies,
   modules: {
+    // Records go in the tables of an SQLite file
+    storage: new DrizzleStorageModule({
+      database: drizzle('file:agent.db'),
+      bundles: [],
+    }),
+    // Drizzle doesn't store keys, so Askar keeps them
     askar: new AskarModule({
       askar: NativeAskar,
+      enableStorage: false,
       store: {
         id: 'my-first-agent',
         // Use a secret from your environment or a secure store in a real application

@@ -61,6 +61,8 @@ Register the module under the key `openid4vc`, so it's available as `agent.openi
 openid4vc: new OpenId4VcModule(),
 ```
 
+The module stores issuers, verifiers and sessions as records. With [Drizzle storage](../../agent-setup/storage/drizzle.mdx), add `openid4vcBundle` from `@credo-ts/drizzle-storage/openid4vc` to the bundles.
+
 `baseUrl` is the public URL of the endpoints, and Credo serves them under its path (`/oid4vci` and `/oid4vp` here). OpenID4VCI also requires the issuer metadata at the root of the host (`/.well-known/openid-credential-issuer/oid4vci/<issuerId>`), so your server must pass requests for the whole host to the Express app.
 
 `app` is your Express app. Without it, Credo creates one, available as `agent.openid4vc.config.app`. Either way, you start the server. Credo adds its routes during `agent.initialize()`, so register your own middleware and routes after that.

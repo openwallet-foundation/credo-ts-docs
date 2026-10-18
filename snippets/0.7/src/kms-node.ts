@@ -1,9 +1,11 @@
+import { exampleStorage } from './example-storage.js'
+
+const { storage } = await exampleStorage()
+
 // start-section-1
-import { AskarModule } from '@credo-ts/askar'
 import { Agent } from '@credo-ts/core'
 import { KeyManagementModule } from '@credo-ts/core/kms'
 import { agentDependencies, NodeInMemoryKeyManagementStorage, NodeKeyManagementService } from '@credo-ts/node'
-import { NativeAskar, Store } from '@openwallet-foundation/askar-nodejs'
 
 const agent = new Agent({
   dependencies: agentDependencies,
@@ -12,17 +14,7 @@ const agent = new Agent({
       // Keys only live in memory: they are lost when the process stops
       backends: [new NodeKeyManagementService(new NodeInMemoryKeyManagementStorage())],
     }),
-    // Askar for storage only, in memory as well
-    askar: new AskarModule({
-      askar: NativeAskar,
-      enableKms: false,
-      store: {
-        id: 'test-agent',
-        key: Store.generateRawKey(),
-        keyDerivationMethod: 'raw',
-        database: { type: 'sqlite', config: { inMemory: true } },
-      },
-    }),
+    storage, // Storage, see Agent setup
   },
 })
 // end-section-1

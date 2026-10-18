@@ -1,5 +1,8 @@
+import { exampleStorage } from './example-storage.js'
+
+const storage = await exampleStorage()
+
 // start-section-1
-import { AskarModule } from '@credo-ts/askar'
 import {
   Agent,
   ConsoleLogger,
@@ -12,14 +15,10 @@ import {
   WebDidResolver,
 } from '@credo-ts/core'
 import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
 function getAgentModules() {
   return {
-    askar: new AskarModule({
-      askar: NativeAskar,
-      store: { id: 'agent-config-example', key: 'agent-config-example-key' },
-    }),
+    ...storage, // Storage and key management, see Agent setup
     // Same key as the default module, so it replaces it
     dids: new DidsModule({
       registrars: [new KeyDidRegistrar(), new JwkDidRegistrar()],
@@ -40,16 +39,19 @@ const agent = new Agent({
 // start-section-2
 export type MyAgent = Agent<ReturnType<typeof getAgentModules>>
 
-export function isAgentReady(agent: MyAgent) {
-  // `askar` is not a default module, so its API is under `agent.modules`
-  return agent.isInitialized && agent.modules.askar.isStoreOpen
+export async function createDid(agent: MyAgent) {
+  const { didState } = await agent.dids.create({
+    method: 'jwk',
+    options: { createKey: { type: { kty: 'EC', crv: 'P-256' } } },
+  })
+  return didState.did
 }
 // end-section-2
 
 // start-section-3
 await agent.initialize()
-console.log(`Agent ready: ${isAgentReady(agent)}`)
+console.log(`Created ${await createDid(agent)}`)
 
 await agent.shutdown()
-console.log(`Agent ready: ${isAgentReady(agent)}`)
+console.log(`Agent initialized: ${agent.isInitialized}`)
 // end-section-3

@@ -1,5 +1,9 @@
+import { didcommBundle } from '@credo-ts/drizzle-storage/didcomm'
+import { exampleStorageWithAskarKeys } from './example-storage.js'
+
+type ExampleStorage = Awaited<ReturnType<typeof exampleStorageWithAskarKeys>>
+
 // start-section-1
-import { AskarModule } from '@credo-ts/askar'
 import { Agent, type KeyDidCreateOptions, w3cDate } from '@credo-ts/core'
 import {
   DidCommAutoAcceptCredential,
@@ -12,14 +16,12 @@ import {
   DidCommModule,
 } from '@credo-ts/didcomm'
 import { agentDependencies, DidCommHttpInboundTransport } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
-function createAgent(name: string, port: number) {
+function createAgent(port: number, storage: ExampleStorage) {
   return new Agent({
     dependencies: agentDependencies,
     modules: {
-      // Use a strong secret as the store key in production
-      askar: new AskarModule({ askar: NativeAskar, store: { id: name, key: `${name}-key` } }),
+      ...storage, // Storage and key management, see Agent setup
       didcomm: new DidCommModule({
         endpoints: [`http://localhost:${port}`],
         transports: {
@@ -41,8 +43,8 @@ function createAgent(name: string, port: number) {
 }
 // end-section-1
 
-const issuer = createAgent('didcomm-issue-issuer', 4050)
-const holder = createAgent('didcomm-issue-holder', 4051)
+const issuer = createAgent(4050, await exampleStorageWithAskarKeys([didcommBundle]))
+const holder = createAgent(4051, await exampleStorageWithAskarKeys([didcommBundle]))
 await issuer.initialize()
 await holder.initialize()
 

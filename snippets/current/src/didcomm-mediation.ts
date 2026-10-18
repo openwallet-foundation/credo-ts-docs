@@ -1,5 +1,11 @@
+import { didcommBundle } from '@credo-ts/drizzle-storage/didcomm'
+import { exampleStorageWithAskarKeys } from './example-storage.js'
+
+const mediatorStorage = await exampleStorageWithAskarKeys([didcommBundle])
+const aliceStorage = await exampleStorageWithAskarKeys([didcommBundle])
+const bobStorage = await exampleStorageWithAskarKeys([didcommBundle])
+
 // start-section-1
-import { AskarModule } from '@credo-ts/askar'
 import { Agent } from '@credo-ts/core'
 import {
   DidCommBasicMessageEventTypes,
@@ -13,15 +19,11 @@ import {
   DidCommWsOutboundTransport,
 } from '@credo-ts/didcomm'
 import { agentDependencies, DidCommHttpInboundTransport, DidCommWsInboundTransport } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
 const mediator = new Agent({
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({
-      askar: NativeAskar,
-      store: { id: 'mediator', key: 'mediator-key' },
-    }),
+    ...mediatorStorage, // Storage and key management, see Agent setup
     didcomm: new DidCommModule({
       endpoints: ['http://localhost:4040', 'ws://localhost:4041'],
       transports: {
@@ -54,10 +56,7 @@ const mediatorInvitationUrl = mediatorOutOfBandRecord.outOfBandInvitation.toUrl(
 const alice = new Agent({
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({
-      askar: NativeAskar,
-      store: { id: 'alice', key: 'alice-key' },
-    }),
+    ...aliceStorage, // Storage and key management, see Agent setup
     didcomm: new DidCommModule({
       transports: {
         outbound: [new DidCommWsOutboundTransport(), new DidCommHttpOutboundTransport()],
@@ -87,10 +86,7 @@ alice.events.on<DidCommKeylistUpdatedEvent>(DidCommRoutingEventTypes.RecipientKe
 const bob = new Agent({
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({
-      askar: NativeAskar,
-      store: { id: 'bob', key: 'bob-key' },
-    }),
+    ...bobStorage, // Storage and key management, see Agent setup
     didcomm: new DidCommModule({
       endpoints: ['http://localhost:4042'],
       transports: {

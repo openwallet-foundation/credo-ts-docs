@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises'
-import { AskarModule, transformPrivateKeyToPrivateJwk } from '@credo-ts/askar'
+import { transformPrivateKeyToPrivateJwk } from '@credo-ts/askar'
 import { Agent, DidsModule, TypedArrayEncoder } from '@credo-ts/core'
 import { PublicJwk } from '@credo-ts/core/kms'
 import {
@@ -11,15 +11,15 @@ import {
 } from '@credo-ts/indy-vdr'
 import { agentDependencies } from '@credo-ts/node'
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { exampleStorage } from './example-storage.js'
 
 const genesisTransactions = await readFile('genesis/bcovrin-test.txn', 'utf8')
 
-function createAgent(id: string) {
+async function createAgent() {
   return new Agent({
     dependencies: agentDependencies,
     modules: {
-      askar: new AskarModule({ askar: NativeAskar, store: { id, key: id } }),
+      ...(await exampleStorage()),
       indyVdr: new IndyVdrModule({
         indyVdr,
         networks: [{ indyNamespace: 'bcovrin:test', isProduction: false, genesisTransactions }],
@@ -32,8 +32,8 @@ function createAgent(id: string) {
   })
 }
 
-const endorser = createAgent('indy-endorser')
-const author = createAgent('indy-author')
+const endorser = await createAgent()
+const author = await createAgent()
 await endorser.initialize()
 await author.initialize()
 

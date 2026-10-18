@@ -1,18 +1,20 @@
+import { anoncredsBundle } from '@credo-ts/drizzle-storage/anoncreds'
+import { exampleStorage } from './example-storage.js'
+
+const storage = await exampleStorage([anoncredsBundle])
+
 // start-section-1
 import { AnonCredsModule } from '@credo-ts/anoncreds'
-import { AskarModule } from '@credo-ts/askar'
 import { CheqdDidRegistrar, CheqdDidResolver, CheqdModule } from '@credo-ts/cheqd'
 import { CheqdAnonCredsRegistry } from '@credo-ts/cheqd/anoncreds'
 import { Agent, DidsModule } from '@credo-ts/core'
 import { agentDependencies } from '@credo-ts/node'
 import { NativeAnoncreds } from '@hyperledger/anoncreds-nodejs'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
 const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
-    // Use a strong secret as the store key in production
-    askar: new AskarModule({ askar: NativeAskar, store: { id: 'anoncreds-agent', key: 'anoncreds-agent-key' } }),
+    ...storage, // Storage and key management, see Agent setup
     cheqd: new CheqdModule({
       networks: [{ network: 'testnet', cosmosPayerSeed: '<cosmos payer seed or mnemonic>' }],
     }),

@@ -1,6 +1,6 @@
-import { AskarModule } from '@credo-ts/askar'
 import { Agent } from '@credo-ts/core'
 import { KnownJwaSignatureAlgorithms, PublicJwk } from '@credo-ts/core/kms'
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
 import { agentDependencies } from '@credo-ts/node'
 import {
   getScopesFromCredentialConfigurationsSupported,
@@ -9,23 +9,19 @@ import {
   OpenId4VciCredentialFormatProfile,
   OpenId4VcModule,
 } from '@credo-ts/openid4vc'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 import express from 'express'
+import { exampleStorage } from './example-storage.js'
 
 // Creates the issuers and offers. Receiving the credentials needs a running authorization server.
 
-function askar(id: string) {
-  return new AskarModule({
-    askar: NativeAskar,
-    // In-memory storage, so the example leaves nothing behind
-    store: { id, key: `${id}-key`, database: { type: 'sqlite', config: { inMemory: true } } },
-  })
-}
+// In-memory storage and keys, so the example leaves nothing behind
+const issuerStorage = await exampleStorage([openid4vcBundle])
+const holderStorage = await exampleStorage([openid4vcBundle])
 
 const issuer = new Agent({
   dependencies: agentDependencies,
   modules: {
-    askar: askar('external-as-issuer'),
+    ...issuerStorage,
     openid4vc: new OpenId4VcModule({
       app: express(),
       issuer: {
@@ -41,7 +37,7 @@ const issuer = new Agent({
 const holder = new Agent({
   dependencies: agentDependencies,
   modules: {
-    askar: askar('external-as-holder'),
+    ...holderStorage,
     openid4vc: new OpenId4VcModule(),
   },
 })

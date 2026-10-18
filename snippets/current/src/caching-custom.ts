@@ -1,9 +1,5 @@
-import { AskarModule } from '@credo-ts/askar'
 // start-section-1
 import type { AgentContext, Cache, CacheOptions } from '@credo-ts/core'
-import { Agent, CacheModule } from '@credo-ts/core'
-import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar, Store } from '@openwallet-foundation/askar-nodejs'
 
 export class MapCache implements Cache {
   private entries = new Map<string, { value: unknown; expiresAt?: number }>()
@@ -43,21 +39,18 @@ export class MapCache implements Cache {
     this.entries.delete(this.key(agentContext, key, options))
   }
 }
+
 // end-section-1
+
+import { Agent, CacheModule } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/node'
+import { exampleStorage } from './example-storage.js'
 
 const cache = new MapCache()
 const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({
-      askar: NativeAskar,
-      store: {
-        id: 'custom-cache-example',
-        key: Store.generateRawKey(),
-        keyDerivationMethod: 'raw',
-        database: { type: 'sqlite', config: { inMemory: true } },
-      },
-    }),
+    ...(await exampleStorage()),
     cache: new CacheModule({ cache }),
   },
 })

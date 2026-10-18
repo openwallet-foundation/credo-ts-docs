@@ -1,3 +1,9 @@
+import { anoncredsBundle } from '@credo-ts/drizzle-storage/anoncreds'
+import { didcommBundle } from '@credo-ts/drizzle-storage/didcomm'
+import { exampleStorageWithAskarKeys } from './example-storage.js'
+
+type ExampleStorage = Awaited<ReturnType<typeof exampleStorageWithAskarKeys>>
+
 // start-section-1
 import { AnonCredsModule } from '@credo-ts/anoncreds'
 import {
@@ -6,7 +12,6 @@ import {
   LegacyIndyDidCommCredentialFormatService,
   LegacyIndyDidCommProofFormatService,
 } from '@credo-ts/anoncreds/didcomm'
-import { AskarModule } from '@credo-ts/askar'
 import { CheqdDidRegistrar, CheqdDidResolver, CheqdModule } from '@credo-ts/cheqd'
 import { CheqdAnonCredsRegistry } from '@credo-ts/cheqd/anoncreds'
 import { Agent, DidsModule } from '@credo-ts/core'
@@ -26,14 +31,12 @@ import {
 } from '@credo-ts/didcomm'
 import { agentDependencies, DidCommHttpInboundTransport } from '@credo-ts/node'
 import { NativeAnoncreds } from '@hyperledger/anoncreds-nodejs'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
-function createAgent(name: string, port: number) {
+function createAgent(port: number, storage: ExampleStorage) {
   return new Agent({
     dependencies: agentDependencies,
     modules: {
-      // Use a strong secret as the store key in production
-      askar: new AskarModule({ askar: NativeAskar, store: { id: name, key: `${name}-key` } }),
+      ...storage, // Storage and key management, see Agent setup
       // The registry and its DID module, see the AnonCreds page
       cheqd: new CheqdModule({ networks: [{ network: 'testnet', cosmosPayerSeed: '<cosmos payer seed>' }] }),
       dids: new DidsModule({ registrars: [new CheqdDidRegistrar()], resolvers: [new CheqdDidResolver()] }),
@@ -70,8 +73,8 @@ function createAgent(name: string, port: number) {
 }
 // end-section-1
 
-const issuer = createAgent('didcomm-anoncreds-issuer', 4056)
-const holder = createAgent('didcomm-anoncreds-holder', 4057)
+const issuer = createAgent(4056, await exampleStorageWithAskarKeys([didcommBundle, anoncredsBundle]))
+const holder = createAgent(4057, await exampleStorageWithAskarKeys([didcommBundle, anoncredsBundle]))
 await issuer.initialize()
 await holder.initialize()
 

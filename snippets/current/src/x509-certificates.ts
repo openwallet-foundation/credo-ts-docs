@@ -1,6 +1,9 @@
 import { createServer } from 'node:http'
+import { exampleStorage } from './example-storage.js'
+
+const storage = await exampleStorage()
+
 // start-section-1
-import { AskarModule } from '@credo-ts/askar'
 import {
   Agent,
   CredoWebCrypto,
@@ -14,7 +17,6 @@ import {
 } from '@credo-ts/core'
 import { PublicJwk } from '@credo-ts/core/kms'
 import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
 // end-section-1
 
@@ -25,10 +27,7 @@ const crlUrl = 'http://localhost:4081/crl'
 const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({
-      askar: NativeAskar,
-      store: { id: 'x509-ca', key: 'x509-ca', database: { type: 'sqlite', config: { inMemory: true } } },
-    }),
+    ...(await exampleStorage()),
   },
 })
 await agent.initialize()
@@ -80,7 +79,7 @@ console.log(issuerCertificate.keyId === issuerKey.keyId)
 const verifierAgent = new Agent({
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({ askar: NativeAskar, store: { id: 'x509-verifier', key: 'x509-verifier' } }),
+    ...storage, // Storage and key management, see Agent setup
     x509: new X509Module({
       trustedCertificates: [rootCertificatePem],
       revocationCheck: { mode: X509RevocationCheckMode.SoftFail },

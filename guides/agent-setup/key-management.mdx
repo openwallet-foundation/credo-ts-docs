@@ -1,6 +1,6 @@
 ---
 title: Key management
-description: Choose and configure the key management backends of a Credo agent (Askar, Node.js, and hardware-backed keys on React Native) and use agent.kms to create keys and sign.
+description: Choose and configure the key management backends of a Credo agent (Askar, Node.js, hardware-backed keys on React Native, or your own), and use agent.kms to create keys and sign.
 ---
 
 The key management service (KMS) creates and stores keys and does the cryptography with them: signing, verifying, encrypting and key agreement. Credo modules use it for DIDs, credentials, DIDComm and OpenID4VC, and you can call it directly through `agent.kms`. The KMS hands the work to one or more backends.
@@ -9,11 +9,12 @@ The key management service (KMS) creates and stores keys and does the cryptograp
 
 | You're building | Use | Why |
 | --- | --- | --- |
-| A server | Askar | Keys are stored encrypted in the Askar store and survive restarts. `AskarModule` adds the backend, also when Drizzle stores the records. |
+| A server | Askar | Keys are stored encrypted and survive restarts. With [Drizzle](./storage/drizzle.mdx) storing the records, Askar keeps only the keys. |
 | A mobile wallet | Askar, plus the secure environment for keys that must stay in hardware | Askar handles everything the secure environment can't, such as verifying, encryption and Ed25519. |
-| Tests | Askar on [in-memory SQLite](./storage/askar.mdx#in-memory-sqlite) | Nothing to clean up. |
+| Tests and other short-lived agents | Node.js, with in-memory key storage | Lighter than Askar: it only uses `node:crypto`, and the keys are gone when the process stops. |
+| Keys in a cloud KMS or an HSM | Your own backend | Credo doesn't ship one, but a backend is a single interface. See [Build your own backend](#build-your-own-backend). |
 
-Don't use the [Node.js backend](#nodejs) as a server's only backend: it keeps keys in memory. Add it next to Askar when you need RSA, P-521 or HMAC keys, and give it a key storage of your own if those keys must survive a restart. For a cloud KMS or an HSM, implement the `KeyManagementService` interface from `@credo-ts/core/kms`: Credo doesn't ship one.
+Add the Node.js backend next to Askar to [verify RSA signatures](#verify-rsa-signatures) and other algorithms Askar lacks, for example of an X.509 certificate authority. Verifying with a public key stores nothing. Don't make the Node.js backend a server's only backend for keys it creates: it keeps them in memory, unless you give it a key storage of your own.
 
 ### Hardware-bound keys in a wallet
 
@@ -35,7 +36,9 @@ Credo doesn't check for a backend at startup. Without one, the agent initializes
 
 ### Node.js
 
-`NodeKeyManagementService` from `@credo-ts/node` (backend `node`) uses `node:crypto`. It supports more algorithms than Askar, such as RSA, P-521 and HMAC. It needs a key storage:
+`NodeKeyManagementService` from `@credo-ts/node` (backend `node`) uses `node:crypto`, so it needs no native library. It supports more algorithms than Askar, such as RSA, P-521 and HMAC. It has two common uses: the only backend of a test or other short-lived agent, and a second backend that verifies what Askar can't (see [Verify RSA signatures](#verify-rsa-signatures)).
+
+It needs a key storage. For a test agent, keep the keys in memory:
 
 ```ts showLineNumbers title="agent.ts" kms-node.ts section-1
 ```
@@ -65,8 +68,6 @@ It only creates P-256 keys, signs with ES256 and deletes keys. It can't verify, 
 | Sign and verify | EdDSA, ES256, ES384, ES256K | EdDSA, ES256, ES384, ES512, ES256K, RS\*, PS\*, HS\* | ES256, sign only |
 | Encrypt and decrypt | AES-GCM, AES-CBC-HMAC, (X)ChaCha20, XSalsa20, AES key wrap, ECDH-ES, HPKE | AES-GCM, AES-CBC, AES-CBC-HMAC, ChaCha20, ECDH-ES, HPKE | No |
 | Import keys | EC and OKP keys | EC, OKP, RSA and symmetric keys | No |
-
-Neither Askar nor the secure environment supports RSA. On React Native, verifying an X.509 chain with an RSA certificate authority therefore needs an extra backend that can verify RSA signatures, which you implement yourself.
 
 ## Multiple backends
 
@@ -103,6 +104,61 @@ Create a hardware key by passing `backend`. Signing finds the key by its key id:
 ```
 
 To verify a signature from a hardware key, pass the `publicJwk` instead of the key id, so another backend does it.
+
+### Verify RSA signatures
+
+Neither Askar nor the secure environment supports RSA. You still meet RSA signatures from others, for example X.509 certificate authorities that sign with RSA, or JWTs signed by an external RSA key. Credo can't check those without a backend that verifies RSA, and the error doesn't always say so: an mdoc issued under an RSA certificate authority fails with an error about the certificate chain.
+
+On Node.js, add the Node.js backend next to Askar. A verification with a public key needs no stored key, so the in-memory key storage is enough:
+
+```ts showLineNumbers title="agent.ts" kms-node-verify.ts section-1
+```
+
+Credo then sends RSA verifications to it:
+
+```ts showLineNumbers title="verify.ts" kms-node-verify.ts section-2
+```
+
+On React Native, the Node.js backend isn't available. Add your own backend that only verifies RSA signatures, as described in [Build your own backend](#build-your-own-backend). Paradym Wallet has one, built on `react-native-quick-crypto`: [`RsaVerificationKeyManagementService`](https://github.com/animo/paradym-wallet/blob/226083df04e183b06e7a379b2b4938bbafe84f3c/packages/sdk/src/kms/RsaVerificationKeyManagementService.ts). Register it next to the other backends:
+
+```ts title="agent.ts"
+new KeyManagementModule({
+  backends: [
+    new AskarKeyManagementService(),
+    new SecureEnvironmentKeyManagementService(),
+    new RsaVerificationKeyManagementService(),
+  ],
+  defaultBackend: 'askar',
+})
+```
+
+## Build your own backend
+
+A backend is a class that implements `KeyManagementService` from `@credo-ts/core/kms`. Write one to keep keys in a cloud KMS such as Google Cloud KMS or AWS KMS, in an HSM, or on a platform Credo has no backend for. Implement only what your key store can do, and leave the rest to Askar or the Node.js backend in the same agent.
+
+Credo uses these parts of the interface to route operations:
+
+| Member | What Credo expects |
+| --- | --- |
+| `backend` | A unique name. Users pass it as `backend` to choose this backend. |
+| `isOperationSupported(agentContext, operation)` | `true` for each operation and algorithm the backend handles, such as `createKey` for P-256 keys or `sign` with ES256. Credo never sends this backend an operation it returns `false` for. A call that names this backend for such an operation throws. |
+| `getPublicKey(agentContext, keyId)` | The public JWK, with `kid`, or `null` when the backend doesn't hold the key. Credo asks each backend in turn to find the one that holds a key. |
+| `createKey`, `importKey`, `deleteKey` | Manage keys. Return the key id that Credo stores in DIDs and credential records, so keep it stable. Respect `options.keyId` when it's set. |
+| `sign`, `verify`, `encrypt`, `decrypt`, `randomBytes` | The cryptography. Throw `KeyManagementAlgorithmNotSupportedError` or `KeyManagementError` for what you don't support. |
+
+This backend creates P-256 keys in a cloud KMS and signs with them. The `CloudKmsClient` interface stands in for your KMS SDK:
+
+```ts showLineNumbers title="CloudKeyManagementService.ts" kms-custom-backend.ts section-1
+```
+
+Signing has two traps with most cloud KMSs. They sign a digest, so hash the data yourself with the hash of the JWA algorithm (SHA-256 for ES256). And they return ECDSA signatures DER encoded, while JWA uses the raw `r || s` form: convert them with `derEcSignatureToRaw`.
+
+Register the backend in `KeyManagementModule`. Here it's the default, so Credo creates P-256 keys in the cloud KMS, and Askar creates the other keys, verifies and encrypts:
+
+```ts showLineNumbers title="agent.ts" kms-custom-backend.ts section-2
+```
+
+Import from `@credo-ts/core` before `@credo-ts/core/kms` in the file your app loads first, as the `kms` entry point doesn't load the `reflect-metadata` polyfill that Credo needs.
 
 ## Use `agent.kms`
 

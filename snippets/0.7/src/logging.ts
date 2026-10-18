@@ -1,8 +1,10 @@
+import { exampleStorage } from './example-storage.js'
+
+const storage = await exampleStorage()
+
 // start-section-1
-import { AskarModule } from '@credo-ts/askar'
 import { Agent, ConsoleLogger, LogLevel } from '@credo-ts/core'
 import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
 const agent = new Agent({
   config: {
@@ -11,10 +13,7 @@ const agent = new Agent({
   },
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({
-      askar: NativeAskar,
-      store: { id: 'logging-example', key: 'logging-example-key' },
-    }),
+    ...storage, // Storage and key management, see Agent setup
   },
 })
 // end-section-1

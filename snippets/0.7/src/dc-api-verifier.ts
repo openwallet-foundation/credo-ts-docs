@@ -1,13 +1,16 @@
 // The verifier backend. It creates the requests that the web page in dc-api-verifier-browser.ts passes
 // to the Digital Credentials API, and verifies the response the page posts back.
 
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
+import { exampleStorage } from './example-storage.js'
+
+const storage = await exampleStorage([openid4vcBundle])
+
 // start-section-1
 import { readFileSync } from 'node:fs'
-import { AskarModule } from '@credo-ts/askar'
 import { Agent, ClaimFormat, X509Module } from '@credo-ts/core'
 import { agentDependencies } from '@credo-ts/node'
 import { OpenId4VcModule } from '@credo-ts/openid4vc'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 import express from 'express'
 
 // The origin of the web page that calls the Digital Credentials API. This server serves the page.
@@ -24,15 +27,7 @@ const verifier = new Agent({
   },
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({
-      askar: NativeAskar,
-      // In-memory storage, so each run of this example starts fresh
-      store: {
-        id: 'dc-api-verifier',
-        key: 'dc-api-verifier-key',
-        database: { type: 'sqlite', config: { inMemory: true } },
-      },
-    }),
+    ...storage, // Storage and key management, see Agent setup
     // Certificates (or root CAs) of the issuers you accept, as PEM or base64. For an mDL, the IACA certificates.
     x509: new X509Module({ trustedCertificates: [readFileSync('issuer-certificate.pem', 'utf8')] }),
     // Only needed for OpenID4VP. ISO 18013-7 Annex C uses `agent.mdoc`, which every agent has.

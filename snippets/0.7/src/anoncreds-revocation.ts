@@ -1,13 +1,13 @@
 // start-section-1
 import { readFile } from 'node:fs/promises'
 import { AnonCredsModule, type AnonCredsRevocationRegistryDefinition, BasicTailsFileService } from '@credo-ts/anoncreds'
-import { AskarModule } from '@credo-ts/askar'
 import { CheqdDidRegistrar, CheqdDidResolver, CheqdModule } from '@credo-ts/cheqd'
 import { CheqdAnonCredsRegistry } from '@credo-ts/cheqd/anoncreds'
 import { Agent, type AgentContext, DidsModule } from '@credo-ts/core'
+import { anoncredsBundle } from '@credo-ts/drizzle-storage/anoncreds'
 import { agentDependencies } from '@credo-ts/node'
 import { NativeAnoncreds } from '@hyperledger/anoncreds-nodejs'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { exampleStorage } from './example-storage.js'
 
 class TailsServerFileService extends BasicTailsFileService {
   public async uploadTailsFile(
@@ -29,7 +29,7 @@ class TailsServerFileService extends BasicTailsFileService {
 const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({ askar: NativeAskar, store: { id: 'anoncreds-agent', key: 'anoncreds-agent-key' } }),
+    ...(await exampleStorage([anoncredsBundle])),
     cheqd: new CheqdModule({
       networks: [{ network: 'testnet', cosmosPayerSeed: '<cosmos payer seed or mnemonic>' }],
     }),

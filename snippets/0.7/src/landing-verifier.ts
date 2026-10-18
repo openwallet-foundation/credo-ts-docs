@@ -1,19 +1,34 @@
 import { AskarModule } from '@credo-ts/askar'
 import { Agent } from '@credo-ts/core'
+import { DrizzleStorageModule } from '@credo-ts/drizzle-storage'
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
 import { agentDependencies } from '@credo-ts/node'
 import { OpenId4VcModule } from '@credo-ts/openid4vc'
 import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { drizzle } from 'drizzle-orm/node-postgres'
 import express from 'express'
 
 const app = express()
-const store = { id: 'verifier', key: process.env.STORE_KEY ?? '' }
+const database = drizzle(process.env.DATABASE_URL ?? '')
+const store = { id: 'verifier-keys', key: process.env.STORE_KEY ?? '' }
 const baseUrl = 'https://verifier.example.com/oid4vp'
+
+const storage = new DrizzleStorageModule({
+  database,
+  bundles: [openid4vcBundle],
+})
+const askar = new AskarModule({
+  askar: NativeAskar,
+  enableStorage: false,
+  store,
+})
 
 // start-section-1
 const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({ askar: NativeAskar, store }),
+    storage, // records in Drizzle
+    askar, // keys in Askar
     openid4vc: new OpenId4VcModule({ app, verifier: { baseUrl } }),
   },
 })

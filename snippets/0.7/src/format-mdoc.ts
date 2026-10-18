@@ -1,5 +1,8 @@
+import { exampleStorage } from './example-storage.js'
+
+type ExampleStorage = Awaited<ReturnType<typeof exampleStorage>>
+
 // start-section-1
-import { AskarModule } from '@credo-ts/askar'
 import {
   Agent,
   DateOnly,
@@ -11,25 +14,20 @@ import {
 } from '@credo-ts/core'
 import { PublicJwk } from '@credo-ts/core/kms'
 import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
-function createAgent(id: string) {
+function createAgent(storage: ExampleStorage) {
   return new Agent({
-    config: {},
     dependencies: agentDependencies,
     modules: {
-      askar: new AskarModule({
-        askar: NativeAskar,
-        store: { id, key: id, database: { type: 'sqlite', config: { inMemory: true } } },
-      }),
+      ...storage, // Storage and key management, see Agent setup
     },
   })
 }
 // end-section-1
 
-const issuer = createAgent('format-mdoc-issuer')
-const holder = createAgent('format-mdoc-holder')
-const verifier = createAgent('format-mdoc-verifier')
+const issuer = createAgent(await exampleStorage())
+const holder = createAgent(await exampleStorage())
+const verifier = createAgent(await exampleStorage())
 await issuer.initialize()
 await holder.initialize()
 await verifier.initialize()

@@ -5,7 +5,7 @@ description: Configure Askar for encrypted storage and key management in a Credo
 
 [Askar](https://github.com/openwallet-foundation/askar) is an encrypted store for records and keys. `AskarModule` registers it as the agent's storage and as a [key management](../key-management.mdx) backend. It runs on SQLite or PostgreSQL, in Node.js and React Native.
 
-Use SQLite, the default, on phones and for a server with one instance. Use PostgreSQL when several instances share the agent's data, or when PostgreSQL is what you already back up and monitor. To choose between Askar and Drizzle, see [Storage](./index.mdx).
+Askar is the default for mobile wallets: it encrypts the wallet, includes key management, and has no migrations to ship with app updates. On a server, [Drizzle](./drizzle.mdx) stores the records and Askar keeps the keys, with [storage turned off](#storage-and-key-management). Use SQLite, the default, on phones and for a server with one instance, and PostgreSQL when several instances share the keys. To choose between Askar and Drizzle, see [Storage](./index.mdx).
 
 ## Install
 
@@ -75,7 +75,7 @@ database: { type: 'sqlite', config: { path: '/var/lib/my-agent/agent.db' } }
 
 ### In-memory SQLite
 
-For tests, keep the store in memory. The data is gone when the agent shuts down:
+For tests that need Askar, such as DIDComm tests, keep the store in memory. The data is gone when the agent shuts down. Other tests can use the lighter [Drizzle and Node.js setup](./drizzle.mdx#in-memory-database-for-tests).
 
 ```ts showLineNumbers title="test-agent.ts" storage-askar-in-memory.ts section-1
 ```
@@ -110,7 +110,7 @@ If you add `AskarKeyManagementService` to the `KeyManagementModule` backends and
 
 ## Multi-tenancy
 
-With the [tenants module](../multi-tenancy.mdx), `multiWalletDatabaseScheme` decides where tenant data goes: `AskarMultiWalletDatabaseScheme.ProfilePerWallet` keeps all tenants in the root store with a profile each, `DatabasePerWallet` (the default) gives each tenant its own store. Use `ProfilePerWallet`. See [Where tenant data is stored](../multi-tenancy.mdx#where-tenant-data-is-stored) for the trade-offs, and for why you shouldn't set a SQLite `path` with `DatabasePerWallet`.
+With the [tenants module](../multi-tenancy.mdx), `multiWalletDatabaseScheme` decides where tenant data goes: `AskarMultiWalletDatabaseScheme.ProfilePerWallet` keeps all tenants in the root store with a profile each, `DatabasePerWallet` (the default) gives each tenant its own store. This also applies when Askar only keeps the keys. Use `ProfilePerWallet`. See [Where tenant data is stored](../multi-tenancy.mdx#where-tenant-data-is-stored) for the trade-offs, and for why you shouldn't set a SQLite `path` with `DatabasePerWallet`.
 
 ## Manage the store
 

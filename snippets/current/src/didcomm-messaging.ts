@@ -1,3 +1,11 @@
+import { actionMenuBundle } from '@credo-ts/drizzle-storage/action-menu'
+import { didcommBundle } from '@credo-ts/drizzle-storage/didcomm'
+import { drpcBundle } from '@credo-ts/drizzle-storage/drpc'
+import { questionAnswerBundle } from '@credo-ts/drizzle-storage/question-answer'
+import { exampleStorageWithAskarKeys } from './example-storage.js'
+
+type ExampleStorage = Awaited<ReturnType<typeof exampleStorageWithAskarKeys>>
+
 // start-section-1
 import {
   ActionMenu,
@@ -7,7 +15,6 @@ import {
   ActionMenuState,
   type ActionMenuStateChangedEvent,
 } from '@credo-ts/action-menu'
-import { AskarModule } from '@credo-ts/askar'
 import type { BaseEvent } from '@credo-ts/core'
 import { Agent } from '@credo-ts/core'
 import {
@@ -25,16 +32,12 @@ import {
   QuestionAnswerState,
   type QuestionAnswerStateChangedEvent,
 } from '@credo-ts/question-answer'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
-function createAgent(name: string, port: number) {
+function createAgent(port: number, storage: ExampleStorage) {
   return new Agent({
     dependencies: agentDependencies,
     modules: {
-      askar: new AskarModule({
-        askar: NativeAskar,
-        store: { id: name, key: `${name}-key` },
-      }),
+      ...storage, // Storage and key management, see Agent setup
       didcomm: new DidCommModule({
         endpoints: [`http://localhost:${port}`],
         transports: {
@@ -67,8 +70,9 @@ function waitFor<Event extends BaseEvent>(
   })
 }
 
-const acme = createAgent('acme', 4040)
-const bob = createAgent('bob', 4041)
+const bundles = [didcommBundle, actionMenuBundle, questionAnswerBundle, drpcBundle]
+const acme = createAgent(4040, await exampleStorageWithAskarKeys(bundles))
+const bob = createAgent(4041, await exampleStorageWithAskarKeys(bundles))
 await acme.initialize()
 await bob.initialize()
 

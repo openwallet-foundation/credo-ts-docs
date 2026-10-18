@@ -1,17 +1,26 @@
 // start-section-1
 import { AskarModule, AskarMultiWalletDatabaseScheme } from '@credo-ts/askar'
 import { Agent, CacheModule, InMemoryLruCache } from '@credo-ts/core'
+import { DrizzleStorageModule } from '@credo-ts/drizzle-storage'
+import { tenantsBundle } from '@credo-ts/drizzle-storage/tenants'
 import { agentDependencies } from '@credo-ts/node'
 import { TenantsModule } from '@credo-ts/tenants'
 import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { drizzle } from 'drizzle-orm/libsql'
+
+// Run the migrations of the core and tenants bundles first
+const database = drizzle('file:agent.db')
 
 const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
+    // The records of all tenants in one database
+    storage: new DrizzleStorageModule({ database, bundles: [tenantsBundle] }),
     askar: new AskarModule({
       askar: NativeAskar,
-      store: { id: 'multi-tenant-agent', key: 'multi-tenant-agent-store-key' },
-      // One Askar store with a profile per tenant
+      enableStorage: false,
+      store: { id: 'credo-keys', key: 'my-agent-store-key' },
+      // The keys of all tenants in one Askar store, with a profile per tenant
       multiWalletDatabaseScheme: AskarMultiWalletDatabaseScheme.ProfilePerWallet,
     }),
     tenants: new TenantsModule({ sessionLimit: 100, sessionAcquireTimeout: 5000 }),
@@ -20,8 +29,19 @@ const agent = new Agent({
   },
 })
 
-await agent.initialize()
 // end-section-1
+
+import { coreBundle } from '@credo-ts/drizzle-storage/core'
+import { migrate } from 'drizzle-orm/libsql/migrator'
+
+// The same migrations as in storage-drizzle-migrate.ts, with the tenants bundle
+for (const bundle of [coreBundle, tenantsBundle]) {
+  await migrate(database, {
+    migrationsFolder: bundle.migrations.sqlite.migrationsPath,
+    migrationsTable: `credo_migrations__${bundle.name.replace('-', '_')}`,
+  })
+}
+await agent.initialize()
 
 // start-section-2
 const tenantRecord = await agent.modules.tenants.createTenant({

@@ -327,8 +327,12 @@ const layers: { name: string; to: string; items: string[]; tone?: 'core' | 'plat
   { name: 'Protocols', to: '/guides/protocols', items: ['OpenID4VC', 'ISO mdoc', 'DC API', 'DIDComm'] },
   { name: 'Credential formats', to: '/guides/credential-formats', items: ['SD-JWT VC', 'mdoc', 'W3C VC', 'AnonCreds'] },
   { name: 'Agent', to: '/guides/agent-setup', items: ['Modules', 'Events', 'Multi-tenancy'], tone: 'core' },
-  { name: 'Storage', to: '/guides/agent-setup/storage', items: ['Askar', 'PostgreSQL', 'SQLite'] },
-  { name: 'Keys', to: '/guides/agent-setup/key-management', items: ['Askar', 'Node.js crypto', 'Secure Enclave'] },
+  { name: 'Storage', to: '/guides/agent-setup/storage', items: ['Drizzle', 'Askar', 'PostgreSQL', 'SQLite'] },
+  {
+    name: 'Keys',
+    to: '/guides/agent-setup/key-management',
+    items: ['Askar', 'Node.js crypto', 'Secure Enclave', 'Your own'],
+  },
   { name: 'Trust', to: '/guides/dids-and-trust', items: ['DIDs', 'X.509', 'Ledgers'] },
   {
     name: 'Platform',

@@ -21,14 +21,14 @@ Four choices come up before you write any code. If you're not sure, start with t
 | Platform | Node.js, for issuers, verifiers, mediators and cloud wallets | You build a mobile wallet: use React Native with Expo | [Platforms](../concepts/platform-and-environment.md) |
 | Protocol | OpenID4VC | Use DIDComm if you need a lasting connection with messaging between agents, or AnonCreds, or your ecosystem is built on Aries. A wallet can support both | [Protocols](../protocols/index.mdx) |
 | Credential format | SD-JWT VC | Your ecosystem asks for another one: mdoc for mobile driving licences, W3C VCs for Open Badges or EBSI, AnonCreds (DIDComm only) for predicates and unlinkable presentations. The EUDI Wallet uses SD-JWT VC and mdoc | [Credential formats](../credential-formats/index.mdx) |
-| Storage | Askar, which encrypts the data and also stores the keys | Use Drizzle on PostgreSQL for a server whose records you want to query with SQL. Drizzle doesn't store keys, so keep Askar for those | [Storage](../agent-setup/storage/index.mdx) |
+| Storage | On a server, Drizzle on PostgreSQL for the records, as SQL tables that scale to many tenants and instances, and Askar for the keys. In a mobile wallet, Askar for both | Use SQLite instead of PostgreSQL for a single server instance or local development. A mobile wallet can also use Drizzle on `expo-sqlite` | [Storage](../agent-setup/storage/index.mdx) |
 
-The getting started pages use Askar and work for any protocol and format.
+The getting started pages use Drizzle on SQLite with Askar for the keys on Node.js, and Askar on React Native. They work for any protocol and format.
 
 ## Read in this order
 
 <Cards>
-  <Card to="getting-started/installation" title="1. Installation">Set up a Node.js or Expo project and install Credo with Askar.</Card>
+  <Card to="getting-started/installation" title="1. Installation">Set up a Node.js or Expo project and install Credo and its storage.</Card>
   <Card to="getting-started/first-agent" title="2. Your first agent">Create an agent, initialize it, create a DID and shut it down.</Card>
   <Card to="getting-started/example-setups" title="3. Example setups">Complete configurations for wallets, issuers, verifiers, mediators and tests.</Card>
 </Cards>

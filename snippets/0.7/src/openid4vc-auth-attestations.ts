@@ -1,4 +1,3 @@
-import { AskarModule } from '@credo-ts/askar'
 import {
   Agent,
   ClaimFormat,
@@ -10,6 +9,7 @@ import {
   type X509Certificate,
 } from '@credo-ts/core'
 import { KnownJwaSignatureAlgorithms, PublicJwk } from '@credo-ts/core/kms'
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
 import { agentDependencies } from '@credo-ts/node'
 import {
   OpenId4VciCredentialFormatProfile,
@@ -19,18 +19,15 @@ import {
   OpenId4VcModule,
   type OpenId4VcVerificationTypes,
 } from '@credo-ts/openid4vc'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 import express from 'express'
+import { exampleStorage } from './example-storage.js'
 
 const issuerUrl = 'http://localhost:4039'
 
-function askar(id: string) {
-  return new AskarModule({
-    askar: NativeAskar,
-    // In-memory storage, so the example leaves nothing behind
-    store: { id, key: `${id}-key`, database: { type: 'sqlite', config: { inMemory: true } } },
-  })
-}
+// In-memory storage and keys, so the example leaves nothing behind
+const holderStorage = await exampleStorage([openid4vcBundle])
+
+const issuerStorage = await exampleStorage([openid4vcBundle])
 
 // Created once the agents are initialized (see below)
 let issuerCertificate: X509Certificate
@@ -85,7 +82,7 @@ const issuer = new Agent({
   config: { allowInsecureHttpUrls: true, getTrustedIssuersForVerification },
   dependencies: agentDependencies,
   modules: {
-    askar: askar('attestations-issuer'),
+    ...issuerStorage, // Storage and key management, see Agent setup
     openid4vc: new OpenId4VcModule({
       app,
       issuer: {
@@ -103,7 +100,7 @@ const holder = new Agent({
   config: { allowInsecureHttpUrls: true },
   dependencies: agentDependencies,
   modules: {
-    askar: askar('attestations-holder'),
+    ...holderStorage,
     openid4vc: new OpenId4VcModule(),
   },
 })

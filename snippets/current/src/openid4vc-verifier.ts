@@ -1,7 +1,11 @@
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
+import { exampleStorage } from './example-storage.js'
+
+const storage = await exampleStorage([openid4vcBundle])
+
 // The issuer's certificate from openid4vc-issuer.ts, which this verifier trusts
 
 // start-section-1
-import { AskarModule } from '@credo-ts/askar'
 import { Agent, ClaimFormat, Kms, X509Module } from '@credo-ts/core'
 import { agentDependencies } from '@credo-ts/node'
 import {
@@ -10,7 +14,6 @@ import {
   type OpenId4VcVerificationSessionStateChangedEvent,
   OpenId4VcVerifierEvents,
 } from '@credo-ts/openid4vc'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 import express from 'express'
 import { issuerCertificate } from './openid4vc-issuer.js'
 
@@ -24,11 +27,7 @@ export const verifier = new Agent({
   },
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({
-      askar: NativeAskar,
-      // In-memory database, so each run of this example starts fresh
-      store: { id: 'verifier', key: 'verifier-key', database: { type: 'sqlite', config: { inMemory: true } } },
-    }),
+    ...storage, // Storage and key management, see Agent setup
     // Certificates (or root CAs) of the credential issuers you accept
     x509: new X509Module({ trustedCertificates: [issuerCertificate] }),
     openid4vc: new OpenId4VcModule({

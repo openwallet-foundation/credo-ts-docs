@@ -1,5 +1,9 @@
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
+import { exampleStorage } from './example-storage.js'
+
+const storage = await exampleStorage([openid4vcBundle])
+
 // start-section-1
-import { AskarModule } from '@credo-ts/askar'
 import { Agent, ClaimFormat, Kms, type SdJwtVcSignOptions } from '@credo-ts/core'
 import { agentDependencies } from '@credo-ts/node'
 import {
@@ -11,7 +15,6 @@ import {
   type OpenId4VciSignSdJwtCredentials,
   OpenId4VcModule,
 } from '@credo-ts/openid4vc'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 import express from 'express'
 
 const issuerPort = 4020
@@ -24,11 +27,7 @@ export const issuer = new Agent({
   },
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({
-      askar: NativeAskar,
-      // In-memory database, so each run of this example starts fresh
-      store: { id: 'issuer', key: 'issuer-key', database: { type: 'sqlite', config: { inMemory: true } } },
-    }),
+    ...storage, // Storage and key management, see Agent setup
     openid4vc: new OpenId4VcModule({
       app,
       issuer: {

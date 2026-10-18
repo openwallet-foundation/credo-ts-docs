@@ -1,6 +1,8 @@
 // start-section-1
 import { AskarModule } from '@credo-ts/askar'
 import { Agent, CacheModule, ClaimFormat, ConsoleLogger, LogLevel } from '@credo-ts/core'
+import { DrizzleStorageModule } from '@credo-ts/drizzle-storage'
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
 import { agentDependencies } from '@credo-ts/node'
 import {
   OpenId4VciCredentialFormatProfile,
@@ -9,6 +11,7 @@ import {
 } from '@credo-ts/openid4vc'
 import { RedisCache } from '@credo-ts/redis-cache'
 import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { drizzle } from 'drizzle-orm/node-postgres'
 import express from 'express'
 import { Redis } from 'ioredis'
 
@@ -51,12 +54,18 @@ const agent = new Agent({
   },
   dependencies: agentDependencies,
   modules: {
-    // start-section-2
+    // Records go in PostgreSQL tables. Run the migrations of the core and openid4vc bundles first.
+    storage: new DrizzleStorageModule({
+      database: drizzle(env('DATABASE_URL')),
+      bundles: [openid4vcBundle],
+    }),
+    // Drizzle doesn't store keys, so Askar keeps them, in a PostgreSQL database of its own
     askar: new AskarModule({
       askar: NativeAskar,
+      enableStorage: false,
       store: {
-        // Also the name of the Postgres database
-        id: 'issuer-verifier',
+        // Also the name of the PostgreSQL database
+        id: 'issuer-verifier-keys',
         key: env('STORE_KEY'),
         database: {
           type: 'postgres',
@@ -65,7 +74,6 @@ const agent = new Agent({
         },
       },
     }),
-    // end-section-2
     // Shared by all instances of the service
     cache: new CacheModule({ cache: new RedisCache(redis) }),
     openid4vc: new OpenId4VcModule({

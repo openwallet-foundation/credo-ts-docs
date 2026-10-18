@@ -1,4 +1,7 @@
-import { AskarModule } from '@credo-ts/askar'
+import { exampleStorage } from './example-storage.js'
+
+const storage = await exampleStorage()
+
 // start-section-1
 import { type CheqdDidCreateOptions, CheqdDidRegistrar, CheqdDidResolver, CheqdModule } from '@credo-ts/cheqd'
 import {
@@ -15,7 +18,6 @@ import {
   WebDidResolver,
 } from '@credo-ts/core'
 import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
 const cheqdModules = {
   cheqd: new CheqdModule({
@@ -43,7 +45,7 @@ const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
     ...cheqdModules,
-    askar: new AskarModule({ askar: NativeAskar, store: { id: 'cheqd-issuer', key: 'cheqd-issuer' } }),
+    ...storage,
   },
 })
 await agent.initialize()

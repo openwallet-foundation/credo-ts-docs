@@ -1,15 +1,13 @@
-import { AskarModule } from '@credo-ts/askar'
 import { Agent, TypedArrayEncoder } from '@credo-ts/core'
 import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { exampleStorage } from './example-storage.js'
+
+const storage = await exampleStorage()
 
 const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({
-      askar: NativeAskar,
-      store: { id: 'kms-example', key: 'kms-example-store-key' },
-    }),
+    ...storage, // Storage and key management, see Agent setup
   },
 })
 await agent.initialize()

@@ -1,20 +1,12 @@
-import { AskarModule } from '@credo-ts/askar'
 import { Agent, DidKey, type KeyDidCreateOptions, X509KeyUsage } from '@credo-ts/core'
 import { PublicJwk } from '@credo-ts/core/kms'
 import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { exampleStorage } from './example-storage.js'
 
 const oneYear = 365 * 24 * 60 * 60 * 1000
 
-function inMemoryStorage(id: string) {
-  return new AskarModule({
-    askar: NativeAskar,
-    store: { id, key: id, database: { type: 'sqlite', config: { inMemory: true } } },
-  })
-}
-
 // The issuer runs a CA, and issues SD-JWT VCs signed with an X.509 certificate and with a did:key
-const issuer = new Agent({ dependencies: agentDependencies, modules: { askar: inMemoryStorage('trust-issuer') } })
+const issuer = new Agent({ dependencies: agentDependencies, modules: { ...(await exampleStorage()) } })
 await issuer.initialize()
 
 async function createCertificateAuthority(commonName: string) {
@@ -67,7 +59,7 @@ const didSignedCredential = await issuer.sdJwtVc.sign({
 // A verifier without any trust configuration: did-signed credentials verify, X.509 ones don't
 const untrustingVerifier = new Agent({
   dependencies: agentDependencies,
-  modules: { askar: inMemoryStorage('trust-untrusting-verifier') },
+  modules: { ...(await exampleStorage()) },
 })
 await untrustingVerifier.initialize()
 const untrustedX509 = await untrustingVerifier.sdJwtVc.verify({ compactSdJwtVc: x509SignedCredential.compact })
@@ -75,6 +67,7 @@ const untrustedDid = await untrustingVerifier.sdJwtVc.verify({ compactSdJwtVc: d
 console.log('no trust configured:', { x509: untrustedX509.isValid, did: untrustedDid.isValid })
 
 const rootCertificatePem = root.certificate.toString('pem')
+const storage = await exampleStorage()
 
 // start-section-2
 const trustedRootCertificates = [rootCertificatePem]
@@ -94,7 +87,9 @@ const agent = new Agent({
     },
   },
   dependencies: agentDependencies,
-  modules: { askar: inMemoryStorage('trust-verifier') },
+  modules: {
+    ...storage, // Storage and key management, see Agent setup
+  },
 })
 // end-section-2
 await agent.initialize()

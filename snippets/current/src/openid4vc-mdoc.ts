@@ -1,6 +1,6 @@
-import { AskarModule } from '@credo-ts/askar'
 import { Agent, ClaimFormat, DateOnly, MdocRecord, type X509Certificate } from '@credo-ts/core'
 import { KnownJwaSignatureAlgorithms, PublicJwk } from '@credo-ts/core/kms'
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
 import { agentDependencies } from '@credo-ts/node'
 import {
   type OpenId4VciCredentialConfigurationSupportedWithFormats,
@@ -9,19 +9,17 @@ import {
   type OpenId4VciSignMdocCredentials,
   OpenId4VcModule,
 } from '@credo-ts/openid4vc'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 import express from 'express'
+import { exampleStorage } from './example-storage.js'
 
 const issuerUrl = 'http://localhost:4033'
 const verifierUrl = 'http://localhost:4034'
 
-function askar(id: string) {
-  return new AskarModule({
-    askar: NativeAskar,
-    // In-memory storage, so the example leaves nothing behind
-    store: { id, key: `${id}-key`, database: { type: 'sqlite', config: { inMemory: true } } },
-  })
-}
+// In-memory storage and keys, so the example leaves nothing behind
+const issuerStorage = await exampleStorage([openid4vcBundle])
+const holderStorage = await exampleStorage([openid4vcBundle])
+
+const verifierStorage = await exampleStorage([openid4vcBundle])
 
 // start-section-1
 const mdlNamespace = 'org.iso.18013.5.1'
@@ -94,7 +92,7 @@ const issuer = new Agent({
   config: { allowInsecureHttpUrls: true },
   dependencies: agentDependencies,
   modules: {
-    askar: askar('mdoc-issuer'),
+    ...issuerStorage,
     openid4vc: new OpenId4VcModule({
       app: issuerApp,
       issuer: { baseUrl: `${issuerUrl}/oid4vci`, credentialRequestToCredentialMapper },
@@ -107,7 +105,7 @@ const verifier = new Agent({
   config: { allowInsecureHttpUrls: true },
   dependencies: agentDependencies,
   modules: {
-    askar: askar('mdoc-verifier'),
+    ...verifierStorage,
     openid4vc: new OpenId4VcModule({ app: verifierApp, verifier: { baseUrl: `${verifierUrl}/oid4vp` } }),
   },
 })
@@ -116,7 +114,7 @@ const holder = new Agent({
   config: { allowInsecureHttpUrls: true },
   dependencies: agentDependencies,
   modules: {
-    askar: askar('mdoc-holder'),
+    ...holderStorage,
     openid4vc: new OpenId4VcModule(),
   },
 })

@@ -1,13 +1,20 @@
 import { AskarModule } from '@credo-ts/askar'
 import { Agent, CacheModule, InMemoryLruCache } from '@credo-ts/core'
 import { DidCommModule } from '@credo-ts/didcomm'
+import { DrizzleStorageModule } from '@credo-ts/drizzle-storage'
+import { didcommBundle } from '@credo-ts/drizzle-storage/didcomm'
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
+import { tenantsBundle } from '@credo-ts/drizzle-storage/tenants'
 import { agentDependencies } from '@credo-ts/node'
 import { OpenId4VcModule } from '@credo-ts/openid4vc'
 import { TenantsModule } from '@credo-ts/tenants'
 import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { drizzle } from 'drizzle-orm/node-postgres'
+
+const database = drizzle(process.env.DATABASE_URL ?? '')
 
 const store = {
-  id: 'credo',
+  id: 'credo-keys',
   key: process.env.STORE_KEY ?? '',
   database: {
     type: 'postgres' as const,
@@ -23,8 +30,16 @@ const store = {
 const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
-    // Storage and keys, here Askar on PostgreSQL
-    askar: new AskarModule({ askar: NativeAskar, store }),
+    // Records in PostgreSQL with Drizzle, keys in Askar
+    storage: new DrizzleStorageModule({
+      database,
+      bundles: [tenantsBundle, openid4vcBundle, didcommBundle],
+    }),
+    askar: new AskarModule({
+      askar: NativeAskar,
+      enableStorage: false,
+      store,
+    }),
     // Replace the default cache, required with tenants
     cache: new CacheModule({ cache: new InMemoryLruCache({ limit: 500 }) }),
     tenants: new TenantsModule(),

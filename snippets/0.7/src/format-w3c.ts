@@ -1,5 +1,8 @@
+import { exampleStorage } from './example-storage.js'
+
+type ExampleStorage = Awaited<ReturnType<typeof exampleStorage>>
+
 // start-section-1
-import { AskarModule } from '@credo-ts/askar'
 import {
   Agent,
   ClaimFormat,
@@ -16,7 +19,6 @@ import {
   w3cDate,
 } from '@credo-ts/core'
 import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
 const membershipContext = {
   '@context': {
@@ -26,15 +28,11 @@ const membershipContext = {
   },
 }
 
-function createAgent(id: string) {
+function createAgent(storage: ExampleStorage) {
   return new Agent({
-    config: {},
     dependencies: agentDependencies,
     modules: {
-      askar: new AskarModule({
-        askar: NativeAskar,
-        store: { id, key: id, database: { type: 'sqlite', config: { inMemory: true } } },
-      }),
+      ...storage, // Storage and key management, see Agent setup
       // Serve your own JSON-LD contexts instead of fetching them from the network
       w3cCredentials: new W3cCredentialsModule({
         documentLoader: (agentContext) =>
@@ -54,9 +52,9 @@ async function createDidKey(agent: Agent) {
 }
 // end-section-1
 
-const issuer = createAgent('format-w3c-issuer')
-const holder = createAgent('format-w3c-holder')
-const verifier = createAgent('format-w3c-verifier')
+const issuer = createAgent(await exampleStorage())
+const holder = createAgent(await exampleStorage())
+const verifier = createAgent(await exampleStorage())
 await issuer.initialize()
 await holder.initialize()
 await verifier.initialize()

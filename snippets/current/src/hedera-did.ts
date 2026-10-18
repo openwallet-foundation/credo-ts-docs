@@ -1,4 +1,7 @@
-import { AskarModule } from '@credo-ts/askar'
+import { exampleStorage } from './example-storage.js'
+
+const storage = await exampleStorage()
+
 // start-section-1
 import {
   Agent,
@@ -20,7 +23,6 @@ import {
   HederaModule,
 } from '@credo-ts/hedera'
 import { agentDependencies } from '@credo-ts/node'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 
 // The operator account pays the Hedera transaction fees
 const operatorId = process.env.HEDERA_OPERATOR_ID
@@ -48,7 +50,7 @@ const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
     ...hederaModules,
-    askar: new AskarModule({ askar: NativeAskar, store: { id: 'hedera-issuer', key: 'hedera-issuer' } }),
+    ...storage,
   },
 })
 await agent.initialize()

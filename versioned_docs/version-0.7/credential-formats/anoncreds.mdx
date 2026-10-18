@@ -41,7 +41,7 @@ Register the `AnonCredsModule` with the native AnonCreds library and at least on
 </TabItem>
 </Tabs>
 
-Pass the `NativeAnoncreds` class (supported since Credo 0.7.2): Credo resolves the native binding when it needs it, so import order doesn't matter. The module's API is available as `agent.modules.anoncreds` under the key you register it with.
+Pass the `NativeAnoncreds` class (supported since Credo 0.7.2): Credo resolves the native binding when it needs it, so import order doesn't matter. The module's API is available as `agent.modules.anoncreds` under the key you register it with. With [Drizzle storage](../agent-setup/storage/drizzle.mdx#bundles), also register `anoncredsBundle`, as AnonCreds stores its own records.
 
 Each registry handles the identifiers of one DID method, and Credo uses the first registry that matches an identifier. A registry also needs the module of its network, which provides the DID resolver:
 

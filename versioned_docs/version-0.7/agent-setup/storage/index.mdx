@@ -3,20 +3,22 @@ title: Storage
 description: Compare Askar and Drizzle, the two storage modules for a Credo agent, and pick the one that fits your platform and deployment.
 ---
 
-Every Credo agent needs a storage module to keep its state between restarts: DIDs, credentials, OpenID4VC issuers and sessions, DIDComm connections, tenants and generic records. Credo ships two, Askar and Drizzle, and you register exactly one. Without one, `new Agent()` throws `Missing required dependency: 'StorageService'`.
+Every Credo agent needs a storage module to keep its state between restarts: DIDs, credentials, OpenID4VC issuers and sessions, DIDComm connections, tenants and generic records. Credo ships two, Drizzle and Askar, and one of them stores the records. Without one, `new Agent()` throws `Missing required dependency: 'StorageService'`.
 
 ## Which should I use?
 
-| You're building | Use | Why |
+| You're building | Records | Keys |
 | --- | --- | --- |
-| A mobile wallet | Askar on SQLite | Encrypts the wallet with a key you keep in the device keychain, includes key management, and has no schema migrations to ship with app updates. |
-| A server with one instance | Askar on SQLite | Nothing to set up and nothing to migrate. Keep the file on a persistent disk, or use PostgreSQL if that's what you back up and monitor. |
-| A multi-tenant server | Drizzle on PostgreSQL, with Askar for the keys | All tenants in one database, in tables you can query, inspect and back up with your usual tools. |
-| Several instances behind a load balancer | Drizzle on PostgreSQL, with Askar on PostgreSQL for the keys | All instances must share one database, so SQLite is out. Also use a shared [cache](../caching.mdx). |
+| A server | Drizzle on PostgreSQL | Askar, with storage turned off |
+| A server with one instance, or local development | Drizzle on SQLite | Askar, with storage turned off |
+| A mobile wallet | Askar on SQLite | Askar |
+| Tests | Drizzle on [in-memory SQLite](./drizzle.mdx#in-memory-database-for-tests) | Node.js backend, in memory. Askar in memory for DIDComm, which needs algorithms only Askar has |
 
-On a server, pick Askar on PostgreSQL instead of Drizzle if you can't run migrations on every deploy: Drizzle storage adds SQL migrations in non-breaking Credo releases, and Credo doesn't work until you apply them. For many tenants on Askar, use a [profile per tenant](../multi-tenancy.mdx#where-tenant-data-is-stored).
+Drizzle scales better on servers: records are SQL tables with indexes that the database can query, and many tenants and instances share one database.
 
-Tests can use Askar with an [in-memory SQLite database](./askar.mdx#in-memory-sqlite): nothing to set up or clean up.
+On phones, Askar encrypts the wallet with a key you keep in the device keychain, includes key management, and has no schema migrations to ship with app updates. Drizzle on `expo-sqlite` is an option there too.
+
+Drizzle doesn't encrypt records, so rely on encryption of the database or disk. It also adds SQL migrations, also in non-breaking Credo releases, and Credo doesn't work until you apply them. If you can't run migrations on every deploy, use Askar on PostgreSQL for the records as well: it has no schema and encrypts everything with the store key. For many tenants on Askar, use a [profile per tenant](../multi-tenancy.mdx#where-tenant-data-is-stored).
 
 ## Askar and Drizzle compared
 
@@ -36,7 +38,7 @@ Keys aren't records: the [key management](../key-management.mdx) backend stores 
 
 ## Move from Askar to Drizzle
 
-If you start a server on Askar and later want SQL access to the records, you can copy them to Drizzle. The keys stay in Askar. See [Migrate from Askar](./drizzle.mdx#migrate-from-askar).
+A server that already stores its records in Askar can copy them to Drizzle. The keys stay in Askar. See [Migrate from Askar](./drizzle.mdx#migrate-from-askar).
 
 To use a storage backend Credo doesn't ship, implement the `StorageService` interface from `@credo-ts/core`.
 

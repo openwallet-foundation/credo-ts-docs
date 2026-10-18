@@ -1,3 +1,7 @@
+import { exampleStorage } from './example-storage.js'
+
+const { storage } = await exampleStorage()
+
 // start-section-1
 import { AskarKeyManagementService, AskarModule } from '@credo-ts/askar'
 import { Agent, TypedArrayEncoder } from '@credo-ts/core'
@@ -8,13 +12,15 @@ import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
+    storage, // Storage, see Agent setup
     kms: new KeyManagementModule({
       backends: [new AskarKeyManagementService(), new NodeKeyManagementService(new NodeInMemoryKeyManagementStorage())],
       defaultBackend: 'askar',
     }),
     askar: new AskarModule({
       askar: NativeAskar,
-      // The Askar backend is already in the backends list above
+      // Askar only keeps the keys, and its backend is already in the backends list above
+      enableStorage: false,
       enableKms: false,
       store: { id: 'kms-backends-example', key: 'kms-backends-example-store-key' },
     }),

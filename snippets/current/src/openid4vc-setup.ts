@@ -1,9 +1,12 @@
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
+import { exampleStorage } from './example-storage.js'
+
+const storage = await exampleStorage([openid4vcBundle])
+
 // start-section-1
-import { AskarModule } from '@credo-ts/askar'
 import { Agent } from '@credo-ts/core'
 import { agentDependencies } from '@credo-ts/node'
 import { OpenId4VcModule } from '@credo-ts/openid4vc'
-import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
 import express from 'express'
 
 const app = express()
@@ -11,7 +14,7 @@ const app = express()
 const agent = new Agent({
   dependencies: agentDependencies,
   modules: {
-    askar: new AskarModule({ askar: NativeAskar, store: { id: 'openid4vc-server', key: 'openid4vc-server-key' } }),
+    ...storage, // Storage and key management, see Agent setup
     // The key must be `openid4vc` for the module to be available as agent.openid4vc
     openid4vc: new OpenId4VcModule({
       app,

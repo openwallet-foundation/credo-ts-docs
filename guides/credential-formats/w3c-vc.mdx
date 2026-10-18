@@ -29,7 +29,7 @@ If you don't need W3C VCs, [SD-JWT VC](./sd-jwt-vc.mdx) is simpler and has selec
 
 ## Set up
 
-Everything on this page is in `@credo-ts/core`, and both modules are default modules. The agent needs storage and a KMS, here [Askar](../agent-setup/storage/askar.mdx). The examples use an issuer, a holder and a verifier, each with an Ed25519 `did:key`:
+Everything on this page is in `@credo-ts/core`, and both modules are default modules. The agent also needs [storage](../agent-setup/storage/index.mdx) and key management. The examples use an issuer, a holder and a verifier, each with an Ed25519 `did:key`:
 
 ```ts showLineNumbers title="w3c.ts" format-w3c.ts section-1
 ```

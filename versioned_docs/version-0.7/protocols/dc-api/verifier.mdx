@@ -8,9 +8,9 @@ A verifier for the Digital Credentials API has two parts: a Node.js backend with
 
 ## Set up the backend
 
-<InstallTabs packages="@credo-ts/core @credo-ts/node @credo-ts/askar @openwallet-foundation/askar-nodejs @credo-ts/openid4vc express" />
+<InstallTabs packages="@credo-ts/core @credo-ts/node @credo-ts/openid4vc express" />
 
-The backend creates the requests, verifies the responses, and serves the web page:
+The agent also needs storage, see [Storage](../../agent-setup/storage/index.mdx). The backend creates the requests, verifies the responses, and serves the web page:
 
 ```ts showLineNumbers title="dc-api-verifier.ts" dc-api-verifier.ts section-1
 ```

@@ -1,9 +1,9 @@
 ---
 title: Installation
-description: Set up a Node.js or React Native (Expo) project and install Credo with Askar storage.
+description: Set up a Node.js or React Native (Expo) project and install Credo with its storage and key management packages.
 ---
 
-This page sets up a project and installs Credo, its platform package and [Askar](../agent-setup/storage/askar.mdx). Every agent needs a storage module, and the next pages use Askar. Use Node.js for a server and React Native for a mobile wallet. [Choose your setup](./index.mdx#choose-your-setup) covers the other choices to make first.
+This page sets up a project and installs Credo, its platform package, and the packages for storage and keys. Every agent needs a storage module. On Node.js the next pages store records with [Drizzle](../agent-setup/storage/drizzle.mdx) in SQLite and keys with [Askar](../agent-setup/storage/askar.mdx). On React Native, Askar stores both. Use Node.js for a server and React Native for a mobile wallet. [Choose your setup](./index.mdx#choose-your-setup) covers the other choices to make first.
 
 ## Set up the project
 
@@ -57,7 +57,9 @@ Keep all `@credo-ts/*` packages on the same version. They depend on each other w
 <Tabs groupId="platform" queryString>
 <TabItem value="node" label="Node.js">
 
-<InstallTabs packages="@credo-ts/core @credo-ts/node @credo-ts/askar @openwallet-foundation/askar-nodejs@0.6.1" />
+<InstallTabs packages="@credo-ts/core @credo-ts/node @credo-ts/drizzle-storage drizzle-orm@^0.44.6 @libsql/client @credo-ts/askar @openwallet-foundation/askar-nodejs@0.6.1" />
+
+`@libsql/client` is the SQLite driver for Drizzle. Keep `drizzle-orm` on the version range shown, which `@credo-ts/drizzle-storage` requires.
 
 </TabItem>
 <TabItem value="react-native" label="React Native">
@@ -108,4 +110,4 @@ The Askar packages download their native library in an install script. pnpm and 
 ## Next steps
 
 - [Your first agent](./first-agent.mdx) configures the agent and runs it.
-- [Storage](../agent-setup/storage/index.mdx) compares Askar with Drizzle.
+- [Storage](../agent-setup/storage/index.mdx) compares Drizzle with Askar.
