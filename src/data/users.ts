@@ -8,6 +8,8 @@ export interface CredoUser {
   url: string
   /** Defaults to the host name of `url` */
   linkLabel?: string
+  /** More links, shown next to the main one */
+  links?: { label: string; url: string }[]
   logo: { light: string; dark?: string; height?: number }
   description: string
   tags: string[]
@@ -27,7 +29,7 @@ export const credoUsers: CredoUser[] = [
     name: 'Paradym Wallet',
     by: 'Animo',
     url: 'https://github.com/animo/paradym-wallet',
-    linkLabel: 'github.com/animo/paradym-wallet',
+    linkLabel: 'Paradym Wallet on GitHub',
     logo: { light: '/img/users/paradym-wallet.png', height: 44 },
     description:
       'An open source wallet app for iOS and Android, built with Credo on React Native. It supports the EUDI flows, such as receiving a PID and presenting it with OpenID4VP, as well as DIDComm, and is a starting point for building your own wallet.',
@@ -44,9 +46,10 @@ export const credoUsers: CredoUser[] = [
   {
     name: 'Digital Catapult',
     url: 'https://www.digicatapult.org.uk',
+    links: [{ label: 'Veritable on GitHub', url: 'https://github.com/digicatapult/veritable-cloudagent' }],
     logo: { light: '/img/users/digital-catapult.png', dark: '/img/users/digital-catapult-dark.png', height: 40 },
     description:
-      'A UK deep tech innovation organisation. Its open source Veritable framework lets supply chain partners share data with verifiable credentials. The Veritable cloud agent runs on Credo, with DIDComm and AnonCreds.',
+      'A UK deep tech innovation organisation. Its open source Veritable framework provides a RESTful interface for supply chain use cases exploring verifiable credentials. The Veritable cloud agent runs on Credo, supporting DIDComm, W3C credentials and AnonCreds.',
     tags: ['Supply chain', 'Open source'],
   },
 ]

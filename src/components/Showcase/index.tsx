@@ -10,7 +10,7 @@ function UserCard({ user }: { user: CredoUser }) {
   const dark = useBaseUrl(user.logo.dark ?? user.logo.light)
 
   return (
-    <a className={styles.card} href={user.url}>
+    <div className={styles.card}>
       <div className={styles.logo}>
         <ThemedImage alt={`${user.name} logo`} sources={{ light, dark }} height={user.logo.height ?? 36} />
       </div>
@@ -24,8 +24,18 @@ function UserCard({ user }: { user: CredoUser }) {
           <li key={tag}>{tag}</li>
         ))}
       </ul>
-      <span className={styles.link}>{user.linkLabel ?? new URL(user.url).hostname.replace(/^www\./, '')} ↗</span>
-    </a>
+      <div className={styles.links}>
+        {/* The main link covers the whole card, the other links sit above it */}
+        <a className={`${styles.link} ${styles.mainLink}`} href={user.url}>
+          {user.linkLabel ?? new URL(user.url).hostname.replace(/^www\./, '')} ↗
+        </a>
+        {user.links?.map((link) => (
+          <a key={link.url} className={styles.link} href={link.url}>
+            {link.label} ↗
+          </a>
+        ))}
+      </div>
+    </div>
   )
 }
 
