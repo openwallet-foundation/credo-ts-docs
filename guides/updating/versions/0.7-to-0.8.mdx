@@ -1,0 +1,287 @@
+---
+title: Updating from 0.7 to 0.8
+description: Dependency updates and breaking changes when you update Credo from 0.7 to the unreleased 0.8.
+---
+
+{/* tracked-up-to: 38f03caa3c5293e020b75a4df5ad58556a6d367c */}
+
+This guide lists what you need to change to update an agent from Credo 0.7 to 0.8: Node.js and dependency versions, removed APIs, and changed behavior. Read [Updating Credo](../index.md) first for the general steps.
+
+:::warning[Unreleased]
+
+Credo 0.8 isn't released yet. This guide describes the current alpha, published under the `alpha` tag on npm, and more changes can land before the release.
+
+It covers the changes on Credo's `main` branch up to commit [`38f03ca`](https://github.com/openwallet-foundation/credo-ts/commit/38f03caa3c5293e020b75a4df5ad58556a6d367c) (17 October 2026). See [what has landed since](https://github.com/openwallet-foundation/credo-ts/compare/38f03caa3c5293e020b75a4df5ad58556a6d367c...main).
+
+:::
+
+Most removals in 0.8 were deprecated in 0.7. If you already replaced the deprecated APIs listed in [Updating from 0.6 to 0.7](./0.6-to-0.7.mdx#deprecations), most import changes below are already done.
+
+:::caution
+
+Back up your storage before you update. Credo doesn't create backups for you.
+
+:::
+
+## Update dependencies
+
+- Node.js 22 or later is required. Support for Node.js 20 is dropped, and Node.js 26 is supported.
+- Update every `@credo-ts/*` package to the same 0.8 version.
+- AnonCreds: update `@hyperledger/anoncreds-*` to `^0.4.1`.
+- Askar: `0.6.1` is recommended. `@credo-ts/askar` still accepts `^0.4.3 || ^0.5.0 || ^0.6.0`, but `@credo-ts/askar-to-drizzle-storage-migration` now requires exactly `@openwallet-foundation/askar-shared@0.6.1`.
+- Indy VDR stays on `^0.3.0`.
+- Drizzle: `@credo-ts/drizzle-storage` now requires `drizzle-orm@^0.45.4`.
+
+<Tabs groupId="platform" queryString>
+<TabItem value="node" label="Node.js">
+
+<InstallTabs packages="@credo-ts/core @credo-ts/node @credo-ts/askar @credo-ts/anoncreds @openwallet-foundation/askar-nodejs@0.6.1 @hyperledger/anoncreds-nodejs@^0.4.1" />
+
+</TabItem>
+<TabItem value="react-native" label="React Native">
+
+<InstallTabs packages="@credo-ts/core @credo-ts/react-native @credo-ts/askar @credo-ts/anoncreds @openwallet-foundation/askar-react-native@0.6.1 @hyperledger/anoncreds-react-native@^0.4.1" />
+
+</TabItem>
+</Tabs>
+
+### AnonCreds registries
+
+`@credo-ts/cheqd`, `@credo-ts/hedera` and `@credo-ts/webvh` no longer install `@credo-ts/anoncreds`. It's now an optional peer dependency, so you only need it if you use their AnonCreds registry. In that case, install it yourself. The Hedera registry also needs `@hiero-did-sdk/anoncreds`. Pin it to `^0.1.8`: the latest version on npm (0.2.x) doesn't match the range Credo supports.
+
+<InstallTabs packages="@credo-ts/anoncreds @hiero-did-sdk/anoncreds@^0.1.8" />
+
+## Storage
+
+Credo 0.8 doesn't change the storage format, so you don't need to run the update assistant.
+
+If you use [Drizzle](../../agent-setup/storage/drizzle.mdx) with the `tenants` bundle, apply the new `tenants` migration. It adds a `status` column to the tenant table and marks existing tenants as active.
+
+## DIDComm
+
+### DIDComm v1 protocols are removed
+
+The Connection protocol (RFC 0160), Issue Credential v1 (RFC 0036) and Present Proof v1 (RFC 0037) are removed. Use DID Exchange to create connections, and the v2 credential and proof protocols. The legacy Indy formats still work with the v2 protocols.
+
+```ts
+// 0.7
+import {
+  DidCommCredentialV1Protocol,
+  DidCommProofV1Protocol,
+  LegacyIndyDidCommCredentialFormatService,
+  LegacyIndyDidCommProofFormatService,
+} from '@credo-ts/anoncreds/didcomm'
+
+credentialProtocols: [
+  new DidCommCredentialV1Protocol({ indyCredentialFormat: legacyIndyCredentialFormatService }),
+  new DidCommCredentialV2Protocol({ credentialFormats: [legacyIndyCredentialFormatService] }),
+],
+proofProtocols: [
+  new DidCommProofV1Protocol({ indyProofFormat: legacyIndyProofFormatService }),
+  new DidCommProofV2Protocol({ proofFormats: [legacyIndyProofFormatService] }),
+],
+
+// 0.8
+import { LegacyIndyDidCommCredentialFormatService, LegacyIndyDidCommProofFormatService } from '@credo-ts/anoncreds/didcomm'
+
+credentialProtocols: [new DidCommCredentialV2Protocol({ credentialFormats: [legacyIndyCredentialFormatService] })],
+proofProtocols: [new DidCommProofV2Protocol({ proofFormats: [legacyIndyProofFormatService] })],
+```
+
+`DidCommCredentialV1Protocol`, `DidCommProofV1Protocol`, their messages, and the `INDY_*_ATTACHMENT_ID` constants are removed too.
+
+Without the Connection protocol, your agent only connects to agents that support DID Exchange:
+
+- Invitations from `createInvitation` only offer DID Exchange. Out of band invitations that only offer the Connection protocol can't be accepted.
+- Connections that are already established keep working. A connection that was still being set up with the Connection protocol can't be completed: `acceptRequest` and `acceptResponse` throw.
+- Invitation URLs with a `c_i` parameter aren't parsed anymore. URLs with `oob`, and legacy connectionless invitations with `d_m`, still work. `receiveInvitation` only accepts a `DidCommOutOfBandInvitation`.
+
+Removed APIs:
+
+- `createLegacyInvitation` on the out of band API. Use `createInvitation`.
+- The `imageUrl` option of `receiveInvitation`, `receiveInvitationFromUrl`, `receiveImplicitInvitation` and `acceptInvitation` on the out of band API, and of `acceptOutOfBandInvitation` on the connections API. `createInvitation` still accepts it.
+- `DidCommHandshakeProtocol.Connections` and `DidCommInvitationType.Connection`.
+- `DidCommConnectionRecord.rfc0160State`. Use `state`, which is a `DidCommDidExchangeState`.
+- `DidCommConnectionState` and `DidCommConnectionRole`. Use `DidCommDidExchangeState` and `DidCommDidExchangeRole`.
+- The Connection protocol messages and handlers, `DidCommConnection`, `rfc0160StateFromDidExchangeState`, `ConnectionProblemReportError` and `ConnectionProblemReportReason`.
+
+```ts
+// 0.7
+const { invitation } = await agent.didcomm.oob.createLegacyInvitation({ label: 'Issuer' })
+await agent.didcomm.oob.receiveInvitationFromUrl(invitationUrl, { label: 'Holder', imageUrl })
+
+// 0.8
+const { outOfBandInvitation } = await agent.didcomm.oob.createInvitation({ label: 'Issuer' })
+await agent.didcomm.oob.receiveInvitationFromUrl(invitationUrl, { label: 'Holder' })
+```
+
+## AnonCreds
+
+### AnonCreds DIDComm imports
+
+The AnonCreds DIDComm formats are only exported from `@credo-ts/anoncreds/didcomm`: `AnonCredsDidCommCredentialFormatService`, `AnonCredsDidCommProofFormatService`, `AnonCredsLinkSecretBindingProvider`, the legacy Indy formats and their types.
+
+```ts
+// 0.7
+import { AnonCredsDidCommProofFormatService, AnonCredsModule } from '@credo-ts/anoncreds'
+
+// 0.8
+import { AnonCredsModule } from '@credo-ts/anoncreds'
+import { AnonCredsDidCommProofFormatService } from '@credo-ts/anoncreds/didcomm'
+```
+
+### AnonCreds registry imports
+
+The cheqd, Hedera and did:webvh AnonCreds registries are only exported from the `/anoncreds` subpath of their package. Install `@credo-ts/anoncreds` as described in [AnonCreds registries](#anoncreds-registries).
+
+```ts
+// 0.7
+import { CheqdAnonCredsRegistry } from '@credo-ts/cheqd'
+import { HederaAnonCredsRegistry } from '@credo-ts/hedera'
+import { WebVhAnonCredsRegistry } from '@credo-ts/webvh'
+
+// 0.8
+import { CheqdAnonCredsRegistry } from '@credo-ts/cheqd/anoncreds'
+import { HederaAnonCredsRegistry } from '@credo-ts/hedera/anoncreds'
+import { WebVhAnonCredsRegistry } from '@credo-ts/webvh/anoncreds'
+```
+
+For Hedera, the AnonCreds methods of `HederaLedgerService` are removed, and you still need to register `HederaModule` next to the registry.
+
+### AnonCreds Data Integrity aliases are removed
+
+The deprecated aliases are removed from `@credo-ts/core` and `@credo-ts/anoncreds`:
+
+```ts
+// 0.7
+import { ANONCREDS_DATA_INTEGRITY_CRYPTOSUITE, DataIntegrityProof } from '@credo-ts/core'
+import { DataIntegrityDidCommCredentialFormatService } from '@credo-ts/anoncreds'
+
+credential.dataIntegrityCryptosuites
+
+// 0.8
+import { ANONCREDS_W3C_CREDENTIAL_CRYPTOSUITE, AnonCredsW3cCredentialProof } from '@credo-ts/core'
+import { DidCommDataIntegrityCredentialFormatService } from '@credo-ts/didcomm'
+
+credential.anonCredsW3cCredentialCryptosuites
+```
+
+[Updating from 0.6 to 0.7](./0.6-to-0.7.mdx#data-integrity-credential-format-removed-in-08) lists all renamed names.
+
+## OpenID4VC
+
+### Issuer: PKCE is required by default
+
+`pkceRequired` now defaults to `true`, so in the authorization code flow the issuer rejects authorization requests without a `code_challenge` with `invalid_request`. The pre-authorized code flow isn't affected. To keep the 0.7 behavior, turn it off globally or per issuance session:
+
+```ts
+new OpenId4VcModule({
+  issuer: {
+    baseUrl: 'https://issuer.example.com/oid4vci',
+    pkceRequired: false,
+    credentialRequestToCredentialMapper,
+  },
+})
+
+// or per session
+await agent.openid4vc.issuer.createCredentialOffer({
+  // ...
+  authorization: { requirePkce: false },
+})
+```
+
+### Issuer: `requireDpop` and `requireWalletAttestation`
+
+Setting `requireDpop` or `requireWalletAttestation` to `false` in `createCredentialOffer` or in the `getDynamicIssuanceSession` callback now turns the requirement off for that issuance session, even when `dpopRequired` or `walletAttestationsRequired` is on in the module config. In 0.7, `false` fell back to the global setting. To keep using the global setting, leave the option out.
+
+```ts
+// 0.7: false means "use the global setting"
+authorization: { requireDpop: false }
+
+// 0.8: leave it out to use the global setting
+authorization: {}
+```
+
+### Issuer: HTTP responses
+
+The issuer endpoints follow the specs more closely. Clients and tests that check status codes or error codes need updating:
+
+- Missing or invalid authentication returns `401` instead of `403`.
+- A successful pushed authorization request returns `201` instead of `200`.
+- A pushed authorization request without `redirect_uri` returns `invalid_request` instead of `invalid_scope`.
+- A credential request that can't be parsed, for example with an unknown `credential_configuration_id`, returns an OAuth 2.0 error response instead of a `500`.
+- A credential request with a `credential_identifier` returns `unknown_credential_identifier` instead of `invalid_credential_request`.
+- On the credential and deferred credential endpoints, errors other than a rejected access token or DPoP proof, such as a misconfigured resource server, return `500 server_error` instead of `401`.
+- An invalid `credential_response_encryption` in a deferred credential request is rejected with `invalid_encryption_parameters`.
+- The authorization server metadata includes `response_types_supported: ["code"]`.
+
+### OpenID4VP
+
+- Creating a `v1.draft21` authorization request with the `x509_hash` client ID prefix throws. Use `x509_san_dns`, or version `v1`.
+- When the wallet sends an authorization error response, such as `access_denied`, the verifier's response endpoint returns `200`, with the `redirect_uri` if one is set, instead of a `500`. The verification session still moves to the error state.
+- The holder rejects transaction data that references credential IDs that aren't in the DCQL query, with `invalid_transaction_data`.
+
+### Symmetric algorithms aren't advertised
+
+Symmetric (HMAC) signature algorithms are no longer advertised in OpenID4VC metadata (`vp_formats_supported`, `proof_signing_alg_values_supported`) and DIDComm `algsSupported`, and the holder no longer offers them for proof of possession.
+
+## DIDs
+
+### Stricter DID URL parsing
+
+Credo now uses `did-resolver` 6, which parses DID URLs strictly according to DID Core 1.0. `parseDid` throws, `tryParseDid` returns `null`, and resolving returns an `invalidDid` error for DID URLs with matrix parameters (`;key=value`), characters that must be percent-encoded, or invalid percent escapes.
+
+`ParsedDid` no longer has a `params` property, because matrix parameters aren't valid anymore. If you implement a custom `DidResolver`, read query parameters from `query`:
+
+```ts
+// 0.7
+const service = parsed.params?.service
+
+// 0.8
+const service = new URLSearchParams(parsed.query).get('service')
+```
+
+`did:web` resolution now validates the host, returns no document when the `id` of the hosted document isn't the DID, and reports network, HTTP and JSON errors as `resolutionError` instead of `notFound`. It uses the `fetch` of the agent dependencies, with a timeout.
+
+### did:jwk
+
+- A `did:jwk` that contains private key material is rejected.
+- `DidJwk.fromDid` rejects DID URL fragments other than `#0`.
+- The JWK `use` value decides the verification relationships: with `use: 'sig'` the key isn't used for key agreement, and with `use: 'enc'` it's only used for key agreement.
+
+### `JsonWebKey2020` without `kid`
+
+`JsonWebKey2020` verification methods in new DID documents no longer include a `kid` in `publicKeyJwk`. Before, Credo put the key management key ID there, so it ended up in published DID documents. Credo finds the key through the keys on the `DidRecord`, so you don't need to change anything.
+
+## SD-JWT VC
+
+- The verifier rejects a status list JWT whose `typ` header isn't `statuslist+jwt`, with an `SLException`.
+- Errors from a failed SD-JWT VC verification carry a `code`, such as `JWT_EXPIRED` or `STATUS_INVALID`. A failed `iat`, `nbf` or `exp` check throws a `JwtTimeClaimException`.
+
+## X.509
+
+- `X509Service.parseCertificateSigningRequest` takes an `agentContext` as first argument, like the other `X509Service` methods. `agent.x509.parseCertificateSigningRequest` didn't change.
+- Credo always limits the work done when parsing ASN.1 (`maxDepth`, `maxNodes`, `maxContentLength`), using `defaultX509ParseOptions` unless you configure other limits. Set them with `new X509Module({ parseOptions })` or per call. See [Parse limits](../../dids-and-trust/x509.mdx#parse-limits).
+
+```ts
+// 0.7
+X509Service.parseCertificateSigningRequest({ encodedCertificateSigningRequest })
+
+// 0.8
+X509Service.parseCertificateSigningRequest(agentContext, { encodedCertificateSigningRequest })
+```
+
+## Node.js key management
+
+These changes are also part of the upcoming 0.7.3 patch release:
+
+- `NodeKeyManagementService` returns `Uint8Array` instead of `Buffer` from `randomBytes`, `sign`, `encrypt` and `decrypt`.
+- ECDH-ES on P-384 and P-521 now derives keys with SHA-256, like other JOSE libraries. Data encrypted with the old Node.js key management on those curves can't be decrypted anymore.
+
+## New in 0.8
+
+- Tenants have a status. After `agent.modules.tenants.updateTenantStatus(tenantId, TenantStatus.Inactive)`, opening a session for the tenant throws a `TenantInactiveError`, so its inbound DIDComm messages and OpenID4VC requests fail. See [Tenant status](../../agent-setup/multi-tenancy.mdx#tenant-status).
+- `SdJwtVcModule` accepts a `customStatusListFetcher` to control how status lists are fetched. See [Status lists](../../credential-formats/status-lists.mdx#verify).
+- `agent.kms.supportedJwaSignatureAlgorithms()` lists the signature algorithms the configured backends support. See [Key management](../../agent-setup/key-management.mdx).
+- `validitySkewSeconds` also applies to the OpenID4VC issuer's checks of wallet attestations and DPoP proofs. See [Agent setup](../../agent-setup/index.mdx#config).
+- The `DidCommMessageProcessingFailed` event is emitted when an inbound DIDComm message can't be processed. See [DIDComm events](../../protocols/didcomm/index.mdx#events).

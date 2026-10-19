@@ -1,0 +1,137 @@
+---
+title: Building a wallet
+sidebar_label: Wallet
+description: Answer W3C Digital Credentials API requests from websites in a React Native wallet with @animo-id/expo-digital-credentials-api and Credo. Register credentials with the operating system, share the store with the iOS extension, and answer OpenID4VP and org-iso-mdoc requests.
+---
+
+When a website calls the Digital Credentials API, the operating system offers the wallets that hold a matching credential, and opens the one the user picks with the request and the origin of the website. In a React Native wallet, [`@animo-id/expo-digital-credentials-api`](https://github.com/animo/expo-digital-credentials-api) handles the platform side: it registers credentials with Credential Manager on Android and Identity Document Services on iOS, and shows your request UI. Credo resolves the request and creates the response. This page builds a minimal wallet that answers both OpenID4VP and `org-iso-mdoc` requests. [Digital Credentials API](./index.mdx) explains the flow and which protocols to support, and the [module README](https://github.com/animo/expo-digital-credentials-api#readme) has all options and platform details.
+
+[Paradym Wallet](https://github.com/animo/paradym-wallet), an open source wallet built on Credo, supports the API this way. See its [request handling](https://github.com/animo/paradym-wallet/blob/main/packages/sdk/src/dcApi/ParadymDcApiSdk.ts), [credential registration](https://github.com/animo/paradym-wallet/blob/main/packages/sdk/src/dcApi/registerCredentials.ts) and [request UI](https://github.com/animo/paradym-wallet/tree/main/apps/wallet/src/features/dc-api) for a complete implementation.
+
+## Set up
+
+The wallet is a React Native agent, see [Installation](../../getting-started/installation.mdx). Add the module, and `expo-secure-store` for the wallet key:
+
+<InstallTabs packages="@animo-id/expo-digital-credentials-api expo-secure-store" />
+
+Add the config plugin to `app.json` and run `npx expo prebuild`:
+
+```json title="app.json"
+{
+  "expo": {
+    "plugins": [
+      [
+        "@animo-id/expo-digital-credentials-api",
+        {
+          "entry": "src/dc-api-wallet-request",
+          "ios": { "documentTypes": ["org.iso.18013.5.1.mDL"] }
+        }
+      ]
+    ]
+  }
+}
+```
+
+- The module needs Expo SDK 55 and React Native 0.83 or later. On these SDKs, npm only installs Credo with the `expo-crypto` override from [Installation](../../getting-started/installation.mdx). It works on Android devices whose Credential Manager has the registry API, and on iOS 26 and later. The app itself can still support older iOS versions.
+- `entry` is the file with the request UI, without extension.
+- `ios.documentTypes` are the mdoc document types the wallet can present on iOS, from the set Apple allows: `org.iso.18013.5.1.mDL`, `eu.europa.ec.eudi.pid.1`, `eu.europa.ec.av.1`, `org.iso.23220.photoid.1` and `org.iso.23220.1.jp.mnc`. Without it, the plugin doesn't add the iOS app extension. Android needs no options.
+
+### Share the wallet with the request UI
+
+The app and the request UI open the same wallet:
+
+```ts showLineNumbers title="dc-api-wallet-agent.ts" dc-api-wallet-agent.ts section-1
+```
+
+On iOS, the request UI runs in an app extension, a separate process that can't read the app's files. The config plugin creates an app group, and `getSharedContainerPath()` returns a directory that both can use. A wallet that already has a store elsewhere has to move it there first. The plugin also shares the keychain between the app and the extension, so both read the same wallet key. On Android, the request UI runs in the app's process.
+
+## Register credentials
+
+The operating system only offers the wallet for a request that matches a registered credential:
+
+```ts showLineNumbers title="dc-api-wallet-agent.ts" dc-api-wallet-agent.ts section-2
+```
+
+- On Android, a matcher runs in a sandbox and compares each request with the registered claims. The system picker shows the matching credentials with their values, so register the values: the full example converts them. Each call replaces the registered set, so pass all credentials.
+- iOS only registers mdocs whose document type is in `ios.documentTypes`, and only keeps their id and document type. It matches on the document type, so a request can reach the wallet for elements the mdoc doesn't have. SD-JWT VCs aren't registered there.
+- The first registration on iOS asks the user for permission.
+
+## Answer requests
+
+When the user picks a credential of the wallet, the operating system starts the request UI. Credo resolves the request for the origin and creates the response:
+
+<Tabs groupId="dc-api-protocol">
+<TabItem value="openid4vp" label="OpenID4VP">
+
+```ts showLineNumbers title="dc-api-wallet-response.ts" dc-api-wallet-response.ts section-1
+```
+
+- Pass the `origin` to both `resolveOpenId4VpAuthorizationRequest` and `acceptOpenId4VpAuthorizationRequest`. The holder rejects a DC API request without it, and a signed request whose `expected_origins` doesn't include it.
+- A signed request only resolves when the wallet trusts the verifier's certificate. See [Presenting credentials](../openid4vc/present.mdx).
+- `acceptOpenId4VpAuthorizationRequest` doesn't send anything. It returns `authorizationResponse` for you to hand back to the platform, with the protocol of the request.
+
+</TabItem>
+<TabItem value="iso-mdoc" label="ISO 18013-7 Annex C">
+
+```ts showLineNumbers title="dc-api-wallet-response.ts" dc-api-wallet-response.ts section-2
+```
+
+- `resolveDcApiRequest` rejects a request without an origin. It verifies reader authentication and matches the stored mdocs against each document request. `success` is `false` when they can't satisfy the request.
+- A signed request from a reader you don't trust throws. Trust readers through the agent's trust configuration with verification type `mdocReaderAuth`, or pass `trustedReaderCertificates`. `readerAuth.certificateChain` on each document request has the verified chain, leaf first, to show the verifier to the user.
+- `createDcApiResponse` discloses every requested element. Pass `elements` per credential to disclose fewer, for example to leave out the ones the user declined. It sends nothing: hand the returned `response` back to the platform.
+
+</TabItem>
+</Tabs>
+
+Both functions present the first stored credential that matches. On Android, `request.selection.credentialIds` has the ids of the credentials the user picked in the system picker, so a full wallet presents those.
+
+### The request UI
+
+The request UI calls these functions when the user shares:
+
+```tsx showLineNumbers title="dc-api-wallet-request.tsx" dc-api-wallet-request.tsx section-1
+```
+
+- Always use the origin from the operating system, never one from the request. On Android it's undefined when an app asks for itself instead of a website.
+- On Android, `requests` has the requests the page passed, and `selection` what the user picked in the system picker and the request it matched. With several requests of the same protocol, the matcher only reports the protocol, so the example takes the first candidate.
+- iOS has no picker, and hands over the request only after `approve()`, always as `org-iso-mdoc`. Before that, `request.presentmentRequests` has the document types and elements the operating system parsed from it, to show on the consent screen.
+- `respond()` sends the response through the operating system to the page, `decline()` cancels. Until then the request stays open, so the user can try again after an error.
+
+The entry file registers the screen:
+
+```tsx title="dc-api-wallet-request.tsx" dc-api-wallet-request.tsx section-2
+```
+
+The request UI is bundled separately from the app. Import only what it needs: on iOS the extension gets little memory, and `ios.excludedPackages` or `ios.includedPackages` limit which native modules it links. The module README also lists known issues with some native modules in the request UI, and patches for them.
+
+## Full example
+
+Render the app's screens as usual and call `registerWalletCredentials` after the wallet stores or deletes a credential. The request UI is `dc-api-wallet-request.tsx`.
+
+<Tabs>
+<TabItem value="agent" label="dc-api-wallet-agent.ts">
+
+```ts showLineNumbers title="dc-api-wallet-agent.ts" dc-api-wallet-agent.ts
+```
+
+</TabItem>
+<TabItem value="response" label="dc-api-wallet-response.ts">
+
+```ts showLineNumbers title="dc-api-wallet-response.ts" dc-api-wallet-response.ts
+```
+
+</TabItem>
+<TabItem value="request" label="dc-api-wallet-request.tsx">
+
+```tsx showLineNumbers title="dc-api-wallet-request.tsx" dc-api-wallet-request.tsx
+```
+
+</TabItem>
+</Tabs>
+
+## Next steps
+
+- [Building a verifier](./verifier.mdx): the other side of the flow.
+- [Presenting credentials](../openid4vc/present.mdx): resolve OpenID4VP requests and select credentials.
+- [Trusted issuers](../../dids-and-trust/trust.mdx): decide which issuers, verifiers and readers your wallet trusts.
+- [Proximity (ISO 18013-5)](../mdoc/proximity.mdx): present mdocs in person.

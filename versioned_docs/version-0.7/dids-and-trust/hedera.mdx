@@ -1,0 +1,84 @@
+---
+title: Hedera
+description: Create, update, deactivate and resolve did:hedera DIDs, and use Hedera as an AnonCreds registry with @credo-ts/hedera.
+---
+
+[Hedera](https://hedera.com) is a public network whose Consensus Service (HCS) stores `did:hedera` DID documents and AnonCreds objects. `@credo-ts/hedera` adds the `did:hedera` method and an AnonCreds registry, built on the [Hiero DID SDK](https://github.com/hiero-ledger/hiero-did-sdk-js). Writes cost HBAR, paid by an operator account that you configure.
+
+Use `did:hedera` when your ecosystem uses Hedera, for DIDs or as an AnonCreds registry.
+
+:::warning[Experimental]
+The Hedera module is experimental and may have breaking changes in any release. Pin exact versions of all `@credo-ts/*` packages when you use it.
+:::
+
+## Install
+
+<InstallTabs packages="@credo-ts/hedera" />
+
+## Configure
+
+Register `HederaModule` with the networks you use, and add the Hedera registrar and resolver to `DidsModule`:
+
+```ts showLineNumbers title="agent.ts" hedera-did.ts section-1
+```
+
+Spread these modules into the `modules` of your agent. Each network takes:
+
+| Option | Description |
+| --- | --- |
+| `network` | `'mainnet'`, `'testnet'`, `'previewnet'`, `'local-node'`, or a custom network `{ name, nodes, mirrorNodes }`. |
+| `operatorId` | Account id of the operator account, such as `0.0.12345`. |
+| `operatorKey` | Private key of the operator account. |
+
+`HederaModule` doesn't register the DID registrar and resolver itself, so list them in `DidsModule`. Your lists replace the default registrars and resolvers, see [Configure DID methods](./index.mdx#configure-did-methods).
+
+## Create a did:hedera
+
+```ts showLineNumbers title="issuer.ts" hedera-did.ts section-2
+```
+
+Credo creates an Ed25519 root key in the KMS and publishes a DID document with it as `#did-root-key`. The root key signs every later update. Pass `secret.rootKeyId` to use an Ed25519 key that's already in the KMS. With more than one network configured, `options.network` picks the network for the new DID.
+
+To publish a full DID document right away, pass `didDocument`, and list the KMS keys of its verification methods in `secret.keys` as `{ kmsKeyId, didDocumentRelativeKeyId }`.
+
+## Update a did:hedera
+
+```ts showLineNumbers title="issuer.ts" hedera-did.ts section-3
+```
+
+`didDocumentOperation` is required:
+
+- `addToDidDocument` adds the services and verification methods in `didDocument`.
+- `removeFromDidDocument` removes them.
+- `setDidDocument` replaces the document.
+
+Credo finds the network from the DID and signs with the root key from the `DidRecord`. Every verification method in the update needs its KMS key: Credo uses the keys in the `DidRecord`, and you pass keys for new verification methods in `secret.keys`.
+
+## Deactivate a did:hedera
+
+```ts showLineNumbers title="issuer.ts" hedera-did.ts section-4
+```
+
+## AnonCreds registry
+
+`HederaAnonCredsRegistry` registers and resolves AnonCreds schemas, credential definitions and revocation data on HCS. Import it from the `@credo-ts/hedera/anoncreds` subpath: the export from the `@credo-ts/hedera` root is deprecated, and removed in 0.8. The Hiero DID SDK needs a Zstandard library to store the objects, and a crypto library on React Native:
+
+<Tabs groupId="platform" queryString>
+<TabItem value="node" label="Node.js">
+
+<InstallTabs packages="zstd-napi" />
+
+</TabItem>
+<TabItem value="react-native" label="React Native">
+
+<InstallTabs packages="react-native-zstd react-native-quick-crypto" />
+
+</TabItem>
+</Tabs>
+
+Set up AnonCreds as described in [AnonCreds](../credential-formats/anoncreds.mdx), with the Hedera registry:
+
+```ts showLineNumbers title="agent.ts" hedera-anoncreds.ts section-1
+```
+
+The registry uses the network configuration of `HederaModule`, so register that module as well. The issuer needs a `did:hedera`.

@@ -39,7 +39,13 @@
       "allowComments": true
     }
   },
-  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
   "linter": {
     "rules": {
       "a11y": {
@@ -73,6 +79,34 @@
           "level": "error"
         }
       }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["snippets/*/src/**/*.ts"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useHookAtTopLevel": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["snippets/*/src/landing-*.ts"],
+      "formatter": {
+        "lineWidth": 76
+      },
+      "javascript": {
+        "formatter": {
+          "lineWidth": 76
+        }
+      }
+    }
+  ],
+  "css": {
+    "parser": {
+      "cssModules": true
     }
   }
 }

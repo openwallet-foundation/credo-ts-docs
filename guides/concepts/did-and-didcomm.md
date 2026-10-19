@@ -1,34 +1,37 @@
-# DIDs and DIDComm
+---
+title: DIDs and DIDComm
+description: What decentralized identifiers and DID documents are, and how DIDComm uses them for messaging between agents.
+---
 
-### DIDs
+Credo uses DIDs to identify issuers, holders and the keys they sign with, and DIDComm to exchange messages between agents. This page explains the basics of both.
 
-[DIDs](https://www.w3.org/TR/did-core/), short for Decentralized identifiers,
-are a type of identifier that enables verifiable, decentralized identity. A DID
-can refer to any subject, a person, organization, etc. DIDs are decoupled from
-centralized registries, identity providers and certificate authorities.
+## DIDs
 
-### DID Documents
+A [decentralized identifier](https://www.w3.org/TR/did-1.0/) (DID) is an identifier such as `did:web:issuer.example.com` that you can resolve to a DID document. You create DIDs yourself: no central party issues them.
 
-A DID by itself does not contain a lot of information. So in order to get some
-metadata we have to resolve the DID to get a [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents). With this
-document we can get data such as their public key, proof mechanisms and their
-service endpoints. This means that we can check the validity, encrypt
-one-to-one messages and send it to their service endpoint.
+The part after `did:` is the DID method. It defines where the document lives and how you create and update it:
 
-### DIDComm
+- `did:key` and `did:jwk` encode a single public key in the DID itself. Nothing is published.
+- `did:peer` is shared only with the other party of a DIDComm connection.
+- `did:web` and `did:webvh` are published on a web server under your domain.
+- `did:cheqd`, `did:indy` and `did:hedera` are anchored on a ledger.
 
-In the previous section sending a message to their service endpoint is
-mentioned. This is a nice feature, but is lacking a definition of how it should
-work. [DIDComm](https://identity.foundation/didcomm-messaging/spec/), we will
-only discuss V1 here, defines this. DIDComm is designed to be private, secure,
-transport-agnostic, interoperable and much more. This means that you can
-securely send a message from as Alice to Bob securely via bluetooth, HTTP,
-WebSockets, etc.
+[DIDs](../dids-and-trust/index.mdx) lists the methods Credo supports and shows how to create and resolve DIDs.
 
-When working with the tools available inside the Credo ecosystem,
-deep knowledge of DIDComm is not required.
+## DID documents
 
-### Useful Resources
+A DID document lists:
 
-- [DID spec](https://www.w3.org/TR/did-core/)
-- [DIDComm spec](https://identity.foundation/didcomm-messaging/spec/)
+- Verification methods: the public keys of the DID.
+- Verification relationships, which say what each key may be used for, for example `assertionMethod` to sign credentials, `authentication` to prove control of the DID, and `keyAgreement` to encrypt messages.
+- Services, such as the endpoint where the DID controller receives DIDComm messages.
+
+A verifier resolves the issuer's DID to get the key that signed a credential. Another agent resolves a DID to find out where and how to send it a message.
+
+## DIDComm
+
+[DIDComm](https://identity.foundation/didcomm-messaging/spec/) is a way for agents identified by DIDs to send each other messages. A message is encrypted for the recipient's `keyAgreement` key and sent to its service endpoint, over any transport, such as HTTP or WebSockets. Credo implements DIDComm Messaging v1, the version the Aries protocols use.
+
+On top of this messaging layer, protocols define specific exchanges: setting up a connection with Out of Band and DID Exchange, issuing credentials, requesting proofs, mediation and basic messages. A mobile wallet has no public endpoint, so it uses a mediator: an agent that receives and stores messages until the wallet picks them up.
+
+You don't need DIDComm to use DIDs. OpenID4VC uses DIDs or X.509 certificates for keys, and HTTPS and OAuth 2.0 for transport. See [Verifiable credentials](./verifiable-credentials.mdx) for how the protocols compare, and [DIDComm](../protocols/didcomm/index.mdx) to set it up.

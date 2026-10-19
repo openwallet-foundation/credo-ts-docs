@@ -1,0 +1,96 @@
+---
+title: Example setups
+description: Complete Credo agent configurations for a mobile wallet, an issuer and verifier service, a multi-tenant service, a DIDComm mediator and tests.
+---
+
+Each recipe on this page is a complete, type-checked agent configuration for a common deployment. Start from the one closest to what you build. The linked pages explain the options.
+
+## Mobile wallet
+
+Start here if you build a wallet app for phones. This React Native app [receives](../protocols/openid4vc/receive.mdx) and [presents](../protocols/openid4vc/present.mdx) credentials with OpenID4VC, and connects to other agents over [DIDComm](../protocols/didcomm/index.mdx) through a mediator. Askar stores the data and keys, and keys that must stay in the device's secure hardware use the secure environment backend.
+
+Install the packages from [Installation](./installation.mdx), and:
+
+<InstallTabs packages="@credo-ts/openid4vc @credo-ts/didcomm @animo-id/expo-secure-environment@^0.1.5" />
+
+```ts showLineNumbers title="agent.ts" example-mobile-wallet-rn.ts section-1
+```
+
+Askar is the default [key management](../agent-setup/key-management.mdx) backend. A key goes to the secure environment only when you create it with `backend: 'secureEnvironment'`, which supports P-256 keys and ES256 signatures. `walletKey` is a raw key that you generate once and keep in the device keychain, see [Askar](../agent-setup/storage/askar.mdx).
+
+If the wallet only uses OpenID4VC, leave out the `didcomm` module and package. [Mediation](../protocols/didcomm/mediation.mdx) explains the pickup strategies.
+
+## Issuer and verifier service
+
+Start here if your organization issues or verifies credentials from its own backend. This Node.js service issues credentials with [OpenID4VCI](../protocols/openid4vc/issuer.mdx) and verifies presentations with [OpenID4VP](../protocols/openid4vc/verifier.mdx). It stores its records in PostgreSQL with [Drizzle](../agent-setup/storage/drizzle.mdx), its keys in Askar and its cache in Redis, so you can run several instances of it.
+
+<InstallTabs packages="@credo-ts/core @credo-ts/node @credo-ts/drizzle-storage @credo-ts/askar @credo-ts/openid4vc @credo-ts/redis-cache @openwallet-foundation/askar-nodejs@0.6.1 drizzle-orm@^0.45.4 pg express@^5 ioredis" />
+<InstallTabs packages="@types/express@^5" dev />
+
+```ts showLineNumbers title="server.ts" example-issuer-verifier.ts section-1
+```
+
+`credentialRequestToCredentialMapper` decides which credential the issuer signs for a request. This one signs SD-JWT VCs with a DID that the agent created before, set in `ISSUER_DID_URL`. Before you can offer credentials, create an issuer record. [Issuing credentials](../protocols/openid4vc/issuer.mdx) covers the mapper, issuer records and offers.
+
+`agent.initialize()` adds the OpenID4VC routes to the Express app, so start the server after it.
+
+Drizzle doesn't create tables. Run the migrations before every deploy:
+
+```bash
+npx drizzle-storage --bundle core --bundle openid4vc migrate --dialect postgres --database-url "$DATABASE_URL"
+```
+
+## Multi-tenant service
+
+Start here if you host issuers or verifiers for many organizations in one deployment. Each organization is a tenant with its own DIDs, keys and records. See [Multi-tenancy](../agent-setup/multi-tenancy.mdx).
+
+Install the packages of the issuer and verifier service, and:
+
+<InstallTabs packages="@credo-ts/tenants" />
+
+```ts showLineNumbers title="server.ts" example-multi-tenant.ts section-1
+```
+
+Replace the default cache: it works with one agent context only, and throws as soon as a tenant uses it. Use `InMemoryLruCache` for a single instance or `RedisCache` for several, see [Caching](../agent-setup/caching.mdx). Drizzle keeps the records of all tenants in one database. `ProfilePerWallet` does the same for the keys, with an Askar profile per tenant.
+
+Run the migrations with the tenants bundle:
+
+```bash
+npx drizzle-storage --bundle core --bundle openid4vc --bundle tenants migrate --dialect postgres --database-url "$DATABASE_URL"
+```
+
+Tenant agents use the modules of the root agent, and the OpenID4VC endpoints route each request to the tenant that owns the issuer or verifier. Create a tenant and set it up through a tenant agent:
+
+```ts showLineNumbers example-multi-tenant.ts section-2
+```
+
+## DIDComm mediator
+
+Start here if the mobile wallets in your DIDComm ecosystem need a mediator. This public Node.js service receives DIDComm messages for wallets without an endpoint of their own, and holds them until the wallet picks them up. It stores records in PostgreSQL with Drizzle, keeps keys in Askar and caches in Redis. See [Mediation](../protocols/didcomm/mediation.mdx).
+
+<InstallTabs packages="@credo-ts/core @credo-ts/node @credo-ts/askar @credo-ts/didcomm @credo-ts/drizzle-storage @credo-ts/redis-cache @openwallet-foundation/askar-nodejs@0.6.1 drizzle-orm@^0.45.4 pg ioredis" />
+
+```ts showLineNumbers title="mediator.ts" example-mediator.ts section-1
+```
+
+Run the migrations before you start it:
+
+```bash
+npx drizzle-storage --bundle core --bundle didcomm migrate --dialect postgres --database-url "$DATABASE_URL"
+```
+
+Queued messages are kept in memory by default, so they're lost on restart and not shared between instances. For production, pass a persistent `queueTransportRepository` to the `DidCommModule`. [DIDComm Mediator Credo](https://github.com/openwallet-foundation/didcomm-mediator-credo) is a complete mediator that can keep the queue in PostgreSQL or DynamoDB.
+
+`autoUpdateStorageOnStartup` migrates the storage when you upgrade Credo. Back up the database first, see [Updating](../updating/index.md).
+
+## Tests
+
+Start here for unit and integration tests of your own code. Each agent gets its own in-memory SQLite database and keeps its keys in memory, so tests don't share state and nothing is written to disk.
+
+```ts showLineNumbers title="agent.test.ts" example-tests.ts section-1
+```
+
+The Node.js [key management](../agent-setup/key-management.mdx) backend is lighter than Askar and needs no store. DIDComm needs XSalsa20-Poly1305, which only Askar has, so tests that use DIDComm keep the keys in Askar with an in-memory store. A test with Node.js's test runner:
+
+```ts showLineNumbers example-tests.ts section-2
+```

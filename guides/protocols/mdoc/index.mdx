@@ -1,0 +1,64 @@
+---
+title: ISO mdoc
+description: How the ISO/IEC 18013-5 and 18013-7 presentation protocols for mdocs work, how they differ from OpenID4VP, and what Credo does for proximity and the Digital Credentials API.
+---
+
+ISO/IEC 18013-5 defines the mdoc, the credential format of the mobile driving licence (mDL), together with a protocol to present it in person. ISO/IEC TS 18013-7 adds presentation over the internet, and its Annex C defines `org-iso-mdoc` for the W3C Digital Credentials API. These protocols carry only mdocs. This page explains how an mdoc presentation works, how it differs from OpenID4VP, and what Credo does for each. For the format, see [mdoc](../../credential-formats/mdoc.mdx). To issue mdocs, or to present them over OpenID4VP, see [mdoc with OpenID4VC](../openid4vc/mdoc.mdx).
+
+## How a presentation works
+
+The wallet holds the mdoc, and the verifier is called the mdoc reader. A presentation has these parts:
+
+| Part | What it is |
+| --- | --- |
+| Device engagement | Only in proximity. The wallet shows a QR code, or answers an NFC tap, with an ephemeral key and the transports it supports. The reader answers with its own ephemeral key, and both derive session keys that encrypt the rest of the exchange. |
+| Device request | Per document type, the data elements the reader wants and whether it keeps them (intent to retain). The reader can sign each document request with its certificate (reader authentication), so the wallet can show who is asking. |
+| Device response | The disclosed data elements as the issuer signed them, and a signature over the session transcript made with the device key the mdoc is bound to. |
+| Session transcript | Never sent. Both sides derive it from the session: from the engagement in proximity, from the website's origin and the encryption parameters with the Digital Credentials API. The device signature covers it, so a response is only valid in the session it was made for. |
+
+## Proximity and the Digital Credentials API
+
+Credo supports two ways to present an mdoc with these protocols:
+
+| | [Proximity](./proximity.mdx) | [Digital Credentials API](../dc-api/index.mdx) |
+| --- | --- | --- |
+| Standard | ISO/IEC 18013-5 | ISO/IEC TS 18013-7 Annex C |
+| Use | In person, for example at a counter or a gate | A website, through the browser and the operating system |
+| Started by | The reader scanning a QR code, or an NFC tap | The page calling `navigator.credentials.get()` with protocol `org-iso-mdoc` |
+| Transport | BLE, NFC or Wi-Fi Aware | The browser and the operating system |
+| Encryption | Session keys from the engagement | The response is encrypted to the verifier with HPKE |
+
+The Digital Credentials API also carries OpenID4VP requests. [Digital Credentials API](../dc-api/index.mdx) covers both protocols, with a guide for the verifier and one for the wallet.
+
+Which to use depends on where the presentation happens. In person, use proximity. On a website, use the Digital Credentials API, and pass an OpenID4VP and an `org-iso-mdoc` request in one call, as iOS only accepts `org-iso-mdoc`. Where the browser doesn't support the API, fall back to OpenID4VP with a QR code or a link, see [mdoc with OpenID4VC](../openid4vc/mdoc.mdx).
+
+## How it differs from OpenID4VP
+
+OpenID4VP can present the same mdoc, and the device response inside it has the same structure. ISO/IEC TS 18013-7 also describes mdoc presentation over OpenID4VP. Everything around the device response differs:
+
+| | ISO 18013-5 and 18013-7 Annex C | OpenID4VP |
+| --- | --- | --- |
+| Encoding | CBOR | JSON and JWT |
+| Request | A device request with document types and data element identifiers | An authorization request with a DCQL query |
+| Credential formats | mdoc | SD-JWT VC, mdoc and W3C VCs |
+| Alternatives | Can't be expressed. Several document requests can mean all of them or any one. | DCQL credential sets and claim sets |
+| Verifier identity | Reader certificate, optional | Client identifier, usually with a signed request |
+| Credo API | `agent.mdoc` and `MdocDeviceResponse` in `@credo-ts/core` | `agent.openid4vc` in `@credo-ts/openid4vc` |
+
+## What Credo does
+
+| Step | Proximity | Digital Credentials API |
+| --- | --- | --- |
+| Engagement and transport | A native module, such as `expo-mdoc-data-transfer` in a React Native wallet | The browser and the operating system. In the wallet, a native module such as `@animo-id/expo-digital-credentials-api` |
+| Encryption | The native module | Credo |
+| Create the device request | Not supported | `agent.mdoc.createDcApiVerificationSession` |
+| Read the request in the wallet | Decode it with `@owf/mdoc` | `agent.mdoc.resolveDcApiRequest`, which also finds matching mdocs |
+| Reader authentication | Not checked | Created and verified |
+| Create the device response | `MdocDeviceResponse.createDeviceResponse` | `agent.mdoc.createDcApiResponse` |
+| Verify the device response | `MdocDeviceResponse.verify` | `agent.mdoc.verifyDcApiResponse`, which also checks the response against the request |
+
+Credo signs device responses with the device key (device signature). It doesn't support device MAC authentication, so it can't verify a response authenticated with a MAC either.
+
+Neither standard covers issuance. Wallets usually receive mdocs over OpenID4VCI, see [mdoc with OpenID4VC](../openid4vc/mdoc.mdx).
+
+<DocCardList />

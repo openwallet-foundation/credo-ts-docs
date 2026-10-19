@@ -1,0 +1,103 @@
+---
+title: AnonCreds with DIDComm
+description: Issue AnonCreds credentials and request proofs with predicates over DIDComm, and handle revocation.
+---
+
+You exchange AnonCreds credentials over DIDComm, with [Issue Credential v2](./issue-credential.mdx) and [Present Proof v2](./present-proof.mdx). This page issues a credential and requests a proof with a predicate, then covers revocation. The AnonCreds specification calls the holder the prover when it presents. Both agents need the `AnonCredsModule` with a registry, and the issuer needs a registered credential definition: see [AnonCreds](../../credential-formats/anoncreds.mdx).
+
+## Register the format services
+
+The AnonCreds format services are exported from `@credo-ts/anoncreds/didcomm` since Credo 0.7.2. `@credo-ts/anoncreds` still exports them too, but those exports are deprecated and removed in 0.8. Register the services on both the credentials and the proofs protocol.
+
+```ts showLineNumbers title="agent.ts" didcomm-anoncreds.ts section-1
+```
+
+There are two formats for the same credentials. `anoncreds` uses the AnonCreds attachments of [RFC 0771](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0771-anoncreds-attachments). `indy` uses the older Hyperledger Indy attachments of [RFC 0592](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0592-indy-attachments), which some agents still require. Their API options are the same, under the `anoncreds` or `indy` key. The deprecated Issue Credential v1 and Present Proof v1 protocols only support the `indy` format, see [Issuing credentials](./issue-credential.mdx#issue-credential-v1).
+
+## Issue a credential
+
+:::issuer
+
+```ts showLineNumbers title="issuer.ts" didcomm-anoncreds.ts section-2
+```
+
+:::
+
+The attribute names must match the schema of the credential definition exactly: no missing and no extra attributes. AnonCreds values are strings. Predicates work on attributes whose value is an integer string.
+
+:::holder
+
+```ts showLineNumbers title="holder.ts" didcomm-anoncreds.ts section-3
+```
+
+:::
+
+The holder binds the credential to its link secret. Credo creates a default link secret on the first credential request if there is none. To use another one, create it with `agent.modules.anoncreds.createLinkSecret` and pass `credentialFormats: { anoncreds: { linkSecretId } }` to `acceptOffer`. The holder stores the credential as a W3C credential record. [AnonCreds](../../credential-formats/anoncreds.mdx) shows how to query it.
+
+## Request a proof
+
+:::verifier
+
+```ts showLineNumbers title="verifier.ts" didcomm-anoncreds.ts section-4
+```
+
+:::
+
+The keys of `requested_attributes` and `requested_predicates` (`name`, `role`, `adult`) are referents: names you choose to find the values in the presentation. Use `names: ['name', 'role']` instead of `name` to require attributes from the same credential. A predicate (`>=`, `>`, `<=` or `<` with an integer `p_value`) proves a comparison without revealing the value. Credo generates the `nonce` of the request when you leave it out.
+
+`restrictions` decide which credentials qualify, for example by `cred_def_id`, `issuer_id` or `schema_id`. Without restrictions, the holder can use any credential with that attribute, including one it issued itself, so restrict every item to the issuers you trust.
+
+:::holder
+
+```ts showLineNumbers title="holder.ts" didcomm-anoncreds.ts section-5
+```
+
+:::
+
+All credentials in one presentation must be bound to the same link secret.
+
+:::verifier
+
+```ts showLineNumbers title="verifier.ts" didcomm-anoncreds.ts section-6
+```
+
+:::
+
+The presentation contains the revealed attribute values under their referents. Predicates appear only as proven, without the value.
+
+## Revocation
+
+Revocation needs a revocable credential definition with a revocation registry and status list. [AnonCreds](../../credential-formats/anoncreds.mdx) shows how to create them and how to revoke.
+
+When you issue a revocable credential, pass the revocation registry and an index in it. Credo doesn't track which indexes you used: each credential needs its own, and you need the index later to revoke the credential.
+
+:::issuer
+
+```ts showLineNumbers title="issuer.ts" didcomm-anoncreds.ts section-7
+```
+
+:::
+
+After you revoke a credential, you can tell the holder with a revocation notification. The holder agent emits a `DidCommCredentialEventTypes.DidCommRevocationNotificationReceived` event and stores the notification on the exchange record (`revocationNotification`).
+
+:::issuer
+
+```ts showLineNumbers title="issuer.ts" didcomm-anoncreds.ts section-8
+```
+
+:::
+
+A verifier that wants proof that a credential isn't revoked sets `non_revoked`, on the whole request or per attribute or predicate. Set `to`, the time in seconds. If you also set `from`, it must equal `to`.
+
+:::verifier
+
+```ts showLineNumbers title="verifier.ts" didcomm-anoncreds.ts section-9
+```
+
+:::
+
+The holder fetches the status list for that time from the registry. `selectCredentialsForRequest` skips revoked credentials, and throws when no valid credential is left.
+
+## AnonCreds in W3C format
+
+The [Data Integrity format](./w3c.mdx) can also issue AnonCreds credentials as W3C VCDM 1.1 credentials: offer with `anonCredsLinkSecretBinding: { credentialDefinitionId }` and `bindingRequired: true`, and register the `AnonCredsModule` on both agents. The offered credential may only contain `@context`, `type`, `issuer`, `issuanceDate` or `validFrom`, and `credentialSubject`, and `type` must be `['VerifiableCredential']`. Present these credentials with DIF Presentation Exchange.

@@ -1,0 +1,81 @@
+---
+title: cheqd
+description: Create, update and deactivate did:cheqd DIDs, publish DID-linked resources, and use cheqd as an AnonCreds registry with @credo-ts/cheqd.
+---
+
+[cheqd](https://cheqd.io) is a Cosmos-based network for DIDs and DID-linked resources: data such as logos, schemas or status lists, published under a DID and controlled with its keys. `@credo-ts/cheqd` adds the `did:cheqd` method, DID-linked resources and an AnonCreds registry. Ledger writes cost CHEQ tokens, paid by a Cosmos account that you configure.
+
+Use `did:cheqd` when your ecosystem uses cheqd, for example to issue AnonCreds credentials on cheqd, or to publish resources under a DID on a public network. For a public issuer DID without a ledger, `did:web` is simpler, see [Choose a DID method](./index.mdx#choose-a-did-method).
+
+## Install
+
+<InstallTabs packages="@credo-ts/cheqd" />
+
+## Configure
+
+Register `CheqdModule` with the networks you use, and add the cheqd registrar and resolver to `DidsModule`:
+
+```ts showLineNumbers title="agent.ts" cheqd-did.ts section-1
+```
+
+Spread these modules into the `modules` of your agent. Each network takes:
+
+| Option | Description |
+| --- | --- |
+| `network` | `'testnet'` or `'mainnet'`. |
+| `cosmosPayerSeed` | Mnemonic, or a 32-character seed, of the Cosmos account that pays for writes. Without it, Credo generates a new empty account on every start: you can resolve, but writes fail. |
+| `rpcUrl` | RPC endpoint. Defaults to `https://rpc.cheqd.network` for testnet and `https://rpc.cheqd.net` for mainnet. |
+
+The agent connects to the networks in the background when it starts. `CheqdModule` doesn't register the `did:cheqd` registrar and resolver itself, so list them in `DidsModule`. Your lists replace the default registrars and resolvers, see [Configure DID methods](./index.mdx#configure-did-methods).
+
+## Create a did:cheqd
+
+```ts showLineNumbers title="issuer.ts" cheqd-did.ts section-2
+```
+
+Credo creates an Ed25519 key and a DID document with one `JsonWebKey2020` verification method, `#key-1`. To use an Ed25519 key that's already in the KMS, pass `keyId` instead of `createKey`. `methodSpecificIdAlgo` picks the identifier format: `uuid` (default) or `base58btc`.
+
+To publish your own DID document, pass `didDocument` instead, with `options.keys` linking each `authentication` verification method to a KMS key. cheqd accepts `Ed25519VerificationKey2018`, `Ed25519VerificationKey2020` and `JsonWebKey2020` verification methods.
+
+All write operations accept `fee` and `feeOptions` for the ledger transaction, and `versionId` for the new version of the DID document (a random UUID by default).
+
+## Update a did:cheqd
+
+Resolve the document, change it, and pass the full new document to `update`:
+
+```ts showLineNumbers title="issuer.ts" cheqd-did.ts section-3
+```
+
+The keys of all `authentication` verification methods sign the update, so they must be in the agent's KMS.
+
+## Deactivate a did:cheqd
+
+```ts showLineNumbers title="issuer.ts" cheqd-did.ts section-4
+```
+
+A deactivated DID still resolves, and its document metadata marks it as deactivated. You can't update it anymore.
+
+## DID-linked resources
+
+Create a resource under a DID with `agent.modules.cheqd`, where `cheqd` is the key you registered the module under:
+
+```ts showLineNumbers title="issuer.ts" cheqd-did.ts section-5
+```
+
+`id` must be a UUID. `data` can be an object (stored as JSON), a `Uint8Array`, or a base64 string: Credo always decodes a string as base64. All verification methods of the DID sign the resource, so the agent needs all their keys. A resource with the same `name` and `resourceType` as an existing one becomes a new version of it.
+
+Resolve a resource by its id, or by name and type:
+
+```ts showLineNumbers title="issuer.ts" cheqd-did.ts section-6
+```
+
+The result has `resource` and `resourceMetadata`, or `error` and `message` when the resource can't be resolved.
+
+## AnonCreds registry
+
+`CheqdAnonCredsRegistry` registers and resolves AnonCreds schemas, credential definitions and revocation data as DID-linked resources. Import it from the `@credo-ts/cheqd/anoncreds` subpath: the export from the `@credo-ts/cheqd` root is deprecated, and removed in 0.8. Set up AnonCreds as described in [AnonCreds](../credential-formats/anoncreds.mdx), with the cheqd registry:
+
+```ts showLineNumbers title="agent.ts" cheqd-anoncreds.ts section-1
+```
+
+The registry also needs `CheqdModule`, and the issuer needs a `did:cheqd`.

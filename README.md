@@ -26,7 +26,7 @@
 
 # Getting Started
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+This website is built with [Docusaurus](https://docusaurus.io/). Code examples are TypeScript files in `snippets/`, type-checked and included in the pages at build time. See [Writing docs](developer-docs/WRITING.md).
 
 ### Installation
 
@@ -49,6 +49,13 @@ pnpm build
 ```
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
+
+### Checks
+
+```
+pnpm types:check
+pnpm style:check
+```
 
 ## Contributing
 

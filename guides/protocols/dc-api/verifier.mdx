@@ -1,0 +1,165 @@
+---
+title: Building a verifier
+sidebar_label: Verifier
+description: Request credentials from a website with the W3C Digital Credentials API. A Credo backend creates OpenID4VP and ISO 18013-7 Annex C requests and verifies the response, and the web page calls the API in the browser.
+---
+
+A verifier for the Digital Credentials API has two parts: a Node.js backend with a Credo agent, which creates the requests and verifies the responses, and a web page that passes them through the browser. This page builds both. The example asks for the given name and age over 18 from an mDL, with OpenID4VP and with ISO 18013-7 Annex C (`org-iso-mdoc`) in one call, so wallets on Android and iOS can answer. [Digital Credentials API](./index.mdx) explains the flow and the choices.
+
+## Set up the backend
+
+<InstallTabs packages="@credo-ts/core @credo-ts/node @credo-ts/openid4vc express" />
+
+The agent also needs storage, see [Storage](../../agent-setup/storage/index.mdx). The backend creates the requests, verifies the responses, and serves the web page:
+
+```ts showLineNumbers title="dc-api-verifier.ts" dc-api-verifier.ts section-1
+```
+
+- `origin` is the origin of the page that calls the API. Here the backend serves the page, so it's the backend's own origin.
+- The verifier accepts credentials from the issuers in its trust configuration. See [Trusted issuers](../../dids-and-trust/trust.mdx).
+- Only OpenID4VP needs `OpenId4VcModule`. If you only use `org-iso-mdoc`, leave it out.
+
+## Create the requests
+
+Create a request for each protocol you offer. Both ask for the same data elements:
+
+<Tabs groupId="dc-api-protocol">
+<TabItem value="openid4vp" label="OpenID4VP">
+
+```ts showLineNumbers title="dc-api-verifier.ts" dc-api-verifier.ts section-2
+```
+
+- `responseMode` is `dc_api.jwt`, which encrypts the response to the verifier, or `dc_api`, which doesn't.
+- An unsigned request (`method: 'none'`) has no client id. The wallet identifies the verifier as `origin:<origin>`.
+- Return `authorizationRequestObject` to the page, not the `openid4vp://` URI in `authorizationRequest`. `authorizationResponseRedirectUri` can't be used, as the response goes back to the page.
+- To request an SD-JWT VC instead, change the DCQL query (see [SD-JWT VC with OpenID4VC](../openid4vc/sd-jwt-vc.mdx)) and pass only this request. Annex C only carries mdocs.
+
+</TabItem>
+<TabItem value="iso-mdoc" label="ISO 18013-7 Annex C">
+
+```ts showLineNumbers title="dc-api-verifier.ts" dc-api-verifier.ts section-3
+```
+
+- `nameSpaces` maps each data element to its intent to retain. Pass `{ intentToRetain, optional, source }` instead of a boolean to accept a response without the element (`optional: true`), or with the element signed by the device instead of the issuer (`source: 'deviceSigned'` or `'any'`).
+- By default the response must contain every requested element, issuer signed. With several `docRequests`, set `treatAmbiguousMultipleDocRequestsAsAlternatives` if one of them is enough. The flag isn't sent, so a wallet may still answer all of them.
+- Each session has its own encryption key in the KMS, and expires after 5 minutes (`expiresInSeconds`).
+
+</TabItem>
+</Tabs>
+
+The page gets both requests from one route:
+
+```ts showLineNumbers title="dc-api-verifier.ts" dc-api-verifier.ts section-4
+```
+
+### Sign the requests
+
+Unsigned requests identify the verifier by its origin. To let wallets verify who you are beyond that, sign the request with a certificate whose key is in the verifier's KMS:
+
+<Tabs groupId="dc-api-protocol">
+<TabItem value="openid4vp" label="OpenID4VP">
+
+```ts
+requestSigner: { method: 'x5c', x5c: [verifierCertificate], clientIdPrefix: 'x509_hash' },
+expectedOrigins: [origin],
+```
+
+The wallet rejects a signed request when `expectedOrigins` doesn't include the origin the browser passed. On the page, use protocol `openid4vp-v1-signed`. [Verifying credentials](../openid4vc/verifier.mdx#client-identifiers) explains the client identifier prefixes.
+
+</TabItem>
+<TabItem value="iso-mdoc" label="ISO 18013-7 Annex C">
+
+```ts
+readerAuth: { certificate: readerCertificate, origin },
+```
+
+The signature covers one origin, so create a session per origin.
+
+</TabItem>
+</Tabs>
+
+The wallet only accepts a signed request when it trusts your certificate or its CA.
+
+## Verify the response
+
+The page posts the response to the backend, which verifies it for the protocol the wallet answered:
+
+<Tabs groupId="dc-api-protocol">
+<TabItem value="openid4vp" label="OpenID4VP">
+
+```ts showLineNumbers title="dc-api-verifier.ts" dc-api-verifier.ts section-5
+```
+
+With the `dc_api` response modes, Credo doesn't receive the response at its endpoint, so you pass it to `verifyAuthorizationResponse`. The result is the same as for other response modes, see [mdoc with OpenID4VC](../openid4vc/mdoc.mdx) for reading mdoc claims.
+
+</TabItem>
+<TabItem value="iso-mdoc" label="ISO 18013-7 Annex C">
+
+```ts showLineNumbers title="dc-api-verifier.ts" dc-api-verifier.ts section-6
+```
+
+- Credo decrypts the response, verifies each mdoc (issuer signature and certificate chain, element digests, device signature, validity and status), and checks the response against the request. When an element is missing or isn't signed as required, it throws `MdocDeviceRequestNotSatisfiedError`, with the details in `deviceRequestMatch`.
+- A response for an expired session throws `MdocVerificationSessionExpiredError`. Create a new request.
+- `issuerClaims` has the disclosed elements per document type and namespace, `deviceClaims` the device-signed ones.
+
+</TabItem>
+</Tabs>
+
+The route picks the protocol from the response:
+
+```ts showLineNumbers title="dc-api-verifier.ts" dc-api-verifier.ts section-7
+```
+
+- `origin` is the origin of your page. Use the value you know, never one from the request: verification fails for any other origin, which is what stops a relayed response.
+- Credo doesn't delete mdoc verification sessions or their keys by itself. Delete each session with `deleteVerificationSessionById`, also when the wallet answered the OpenID4VP request or verification failed.
+
+## Call the API from the browser
+
+The web page gets the requests from the backend, passes them to `navigator.credentials.get()`, and posts the response back:
+
+```ts showLineNumbers title="dc-api-verifier-browser.ts" dc-api-verifier-browser.ts section-1
+```
+
+- The wallet answers one of the requests, and `credential.protocol` says which. Post `credential.data` to your backend as it is.
+- TypeScript's DOM types don't have the `digital` option yet. The full example declares it.
+- The call throws a `NotAllowedError` when the user cancels or no wallet has a matching credential. The browser doesn't say which, so a website can't find out what a wallet holds without the user's consent.
+
+Call it when the user clicks a button:
+
+```ts showLineNumbers title="dc-api-verifier-browser.ts" dc-api-verifier-browser.ts section-2
+```
+
+The browser only opens the wallet shortly after a user action. A single request to your backend before the call is quick enough. For slower work, get the requests before the click. The API only exists in a secure context (`https`, or `http://localhost`) and in browsers that support it. Elsewhere, fall back to a QR code or a link, see [Verifying credentials](../openid4vc/verifier.mdx).
+
+## Full example
+
+The backend serves the page from `public/`. Put the certificate of the issuer you trust in `issuer-certificate.pem`, then start it with `npx tsx dc-api-verifier.ts` and open `http://localhost:4037`.
+
+<Tabs>
+<TabItem value="backend" label="Backend">
+
+```ts showLineNumbers title="dc-api-verifier.ts" dc-api-verifier.ts
+```
+
+</TabItem>
+<TabItem value="browser" label="Web page">
+
+Compile the script into `public/`, for example with `npx esbuild dc-api-verifier-browser.ts --outdir=public`.
+
+```html title="public/index.html"
+<button>Verify with your wallet</button>
+<script type="module" src="dc-api-verifier-browser.js"></script>
+```
+
+```ts showLineNumbers title="dc-api-verifier-browser.ts" dc-api-verifier-browser.ts
+```
+
+</TabItem>
+</Tabs>
+
+## Next steps
+
+- [Building a wallet](./wallet.mdx): the other side of the flow.
+- [Verifying credentials](../openid4vc/verifier.mdx): OpenID4VP requests, client identifiers and verification sessions.
+- [mdoc with OpenID4VC](../openid4vc/mdoc.mdx) and [SD-JWT VC with OpenID4VC](../openid4vc/sd-jwt-vc.mdx): request and read each format.
+- [Trusted issuers](../../dids-and-trust/trust.mdx): decide which issuers you trust.

@@ -1,0 +1,178 @@
+---
+title: W3C Verifiable Credentials
+description: Sign, store, present and verify W3C Verifiable Credentials (data model 1.1 and 2.0) as JWT, SD-JWT, JSON-LD or Data Integrity.
+---
+
+The [W3C Verifiable Credentials Data Model](https://www.w3.org/TR/vc-data-model-2.0/) defines a JSON structure for credentials and presentations. It doesn't fix how they're signed: the same credential can be secured as a JWT, an SD-JWT, or with an embedded proof. Credo supports data model 1.1 on `agent.w3cCredentials` and data model 2.0 on `agent.w3cV2Credentials`. This page covers signing, storing, presenting and verifying with both. For exchange, see [W3C VCs with OpenID4VC](../protocols/openid4vc/w3c.mdx) and [W3C VCs with DIDComm](../protocols/didcomm/w3c.mdx).
+
+## Data models and securing mechanisms
+
+| Data model | Secured as | Claim format | Selective disclosure | Holder binding | Exchange |
+| --- | --- | --- | --- | --- | --- |
+| 1.1 | JWT | `jwt_vc` (`jwt_vc_json` in OpenID4VC) | No | DID in `credentialSubject.id` | OpenID4VC, DIDComm presentation only |
+| 1.1 | JSON-LD with an Ed25519 Linked Data proof | `ldp_vc` | No | DID in `credentialSubject.id` | DIDComm (OpenID4VC has known problems) |
+| 2.0 | JWT | `vc+jwt` | No | `cnf` claim | None, sign and verify only |
+| 2.0 | SD-JWT | `vc+sd-jwt` | Yes | `cnf` claim | OpenID4VC, DIDComm issuance |
+| 2.0 | Data Integrity (`eddsa-jcs-2022`) | `di_vc` | No | DID in `credentialSubject.id` | DIDComm issuance |
+
+The issuer always signs with a key of a DID it created (or imported with its keys). X.509 issuers aren't supported. W3C 2.0 `vc+sd-jwt` is a different format from [SD-JWT VC](./sd-jwt-vc.mdx) (`dc+sd-jwt`), even though both use SD-JWT. For the protocol details, see [W3C VCs with OpenID4VC](../protocols/openid4vc/w3c.mdx) and [W3C VCs with DIDComm](../protocols/didcomm/w3c.mdx).
+
+### Choose a variant
+
+Use the variant your ecosystem or verifiers ask for. Without such a requirement:
+
+- Over OpenID4VC, use data model 1.1 as JWT (`jwt_vc_json`). Use 2.0 as SD-JWT (`vc+sd-jwt`) when you need selective disclosure.
+- Over DIDComm, use 1.1 as JSON-LD (`ldp_vc`), the only 1.1 variant that DIDComm can issue, or 2.0 as SD-JWT for selective disclosure.
+- Avoid 2.0 as plain JWT and with Data Integrity. Credo can't exchange `vc+jwt` over any protocol, can't present `di_vc` over any protocol, and doesn't check the issuer trust and validity period of `di_vc` credentials.
+
+If you don't need W3C VCs, [SD-JWT VC](./sd-jwt-vc.mdx) is simpler and has selective disclosure.
+
+## Set up
+
+Everything on this page is in `@credo-ts/core`, and both modules are default modules. The agent also needs [storage](../agent-setup/storage/index.mdx) and key management. The examples use an issuer, a holder and a verifier, each with an Ed25519 `did:key`:
+
+```ts showLineNumbers title="w3c.ts" format-w3c.ts section-1
+```
+
+### JSON-LD contexts
+
+Every property of a JSON-LD credential must be defined in one of its `@context`s, and signing and verifying load those contexts through a document loader. The default loader has copies of the common contexts (credentials v1 and v2, the security suites, DIDs, ODRL, schema.org, Open Badges 3.0), resolves DIDs, and fetches every other URL from the network. Pass your own contexts to `defaultDocumentLoader` as shown above, or set your own `documentLoader` to control what is fetched. Register `W3cCredentialsModule` under the `w3cCredentials` key to replace the default module. Data model 2.0 uses the same document loader.
+
+## Data model 1.1
+
+### Sign a credential
+
+```ts showLineNumbers title="w3c.ts" format-w3c.ts section-2
+```
+
+- `verificationMethod` is the DID URL of an `assertionMethod` key of the issuer DID.
+- For `jwt_vc`, `alg` must fit the key. A JWT VC can have only one `credentialSubject`.
+- For `ldp_vc`, `proofType` is `Ed25519Signature2018` for `Ed25519VerificationKey2018` verification methods (such as `did:key`) or `Ed25519Signature2020` for `Ed25519VerificationKey2020`. These are the only Linked Data suites. There is no BBS+ suite, so 1.1 credentials have no selective disclosure.
+
+:::caution
+Build JSON-LD credentials with `W3cCredential.fromJson`, as above. A `new W3cCredential({ ... })` without `expirationDate` fails to sign as `ldp_vc` with `"expirationDate" must be a valid date: undefined`.
+:::
+
+### Store and query
+
+:::holder
+
+```ts showLineNumbers title="w3c.ts" format-w3c.ts section-3
+```
+
+:::
+
+`findAllByQuery` returns the credentials, not the records. Records are tagged with `claimFormat`, `types`, `issuerId`, `subjectIds`, `schemaIds` and `contexts`. `getById` and `getAll` return records, and `deleteById` removes one. There is no `update`. Store JSON-LD credentials with `agent.w3cCredentials.store`: it adds the expanded types that OpenID4VP queries on.
+
+### Present
+
+The holder wraps credentials in a presentation and signs it with an `authentication` key of its DID, the DID in `credentialSubject.id`:
+
+:::holder
+
+```ts showLineNumbers title="w3c.ts" format-w3c.ts section-4
+```
+
+:::
+
+- `challenge` and `domain` come from the verifier. In a JWT VP they're the `nonce` and `aud` claims.
+- A JWT VP can only contain JWT VCs, and a JSON-LD VP only JSON-LD VCs.
+- A JSON-LD presentation needs a `proofPurpose`, and an `id`: signing fails without one.
+
+### Verify
+
+:::verifier
+
+```ts showLineNumbers title="w3c.ts" format-w3c.ts section-5
+```
+
+:::
+
+`verifyCredential` and `verifyPresentation` return `{ isValid, validations, error }`, where `validations` shows which check failed. For a presentation, Credo checks the holder signature, `challenge` and `domain`, every credential in it, and that the holder is the subject of each credential. A JSON-LD credential or presentation must be passed as an instance, such as from `JsonTransformer.fromJSON`. The date checks of JSON-LD credentials don't use the agent's `validitySkewSeconds`.
+
+Without `trustedIssuers` and without a [trusted issuers](../dids-and-trust/trust.mdx) callback on the agent, any issuer DID is accepted.
+
+## Data model 2.0
+
+The 2.0 examples use the same agents and DIDs, and these imports:
+
+```ts showLineNumbers title="w3c-v2.ts" format-w3c-v2.ts section-1
+```
+
+### Sign a credential
+
+:::issuer
+
+```ts showLineNumbers title="w3c-v2.ts" format-w3c-v2.ts section-2
+```
+
+:::
+
+- `verificationMethod` is the DID URL of an `assertionMethod` key of the issuer DID, and `alg` must fit the key.
+- `holder` adds a `cnf` claim with a DID URL or a JWK, for `vc+jwt` and `vc+sd-jwt`. Choose as for [SD-JWT VC](./sd-jwt-vc.mdx#choose-the-holder-binding). A `di_vc` credential is bound through `credentialSubject.id`.
+- `disclosureFrame` works as for [SD-JWT VC](./sd-jwt-vc.mdx). `@context`, `type`, `credentialStatus`, `credentialSchema` and `relatedResource` can't be selectively disclosable at the top level.
+- `cryptosuite` for `di_vc` is `eddsa-jcs-2022`, the only cryptosuite, which needs an Ed25519 key.
+
+### Store and query
+
+:::holder
+
+```ts showLineNumbers title="w3c-v2.ts" format-w3c-v2.ts section-3
+```
+
+:::
+
+As in 1.1, `findAllByQuery` returns credentials and there is no `update`. A record can hold several instances of the same credential for batch issuance.
+
+### Present
+
+There is no key binding JWT for 2.0. The holder proves possession by signing a presentation that contains the credential:
+
+:::holder
+
+```ts showLineNumbers title="w3c-v2.ts" format-w3c-v2.ts section-4
+```
+
+:::
+
+- Selective disclosure for `vc+sd-jwt` is only on `W3cV2SdJwtCredentialService`. Wrap the result with `W3cV2EnvelopedVerifiableCredential` to put it in a presentation.
+- For `vp+jwt` and `vp+sd-jwt`, Credo signs with the `authentication` key of the `holder` DID. The DID must be created in this agent, with exactly one `authentication` key in its KMS. Without `holder`, Credo signs with the key in the credentials' `cnf`.
+- For `di_vp`, pass the `verificationMethod` and `cryptosuite`.
+
+### Verify
+
+:::verifier
+
+```ts showLineNumbers title="w3c-v2.ts" format-w3c-v2.ts section-5
+```
+
+:::
+
+The result has `presentation.validations` for the presentation itself and `credentialEntries` with a result per credential. `verifyCredential` verifies a single credential, and takes `trustedIssuers`:
+
+:::verifier
+
+```ts showLineNumbers title="w3c-v2.ts" format-w3c-v2.ts section-6
+```
+
+:::
+
+:::warning[Trust in 2.0]
+- `trustedIssuers` on `verifyPresentation` isn't applied to the credentials in the presentation. Configure a [trusted issuers](../dids-and-trust/trust.mdx) callback on the agent instead.
+- For `di_vc` credentials, Credo checks neither trusted issuers nor `validFrom` and `validUntil`. Check them yourself.
+:::
+
+## Status and revocation
+
+Credo doesn't verify `credentialStatus` for W3C credentials. There is no support for Bitstring Status List or Status List 2021.
+
+- Data model 1.1: verifying a credential with a `credentialStatus`, or a presentation that contains one, fails by default. Pass `verifyCredentialStatus: false` and check the status yourself.
+- Data model 2.0: `credentialStatus` is ignored, unless you pass `verifyCredentialStatus: true`, which makes verification fail.
+
+For revocation with SD-JWT VC and mdoc, see [Status lists](./status-lists.mdx).
+
+## Next steps
+
+- [W3C VCs with OpenID4VC](../protocols/openid4vc/w3c.mdx)
+- [W3C VCs with DIDComm](../protocols/didcomm/w3c.mdx)
+- [Trusted issuers](../dids-and-trust/trust.mdx)
