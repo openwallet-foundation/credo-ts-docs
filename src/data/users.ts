@@ -20,8 +20,8 @@ export const credoUsers: CredoUser[] = [
     url: 'https://paradym.id',
     logo: { light: '/img/users/paradym.svg', height: 30 },
     description:
-      'A platform for issuing and verifying digital credentials with OpenID4VC, SD-JWT VC, mdoc and DIDComm. Its agents run on Credo, with each customer as a separate tenant.',
-    tags: ['Issuer', 'Verifier', 'Multi-tenancy'],
+      'A platform for issuing and verifying credentials in EUDI and other ecosystems. It can issue and verify credentials from national EUDI wallets such as France Identité and the German d‑you. Each customer is a separate Credo tenant.',
+    tags: ['Issuer', 'Verifier', 'EUDI'],
   },
   {
     name: 'Paradym Wallet',
@@ -30,8 +30,8 @@ export const credoUsers: CredoUser[] = [
     linkLabel: 'github.com/animo/paradym-wallet',
     logo: { light: '/img/users/paradym-wallet.png', height: 44 },
     description:
-      'An open source wallet app for iOS and Android, built with Credo on React Native. It receives and presents credentials over OpenID4VC and DIDComm, and is a starting point for building your own wallet.',
-    tags: ['Wallet', 'React Native', 'Open source'],
+      'An open source wallet app for iOS and Android, built with Credo on React Native. It supports the EUDI flows, such as receiving a PID and presenting it with OpenID4VP, as well as DIDComm, and is a starting point for building your own wallet.',
+    tags: ['Wallet', 'EUDI', 'Open source'],
   },
   {
     name: '2060',
@@ -40,5 +40,13 @@ export const credoUsers: CredoUser[] = [
     description:
       'Builds Hologram, a messaging app and AI agent framework where people, services and agents identify each other with verifiable credentials. The Hologram app and VS Agent, the service agent of the Verana trust network, are built on Credo.',
     tags: ['Messaging', 'AI agents', 'Verana'],
+  },
+  {
+    name: 'Digital Catapult',
+    url: 'https://www.digicatapult.org.uk',
+    logo: { light: '/img/users/digital-catapult.png', dark: '/img/users/digital-catapult-dark.png', height: 40 },
+    description:
+      'A UK deep tech innovation organisation. Its open source Veritable framework lets supply chain partners share data with verifiable credentials. The Veritable cloud agent runs on Credo, with DIDComm and AnonCreds.',
+    tags: ['Supply chain', 'Open source'],
   },
 ]
