@@ -42,6 +42,7 @@ const indyVdrModules = {
     ],
   }),
 }
+
 // end-section-1
 
 export { indyVdrModules }

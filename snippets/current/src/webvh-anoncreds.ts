@@ -7,6 +7,7 @@ const anoncreds = new AnonCredsModule({
   anoncreds: NativeAnoncreds,
   registries: [new WebVhAnonCredsRegistry()],
 })
+
 // end-section-1
 
 export { anoncreds }

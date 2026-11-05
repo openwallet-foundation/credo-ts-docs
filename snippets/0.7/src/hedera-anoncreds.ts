@@ -8,6 +8,7 @@ const anoncreds = new AnonCredsModule({
   anoncreds: NativeAnoncreds,
   registries: [new HederaAnonCredsRegistry()],
 })
+
 // end-section-1
 
 export { anoncreds }
