@@ -67,7 +67,7 @@ To use a key that's already in the KMS, pass its `keyId` instead of `createKey`:
 
 `resolve` returns the full resolution result, with `didResolutionMetadata.error` when resolution fails. `resolveDidDocument` returns only the document and throws on failure.
 
-Credo parses DID URLs strictly, as DID Core 1.0 defines them, and returns `invalidDid` for DIDs with matrix parameters (`;key=value`), unencoded characters or invalid percent escapes. For `did:web`, `notFound` means an HTTP 404 or a document whose `id` isn't the DID; network, HTTP and JSON failures return `resolutionError`.
+Credo parses DID URLs strictly, as DID Core 1.0 defines them, and returns `invalidDid` for DIDs with matrix parameters (`;key=value`), unencoded characters or invalid percent escapes. For `did:web`, `notFound` means an HTTP 404 or a document whose `id` isn't the DID, and network, HTTP and JSON failures return `resolutionError`. Documents larger than the agent's [`fetchLimits`](../agent-setup/index.mdx#config) fail too. Pass `maxDidDocumentBytes` to `new WebDidResolver()` to set another limit. For other methods, a resolved document whose `id` isn't the DID returns `invalidDidDocument`.
 
 Credo caches resolved documents for 5 minutes for methods whose resolver allows it (`did:web`, `did:webvh`, `did:cheqd`, `did:indy`, `did:sov` and `did:hedera`). Pass `{ useCache: false }` to `resolve` to skip the cache, or `cacheDurationInSeconds` to change the duration. For DIDs that you created or imported, these resolvers (except `did:sov`) return the document from your `DidRecord` instead of fetching it.
 

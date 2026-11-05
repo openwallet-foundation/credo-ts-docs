@@ -51,7 +51,7 @@ Pass the `indyVdr` object itself: unlike Askar and AnonCreds, Indy VDR has no `N
 
 ## Resolve did:indy and did:sov
 
-With the resolvers registered, `agent.dids.resolve` handles both methods. For `did:indy`, Credo uses the network whose `indyNamespace` matches the DID. A `did:sov` or unqualified Indy identifier doesn't say which network it's on, so Credo queries all networks and prefers a production network when the DID exists on more than one.
+With the resolvers registered, `agent.dids.resolve` handles both methods. For `did:indy`, Credo uses the network whose `indyNamespace` matches the DID. A `did:sov` doesn't say which network it's on, so Credo queries all networks and prefers a production network when the DID exists on more than one.
 
 ## Import an existing DID
 
@@ -87,4 +87,4 @@ With `endorserMode: 'external'`, the registrar returns the state `action` with `
 ```ts showLineNumbers title="agent.ts" indy-vdr-anoncreds.ts section-1
 ```
 
-The registry needs `IndyVdrModule`. To register objects, the issuer needs a `did:indy` with write permission, and passes `endorserMode` and `endorserDid` in the registration options.
+The registry only handles `did:indy` identifiers, such as `did:indy:bcovrin:test:<did>/anoncreds/v0/SCHEMA/<name>/<version>`. It doesn't resolve unqualified identifiers. The registry needs `IndyVdrModule`. To register objects, the issuer needs a `did:indy` with write permission, and passes `endorserMode` and `endorserDid` in the registration options.

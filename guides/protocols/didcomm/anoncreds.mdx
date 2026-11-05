@@ -12,7 +12,7 @@ The AnonCreds format services are exported from `@credo-ts/anoncreds/didcomm`. R
 ```ts showLineNumbers title="agent.ts" didcomm-anoncreds.ts section-1
 ```
 
-There are two formats for the same credentials. `anoncreds` uses the AnonCreds attachments of [RFC 0771](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0771-anoncreds-attachments). `indy` uses the older Hyperledger Indy attachments of [RFC 0592](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0592-indy-attachments), which some agents still require. Their API options are the same, under the `anoncreds` or `indy` key.
+The `anoncreds` format uses the AnonCreds attachments of [RFC 0771](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0771-anoncreds-attachments). Credo doesn't support the older `indy` format of [RFC 0592](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0592-indy-attachments), as it only works with unqualified Indy identifiers. Agents that only support `indy` can't exchange AnonCreds credentials with Credo.
 
 ## Issue a credential
 

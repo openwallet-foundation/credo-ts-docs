@@ -112,8 +112,8 @@ Credo marks the registry as active, and you can issue up to `maximumCredentialNu
 
 :::
 
-:::warning[Indy VDR in 0.7.2]
-In Credo 0.7.2, issuing revocable credentials with the Indy VDR registry can fail, because the issuer can't resolve the status list of its own revocation registry.
+:::warning[Indy VDR before 0.7.3]
+Before Credo 0.7.3, issuing revocable credentials with the Indy VDR registry can fail, because the issuer can't resolve the status list of its own revocation registry. Update to 0.7.3 or later. Registries created before the fix work too.
 :::
 
 [AnonCreds with DIDComm](../protocols/didcomm/anoncreds.mdx#revocation) shows how to issue revocable credentials, notify holders and request proof of non-revocation.

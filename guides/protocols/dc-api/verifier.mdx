@@ -41,7 +41,9 @@ Create a request for each protocol you offer. Both ask for the same data element
 ```
 
 - `nameSpaces` maps each data element to its intent to retain. Pass `{ intentToRetain, optional, source }` instead of a boolean to accept a response without the element (`optional: true`), or with the element signed by the device instead of the issuer (`source: 'deviceSigned'` or `'any'`).
-- By default the response must contain every requested element, issuer signed. With several `docRequests`, set `treatAmbiguousMultipleDocRequestsAsAlternatives` if one of them is enough. The flag isn't sent, so a wallet may still answer all of them.
+- By default the response must contain every requested element, issuer signed. With several `docRequests`, `deviceRequestInfo.useCases` says which of them the wallet has to answer. `{ useCases: [{ mandatory: true, documentSets: [[0], [1, 2]] }] }` asks for the first document, or the second and the third. Wallets that don't support use cases ignore them and read every document request as requested.
+- Without use cases, set `treatAmbiguousMultipleDocRequestsAsAlternatives` if one of the `docRequests` is enough. The flag isn't sent, so a wallet may still answer all of them.
+- `requestInfo` on a document request lists alternative elements the wallet may disclose instead of a requested one (`alternativeDataElements`), and the issuers you accept (`issuerIdentifiers`, the hex encoded key identifiers of their certificates).
 - Each session has its own encryption key in the KMS, and expires after 5 minutes (`expiresInSeconds`).
 
 </TabItem>

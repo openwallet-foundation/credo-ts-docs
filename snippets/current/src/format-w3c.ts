@@ -11,7 +11,6 @@ import {
   JsonTransformer,
   type KeyDidCreateOptions,
   purposes,
-  utils,
   W3cCredential,
   W3cCredentialRecord,
   W3cCredentialsModule,
@@ -125,8 +124,6 @@ const jwtVp = await holder.w3cCredentials.signPresentation<ClaimFormat.JwtVp>({
 })
 
 const ldpPresentation = await holder.w3cCredentials.createPresentation({
-  // Signing a JSON-LD presentation without an id fails
-  id: `urn:uuid:${utils.uuid()}`,
   credentials: [ldpVc],
   holder: holderDid.did,
 })

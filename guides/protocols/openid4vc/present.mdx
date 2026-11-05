@@ -27,6 +27,19 @@ After the user agrees, select the credentials and send the response:
 
 Credo posts the response to the verifier's response endpoint. If the verifier rejects it, the call doesn't throw: `result.ok` is `false` and `result.serverResponse` holds the verifier's answer. `result.redirectUri` is set when the verifier wants the user to continue on its website or app. Open it in the browser.
 
+## Decline the request
+
+When the user declines, or the holder doesn't have the requested credentials, tell the verifier, so its session ends instead of waiting until it expires:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-9
+```
+
+- Credo sends an `access_denied` error. Set `error` for another OpenID4VP error code. `access_denied` covers both cases, so the verifier can't tell whether the user declined or has no matching credential.
+- The result has the same shape as for accepting, including the `redirectUri` from the verifier. For a [Digital Credentials API](../dc-api/wallet.mdx) request, nothing is sent: pass `authorizationResponse` to the platform.
+- `resolveOpenId4VpAuthorizationRequest` throws an `Openid4vpAuthorizationRequestError` when the request is invalid. Pass it as `authorizationRequestError` to send that error to the verifier. When resolving failed before the verifier was authenticated (`isClientAuthenticated` is `false`), the result has no `redirectUri`, as it could send the user anywhere.
+
+## Other request types
+
 Verifiers that use an OpenID4VP draft may send a DIF Presentation Exchange definition instead of a DCQL query. Then `resolvedRequest.presentationExchange` is set instead of `dcql`: select with `selectCredentialsForPresentationExchangeRequest` and pass `presentationExchange: { credentials }` when accepting. For requests that include transaction data, see [SD-JWT VC with OpenID4VC](./sd-jwt-vc.mdx#sign-transaction-data). For requests from a website through the browser, see [Digital Credentials API](../dc-api/wallet.mdx).
 
 ## Next steps

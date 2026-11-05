@@ -51,7 +51,7 @@ The extensions and subject alternative names (SANs) depend on what the certifica
 | --- | --- |
 | `trustedCertificates` | PEM or base64 DER strings, or `X509Certificate` instances. Credo uses them as trust anchors when nothing else decides trust, see [Trusted issuers](./trust.mdx). |
 | `getTrustedCertificatesForVerification` | Deprecated. Use the agent's `getTrustedIssuersForVerification` callback instead. |
-| `revocationCheck` | Enables CRL checking during chain validation. See [Revocation](#revocation). |
+| `revocationCheck` | CRL checking during chain validation, on by default. See [Revocation](#revocation). |
 
 To change the trusted certificates at runtime, use `agent.x509.config.addTrustedCertificate(certificate)` or `agent.x509.config.setTrustedCertificates(certificates)`.
 
@@ -90,18 +90,18 @@ Without `trustedCertificates`, Credo validates the chain but doesn't check that 
 
 ## Revocation
 
-Credo checks revocation with CRLs, from the URLs in a certificate's `crlDistributionPoints`. Revocation checking is off unless you set `revocationCheck` on the module:
+Credo checks revocation with CRLs, from the URLs in a certificate's `crlDistributionPoints`. Since Credo 0.7.4 this is on by default, in `SoftFail` mode. Before, it was off unless you set `revocationCheck` on the module. Set `revocationCheck` to pick another mode:
 
 | Mode | Behaviour |
 | --- | --- |
-| `X509RevocationCheckMode.SoftFail` | Default when `revocationCheck` is set. Rejects revoked certificates and invalid CRLs, and skips the check when the CRL can't be downloaded. |
+| `X509RevocationCheckMode.SoftFail` | Default. Rejects revoked certificates and invalid CRLs, and skips the check when the CRL can't be downloaded. |
 | `X509RevocationCheckMode.Require` | Also fails when the CRL can't be downloaded. |
 | `X509RevocationCheckMode.Disabled` | No revocation checks. |
 
 Certificates without a CRL distribution point pass the check. Credo checks every certificate in the chain except the root (`checkFullChain`), and caches a CRL for an hour (`crlCacheExpirySeconds`), but never past its `nextUpdate`.
 
 :::warning[Large CRLs]
-Credo 0.7 parses CRLs with the default node limit of the ASN.1 parser (`asn1js`), which rejects CRLs with more than about 2,000 entries. Validation of a certificate whose CRL is that large fails, also in `SoftFail` mode.
+Credo 0.7 parses CRLs with the default node limit of the ASN.1 parser (`asn1js`), which rejects CRLs with more than about 2,000 entries. Validation of a certificate whose CRL is that large fails, also in `SoftFail` mode. Since revocation checks are on by default, this affects every agent on 0.7.4 or later. If you validate certificates of a CA with a large CRL, set `revocationCheck: { mode: X509RevocationCheckMode.Disabled }`.
 :::
 
 To revoke certificates, create a CRL signed by the CA key and publish it at the distribution point URL:

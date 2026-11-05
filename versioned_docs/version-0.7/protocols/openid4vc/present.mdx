@@ -14,7 +14,7 @@ A verifier sends an authorization request as a QR code or link (`openid4vp://...
 
 `resolvedRequest.verifier` tells you who is asking. With `x509_san_dns` or `x509_hash` the request was signed with a certificate that the holder trusts, and resolving throws if it doesn't. With `decentralized_identifier` it was signed with a DID. With `redirect_uri` the request isn't signed, so anyone could have created it: show the user that the verifier is unverified, or reject such requests.
 
-`queryResult.can_be_satisfied` is `false` when the holder doesn't have the credentials the verifier asks for. Otherwise `credential_matches` lists, for each credential query, the matching credentials and the claims each would disclose. Use it to show the user what they're about to share.
+`queryResult.can_be_satisfied` is `false` when the holder doesn't have the credentials the verifier asks for. Otherwise `credential_matches` lists, for each credential query, the matching credentials and the claims each would disclose. Use it to show the user what they're about to share. Since Credo 0.7.4, a credential without holder binding, bound to neither a key nor its subject, only matches a credential query that sets `require_cryptographic_holder_binding: false`.
 
 ## Submit the response
 

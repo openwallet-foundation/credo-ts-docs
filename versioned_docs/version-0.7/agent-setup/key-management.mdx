@@ -65,7 +65,7 @@ It only creates P-256 keys, signs with ES256 and deletes keys. It can't verify, 
 | OKP curves | Ed25519, X25519 | Ed25519, X25519 | No |
 | RSA | No | Yes | No |
 | Symmetric keys | AES-128, AES-256, ChaCha20-Poly1305 | AES, HMAC | No |
-| Sign and verify | EdDSA, ES256, ES384, ES256K | EdDSA, ES256, ES384, ES512, ES256K, RS\*, PS\*, HS\* | ES256, sign only |
+| Sign and verify | EdDSA, ES256, ES384, ES256K, and ES512 verify only (since 0.7.3) | EdDSA, ES256, ES384, ES512, ES256K, RS\*, PS\*, HS\* | ES256, sign only |
 | Encrypt and decrypt | AES-GCM, AES-CBC-HMAC, (X)ChaCha20, XSalsa20, AES key wrap, ECDH-ES, HPKE | AES-GCM, AES-CBC, AES-CBC-HMAC, ChaCha20, ECDH-ES, HPKE | No |
 | Import keys | EC and OKP keys | EC, OKP, RSA and symmetric keys | No |
 
@@ -74,10 +74,10 @@ It only creates P-256 keys, signs with ES256 and deletes keys. It can't verify, 
 Every backend has a name (`askar`, `node`, `secureEnvironment`). Credo decides which one handles an operation like this:
 
 1. If you pass `backend`, that backend handles it, or the call throws if it can't.
-2. `sign` and `getPublicKey` use the backend that holds the key, which they look up by its key id.
-3. Otherwise, the default backend handles it if it supports the operation, and else the first other backend that does. This applies to `createKey`, `importKey`, `randomBytes`, `deleteKey`, `verify`, `encrypt` and `decrypt`.
+2. For an operation on an existing key, Credo uses the backend that holds the key: `sign`, `verify`, `encrypt`, `decrypt` and `getPublicKey` look the key up by its key id. Before Credo 0.7.3, only `sign` and `getPublicKey` did.
+3. Otherwise, the default backend handles it if it supports the operation, and else the first other backend that does. This applies to `createKey`, `importKey`, `randomBytes` and `deleteKey`, and to `verify` with a `publicJwk`.
 
-So pass `backend` to `verify`, `encrypt`, `decrypt` and `deleteKey` when the key isn't in the default backend.
+`deleteKey` doesn't look up the key, so pass `backend` to delete a key that isn't in the default backend.
 
 The default backend is `defaultBackend`, or else the first backend in the list. The list starts with the backends you pass to `KeyManagementModule`, and `AskarModule` adds `askar` after them. `defaultBackend` must name a backend in your own `backends` list. So to make Askar the default, add `AskarKeyManagementService` to `backends` yourself and set `enableKms: false` on `AskarModule`:
 
