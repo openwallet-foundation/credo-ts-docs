@@ -424,8 +424,8 @@
   transition: transform 150ms ease;
 }
 
-.roleCard:hover .cardLink .icon,
-.inlineLink:hover .icon {
+.inlineLink:hover .icon,
+.roleCard:hover .cardLink .icon {
   transform: translateX(3px);
 }
 
@@ -573,6 +573,7 @@
   border-color: color-mix(in srgb, var(--link) 45%, var(--border));
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: Community icons do not overlap role-card or inline-link icons. */
 .communityCard > .icon {
   font-size: 1.3rem;
   color: var(--link);
@@ -584,6 +585,7 @@
   margin-bottom: 0.15rem;
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: Community descriptions do not overlap the core-layer badges. */
 .communityCard span span {
   font-size: 0.875rem;
   color: var(--text-muted);
