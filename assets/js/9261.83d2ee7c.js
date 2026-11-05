@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkcredo_ts_docs=self.webpackChunkcredo_ts_docs||[]).push([["9261"],{5820(e,c,s){s.d(c,{createArchitectureServices:()=>r.S});var r=s(83738);s(91079)}}]);

@@ -1,0 +1,85 @@
+# Credo
+
+> Credo is an open source TypeScript framework for verifiable credentials. It is used to build issuers, verifiers, wallets and mediators that exchange SD-JWT VC, mdoc, W3C and AnonCreds credentials over OpenID4VC and DIDComm, on Node.js and React Native.
+
+These docs are for Credo 0.8 (next, unreleased). Every page is available as Markdown by adding `.md` to its URL. All pages in one file: https://credo.js.org/guides/next/llms-full.txt
+
+## Docs
+
+- [Credo documentation](https://credo.js.org/guides/next.md): Build issuers, verifiers, wallets and mediators for verifiable credentials with Credo, an open source TypeScript framework.
+- [Getting started](https://credo.js.org/guides/next/getting-started.md): What you need to build with Credo, and the order to read the getting started pages in.
+- [Installation](https://credo.js.org/guides/next/getting-started/installation.md): Set up a Node.js or React Native (Expo) project and install Credo with its storage and key management packages.
+- [Your first agent](https://credo.js.org/guides/next/getting-started/first-agent.md): Create, initialize and shut down a minimal Credo agent that stores records with Drizzle in SQLite and keys in Askar, and creates a did:key.
+- [Example setups](https://credo.js.org/guides/next/getting-started/example-setups.md): Complete Credo agent configurations for a mobile wallet, an issuer and verifier service, a multi-tenant service, a DIDComm mediator and tests.
+- [AI coding agents](https://credo.js.org/guides/next/getting-started/ai-agents.md): Give Claude, ChatGPT, Cursor and other AI tools the Credo docs as Markdown.
+- [Concepts](https://credo.js.org/guides/next/concepts.md): Background on verifiable credentials, Credo agents and modules, DIDs and DIDComm, and the platforms Credo runs on.
+- [Verifiable credentials](https://credo.js.org/guides/next/concepts/verifiable-credentials.md): Issuers, holders and verifiers, credentials and presentations, and how exchange protocols, credential formats, key binding, selective disclosure, status and trust fit together in Credo.
+- [Agents and modules](https://credo.js.org/guides/next/concepts/agents.md): What a Credo agent is, how modules add functionality to it, and how agent contexts and tenants keep data apart.
+- [DIDs and DIDComm](https://credo.js.org/guides/next/concepts/did-and-didcomm.md): What decentralized identifiers and DID documents are, and how DIDComm uses them for messaging between agents.
+- [Platforms](https://credo.js.org/guides/next/concepts/platform-and-environment.md): The platforms Credo supports, Node.js and React Native, how its packages are published, and which runtimes aren't supported.
+- [Agent configuration](https://credo.js.org/guides/next/agent-setup.md): The options of the Credo Agent class, the modules every agent has, and how to start, stop and update an agent.
+- [Storage](https://credo.js.org/guides/next/agent-setup/storage.md): Compare Askar and Drizzle, the two storage modules for a Credo agent, and pick the one that fits your platform and deployment.
+- [Askar](https://credo.js.org/guides/next/agent-setup/storage/askar.md): Configure Askar for encrypted storage and key management in a Credo agent, on SQLite or PostgreSQL, in Node.js and React Native.
+- [Drizzle](https://credo.js.org/guides/next/agent-setup/storage/drizzle.md): Store Credo records in PostgreSQL or SQLite tables with Drizzle ORM, run the migrations, and move an existing Askar agent to Drizzle.
+- [Key management](https://credo.js.org/guides/next/agent-setup/key-management.md): Choose and configure the key management backends of a Credo agent (Askar, Node.js, hardware-backed keys on React Native, or your own), and use agent.kms to create keys and sign.
+- [Caching](https://credo.js.org/guides/next/agent-setup/caching.md): Choose and configure the cache a Credo agent uses for resolved DID documents, ledger objects and certificate revocation lists.
+- [Multi-tenancy](https://credo.js.org/guides/next/agent-setup/multi-tenancy.md): Run many isolated tenants in one Credo agent with the tenants module, choose how their data is stored, and manage tenant sessions and status.
+- [Logging](https://credo.js.org/guides/next/agent-setup/logging.md): Log what a Credo agent does with the built-in ConsoleLogger or your own logger, and choose the log level.
+- [Protocols](https://credo.js.org/guides/next/protocols.md): How OpenID4VC, DIDComm and the ISO mdoc protocols differ, which credential formats each one carries, and which one to use.
+- [OpenID4VC](https://credo.js.org/guides/next/protocols/openid4vc.md): Issue, receive and verify credentials over HTTPS with OpenID4VCI and OpenID4VP, using the @credo-ts/openid4vc module.
+- [Issuing credentials](https://credo.js.org/guides/next/protocols/openid4vc/issuer.md): Run an OpenID4VCI issuer with Credo, define credential configurations, create credentials for incoming requests and create credential offers.
+- [Receiving credentials](https://credo.js.org/guides/next/protocols/openid4vc/receive.md): Receive credentials with OpenID4VCI in a Credo wallet on Node.js or React Native, bind them to the wallet's keys and store them.
+- [Issuance authorization and wallet security](https://credo.js.org/guides/next/protocols/openid4vc/authorization.md): Choose an OpenID4VCI authorization flow, use Credo's authorization server, a chained or an external one, presentation during issuance, PKCE, DPoP, and wallet and key attestations.
+- [Verifying credentials](https://credo.js.org/guides/next/protocols/openid4vc/verifier.md): Request and verify credential presentations with OpenID4VP and DCQL from a Credo verifier on Node.js.
+- [Presenting credentials](https://credo.js.org/guides/next/protocols/openid4vc/present.md): Present stored credentials to a verifier with OpenID4VP from a Credo wallet on Node.js or React Native, with DCQL or Presentation Exchange.
+- [SD-JWT VC with OpenID4VC](https://credo.js.org/guides/next/protocols/openid4vc/sd-jwt-vc.md): Issue, receive and verify SD-JWT VCs over OpenID4VCI and OpenID4VP with Credo, including selective disclosure with DCQL and transaction data.
+- [mdoc with OpenID4VC](https://credo.js.org/guides/next/protocols/openid4vc/mdoc.md): Issue, receive and verify ISO 18013-5 mdocs, such as mobile driving licences, over OpenID4VCI and OpenID4VP with Credo.
+- [W3C VCs with OpenID4VC](https://credo.js.org/guides/next/protocols/openid4vc/w3c.md): Issue, receive and verify W3C Verifiable Credentials over OpenID4VCI and OpenID4VP with Credo, as VCDM 1.1 JWTs or VCDM 2.0 SD-JWTs.
+- [ISO mdoc](https://credo.js.org/guides/next/protocols/mdoc.md): How the ISO/IEC 18013-5 and 18013-7 presentation protocols for mdocs work, how they differ from OpenID4VP, and what Credo does for proximity and the Digital Credentials API.
+- [Proximity (ISO 18013-5)](https://credo.js.org/guides/next/protocols/mdoc/proximity.md): Present mdocs in person over BLE after a QR code or NFC engagement from a React Native wallet with expo-mdoc-data-transfer and Credo, and verify the device response in a reader.
+- [Digital Credentials API](https://credo.js.org/guides/next/protocols/dc-api.md): How the W3C Digital Credentials API passes credential requests from a website to a wallet, the two protocols Credo supports over it (OpenID4VP and ISO 18013-7 Annex C), platform support, and which protocols and options to choose.
+- [Building a verifier](https://credo.js.org/guides/next/protocols/dc-api/verifier.md): Request credentials from a website with the W3C Digital Credentials API. A Credo backend creates OpenID4VP and ISO 18013-7 Annex C requests and verifies the response, and the web page calls the API in the browser.
+- [Building a wallet](https://credo.js.org/guides/next/protocols/dc-api/wallet.md): Answer W3C Digital Credentials API requests from websites in a React Native wallet with @animo-id/expo-digital-credentials-api and Credo. Register credentials with the operating system, share the store with the iOS extension, and answer OpenID4VP and org-iso-mdoc requests.
+- [DIDComm](https://credo.js.org/guides/next/protocols/didcomm.md): Set up DIDComm messaging in Credo with the DidCommModule, choose protocols and transports, and listen for state changes.
+- [Connections](https://credo.js.org/guides/next/protocols/didcomm/connections.md): Create and accept out-of-band invitations, connect agents with DID Exchange, reuse connections and track connection state in Credo.
+- [Issuing credentials](https://credo.js.org/guides/next/protocols/didcomm/issue-credential.md): Issue credentials over DIDComm with the Issue Credential v2 protocol, register credential formats and handle offers, requests and auto-accept.
+- [Requesting proofs](https://credo.js.org/guides/next/protocols/didcomm/present-proof.md): Request and verify presentations over DIDComm with the Present Proof v2 protocol, using AnonCreds or DIF Presentation Exchange.
+- [Mediation](https://credo.js.org/guides/next/protocols/didcomm/mediation.md): Run a DIDComm mediator with Credo and connect mobile agents to it, with message pickup, live delivery and keylist updates.
+- [Messaging and other protocols](https://credo.js.org/guides/next/protocols/didcomm/messaging.md): Send basic messages over a DIDComm connection, and add the action menu, question answer and DIDComm RPC protocols to a Credo agent.
+- [AnonCreds with DIDComm](https://credo.js.org/guides/next/protocols/didcomm/anoncreds.md): Issue AnonCreds credentials and request proofs with predicates over DIDComm, and handle revocation.
+- [W3C VCs with DIDComm](https://credo.js.org/guides/next/protocols/didcomm/w3c.md): Issue W3C Verifiable Credentials over DIDComm as JSON-LD, Data Integrity or VCDM 2.0 SD-JWT credentials, and present them with DIF Presentation Exchange.
+- [Credential formats](https://credo.js.org/guides/next/credential-formats.md): The credential formats Credo supports, how they compare, and which one to use.
+- [SD-JWT VC](https://credo.js.org/guides/next/credential-formats/sd-jwt-vc.md): Sign, store, present and verify IETF SD-JWT VCs with agent.sdJwtVc, independent of the exchange protocol.
+- [mdoc](https://credo.js.org/guides/next/credential-formats/mdoc.md): Sign, store, present and verify ISO 18013-5 mdocs, such as the mobile driving licence, with agent.mdoc.
+- [W3C Verifiable Credentials](https://credo.js.org/guides/next/credential-formats/w3c-vc.md): Sign, store, present and verify W3C Verifiable Credentials (data model 1.1 and 2.0) as JWT, SD-JWT, JSON-LD or Data Integrity.
+- [AnonCreds](https://credo.js.org/guides/next/credential-formats/anoncreds.md): Set up AnonCreds in Credo with a registry, register schemas, credential definitions and revocation registries, and manage link secrets and stored credentials.
+- [Status lists](https://credo.js.org/guides/next/credential-formats/status-lists.md): Revoke and suspend SD-JWT VCs and mdocs with IETF Token Status Lists, using agent.tokenStatusList.
+- [DIDs](https://credo.js.org/guides/next/dids-and-trust.md): Choose between X.509 certificates and DIDs, pick a DID method, and create, resolve and import DIDs with agent.dids.
+- [X.509 certificates](https://credo.js.org/guides/next/dids-and-trust/x509.md): Create self-signed and CA-issued X.509 certificates and certificate signing requests with agent.x509, parse certificates, validate chains and check revocation.
+- [Trusted issuers](https://credo.js.org/guides/next/dids-and-trust/trust.md): How Credo decides whether to trust the issuer of a credential or the signer of a request, what it does by default, and how to configure trust with getTrustedIssuersForVerification and trusted X.509 certificates.
+- [cheqd](https://credo.js.org/guides/next/dids-and-trust/cheqd.md): Create, update and deactivate did:cheqd DIDs, publish DID-linked resources, and use cheqd as an AnonCreds registry with @credo-ts/cheqd.
+- [Indy VDR](https://credo.js.org/guides/next/dids-and-trust/indy-vdr.md): Connect to Hyperledger Indy networks with @credo-ts/indy-vdr to resolve did:indy and did:sov, register did:indy DIDs with an endorser, and use Indy as an AnonCreds registry.
+- [Hedera](https://credo.js.org/guides/next/dids-and-trust/hedera.md): Create, update, deactivate and resolve did:hedera DIDs, and use Hedera as an AnonCreds registry with @credo-ts/hedera.
+- [did:webvh](https://credo.js.org/guides/next/dids-and-trust/webvh.md): Create, update and resolve did:webvh DIDs with @credo-ts/webvh, host the DID log, and use did:webvh as an AnonCreds registry.
+- [Supported standards](https://credo.js.org/guides/next/supported-standards.md): The exchange protocols, credential formats, DID methods and platforms Credo supports.
+- [Updating Credo](https://credo.js.org/guides/next/updating.md): How Credo versions work, the steps to update an agent to a new version, and the migration guide for each version.
+- [Updating from 0.7 to 0.8](https://credo.js.org/guides/next/updating/versions/0.7-to-0.8.md): Dependency updates and breaking changes when you update Credo from 0.7 to the unreleased 0.8.
+- [Updating from 0.6 to 0.7](https://credo.js.org/guides/next/updating/versions/0.6-to-0.7.md): Dependency updates, breaking changes and deprecations when you update Credo from 0.6 to 0.7.
+- [Migrating from Credo 0.5.x to 0.6.x](https://credo.js.org/guides/next/updating/versions/0.5-to-0.6.md)
+- [updating/versions/0.4-to-0.5](https://credo.js.org/guides/next/updating/versions/0.4-to-0.5.md)
+- [updating/versions/0.3-to-0.4](https://credo.js.org/guides/next/updating/versions/0.3-to-0.4.md)
+- [updating/versions/0.2-to-0.3](https://credo.js.org/guides/next/updating/versions/0.2-to-0.3.md)
+- [updating/versions/0.1-to-0.2](https://credo.js.org/guides/next/updating/versions/0.1-to-0.2.md)
+- [updating/update-assistant](https://credo.js.org/guides/next/updating/update-assistant.md)
+- [updating/update-indy-sdk-to-askar](https://credo.js.org/guides/next/updating/update-indy-sdk-to-askar.md)
+- [Ecosystem](https://credo.js.org/guides/next/ecosystem.md): The Credo repositories, the libraries Credo builds on, and open source projects built with Credo.
+- [Extensions](https://credo.js.org/guides/next/extensions.md): The Credo extension packages from credo-ts-ext, what each one does, and which Credo version they work with.
+- [REST API](https://credo.js.org/guides/next/extensions/rest.md): Run a Credo 0.5 agent behind a REST API with the @credo-ts/rest CLI.
+- [React hooks](https://credo.js.org/guides/next/extensions/react-hooks.md): Read the connections, credentials and proofs of a Credo 0.5 agent in React with @credo-ts/react-hooks.
+- [Redux store](https://credo.js.org/guides/next/extensions/redux-store.md): Keep the state of a Credo 0.5 agent in a Redux Toolkit store with @credo-ts/redux-store.
+- [Push notifications](https://credo.js.org/guides/next/extensions/push-notifications.md): Share an APNs or Firebase push notification token with another agent over DIDComm, with @credo-ts/push-notifications for Credo 0.5.
+
+## Optional
+
+- [Credo 0.7 (stable)](https://credo.js.org/llms.txt)
+- [Credo on GitHub](https://github.com/openwallet-foundation/credo-ts)

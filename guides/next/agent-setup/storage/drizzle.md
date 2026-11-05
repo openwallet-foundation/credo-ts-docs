@@ -1,0 +1,303 @@
+# Drizzle
+
+> Store Credo records in PostgreSQL or SQLite tables with Drizzle ORM, run the migrations, and move an existing Askar agent to Drizzle.
+
+`@credo-ts/drizzle-storage` stores the agent's records in regular SQL tables in PostgreSQL or SQLite, through [Drizzle ORM](https://orm.drizzle.team). You create the database connection, choose the record bundles and run migrations. Drizzle doesn't store keys, so you also need a [key management](https://credo.js.org/guides/next/agent-setup/key-management.md) backend, usually Askar.
+
+Drizzle is the storage for servers: records are SQL tables with indexes that the database can query, and many tenants and instances share one database. It doesn't encrypt records, and you run its migrations on every Credo upgrade. To compare it with Askar, see [Storage](https://credo.js.org/guides/next/agent-setup/storage.md).
+
+## Install
+
+**PostgreSQL**
+
+```bash
+npm install @credo-ts/drizzle-storage@alpha drizzle-orm@^0.45.4 pg @credo-ts/askar@alpha @openwallet-foundation/askar-nodejs@0.6.1
+```
+
+**SQLite**
+
+```bash
+npm install @credo-ts/drizzle-storage@alpha drizzle-orm@^0.45.4 @libsql/client @credo-ts/askar@alpha @openwallet-foundation/askar-nodejs@0.6.1
+```
+
+`@credo-ts/drizzle-storage` requires `drizzle-orm` `^0.45.4`. It includes `drizzle-kit` for the migration CLI, so you don't install that yourself. The Askar packages provide the key management backend.
+
+Use PostgreSQL with the `pg` driver on servers, and always when several instances share the data. SQLite works for a single instance or local development, with `libsql` on Node.js or `expo-sqlite` on React Native. For another driver, open an issue in the Credo repository: Credo has to map the driver's error codes.
+
+## Configure
+
+**PostgreSQL**
+
+```ts
+import { AskarModule } from '@credo-ts/askar'
+import { Agent } from '@credo-ts/core'
+import { DrizzleStorageModule } from '@credo-ts/drizzle-storage'
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
+import { agentDependencies } from '@credo-ts/node'
+import { OpenId4VcModule } from '@credo-ts/openid4vc'
+import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { drizzle } from 'drizzle-orm/node-postgres'
+
+const agent = new Agent({
+  dependencies: agentDependencies,
+  modules: {
+    storage: new DrizzleStorageModule({
+      database: drizzle('postgresql://credo:credo-password@localhost:5432/credo'),
+      // The core bundle is always included. Add one bundle per module that stores records.
+      bundles: [openid4vcBundle],
+    }),
+    // Drizzle doesn't store keys: Askar provides the KMS, in its own Postgres database
+    askar: new AskarModule({
+      askar: NativeAskar,
+      enableStorage: false,
+      store: {
+        id: 'credo-keys',
+        key: 'my-agent-store-key',
+        database: {
+          type: 'postgres',
+          config: { host: 'localhost:5432' },
+          credentials: { account: 'credo', password: 'credo-password' },
+        },
+      },
+    }),
+    openid4vc: new OpenId4VcModule(),
+  },
+})
+
+// Run the migrations first: the module doesn't create tables
+await agent.initialize()
+```
+
+**SQLite**
+
+```ts
+import { AskarModule } from '@credo-ts/askar'
+import { Agent } from '@credo-ts/core'
+import { DrizzleStorageModule } from '@credo-ts/drizzle-storage'
+import { agentDependencies } from '@credo-ts/node'
+import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+import { drizzle } from 'drizzle-orm/libsql'
+
+const agent = new Agent({
+  dependencies: agentDependencies,
+  modules: {
+    storage: new DrizzleStorageModule({
+      database: drizzle('file:agent.db'),
+      bundles: [],
+    }),
+    // Drizzle doesn't store keys: Askar provides the KMS
+    askar: new AskarModule({
+      askar: NativeAskar,
+      enableStorage: false,
+      store: { id: 'credo-keys', key: 'my-agent-store-key' },
+    }),
+  },
+})
+
+// Run the migrations first: the module doesn't create tables
+await agent.initialize()
+```
+
+`database` takes any Drizzle PostgreSQL or SQLite database. `drizzle()` accepts a connection string, or a client or pool you created yourself.
+
+The module doesn't create tables. Run the [migrations](#run-migrations) before the first `initialize()`.
+
+## Bundles
+
+A bundle holds the tables for the records of one Credo module. Pass a bundle for every module you use that stores records. Without it, saving or reading such a record throws `Could not find a registered drizzle adapter for record type`.
+
+| Bundle | Import | For |
+| --- | --- | --- |
+| `coreBundle` | `@credo-ts/drizzle-storage/core` | `@credo-ts/core`. Always included by the module. |
+| `didcommBundle` | `@credo-ts/drizzle-storage/didcomm` | `@credo-ts/didcomm` |
+| `actionMenuBundle` | `@credo-ts/drizzle-storage/action-menu` | `@credo-ts/action-menu` |
+| `anoncredsBundle` | `@credo-ts/drizzle-storage/anoncreds` | `@credo-ts/anoncreds` |
+| `openid4vcBundle` | `@credo-ts/drizzle-storage/openid4vc` | `@credo-ts/openid4vc` |
+| `drpcBundle` | `@credo-ts/drizzle-storage/drpc` | `@credo-ts/drpc` |
+| `tenantsBundle` | `@credo-ts/drizzle-storage/tenants` | `@credo-ts/tenants` |
+| `questionAnswerBundle` | `@credo-ts/drizzle-storage/question-answer` | `@credo-ts/question-answer` |
+
+Order the bundles as in this table, so a bundle comes after the bundles it depends on (`actionMenuBundle` uses the connection table from `didcommBundle`). Put your own bundles last.
+
+## Key management
+
+Without a key management backend the agent still initializes, but every key operation throws. The examples above keep the keys in Askar with `enableStorage: false`, so Askar creates a store for the keys only. Back that store up together with the Drizzle database: records such as DIDs refer to keys in it. The Node.js backend from `@credo-ts/node` keeps keys in memory only, so it's for [tests](#in-memory-database-for-tests). See [Key management](https://credo.js.org/guides/next/agent-setup/key-management.md).
+
+## Run migrations
+
+Credo ships the SQL migrations for each bundle. Run them before you start the agent for the first time, and again after every Credo upgrade: Drizzle storage adds migrations in non-breaking releases, and Credo doesn't work until you apply them. For example, [tenant status](https://credo.js.org/guides/next/agent-setup/multi-tenancy.md#tenant-status) needs the `0001_add-tenant-status` migration of the tenants bundle. Running the migrations when there's nothing new does nothing.
+
+### With the CLI
+
+The package has a `drizzle-storage` command:
+
+```sh
+# PostgreSQL
+npx drizzle-storage --bundle core --bundle openid4vc migrate --dialect postgres --database-url "postgresql://credo:credo-password@localhost:5432/credo"
+
+# SQLite
+npx drizzle-storage --bundle core migrate --dialect sqlite --database-url "file:agent.db"
+```
+
+| Option | Description |
+| --- | --- |
+| `--bundle`, `-b` | A bundle to migrate. Repeat it for every bundle. Required, and the CLI adds no bundles itself, so always pass `--bundle core`. Takes the bundle names from the table above, or a path or package name for your own bundles. |
+| `migrate --dialect` | `postgres` or `sqlite`. |
+| `migrate --database-url` | The database to migrate. You can set `DRIZZLE_DATABASE_URL` instead. |
+
+Run the CLI with the same Credo version as your agent. The CLI keeps track of applied migrations in a table per bundle, such as `credo_migrations__core`. `drizzle-storage studio --dialect <dialect> --database-url <url>` opens [Drizzle Studio](https://orm.drizzle.team/drizzle-studio/overview) on the database.
+
+### In code
+
+**Node.js**
+
+Each bundle has the absolute path of its migration folders in `bundle.migrations`. Apply them with the Drizzle migrator for your driver, before you initialize the agent:
+
+```ts
+import { coreBundle } from '@credo-ts/drizzle-storage/core'
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
+import { drizzle } from 'drizzle-orm/libsql'
+import { migrate } from 'drizzle-orm/libsql/migrator'
+
+const database = drizzle('file:agent.db')
+
+// The core bundle first, then the bundles you pass to the DrizzleStorageModule
+for (const bundle of [coreBundle, openid4vcBundle]) {
+  await migrate(database, {
+    migrationsFolder: bundle.migrations.sqlite.migrationsPath,
+    // The table names the drizzle-storage CLI uses, so you can switch between the CLI and this code
+    migrationsTable: `credo_migrations__${bundle.name.replace('-', '_')}`,
+  })
+}
+```
+
+For PostgreSQL, import `migrate` from `drizzle-orm/node-postgres/migrator` and use `bundle.migrations.postgres.migrationsPath`.
+
+**React Native**
+
+On React Native, use `expo-sqlite` as the driver and the React Native Askar package for the keys:
+
+```bash
+npm install @credo-ts/drizzle-storage@alpha drizzle-orm@^0.45.4 expo-sqlite @credo-ts/askar@alpha @openwallet-foundation/askar-react-native@0.6.1
+```
+
+A phone has its own database, so the app applies the migrations itself. Import the SQLite migrations of each bundle from `@credo-ts/drizzle-storage/<bundle>/migrations/sqlite` and apply them with `applyReactNativeMigrations`:
+
+```ts
+import { applyReactNativeMigrations, DrizzleStorageModule } from '@credo-ts/drizzle-storage'
+import coreMigrations from '@credo-ts/drizzle-storage/core/migrations/sqlite'
+import { openid4vcBundle } from '@credo-ts/drizzle-storage/openid4vc'
+import openid4vcMigrations from '@credo-ts/drizzle-storage/openid4vc/migrations/sqlite'
+import { drizzle } from 'drizzle-orm/expo-sqlite'
+import { migrate } from 'drizzle-orm/expo-sqlite/migrator'
+import { openDatabaseSync } from 'expo-sqlite'
+
+const database = drizzle(openDatabaseSync('credo.db'))
+
+// Run on every app start, before agent.initialize()
+await applyReactNativeMigrations({
+  db: database,
+  migrate,
+  migrations: [coreMigrations, openid4vcMigrations],
+})
+
+export const storage = new DrizzleStorageModule({ database, bundles: [openid4vcBundle] })
+```
+
+The migrations import `.sql` files, so the bundler has to inline them. Install `babel-plugin-inline-import` as a dev dependency, add the `inline-import` plugin to your Babel config with `extensions: ['.sql']`, and add `sql` to `resolver.sourceExts` in your Metro config.
+
+## In-memory database for tests
+
+For tests, use an in-memory SQLite database and keep the keys in memory with the Node.js backend, so there's nothing to set up or clean up. A new in-memory database is empty, so apply the migrations each time you create an agent:
+
+```ts
+import { Agent } from '@credo-ts/core'
+import { KeyManagementModule } from '@credo-ts/core/kms'
+import { DrizzleStorageModule } from '@credo-ts/drizzle-storage'
+import { coreBundle } from '@credo-ts/drizzle-storage/core'
+import { agentDependencies, NodeInMemoryKeyManagementStorage, NodeKeyManagementService } from '@credo-ts/node'
+import { drizzle } from 'drizzle-orm/libsql'
+import { migrate } from 'drizzle-orm/libsql/migrator'
+
+export async function createTestAgent() {
+  // Every in-memory database starts empty, so apply the migrations each time
+  const database = drizzle(':memory:')
+  for (const bundle of [coreBundle]) {
+    await migrate(database, {
+      migrationsFolder: bundle.migrations.sqlite.migrationsPath,
+      // A migrations table per bundle, as the drizzle-storage CLI uses
+      migrationsTable: `credo_migrations__${bundle.name.replace('-', '_')}`,
+    })
+  }
+
+  return new Agent({
+    dependencies: agentDependencies,
+    modules: {
+      storage: new DrizzleStorageModule({ database, bundles: [] }),
+      // Keys in memory as well, with node:crypto
+      kms: new KeyManagementModule({
+        backends: [new NodeKeyManagementService(new NodeInMemoryKeyManagementStorage())],
+      }),
+    },
+  })
+}
+```
+
+The Node.js backend can't encrypt DIDComm messages, which need XSalsa20-Poly1305. For DIDComm tests, keep the keys in Askar on [in-memory SQLite](https://credo.js.org/guides/next/agent-setup/storage/askar.md#in-memory-sqlite), with `enableStorage: false`.
+
+## Migrate from Askar
+
+`@credo-ts/askar-to-drizzle-storage-migration` copies all records from an Askar store to an empty Drizzle database. Use it when a server that runs on Askar should move to Drizzle, for example to get SQL access to its records. It doesn't move keys: after the migration, Askar stays your key management backend with storage turned off.
+
+```bash
+npm install @credo-ts/askar-to-drizzle-storage-migration@alpha @openwallet-foundation/askar-shared@0.6.1
+```
+
+1. Stop the agent and back up the Askar store. The migrator doesn't make a backup.
+2. Create the Drizzle database and [run the migrations](#run-migrations) for every bundle you'll use. The database must be empty.
+3. Run the migration with your current Askar configuration and your new Drizzle configuration:
+
+   ```ts
+   import { AskarModule } from '@credo-ts/askar'
+   import { AskarToDrizzleStorageMigrator } from '@credo-ts/askar-to-drizzle-storage-migration'
+   import { ConsoleLogger, LogLevel } from '@credo-ts/core'
+   import { DrizzleStorageModule } from '@credo-ts/drizzle-storage'
+   import { agentDependencies } from '@credo-ts/node'
+   import { NativeAskar } from '@openwallet-foundation/askar-nodejs'
+   import { drizzle } from 'drizzle-orm/libsql'
+   
+   // The Askar config your agent uses today, with storage still enabled
+   const askarModule = new AskarModule({
+     askar: NativeAskar,
+     store: { id: 'my-agent', key: 'my-agent-store-key' },
+   })
+   
+   // The Drizzle config your agent will use: an empty, migrated database and a bundle for
+   // every module that stored records in Askar
+   const drizzleModule = new DrizzleStorageModule({
+     database: drizzle('file:agent.db'),
+     bundles: [],
+   })
+   
+   const migrator = await AskarToDrizzleStorageMigrator.initialize({
+     askarModule,
+     drizzleModule,
+     agentDependencies,
+     logger: new ConsoleLogger(LogLevel.Info),
+   })
+   
+   // Copies all records from Askar to Drizzle. The keys stay in Askar.
+   await migrator.migrate()
+   ```
+
+4. Start the agent with the `DrizzleStorageModule` and the same Askar store configuration, with `enableStorage: false`, so Credo still finds the keys.
+5. When everything works, you can remove the copied records from the Askar store:
+
+   ```ts
+   // Removes the copied records from the Askar store, keeping the keys
+   await migrator.deleteStorageRecords()
+   ```
+
+   From then on, only open the store with `enableStorage: false`. With storage on, `initialize()` fails because the storage version record is gone.
+
+If a record in Askar has no bundle in the Drizzle module, the migration throws. `skipMigrationForMissingAdapter: true` skips such records instead, and they're lost. For a multi-tenant agent, pass `tenantsModule` and include `tenantsBundle` to migrate every tenant as well. Tenants that had their own Askar database all end up in the one Drizzle database.
