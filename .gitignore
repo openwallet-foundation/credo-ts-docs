@@ -21,3 +21,6 @@ yarn-error.log*
 
 .vscode
 .idea
+
+# Databases created when running snippets
+snippets/**/*.db

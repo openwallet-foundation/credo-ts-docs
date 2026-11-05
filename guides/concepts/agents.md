@@ -1,58 +1,52 @@
-# Agents
+---
+title: Agents and modules
+description: What a Credo agent is, how modules add functionality to it, and how agent contexts and tenants keep data apart.
+---
 
-When working with any Credo implementation, you will interact with an Credo
-agent. This will be either directly or via a REST API, like [the Credo REST
-API](https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/rest).
+Everything you do with Credo goes through an agent. This page explains what an agent holds, how modules extend it, and what agent contexts and tenants are.
 
-### Characteristics
+## The agent
 
-An Credo agent has three essential characteristics:
+An agent is an instance of `Agent` from `@credo-ts/core`. It holds the configuration, the storage, the keys and the modules for one party, such as an issuer, a verifier, a wallet or a mediator. These roles all use the same `Agent` class. What an agent can do depends on the modules you register.
 
-1. It acts as a fiduciary on behalf of a single identity owner (or, for agents
-   of things like IoT devices, pets, and similar things, a single controller).
-1. It holds cryptographic keys that uniquely embody its delegated
-   authorization.
-1. It interacts using interoperable DIDComm protocols, more on that later.
+You pass three things to the constructor:
 
-What this means is that an Credo agent will act your behalf to issue create
-connections, issue credentials, send messages etc. It also have a cryptographic
-toolkit with which it can uniquely, securely and verifiably operate. And lastly
-it interacts with other entities, this could be another agent, via [DIDComm
-protocols](https://identity.foundation/didcomm-messaging/spec/) later on. The
-Credo agent in the context of the Credo ecosystem is your entry-point
-to all of the functionality.
+- `dependencies`: platform-specific dependencies, such as file system access and `fetch`. Import `agentDependencies` from `@credo-ts/node` or `@credo-ts/react-native`. See [Platforms](./platform-and-environment.md).
+- `modules`: the modules to register, by key. A storage module is required.
+- `config`: optional agent-wide settings, such as the logger.
 
-### Categories
+```ts
+import { Agent } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/node'
+import { OpenId4VcModule } from '@credo-ts/openid4vc'
 
-There are many categories of Credo agents and we will group them into two
-categories; a mobile agent and a cloud agent. These agents are grouped based on
-their "location", e.g. a mobile wallet or server. Some other categories are a
-static, thin, thick and rich Credo agents. These agents are grouped based on
-their complexity instead of their "location". The Credo ecosystem
-allows you to create a mobile agent and a cloud agent. It also allows any of
-the complexity categorized agents.
+const agent = new Agent({
+  dependencies: agentDependencies,
+  modules: {
+    ...storage, // Storage and key management, see Agent setup
+    openid4vc: new OpenId4VcModule(),
+  },
+})
 
-### Examples
+await agent.initialize()
+```
 
-Some examples of things that are Credo agent-like (since the definition can be
-bit loose, these examples might help to get a clearer picture):
+`storage` holds the storage and key management modules, such as Drizzle for the records and Askar for the keys on a server. [Storage](../agent-setup/storage/index.mdx) helps you choose, and [Your first agent](../getting-started/first-agent.mdx) walks through a complete setup step by step.
 
-**A mobile wallet**
+## Modules
 
-A mobile wallet, like
-[aries-mobile-agent-react-native](https://github.com/hyperledger/aries-mobile-agent-react-native)
-, can be used to create connections, send basic messages, hold credentials,
-etc. In the real world this could be an application that contains data like an
-official drivers license.
+A module adds functionality to the agent: an API, services, storage records, and sometimes HTTP endpoints or message handlers. Credo is split into packages that each provide one or more modules, so you install only what you use.
 
-**An Identity hub**
+- Default modules are always registered: among others DIDs, W3C credentials, SD-JWT VC, mdoc, X.509 and key management. You use them through properties such as `agent.dids`, `agent.sdJwtVc` and `agent.kms`. Register a module under the same key to configure it, for example `dids: new DidsModule({ ... })`.
+- Other modules you register yourself, such as `DrizzleStorageModule` or `AskarModule` for storage, `DidCommModule`, `OpenId4VcModule`, `AnonCredsModule` and `TenantsModule`. Their APIs are available under `agent.modules.<key>`.
+- `DidCommModule` and `OpenId4VcModule` are also available as `agent.didcomm` and `agent.openid4vc`, but only when you register them under the keys `didcomm` and `openid4vc`.
 
-An [Identity Hub](https://didproject.azurewebsites.net/docs/hub-overview.html)
-is a personal data store that gives complete control to their owner. It allows
-for secure sensitive data storage and sharing. Since everyone has multiple
-devices these can be used as a more central point for your data.
+The agent's type follows from the modules you pass, so TypeScript knows which APIs exist. [Agent configuration](../agent-setup/index.mdx) covers storage, key management, caching and logging.
 
-### Useful resources
+## Agent context
 
-- [Hyperledger Aries RFC - 004:
-  Agents](https://github.com/hyperledger/aries-rfcs/blob/main/concepts/0004-agents/README.md)
+Credo keeps the data of one agent or tenant apart from others through an agent context. The context links storage, keys and configuration to an identifier, the `contextCorrelationId`. An agent has one root context. Credo passes the context along for you, so you only see it in callbacks, such as `getTrustedIssuersForVerification(agentContext, ...)`, and when you write your own modules.
+
+## Tenants
+
+With `@credo-ts/tenants`, one agent can host many tenants. Each tenant gets its own agent context, so its own storage and keys, while all tenants share the modules, configuration and transports of the root agent. This uses fewer resources than running an agent per tenant, which matters for hosted issuers, verifiers and cloud wallets. See [Multi-tenancy](../agent-setup/multi-tenancy.mdx).

@@ -1,40 +1,42 @@
-# The Credo Ecosystem
+---
+title: Ecosystem
+description: The Credo repositories, the libraries Credo builds on, and open source projects built with Credo.
+---
 
-The Credo ecosystem includes various components that are spread across multiple repositories. In this section we'll go over what these components are and how the relate to one another.
+Credo is a project of the [OpenWallet Foundation](https://openwallet.foundation). This page lists the repositories that make up Credo, the libraries it builds on, and projects built with it.
 
-## Repositories
+## Credo repositories
 
-Currently, Credo is composed out of two separate repositories:
+- [credo-ts](https://github.com/openwallet-foundation/credo-ts): the framework, published as the `@credo-ts/*` packages.
+- [credo-ts-docs](https://github.com/openwallet-foundation/credo-ts-docs): this documentation.
+- [credo-ts-ext](https://github.com/openwallet-foundation/credo-ts-ext): extension packages, such as a REST API, React hooks and push notifications. They haven't been updated for recent Credo versions. See [Extensions](../extensions/index.md).
 
-1. [Credo](https://github.com/openwallet-foundation/credo-ts)
-2. [Credo Extensions](https://github.com/openwallet-foundation/credo-ts-ext)
+## Libraries Credo builds on
 
-In addition, there are several open-source applications and building blocks built on top of Credo. One example is [Aries Mobile Agent React Native (Bifold)](https://github.com/hyperledger/aries-mobile-agent-react-native), which is a white-label mobile wallet you can use to bootstrap your own custom wallet.
+Credo doesn't implement every standard itself. It uses these libraries:
 
-## Documentation
+| Library | Packages | Used for |
+| --- | --- | --- |
+| [Identity Common TS](https://github.com/openwallet-foundation-labs/identity-common-ts) | `@openid4vc/*` | OpenID4VCI, OpenID4VP and OAuth 2.0 |
+| | `@sd-jwt/*` | SD-JWT and SD-JWT VC |
+| | `@owf/mdoc`, `@owf/cose` | mdoc (ISO 18013-5) |
+| | `@owf/token-status-list` | Token Status Lists |
+| | `dcql` | Digital Credentials Query Language (DCQL) queries |
+| [Askar](https://github.com/openwallet-foundation/askar) | `@openwallet-foundation/askar-*` ([wrapper](https://github.com/openwallet-foundation/askar-wrapper-javascript)) | Encrypted storage and key management |
+| [AnonCreds](https://github.com/anoncreds/anoncreds-rs) | `@hyperledger/anoncreds-*` ([wrapper](https://github.com/anoncreds/anoncreds-wrapper-javascript)) | AnonCreds credentials |
+| [Indy VDR](https://github.com/hyperledger-indy/indy-vdr) | `@hyperledger/indy-vdr-*` | Reading from and writing to Indy ledgers |
 
-You can find their documentation here:
+Askar, AnonCreds and Indy VDR are written in Rust. Their JavaScript wrappers have separate packages for Node.js and React Native.
 
-1. [Credo (core)](https://credo.js.org/guides)
-2. [Credo Extensions](https://credo.js.org/guides/extensions)
+## Built with Credo
 
-### Credo
+- [Paradym](https://paradym.id): Animo's platform for issuing and verifying credentials, built on Credo.
+- [Paradym Wallet](https://github.com/animo/paradym-wallet): an open source React Native wallet that uses Credo, made as a companion to Paradym.
+- [Bifold](https://github.com/openwallet-foundation/bifold-wallet): an open source React Native wallet that uses Credo, which you can adapt to build your own wallet.
+- [DIDComm Mediator Credo](https://github.com/openwallet-foundation/didcomm-mediator-credo): a DIDComm mediator built on Credo, with a Docker image you can deploy.
 
-Credo (core) is at the core of the Credo ecosystem. Credo provides all the functionality related to cryptography, storage, messaging and more that is required
+## Get involved
 
-## Contributing in the Credo Ecosystem
-
-Consider attending our weekly meetings to become aware of the current development cadence.
-
-- [Credo Working Group Meeting](https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information)
-- [Aries Working Group Meeting](https://wiki.hyperledger.org/display/ARIES/Aries+Working+Group)
-
-### Developer Contributions
-
-Each project maintains its own CONTRIBUTING guidance:
-
-- [Credo CONTRIBUTING.md](https://github.com/openwallet-foundation/credo-ts/blob/main/CONTRIBUTING.md)
-- [Credo Extensions CONTRIBUTING.md](https://github.com/openwallet-foundation/credo-ts-ext/blob/main/CONTRIBUTING.md)
-
-Each project has a significant set of developer conventions, checklists, templates, and actions to provide guidance and boundaries for a contribution.
-Consider looking at previous issues and their corresponding PRs to get a sense of the latest.
+- Ask questions in the [Credo channel on Discord](https://discord.com/channels/1022962884864643214/1179453305856991263).
+- Join the [Credo working group calls](https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information).
+- Read the [contributing guide](https://github.com/openwallet-foundation/credo-ts/blob/main/CONTRIBUTING.md) before you open a pull request.

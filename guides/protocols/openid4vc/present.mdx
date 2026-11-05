@@ -1,0 +1,36 @@
+---
+title: Presenting credentials
+description: Present stored credentials to a verifier with OpenID4VP from a Credo wallet on Node.js or React Native, with DCQL or Presentation Exchange.
+---
+
+This page covers the holder side of OpenID4VP: resolving a verifier's authorization request, showing the user what it asks for, and sending the response. It uses the holder agent from [Receiving credentials](./receive.mdx#set-up-the-holder), which also trusts the verifier's certificate, and the SD-JWT VC it received there. The verifier side is in [Verifying credentials](./verifier.mdx).
+
+## Resolve the authorization request
+
+A verifier sends an authorization request as a QR code or link (`openid4vp://...`). `resolveOpenId4VpAuthorizationRequest` fetches the request, verifies its signature and finds the stored credentials that match its DCQL query:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-7
+```
+
+`resolvedRequest.verifier` tells you who is asking. With `x509_san_dns` or `x509_hash` the request was signed with a certificate that the holder trusts, and resolving throws if it doesn't. With `decentralized_identifier` it was signed with a DID. With `redirect_uri` the request isn't signed, so anyone could have created it: show the user that the verifier is unverified, or reject such requests.
+
+`queryResult.can_be_satisfied` is `false` when the holder doesn't have the credentials the verifier asks for. Otherwise `credential_matches` lists, for each credential query, the matching credentials and the claims each would disclose. Use it to show the user what they're about to share.
+
+## Submit the response
+
+After the user agrees, select the credentials and send the response:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-8
+```
+
+`selectCredentialsForDcqlRequest` picks the first matching credential for each query and discloses only the requested claims. For credentials received in a batch it uses an unused instance while there is one (`useMode`, default `NewOrFirst`).
+
+Credo posts the response to the verifier's response endpoint. If the verifier rejects it, the call doesn't throw: `result.ok` is `false` and `result.serverResponse` holds the verifier's answer. `result.redirectUri` is set when the verifier wants the user to continue on its website or app. Open it in the browser.
+
+Verifiers that use an OpenID4VP draft may send a DIF Presentation Exchange definition instead of a DCQL query. Then `resolvedRequest.presentationExchange` is set instead of `dcql`: select with `selectCredentialsForPresentationExchangeRequest` and pass `presentationExchange: { credentials }` when accepting. For requests that include transaction data, see [SD-JWT VC with OpenID4VC](./sd-jwt-vc.mdx#sign-transaction-data). For requests from a website through the browser, see [Digital Credentials API](../dc-api/wallet.mdx).
+
+## Next steps
+
+- [SD-JWT VC with OpenID4VC](./sd-jwt-vc.mdx) and [mdoc with OpenID4VC](./mdoc.mdx): format details, such as transaction data.
+- [Digital Credentials API](../dc-api/wallet.mdx): answer requests that a website sends through the browser.
+- [Trusted issuers](../../dids-and-trust/trust.mdx): decide which verifiers your wallet accepts.

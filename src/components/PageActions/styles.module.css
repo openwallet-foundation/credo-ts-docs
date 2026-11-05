@@ -1,0 +1,81 @@
+.actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2rem;
+  padding: 0 0.7rem;
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  list-style: none;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease;
+}
+
+.button:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.button svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.actions > .button {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.menu {
+  position: relative;
+}
+
+.menu > summary {
+  border-left: 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  padding: 0 0.45rem;
+}
+
+.menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.menu ul {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.35rem);
+  z-index: 10;
+  min-width: 11rem;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-md);
+}
+
+.menu a {
+  display: block;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.4rem;
+  color: var(--text);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.menu a:hover {
+  background: var(--surface);
+  text-decoration: none;
+}

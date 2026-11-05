@@ -12,7 +12,5 @@ Contributions are made pursuant to the Developer's Certificate of Origin, availa
 
 ## Topic specific guides
 
-For more information on how to write a tutorial or how to add content to the 'concepts' section, see these more detailed guides:
-
-- [Concepts](developer-docs/CONCEPTS.md)
-- [Tutorials](developer-docs/TUTORIALS.md)
+- [Writing docs](developer-docs/WRITING.md): doc versions, type-checked snippets and the components you can use in pages.
+- [Concepts](developer-docs/CONCEPTS.md): what belongs in the concepts section.

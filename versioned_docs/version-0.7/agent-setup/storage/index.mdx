@@ -1,0 +1,45 @@
+---
+title: Storage
+description: Compare Askar and Drizzle, the two storage modules for a Credo agent, and pick the one that fits your platform and deployment.
+---
+
+Every Credo agent needs a storage module to keep its state between restarts: DIDs, credentials, OpenID4VC issuers and sessions, DIDComm connections, tenants and generic records. Credo ships two, Drizzle and Askar, and one of them stores the records. Without one, `new Agent()` throws `Missing required dependency: 'StorageService'`.
+
+## Which should I use?
+
+| You're building | Records | Keys |
+| --- | --- | --- |
+| A server | Drizzle on PostgreSQL | Askar, with storage turned off |
+| A server with one instance, or local development | Drizzle on SQLite | Askar, with storage turned off |
+| A mobile wallet | Askar on SQLite | Askar |
+| Tests | Drizzle on [in-memory SQLite](./drizzle.mdx#in-memory-database-for-tests) | Node.js backend, in memory. Askar in memory for DIDComm, which needs algorithms only Askar has |
+
+Drizzle scales better on servers: records are SQL tables with indexes that the database can query, and many tenants and instances share one database.
+
+On phones, Askar encrypts the wallet with a key you keep in the device keychain, includes key management, and has no schema migrations to ship with app updates. Drizzle on `expo-sqlite` is an option there too.
+
+Drizzle doesn't encrypt records, so rely on encryption of the database or disk. It also adds SQL migrations, also in non-breaking Credo releases, and Credo doesn't work until you apply them. If you can't run migrations on every deploy, use Askar on PostgreSQL for the records as well: it has no schema and encrypts everything with the store key. For many tenants on Askar, use a [profile per tenant](../multi-tenancy.mdx#where-tenant-data-is-stored).
+
+## Askar and Drizzle compared
+
+|  | Askar | Drizzle |
+| --- | --- | --- |
+| Package | `@credo-ts/askar` | `@credo-ts/drizzle-storage` |
+| Encryption at rest | Record values and tags are encrypted with the store key | None. Use encryption of the database or disk |
+| Key management included | Yes | No, add a backend such as Askar |
+| Databases | SQLite, PostgreSQL | PostgreSQL (`pg` driver), SQLite (`libsql` or `expo-sqlite` driver) |
+| Platforms | Node.js, React Native | Node.js, React Native (with `expo-sqlite`) |
+| Schema and migrations | No schema, nothing to migrate | SQL tables. Run migrations on every Credo upgrade |
+| Multi-tenancy | A database or a profile per tenant | One database, rows scoped per tenant |
+| Read records outside Credo | No, the data is encrypted | Yes, a table per record type |
+| Cursor pagination in queries | No, only `limit` and `offset` | Yes |
+
+Keys aren't records: the [key management](../key-management.mdx) backend stores them. With Drizzle, Askar usually keeps the keys in a store of its own.
+
+## Move from Askar to Drizzle
+
+A server that already stores its records in Askar can copy them to Drizzle. The keys stay in Askar. See [Migrate from Askar](./drizzle.mdx#migrate-from-askar).
+
+To use a storage backend Credo doesn't ship, implement the `StorageService` interface from `@credo-ts/core`.
+
+<DocCardList />

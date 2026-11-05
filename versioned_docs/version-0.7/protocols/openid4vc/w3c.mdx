@@ -1,0 +1,126 @@
+---
+title: W3C VCs with OpenID4VC
+description: Issue, receive and verify W3C Verifiable Credentials over OpenID4VCI and OpenID4VP with Credo, as VCDM 1.1 JWTs or VCDM 2.0 SD-JWTs.
+---
+
+This page covers W3C Verifiable Credentials over OpenID4VC: which forms work, then issuance (the issuer's credential configurations and signing, and DID binding on the holder) and presentation (the verifier's DCQL query and the result). [Issuing credentials](./issuer.mdx), [Receiving credentials](./receive.mdx), [Presenting credentials](./present.mdx) and [Verifying credentials](./verifier.mdx) explain the flow itself, and [W3C Verifiable Credentials](../../credential-formats/w3c-vc.mdx) explains the formats.
+
+Use W3C VCs only when your ecosystem requires the W3C data model. Otherwise [SD-JWT VC](./sd-jwt-vc.mdx) is simpler: it binds to a key instead of a DID and is what HAIP requires.
+
+## Supported forms
+
+| Data model | Secured as | OpenID4VCI `format` | Issue and receive | Present with DCQL |
+| --- | --- | --- | --- | --- |
+| VCDM 1.1 | JWT | `jwt_vc_json` | Yes | Yes, `jwt_vc_json` |
+| VCDM 2.0 | SD-JWT | `vc+sd-jwt` with `credential_definition` | Yes | Yes, `vc+sd-jwt` with `meta.type_values` |
+| VCDM 1.1 | JSON-LD (Linked Data Proofs) | `ldp_vc` | Not recommended | No |
+| VCDM 2.0 | JWT or Data Integrity | none | No | No |
+
+Use `jwt_vc_json` for VCDM 1.1, or `vc+sd-jwt` for VCDM 2.0 with selective disclosure. The rest of this page uses those two. [Limitations](#limitations) explains the other rows.
+
+## Issuance
+
+### Configure the credentials
+
+:::issuer
+
+```ts showLineNumbers title="issuer.ts" openid4vc-w3c.ts section-1
+```
+
+:::
+
+- `credential_definition.type` lists the credential types. `vc+sd-jwt` with a `credential_definition` and no `vct` is a W3C VCDM 2.0 credential. With a `vct` it's an [SD-JWT VC](./sd-jwt-vc.mdx).
+- W3C credentials are bound to a DID of the holder, so list DID methods in `cryptographic_binding_methods_supported` (or `did` for any method). Credo doesn't bind W3C credentials to a bare key.
+
+Add a `scope` if you offer the credentials through the [authorization code flow](./authorization.mdx).
+
+### Sign the credentials
+
+The issuer signs with a DID that it created in its own agent, and the mapper puts the holder's DID in the credential:
+
+:::issuer
+
+```ts showLineNumbers title="issuer.ts" openid4vc-w3c.ts section-2
+```
+
+:::
+
+- `issuerDid` is a DID created with `agent.dids.create`, for example `did:key`, and `verificationMethod` is the id of its signing key. W3C credentials can't be signed with an X.509 certificate. See [DIDs](../../dids-and-trust/index.mdx).
+- `holderBinding.keys` has a `didUrl` for each holder key. Its DID becomes the credential subject.
+- For VCDM 1.1 (`ClaimFormat.JwtVc`), return a `W3cCredential` and the verification method. Credo picks the JWT algorithm from the key.
+- For VCDM 2.0 (`ClaimFormat.SdJwtW3cVc`), return a `W3cV2Credential`, the `alg`, the `holder` (written to `cnf`) and a `disclosureFrame`.
+
+Don't add a `credentialStatus`: Credo can't check it, and a Credo verifier rejects VCDM 1.1 presentations of credentials that have one.
+
+### Receive and store
+
+The holder needs a DID it controls, and the binding resolver returns its verification method:
+
+:::holder
+
+```ts showLineNumbers title="holder.ts" openid4vc-w3c.ts section-3
+```
+
+:::
+
+VCDM 1.1 credentials arrive as a `W3cCredentialRecord`, which you store with `agent.w3cCredentials`. VCDM 2.0 credentials arrive as a `W3cV2CredentialRecord`, stored with `agent.w3cV2Credentials`. Credo verifies both before returning them, and accepts any DID issuer unless you configure [trusted issuers](../../dids-and-trust/trust.mdx).
+
+## Presentation
+
+### Request with DCQL
+
+:::verifier
+
+```ts showLineNumbers title="verifier.ts" openid4vc-w3c.ts section-4
+```
+
+:::
+
+`meta.type_values` lists alternative sets of types. Credo compares them with the `type` values as they appear in the credential, not with expanded JSON-LD IRIs. For `jwt_vc_json`, the wallet presents the whole credential. For `vc+sd-jwt`, the `meta.type_values` make it a W3C VCDM 2.0 query, and `claims` paths point into the credential, for example `['credentialSubject', 'degree']`. The wallet discloses only those claims.
+
+### Present
+
+Presenting works as for other formats. The holder signs the presentation with the DID of the credential subject (VCDM 1.1) or the key in `cnf` (VCDM 2.0):
+
+:::holder
+
+```ts showLineNumbers title="holder.ts" openid4vc-w3c.ts section-5
+```
+
+:::
+
+### Read the presentations
+
+:::verifier
+
+```ts showLineNumbers title="verifier.ts" openid4vc-w3c.ts section-6
+```
+
+:::
+
+A `jwt_vc_json` query gives a `W3cJwtVerifiablePresentation`, with the credentials in `verifiableCredential`. A `vc+sd-jwt` query gives a `W3cV2SdJwtVerifiablePresentation`: the credential is enveloped in it, and `resolvedCredential` has the disclosed claims.
+
+## Limitations
+
+- `ldp_vc` (JSON-LD credentials with Linked Data Proofs) has known problems in this version: issuing between Credo agents needs workarounds, and presenting with DCQL fails when Credo creates the presentation.
+- `jwt_vc_json-ld` is issued and stored like `jwt_vc_json`, but DCQL has no format for it.
+- VCDM 2.0 credentials secured as a plain JWT (`vc+jwt`) or with Data Integrity proofs have no OpenID4VCI format.
+- DIF Presentation Exchange only works with the OpenID4VP drafts, and not for VCDM 2.0 credentials.
+
+## Full example
+
+The issuer, holder and verifier from this page in one process:
+
+<details>
+<summary>openid4vc-w3c.ts</summary>
+
+```ts showLineNumbers title="openid4vc-w3c.ts" openid4vc-w3c.ts
+```
+
+</details>
+
+## Next steps
+
+- [W3C Verifiable Credentials](../../credential-formats/w3c-vc.mdx): signing, presenting and verifying outside OpenID4VC.
+- [W3C VCs with DIDComm](../didcomm/w3c.mdx): exchange W3C credentials over DIDComm.
+- [DIDs](../../dids-and-trust/index.mdx): create the DIDs for issuers and holders.

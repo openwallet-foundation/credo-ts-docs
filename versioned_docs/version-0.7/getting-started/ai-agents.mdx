@@ -1,0 +1,28 @@
+---
+title: AI coding agents
+description: Give Claude, ChatGPT, Cursor and other AI tools the Credo docs as Markdown.
+---
+
+AI coding agents often know an older Credo version from their training data. They write better Credo code when they read these docs, so the docs are also published as Markdown.
+
+## Entry points
+
+| URL | Contents |
+| --- | --- |
+| [https://credo.js.org/llms.txt](https://credo.js.org/llms.txt) | Index of the Credo 0.7 docs, with a link to the Markdown version of each page |
+| [https://credo.js.org/llms-full.txt](https://credo.js.org/llms-full.txt) | All Credo 0.7 docs in one file |
+| [https://credo.js.org/guides/next/llms.txt](https://credo.js.org/guides/next/llms.txt) | Index of the Credo 0.8 docs (unreleased) |
+| [https://credo.js.org/guides/next/llms-full.txt](https://credo.js.org/guides/next/llms-full.txt) | All Credo 0.8 docs in one file |
+
+Every page is also available as Markdown: add `.md` to its URL, for example [https://credo.js.org/guides/getting-started/installation.md](https://credo.js.org/guides/getting-started/installation.md). Code examples in the Markdown are the same type-checked snippets as on the site.
+
+The **Copy page** button at the top of each page copies its Markdown. Its menu opens the page in Claude or ChatGPT.
+
+## Point your agent at the docs
+
+Add a line like this to the `AGENTS.md` or `CLAUDE.md` of your project:
+
+```md
+This project uses Credo 0.7 (`@credo-ts/*` packages). Before writing or changing Credo code,
+read https://credo.js.org/llms.txt and the Markdown pages it links to.
+```

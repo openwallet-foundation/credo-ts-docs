@@ -5,7 +5,10 @@
     "moduleResolution": "nodenext",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strict": true
   },
-  "include": ["snippets"]
+  "include": ["snippets"],
+  // React Native screens are checked in tsconfig.snippets-rn.json
+  "exclude": ["snippets/*/src/**/*.tsx"]
 }
