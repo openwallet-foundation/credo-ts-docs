@@ -43,7 +43,7 @@
     "@tsconfig/docusaurus": "^2.0.9",
     "@types/node": "^22",
     "@types/react": "^18.3.27",
-    "remark-directive": "^3.0.1",
+    "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
     "tsx": "^4.23.15",
     "typescript": "~5.9.3",
