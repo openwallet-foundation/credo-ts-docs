@@ -1,0 +1,75 @@
+---
+title: Supported standards
+description: The exchange protocols, credential formats, DID methods and platforms Credo supports.
+---
+
+Credo keeps exchange protocols and credential formats separate, so most formats work with more than one protocol. For which ones to start with, see [Choose your setup](./getting-started/index.mdx#choose-your-setup).
+
+## Credential formats and protocols
+
+<StandardsMatrix />
+
+## OpenID for Verifiable Credentials
+
+Package: `@credo-ts/openid4vc`. See [OpenID4VC](./protocols/openid4vc/index.mdx).
+
+| Specification | Versions | Roles |
+| --- | --- | --- |
+| [OpenID for Verifiable Credential Issuance](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html) | 1.0, drafts 11 to 15 | Issuer, holder |
+| [OpenID for Verifiable Presentations](https://openid.net/specs/openid-4-verifiable-presentations-1_0.html) | 1.0, drafts 21 and 24 | Verifier, holder |
+| [Digital Credentials Query Language](https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-digital-credentials-query-l) (DCQL) | OpenID4VP 1.0 | Verifier, holder |
+| [DIF Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v2.0.0/) | 2.0, with OpenID4VP drafts only | Verifier, holder |
+| [W3C Digital Credentials API](https://www.w3.org/TR/digital-credentials/) | OpenID4VP requests. For ISO 18013-7 requests, see [ISO mdoc](#iso-mdoc) | Verifier, holder |
+| [OAuth 2.0 DPoP](https://www.rfc-editor.org/rfc/rfc9449), [PKCE](https://www.rfc-editor.org/rfc/rfc7636), [PAR](https://www.rfc-editor.org/rfc/rfc9126) | | Issuer, holder |
+| [OAuth 2.0 Attestation-Based Client Authentication](https://datatracker.ietf.org/doc/draft-ietf-oauth-attestation-based-client-auth/) (wallet attestations) | | Issuer, holder |
+
+## ISO mdoc
+
+Package: `@credo-ts/core` (`agent.mdoc`). See [ISO mdoc](./protocols/mdoc/index.mdx).
+
+| Specification | Roles | Notes |
+| --- | --- | --- |
+| [ISO/IEC 18013-5](https://www.iso.org/standard/69084.html) proximity presentation | Holder, verifier | Credo creates and verifies the device response. The BLE or NFC transport comes from a native module such as `expo-mdoc-data-transfer`. Reader authentication and device MAC aren't supported. |
+| [ISO/IEC TS 18013-7](https://www.iso.org/standard/91154.html) Annex C, over the [Digital Credentials API](https://www.w3.org/TR/digital-credentials/) | Verifier, holder | Signed requests with reader authentication are supported. |
+
+## DIDComm
+
+Package: `@credo-ts/didcomm`, with optional protocol packages. Credo implements DIDComm v1 messaging and the protocols below. See [DIDComm](./protocols/didcomm/index.mdx).
+
+| Protocol | Aries RFC | Package |
+| --- | --- | --- |
+| Out of Band 1.1 | [0434](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0434-outofband) | `@credo-ts/didcomm` |
+| DID Exchange 1.1 | [0023](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0023-did-exchange) | `@credo-ts/didcomm` |
+| DID Rotate 1.0 | [0794](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0794-did-rotate) | `@credo-ts/didcomm` |
+| Issue Credential 2.0 | [0453](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0453-issue-credential-v2) | `@credo-ts/didcomm` |
+| Present Proof 2.0 | [0454](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0454-present-proof-v2) | `@credo-ts/didcomm` |
+| Coordinate Mediation 1.0 | [0211](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0211-route-coordination) | `@credo-ts/didcomm` |
+| Message Pickup 1.0 and 2.0 | [0212](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0212-pickup), [0685](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0685-pickup-v2) | `@credo-ts/didcomm` |
+| Discover Features 1.0 and 2.0 | [0031](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0031-discover-features), [0557](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0557-discover-features-v2) | `@credo-ts/didcomm` |
+| Revocation Notification 1.0 and 2.0 | [0183](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0183-revocation-notification), [0721](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0721-revocation-notification-v2) | `@credo-ts/didcomm` |
+| Basic Message 1.0 | [0095](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0095-basic-message) | `@credo-ts/didcomm` |
+| Action Menu 1.0 | [0509](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0509-action-menu) | `@credo-ts/action-menu` |
+| Question Answer 1.0 | [0113](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0113-question-answer) | `@credo-ts/question-answer` |
+| DIDComm RPC 1.0 | [0804](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0804-didcomm-rpc) | `@credo-ts/drpc` |
+
+## DID methods
+
+See [DIDs](./dids-and-trust/index.mdx).
+
+| Method | Package |
+| --- | --- |
+| `did:key`, `did:jwk`, `did:peer`, `did:web` | `@credo-ts/core` |
+| `did:webvh` | `@credo-ts/webvh` |
+| `did:cheqd` | `@credo-ts/cheqd` |
+| `did:indy`, `did:sov` | `@credo-ts/indy-vdr` |
+| `did:hedera` | `@credo-ts/hedera` |
+
+## Platforms and infrastructure
+
+| | Supported |
+| --- | --- |
+| Runtimes | Node.js 22 or later, React Native (Expo) |
+| Storage | [Askar](./agent-setup/storage/askar.mdx) (SQLite, PostgreSQL), [Drizzle](./agent-setup/storage/drizzle.mdx) (PostgreSQL, SQLite) |
+| Key management | [Askar, Node.js crypto, iOS Secure Enclave and Android Keystore](./agent-setup/key-management.mdx) |
+| Caching | [In memory, storage, Redis](./agent-setup/caching.mdx) |
+| Multi-tenancy | [`@credo-ts/tenants`](./agent-setup/multi-tenancy.mdx) |

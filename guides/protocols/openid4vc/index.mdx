@@ -1,0 +1,81 @@
+---
+title: OpenID4VC
+description: Issue, receive and verify credentials over HTTPS with OpenID4VCI and OpenID4VP, using the @credo-ts/openid4vc module.
+---
+
+OpenID for Verifiable Credentials (OpenID4VC) is a family of protocols, built on OAuth 2.0, for issuing and presenting credentials over HTTPS. This page explains the protocols and roles, and how to set up the `@credo-ts/openid4vc` module. The pages below it cover each role.
+
+## Protocols
+
+| Specification | What it covers |
+| --- | --- |
+| OpenID4VCI | Issuance. A holder gets credentials from an issuer. The issuer authorizes it with a pre-authorized code in the offer, or with the OAuth authorization code flow. |
+| OpenID4VP | Presentation. A verifier sends an authorization request with a DCQL query, and the holder responds with presentations of matching credentials. |
+| HAIP | The High Assurance Interoperability Profile of both protocols, used by ecosystems such as the EU Digital Identity Wallet. It requires SD-JWT VC or mdoc. For issuance: the authorization code flow with PKCE, DPoP, and wallet authentication, usually with wallet attestations. For presentation: DCQL, requests signed with an X.509 certificate (`x509_hash`) and encrypted responses. [Authorization and wallet security](./authorization.mdx) explains the issuance part, [Verifying credentials](./verifier.mdx) the presentation part. |
+
+There is no connection between the parties. Each exchange is a separate session, started by a credential offer or an authorization request that the holder receives as a QR code or link.
+
+```mermaid
+sequenceDiagram
+  participant Issuer
+  participant Holder
+  participant Verifier
+  Issuer->>Holder: credential offer (QR code or link)
+  Holder->>Issuer: OpenID4VCI token and credential requests
+  Issuer-->>Holder: credentials
+  Verifier->>Holder: authorization request (QR code or link)
+  Holder->>Verifier: OpenID4VP authorization response with presentations
+```
+
+[Supported standards](../../supported-standards.mdx) lists the versions and drafts Credo supports, and which credential formats work with each protocol.
+
+## Roles
+
+| Role | API | Platform | Guide |
+| --- | --- | --- | --- |
+| Issuer | `agent.openid4vc.issuer` | Node.js | [Issuing credentials](./issuer.mdx) |
+| Holder | `agent.openid4vc.holder` | Node.js and React Native | [Receiving](./receive.mdx) and [presenting](./present.mdx) credentials |
+| Verifier | `agent.openid4vc.verifier` | Node.js | [Verifying credentials](./verifier.mdx) |
+
+Issuers and verifiers serve HTTP endpoints with Express, so they run on Node.js. On React Native only the holder is available.
+
+## Install
+
+<InstallTabs packages="@credo-ts/openid4vc" />
+
+For an issuer or verifier, also install Express 5:
+
+<InstallTabs packages="express@^5" />
+<InstallTabs packages="@types/express@^5" dev />
+
+## Configure the module
+
+An agent that issues and verifies credentials:
+
+```ts showLineNumbers title="agent.ts" openid4vc-setup.ts section-1
+```
+
+Register the module under the key `openid4vc`, so it's available as `agent.openid4vc`. `issuer` and `verifier` are optional and turn on that role. The holder is always available, so a wallet registers the module without options:
+
+```ts
+openid4vc: new OpenId4VcModule(),
+```
+
+The module stores issuers, verifiers and sessions as records. With [Drizzle storage](../../agent-setup/storage/drizzle.mdx), add `openid4vcBundle` from `@credo-ts/drizzle-storage/openid4vc` to the bundles.
+
+`baseUrl` is the public URL of the endpoints, and Credo serves them under its path (`/oid4vci` and `/oid4vp` here). OpenID4VCI also requires the issuer metadata at the root of the host (`/.well-known/openid-credential-issuer/oid4vci/<issuerId>`), so your server must pass requests for the whole host to the Express app.
+
+`app` is your Express app. Without it, Credo creates one, available as `agent.openid4vc.config.app`. Either way, you start the server. Credo adds its routes during `agent.initialize()`, so register your own middleware and routes after that.
+
+The issuer and verifier support [multi-tenancy](../../agent-setup/multi-tenancy.mdx): Credo finds the tenant from the issuer or verifier id in the URL.
+
+For local development over `http://localhost`, set `allowInsecureHttpUrls: true` in the agent config of all parties. Never enable it in production.
+
+## The example flow
+
+The pages for each role build one example: an issuer that issues an employee badge as an SD-JWT VC with the pre-authorized code flow, a holder that receives and presents it, and a verifier that requests two of its claims. This runs them in one process:
+
+```ts showLineNumbers title="flow.ts" protocols-openid4vc-flow.ts section-1
+```
+
+<DocCardList />

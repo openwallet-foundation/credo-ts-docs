@@ -1,0 +1,85 @@
+---
+title: Receiving credentials
+description: Receive credentials with OpenID4VCI in a Credo wallet on Node.js or React Native, bind them to the wallet's keys and store them.
+---
+
+This page covers the holder side of OpenID4VCI: resolving a credential offer, getting an access token, requesting the credentials and storing them. The holder API is the same on Node.js and React Native. The examples continue the SD-JWT VC flow from [Issuing credentials](./issuer.mdx). To present the credentials afterwards, see [Presenting credentials](./present.mdx).
+
+## Set up the holder
+
+Register `OpenId4VcModule` without options. The holder part is always available as `agent.openid4vc.holder`.
+
+<Tabs groupId="platform" queryString>
+<TabItem value="node" label="Node.js">
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-1
+```
+
+</TabItem>
+<TabItem value="react-native" label="React Native">
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder-rn.ts section-1
+```
+
+</TabItem>
+</Tabs>
+
+The holder verifies the credentials it receives, and later the requests of verifiers. To verify X.509 signatures, it needs the certificates, or root CAs, of the issuers and verifiers you trust. The Node.js example trusts the certificates from the [issuer](./issuer.mdx) and [verifier](./verifier.mdx) examples. See [Trusted issuers](../../dids-and-trust/trust.mdx). For storage and keys, see [Storage](../../agent-setup/storage/index.mdx) and [Key management](../../agent-setup/key-management.mdx). The React Native example uses [Askar](../../agent-setup/storage/askar.mdx), the default for mobile wallets.
+
+## Resolve the offer
+
+The wallet gets a credential offer URI from a QR code or a link. `resolveCredentialOffer` fetches the offer and the issuer metadata:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-2
+```
+
+Use the issuer metadata and `offeredCredentialConfigurations` to show the user who offers what. Display names, colors and claim labels are under `credential_metadata` of each configuration, or at its top level for issuers that implement draft 15. If `txCodeRequest` is defined, the issuer sent the user a code (by email, for example), and `description`, `length` and `input_mode` tell you what to ask for.
+
+## Request an access token
+
+In the pre-authorized code flow, exchange the code from the offer for an access token, with the transaction code the user entered:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-3
+```
+
+If the issuer supports DPoP, Credo creates the DPoP proof and returns its options in `token.dpop`. Pass them to the next calls. PKCE and DPoP need nothing else from you. Issuers that follow HAIP also ask for wallet attestations and key attestations, which your wallet gets from its wallet provider's backend. [Authorization and wallet security](./authorization.mdx) covers those and offers that use the authorization code flow.
+
+## Request the credentials
+
+The issuer binds each credential to a key the holder controls. Credo calls your `credentialBindingResolver` once for each offered credential configuration, with what the issuer supports, and you return the keys to bind to:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-4
+```
+
+The resolver returns one of:
+
+| Binding | Use for |
+| --- | --- |
+| `{ method: 'jwk', keys }` | SD-JWT VC and mdoc. Keys from the agent's KMS. This is the default choice, and what HAIP requires. |
+| `{ method: 'did', didUrls }` | W3C formats, which can't bind to a bare key. Verification methods of DIDs the agent created, when the issuer lists the DID method in `supportedDidMethods` or accepts all (`supportsAllDidMethods`). Not allowed for mdoc. |
+| `{ method: 'attestation', keyAttestationJwt }` | Issuers that require key attestations. See [Authorization and wallet security](./authorization.mdx#wallet-and-key-attestations). |
+
+To receive a batch, return up to `issuerMaxBatchSize` keys of the same key type, and you get one credential instance per key.
+
+Then request the credentials:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-5
+```
+
+By default this requests every credential in the offer. Pass `credentialConfigurationIds` to request only some of them.
+
+## Store the credentials
+
+`requestCredentials` verifies each credential, including the issuer's signature and trust, but it doesn't store anything. Each result has a `record` that you store with the API for its format:
+
+```ts showLineNumbers title="holder.ts" openid4vc-holder.ts section-6
+```
+
+A batch arrives as one record with several instances in `record.credentialInstances`. If the issuer defers issuance, the credential is in `deferredCredentials` instead: call `requestDeferredCredentials` with its `transactionId` after `interval` seconds. If a credential has a `notificationId`, tell the issuer whether you stored it with `sendNotification` (`credential_accepted`, `credential_deleted` or `credential_failure`).
+
+## Next steps
+
+- [Presenting credentials](./present.mdx): present the stored credentials to a verifier.
+- [Authorization and wallet security](./authorization.mdx): offers with the authorization code flow, and wallet and key attestations.
+- [SD-JWT VC with OpenID4VC](./sd-jwt-vc.mdx) and [mdoc with OpenID4VC](./mdoc.mdx): format details for wallets.
+- [Trusted issuers](../../dids-and-trust/trust.mdx): decide which issuers your wallet accepts.

@@ -22,22 +22,22 @@
   <a href="#license">License</a>
 </p>
 
-[Credo](https://github.com/openwallet-foundation/credo-ts) is a modular ecosystem of self-sovereign identity development tools written in TypeScript. This documentation site serves to make it as easy as possible for developers of any level to get started with building self-sovereign identity solutions.
+[Credo](https://github.com/openwallet-foundation/credo-ts) is a modular ecosystem of digital identity and verifiable credential development tools written in TypeScript. This documentation site serves to make it as easy as possible for developers of any level to get started with building self-sovereign identity solutions.
 
 # Getting Started
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+This website is built with [Docusaurus](https://docusaurus.io/). Code examples are TypeScript files in `snippets/`, type-checked and included in the pages at build time. See [Writing docs](developer-docs/WRITING.md).
 
 ### Installation
 
 ```
-yarn
+pnpm install
 ```
 
 ### Local Development
 
 ```
-yarn start
+pnpm start
 ```
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
@@ -45,26 +45,17 @@ This command starts a local development server and opens up a browser window. Mo
 ### Build
 
 ```
-yarn build
+pnpm build
 ```
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
-### Deployment
-
-Using SSH:
+### Checks
 
 ```
-USE_SSH=true yarn deploy
+pnpm types:check
+pnpm style:check
 ```
-
-Not using SSH:
-
-```
-GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
 
 ## Contributing
 
@@ -74,6 +65,6 @@ There are regular community working groups to discuss ongoing efforts within Cre
 
 We welcome you to join our mailing list and Discord channel. See the [Wiki](https://github.com/openwallet-foundation/credo-ts/wiki/Communication) for up to date information.
 
-## Licence
+## License
 
 Credo Documentation is licensed under the [Apache License Version 2.0 (Apache-2.0)](/LICENSE).

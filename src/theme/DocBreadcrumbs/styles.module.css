@@ -1,0 +1,17 @@
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.row > nav {
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+}

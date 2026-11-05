@@ -1,0 +1,102 @@
+---
+title: mdoc
+description: Sign, store, present and verify ISO 18013-5 mdocs, such as the mobile driving licence, with agent.mdoc.
+---
+
+An mdoc is the credential format of [ISO/IEC 18013-5](https://www.iso.org/standard/69084.html), used for the mobile driving licence (mDL) and the EU PID. The issuer signs a salted digest of each data element with an X.509 certificate, and binds the mdoc to a device key of the holder. To present, the holder signs a device response that contains only the requested elements. This page covers `agent.mdoc` and `MdocDeviceResponse`. To issue and present mdocs over OpenID4VC, see [mdoc with OpenID4VC](../protocols/openid4vc/mdoc.mdx). To present them in person or in the browser with the ISO protocols, see [Proximity (ISO 18013-5)](../protocols/mdoc/proximity.mdx) and [Digital Credentials API (ISO 18013-7)](../protocols/dc-api/index.mdx).
+
+## Set up
+
+Everything on this page is in `@credo-ts/core`. `MdocModule` is a default module without options, so every agent has `agent.mdoc`. The agent also needs [storage](../agent-setup/storage/index.mdx) and key management. The examples use three agents: an issuer, a holder and a verifier.
+
+```ts showLineNumbers title="mdoc.ts" format-mdoc.ts section-1
+```
+
+## Create an issuer certificate
+
+mdocs are always signed with an X.509 certificate, never with a DID. This example creates a self-signed document signer certificate from a key in the issuer's KMS:
+
+:::issuer
+
+```ts showLineNumbers title="mdoc.ts" format-mdoc.ts section-2
+```
+
+:::
+
+The certificate subject must include a country (`C`). Verification fails without it, and also when the mdoc has an `issuing_country` element that doesn't match. In production, the document signer certificate is issued by your IACA root certificate, and verifiers trust the root. See [X.509 certificates](../dids-and-trust/x509.mdx).
+
+## Sign an mdoc
+
+:::issuer
+
+```ts showLineNumbers title="mdoc.ts" format-mdoc.ts section-3
+```
+
+:::
+
+- `docType` is the document type, such as `org.iso.18013.5.1.mDL`, and `namespaces` maps each namespace to its data elements. Use `DateOnly` from `@credo-ts/core` for elements that are a date without a time, such as `birth_date`.
+- `validityInfo.validUntil` is required. `signed` and `validFrom` default to the time of signing. If you set `validFrom`, also set `signed` to a time no later than it, because signing fails when `validFrom` is before `signed`.
+- `issuerCertificate` is the signing certificate, or a chain with the signing certificate first. Its key must be in the issuer's KMS. `holderKey` is the public device key the mdoc is bound to.
+
+`keyAuthorizations` lists the namespaces or elements the holder may sign itself (device-signed elements). By default there are none. `statusInfo` points to a status list entry, see [Status lists](./status-lists.mdx).
+
+The signature algorithm follows from the certificate key: ES256, ES384, ES512 or EdDSA. Use P-256 keys (ES256) for the certificate and the device key unless your ecosystem asks for something else: HAIP requires every party to support ES256, and the secure hardware of phones supports P-256. Element digests always use SHA-256.
+
+## Store and query
+
+The holder parses the received mdoc, verifies it, and stores it as an `MdocRecord`:
+
+:::holder
+
+```ts showLineNumbers title="mdoc.ts" format-mdoc.ts section-4
+```
+
+:::
+
+- `deviceKeyId` is the KMS key id of the device key. It isn't part of the mdoc, so set it before you store the mdoc. `MdocRecord.fromMdoc` copies it to the record.
+- `verify` returns `{ isValid: true }` or `{ isValid: false, error }`, with `error` as a message. Without `trustedCertificates` it uses the agent's [trusted issuers](../dids-and-trust/trust.mdx) configuration, and throws when no trusted certificates are configured at all.
+- Records are tagged with `docType` and `alg`. `agent.mdoc` also has `getById`, `getAll`, `update` and `deleteById`. A record can hold several instances of the same mdoc, each bound to its own key, for batch issuance.
+
+With [OpenID4VCI](../protocols/openid4vc/mdoc.mdx), the holder flow verifies the mdoc and returns the `MdocRecord` for you. You only store it.
+
+## Present
+
+A presentation is a device response: the mdoc with only the requested elements, signed with the device key. Over OpenID4VP, Credo builds it for you. To build one yourself, use `MdocDeviceResponse.createDeviceResponse`:
+
+:::holder
+
+```ts showLineNumbers title="mdoc.ts" format-mdoc.ts section-5
+```
+
+:::
+
+- `documentRequests` lists the elements to disclose per namespace. Every element of an mdoc is selectively disclosable, so the response contains these elements and nothing else. The boolean is the verifier's intent to retain the element.
+- `sessionTranscriptOptions` binds the response to one exchange. The `openId4Vp` and `openId4VpDcApi` types take the values from an OpenID4VP request. For other transports, such as [ISO 18013-5 proximity](../protocols/mdoc/proximity.mdx), compute the session transcript yourself and pass `{ type: 'sessionTranscriptBytes', sessionTranscriptBytes }`.
+- `deviceNameSpaces` adds device-signed elements. They're only included when requested and authorized by `keyAuthorizations`.
+
+Only device signatures are supported. Device MAC authentication fails.
+
+## Verify a device response
+
+:::verifier
+
+```ts showLineNumbers title="mdoc.ts" format-mdoc.ts section-6
+```
+
+:::
+
+`verify` resolves when the response is valid and throws an `MdocError` when it isn't. It checks the issuer signature and certificate chain, the element digests, the device signature over the session transcript, the validity period (with the agent's `validitySkewSeconds`) and the status. `issuerClaims` and `deviceClaims` hold the disclosed elements per document type and namespace.
+
+:::warning[Pass the trusted certificates]
+`MdocDeviceResponse.verify` doesn't use the agent's trusted issuers configuration or the trusted certificates of the X.509 module. Without `trustedCertificates`, every response fails verification. The OpenID4VP verifier and the DC API flow resolve trust for you.
+:::
+
+`trustedCertificates` takes certificates as PEM or base64 strings. To trust a separate certificate for signing status lists, pass `[{ issuance: [...], status: [...] }]` instead.
+
+## Next steps
+
+- [mdoc with OpenID4VC](../protocols/openid4vc/mdoc.mdx)
+- [Proximity (ISO 18013-5)](../protocols/mdoc/proximity.mdx)
+- [Digital Credentials API (ISO 18013-7)](../protocols/dc-api/index.mdx)
+- [Status lists](./status-lists.mdx)
+- [X.509 certificates](../dids-and-trust/x509.mdx)
