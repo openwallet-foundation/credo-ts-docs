@@ -29,7 +29,7 @@ export default function PageActions(): ReactNode {
   const { siteConfig } = useDocusaurusContext()
   const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle')
 
-  const markdownPath = `${metadata.permalink}.md`
+  const markdownPath = `${metadata.permalink.replace(/\/+$/, '')}.md`
   const markdownUrl = `${siteConfig.url}${markdownPath}`
   const prompt = encodeURIComponent(`Read ${markdownUrl} so I can ask questions about it.`)
 
