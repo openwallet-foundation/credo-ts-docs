@@ -7,6 +7,7 @@ const anoncreds = new AnonCredsModule({
   anoncreds: NativeAnoncreds,
   registries: [new CheqdAnonCredsRegistry()],
 })
+
 // end-section-1
 
 export { anoncreds }

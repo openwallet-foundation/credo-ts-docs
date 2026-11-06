@@ -30,6 +30,9 @@ This website is built with [Docusaurus](https://docusaurus.io/). Code examples a
 
 ### Installation
 
+Use the pnpm 12.16.1 version pinned in `package.json`. Native dependency build
+scripts are permitted through `allowBuilds` in `pnpm-workspace.yaml`.
+
 ```
 pnpm install
 ```
