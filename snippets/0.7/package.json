@@ -36,7 +36,7 @@
     "@openwallet-foundation/askar-react-native": "0.6.0",
     "@openwallet-foundation/askar-shared": "0.6.0",
     "@owf/mdoc": "^0.8.2",
-    "drizzle-orm": "0.44.7",
+    "drizzle-orm": "0.45.2",
     "expo": "~56.0.23",
     "expo-mdoc-data-transfer": "^0.2.0",
     "expo-secure-store": "~56.0.4",
