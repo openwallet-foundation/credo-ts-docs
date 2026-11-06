@@ -29,6 +29,11 @@
   background: transparent;
 }
 
+.compact .table th,
+.compact .table td {
+  padding: 0.55rem 0.75rem;
+}
+
 .table tbody tr:last-child th,
 .table tbody tr:last-child td {
   border-bottom: 0;
@@ -156,9 +161,4 @@
   margin: 0.75rem 0 0;
   font-size: 0.85rem;
   color: var(--text-muted);
-}
-
-.compact .table th,
-.compact .table td {
-  padding: 0.55rem 0.75rem;
 }

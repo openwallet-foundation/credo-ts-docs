@@ -1,9 +1,17 @@
 packages:
   - snippets/*
 
-onlyBuiltDependencies:
-  - '@hyperledger/anoncreds-nodejs'
-  - '@hyperledger/indy-vdr-nodejs'
-  - '@openwallet-foundation/askar-nodejs'
-  - '@swc/core'
-  - esbuild
+allowBuilds:
+  '@hyperledger/anoncreds-nodejs': true
+  '@hyperledger/anoncreds-react-native': false
+  '@hyperledger/indy-vdr-nodejs': true
+  '@hyperledger/indy-vdr-react-native': false
+  '@openwallet-foundation/askar-nodejs': true
+  '@openwallet-foundation/askar-react-native': false
+  '@swc/core': true
+  cbor-extract: false
+  core-js: false
+  esbuild: true
+  koffi: false
+  protobufjs: false
+  secp256k1: false
