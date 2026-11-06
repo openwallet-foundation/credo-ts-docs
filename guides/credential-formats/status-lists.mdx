@@ -88,6 +88,8 @@ After the update the same credential fails, with error code `STATUS_INVALID`:
 
 Any status other than 0 fails verification, including suspended, and `disableStatusValidation: true` skips the check. The status list JWT must have the `typ` header `statuslist+jwt`. Credo fetches the list on every verification. To cache lists, or to restrict which URLs are fetched, set `customStatusListFetcher` on the [SD-JWT VC module](./sd-jwt-vc.mdx#type-metadata-and-module-options).
 
+Fetched status lists, for SD-JWT VCs, mdocs and `fetchTokenStatusList`, may be as large as the `maxResponseBytes` of the agent's [`fetchLimits`](../agent-setup/index.mdx#config) (10 MiB). To set another limit, register the module yourself under its default key: `tokenStatusList: new TokenStatusListModule({ maxStatusListBytes })`.
+
 Which key may sign the status list depends on the [trusted issuer](../dids-and-trust/trust.mdx) that matched the credential:
 
 - No trusted issuers configured (DID issuers only): the list must be signed with the credential issuer's key.

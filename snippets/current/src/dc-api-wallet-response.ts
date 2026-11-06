@@ -36,15 +36,9 @@ export async function createIsoMdocResponse(
   origin: string
 ): Promise<IsoMdocResponseOptions> {
   const resolved = await agent.mdoc.resolveDcApiRequest({ request: data, origin })
-  if (!resolved.success || resolved.docRequestsAsAlternatives) throw new Error('No matching mdoc')
+  if (!resolved.success) throw new Error('No matching mdoc')
 
-  const { response } = await agent.mdoc.createDcApiResponse({
-    resolvedRequest: resolved,
-    credentials: resolved.docRequests.map(({ docRequestIndex, validCredentials }) => ({
-      docRequestIndex,
-      record: validCredentials[0].record,
-    })),
-  })
+  const { response } = await agent.mdoc.createDcApiResponse(agent.mdoc.selectCredentialsForRequest(resolved))
 
   return { protocol: 'org-iso-mdoc', data: { response } }
 }

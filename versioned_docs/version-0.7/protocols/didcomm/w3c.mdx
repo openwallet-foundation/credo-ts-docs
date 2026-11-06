@@ -46,6 +46,8 @@ The holder accepts the offer without format options, and stores the credential a
 
 Credo signs with `Ed25519Signature2018` or `Ed25519Signature2020`, so the issuer needs an Ed25519 key. Each suite only accepts its own verification method type: a `did:key` has `Ed25519VerificationKey2018` methods, so use `Ed25519Signature2018`, with `proofPurpose: 'assertionMethod'`. Credo signs with the first verification method of the issuer DID that fits the proof type. Pass `jsonld: { verificationMethod }` to `acceptRequest` to choose another.
 
+Since Credo 0.7.3, the issuer checks this when it creates an offer or accepts a proposal, not only when it signs: the verification method must belong to a DID created in this agent and fit the proof type. The issuer DID must resolve at that point, so a `did:web` is resolved when you create the offer. If the check fails, Credo throws a `W3cJsonLdCredentialSigningNotSupportedError`, and you can reject the proposal or propose something else.
+
 Every `@context` must resolve. Credo bundles common contexts, such as the VC data model, the security suites, Open Badges 3.0 and schema.org, and fetches others over the network. [W3C Verifiable Credentials](../../credential-formats/w3c-vc.mdx) shows how to add your own.
 
 - Don't add `credentialStatus`. Credo can't check W3C credential status, so the holder fails to verify such a credential.

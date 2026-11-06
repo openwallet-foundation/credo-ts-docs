@@ -24,7 +24,7 @@ Askar is a native module, so it doesn't run in Expo Go. Use a [development build
 </TabItem>
 </Tabs>
 
-The platform package pins `@openwallet-foundation/askar-shared` to its own version, so install a single Askar version across your project. `@credo-ts/askar-to-drizzle-storage-migration` requires exactly `0.6.1`.
+The platform package pins `@openwallet-foundation/askar-shared` to its own version, so install a single Askar version across your project.
 
 ## Configure
 
@@ -122,6 +122,6 @@ With the [tenants module](../multi-tenancy.mdx), `multiWalletDatabaseScheme` dec
 | `exportStore({ exportToStore })` | Copies the open store to a new store, for example a backup with its own id, key and path. On SQLite, the target file must not exist yet. |
 | `importStore({ importFromStore })` | Copies another store, such as a backup, to the configured store location. Call `closeStore()` first. On SQLite, the configured file must not exist yet. |
 | `deleteStore()` | Deletes the store and all its data. |
-| `closeStore()`, `openStore()`, `provisionStore()`, `isStoreOpen` | Manual control. `initialize()` and `shutdown()` already do this. |
+| `closeStore()`, `openStore()`, `provisionStore()`, `isStoreOpen` | Manual control. `initialize()` and `shutdown()` already do this. When the store gets opened while `openStore()` or `provisionStore()` runs, the call closes its own store and throws `AskarStoreAlreadyRegisteredError`. |
 
 With `ProfilePerWallet` these methods act on the whole store, including all tenants, so they throw when you call them from a tenant agent.

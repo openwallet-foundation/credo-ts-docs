@@ -136,7 +136,7 @@ There is no key binding JWT for 2.0. The holder proves possession by signing a p
 :::
 
 - Selective disclosure for `vc+sd-jwt` is only on `W3cV2SdJwtCredentialService`. Wrap the result with `W3cV2EnvelopedVerifiableCredential` to put it in a presentation.
-- For `vp+jwt` and `vp+sd-jwt`, Credo signs with the `authentication` key of the `holder` DID. The DID must be created in this agent, with exactly one `authentication` key in its KMS. Without `holder`, Credo signs with the key in the credentials' `cnf`.
+- For `vp+jwt` and `vp+sd-jwt`, Credo signs with the `authentication` key of the `holder` DID. The DID must be created in this agent. If it has several `authentication` keys in its KMS, Credo uses the one the credentials are bound to with `cnf` (since 0.7.4). Without `holder`, Credo signs with the key in the credentials' `cnf`.
 - For `di_vp`, pass the `verificationMethod` and `cryptosuite`.
 
 ### Verify
@@ -158,9 +158,11 @@ The result has `presentation.validations` for the presentation itself and `crede
 :::
 
 :::warning[Trust in 2.0]
-- `trustedIssuers` on `verifyPresentation` isn't applied to the credentials in the presentation. Configure a [trusted issuers](../dids-and-trust/trust.mdx) callback on the agent instead.
-- For `di_vc` credentials, Credo checks neither trusted issuers nor `validFrom` and `validUntil`. Check them yourself.
+- Before Credo 0.7.4, `trustedIssuers` on `verifyPresentation` isn't applied to the credentials in the presentation, and Credo doesn't check trusted issuers for `di_vc` credentials. Update to 0.7.4 or later.
+- For `di_vc` credentials, Credo doesn't check `validFrom` and `validUntil`. Check them yourself.
 :::
+
+Since 0.7.4, verifying a 2.0 presentation also checks holder binding: a credential bound to a key with `cnf` must be presented with that key, and a key binding JWT on an SD-JWT credential must be for that presentation. A `cnf` that points to a DID URL must point to an `authentication` key. For every format, Credo rejects a signature from a key whose `controller` isn't the DID of the document that lists it.
 
 ## Status and revocation
 

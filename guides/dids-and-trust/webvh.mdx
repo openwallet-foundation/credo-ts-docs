@@ -60,7 +60,7 @@ A `did:webvh` can link resources, such as AnonCreds objects, at `<did>/resources
 const result = await agent.modules.webvh.resolveResource(`${did}/resources/${resourceId}`)
 ```
 
-Credo fetches the resource from `https://<domain>/resources/<resourceId>` (or under the path of the DID). The result has `content`, or `error` and `message` when the resource can't be resolved.
+Credo fetches the resource from `https://<domain>/resources/<resourceId>` (or under the path of the DID). The result has `content`, or `error` and `message` when the resource can't be resolved, for example when its proof doesn't use `eddsa-jcs-2022` or it's larger than the agent's [`fetchLimits`](../agent-setup/index.mdx#config).
 
 ## AnonCreds registry
 
@@ -69,4 +69,4 @@ Credo fetches the resource from `https://<domain>/resources/<resourceId>` (or un
 ```ts showLineNumbers title="agent.ts" webvh-anoncreds.ts section-1
 ```
 
-Registering a schema, credential definition, revocation registry definition or status list publishes nothing. The result has the object id, `<did>/resources/<resourceId>`, and in `registrationMetadata.attestedResource` a resource signed with the DID's `assertionMethod` key. Store it, and serve it as JSON at `https://<domain>/resources/<resourceId>`, so others can resolve the object.
+Registering a schema, credential definition, revocation registry definition or status list publishes nothing. The result has the object id, `<did>/resources/<resourceId>`, and in `registrationMetadata.attestedResource` a resource signed with an Ed25519 `assertionMethod` key of the DID. Attested resources need the `eddsa-jcs-2022` cryptosuite, so Credo doesn't sign with other key types. Store it, and serve it as JSON at `https://<domain>/resources/<resourceId>`, so others can resolve the object.

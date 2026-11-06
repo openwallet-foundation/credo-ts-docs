@@ -46,6 +46,8 @@ The holder accepts the offer without format options, and stores the credential a
 
 Credo signs with `Ed25519Signature2018` or `Ed25519Signature2020`, so the issuer needs an Ed25519 key. Each suite only accepts its own verification method type: a `did:key` has `Ed25519VerificationKey2018` methods, so use `Ed25519Signature2018`, with `proofPurpose: 'assertionMethod'`. Credo signs with the first verification method of the issuer DID that fits the proof type. Pass `jsonld: { verificationMethod }` to `acceptRequest` to choose another.
 
+Credo checks that it can sign before it creates an offer or accepts a proposal: the issuer DID must be created in this agent and resolve, and its key must fit the proof type. Otherwise the call throws a `W3cJsonLdCredentialSigningNotSupportedError` from `@credo-ts/core`.
+
 Every `@context` must resolve. Credo bundles common contexts, such as the VC data model, the security suites, Open Badges 3.0 and schema.org, and fetches others over the network. [W3C Verifiable Credentials](../../credential-formats/w3c-vc.mdx) shows how to add your own.
 
 - Don't add `credentialStatus`. Credo can't check W3C credential status, so the holder fails to verify such a credential.
@@ -94,7 +96,7 @@ The RFC 0809 format issues VCDM 1.1 and 2.0 credentials. The first `@context` en
 
 :::
 
-A VCDM 1.1 credential gets a Linked Data signature, as with the JSON-LD format. A VCDM 2.0 credential gets a Data Integrity proof with `eddsa-jcs-2022`, the only cryptosuite Credo registers, so the issuer needs an Ed25519 key. The exchange always starts with an offer.
+A VCDM 1.1 credential gets a Linked Data signature, as with the JSON-LD format. The holder verifies a received VCDM 1.1 credential without AnonCreds link secret binding before it stores it, including the [issuer trust](../../dids-and-trust/trust.mdx) check. A VCDM 2.0 credential gets a Data Integrity proof with `eddsa-jcs-2022`, the only cryptosuite Credo registers, so the issuer needs an Ed25519 key. The exchange always starts with an offer.
 
 Binding with `didCommSignedAttachmentBinding` works as in the RFC 0881 format, but the issuer doesn't derive `credentialSubject.id` from it. Put the holder's DID in the offer, or pass `credentialSubjectId` to `acceptRequest`; without a subject id, auto-accept doesn't issue the credential. The `anonCredsLinkSecretBinding` option issues AnonCreds credentials in W3C format, see [AnonCreds with DIDComm](./anoncreds.mdx#anoncreds-in-w3c-format).
 
