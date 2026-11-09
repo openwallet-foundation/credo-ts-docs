@@ -77,6 +77,7 @@ When the user picks a credential of the wallet, the operating system starts the 
 ```
 
 - `resolveDcApiRequest` rejects a request without an origin. It verifies reader authentication and matches the stored mdocs against each document request. `success` is `false` when they can't satisfy the request.
+- This example handles only `useCasesSource: 'allDocRequests'`, where every document request must be satisfied. Requests with explicit use cases or alternative documents need a selection UI based on `resolved.useCases` instead.
 - A signed request from a reader you don't trust throws. Trust readers through the agent's trust configuration with verification type `mdocReaderAuth`, or pass `trustedReaderCertificates`. `readerAuth.certificateChain` on each document request has the verified chain, leaf first, to show the verifier to the user.
 - `createDcApiResponse` discloses every requested element. Pass `elements` per credential to disclose fewer, for example to leave out the ones the user declined. It sends nothing: hand the returned `response` back to the platform.
 

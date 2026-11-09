@@ -61,7 +61,7 @@ If you use [Drizzle](../../agent-setup/storage/drizzle.mdx) with the `tenants` b
 
 ### DIDComm v1 protocols are removed
 
-The Connection protocol (RFC 0160), Issue Credential v1 (RFC 0036) and Present Proof v1 (RFC 0037) are removed. Use DID Exchange to create connections, and the v2 credential and proof protocols. The legacy Indy formats still work with the v2 protocols.
+The Connection protocol (RFC 0160), Issue Credential v1 (RFC 0036) and Present Proof v1 (RFC 0037) are removed. Use DID Exchange to create connections, and the v2 credential and proof protocols. The legacy Indy formats are also removed: use the `anoncreds` format with qualified identifiers.
 
 ```ts
 // 0.7
@@ -82,10 +82,10 @@ proofProtocols: [
 ],
 
 // 0.8
-import { LegacyIndyDidCommCredentialFormatService, LegacyIndyDidCommProofFormatService } from '@credo-ts/anoncreds/didcomm'
+import { AnonCredsDidCommCredentialFormatService, AnonCredsDidCommProofFormatService } from '@credo-ts/anoncreds/didcomm'
 
-credentialProtocols: [new DidCommCredentialV2Protocol({ credentialFormats: [legacyIndyCredentialFormatService] })],
-proofProtocols: [new DidCommProofV2Protocol({ proofFormats: [legacyIndyProofFormatService] })],
+credentialProtocols: [new DidCommCredentialV2Protocol({ credentialFormats: [new AnonCredsDidCommCredentialFormatService()] })],
+proofProtocols: [new DidCommProofV2Protocol({ proofFormats: [new AnonCredsDidCommProofFormatService()] })],
 ```
 
 `DidCommCredentialV1Protocol`, `DidCommProofV1Protocol`, their messages, and the `INDY_*_ATTACHMENT_ID` constants are removed too.
@@ -119,7 +119,7 @@ await agent.didcomm.oob.receiveInvitationFromUrl(invitationUrl, { label: 'Holder
 
 ### AnonCreds DIDComm imports
 
-The AnonCreds DIDComm formats are only exported from `@credo-ts/anoncreds/didcomm`: `AnonCredsDidCommCredentialFormatService`, `AnonCredsDidCommProofFormatService`, `AnonCredsLinkSecretBindingProvider`, the legacy Indy formats and their types.
+The AnonCreds DIDComm formats are only exported from `@credo-ts/anoncreds/didcomm`: `AnonCredsDidCommCredentialFormatService`, `AnonCredsDidCommProofFormatService`, `AnonCredsLinkSecretBindingProvider`, and their types. `LegacyIndyDidCommCredentialFormatService` and `LegacyIndyDidCommProofFormatService` are removed. Replace the `indy` API key with `anoncreds`; peers must support RFC 0771 attachments.
 
 ```ts
 // 0.7
@@ -152,6 +152,8 @@ For Hedera, the AnonCreds methods of `HederaLedgerService` are removed, and you 
 
 ### Indy identifier utilities
 
+`IndyVdrSovDidResolver` is removed. Remove it from `DidsModule.resolvers` and use `IndyVdrIndyDidResolver` with qualified `did:indy` identifiers for the configured network instead.
+
 Indy identifier utilities are removed from `@credo-ts/anoncreds`, with no compatibility re-exports:
 
 | Utilities | Import from in 0.8 |
@@ -169,6 +171,18 @@ Move the `IndyVdrRegisterSchema*`, `IndyVdrRegisterCredentialDefinition*`, `Indy
 ```
 
 The migration from storage version 0.4 to 0.5 keeps its own legacy identifier helpers. You don't need to install indy-vdr just to run that migration.
+
+### Shared JSON-LD configuration
+
+`W3cCredentialsModule` no longer takes document-loader options. Configure a standalone `JsonLdModule` under `jsonLd` instead; it supplies the shared loader for W3C data models 1.1 and 2.0:
+
+```ts
+import { defaultDocumentLoader, JsonLdModule } from '@credo-ts/core'
+
+const jsonLd = new JsonLdModule({
+  documentLoader: (agentContext) => defaultDocumentLoader(agentContext, customContexts),
+})
+```
 
 ### AnonCreds Data Integrity aliases are removed
 
