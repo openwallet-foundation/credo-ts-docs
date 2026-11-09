@@ -7,6 +7,8 @@ Hyperledger Indy networks, such as BCovrin Test and Sovrin, store DIDs and AnonC
 
 Use it when your ecosystem uses an Indy network, usually to issue or verify AnonCreds credentials.
 
+The root package provides DID and ledger operations without requiring `@credo-ts/anoncreds`. The optional AnonCreds registry and its identifier utilities are exported from `@credo-ts/indy-vdr/anoncreds`.
+
 ## Install
 
 <Tabs groupId="platform" queryString>
@@ -82,9 +84,20 @@ With `endorserMode: 'external'`, the registrar returns the state `action` with `
 
 ## AnonCreds registry
 
-`IndyVdrAnonCredsRegistry` registers and resolves AnonCreds schemas, credential definitions and revocation data on Indy. It's exported from the `@credo-ts/indy-vdr` root. Set up AnonCreds as described in [AnonCreds](../credential-formats/anoncreds.mdx), with the Indy registry:
+`IndyVdrAnonCredsRegistry` registers and resolves AnonCreds schemas, credential definitions and revocation data on Indy. It's exported from `@credo-ts/indy-vdr/anoncreds`. Install `@credo-ts/anoncreds` and its native binding as described in [AnonCreds](../credential-formats/anoncreds.mdx), then configure the Indy registry:
 
 ```ts showLineNumbers title="agent.ts" indy-vdr-anoncreds.ts section-1
 ```
 
 The registry needs `IndyVdrModule`. To register objects, the issuer needs a `did:indy` with write permission, and passes `endorserMode` and `endorserDid` in the registration options.
+
+### Identifier namespaces
+
+Import `didIndyRegex`, `parseIndyDid`, `isIndyDid`, and `getIndyNamespaceFromIndyDid` from `@credo-ts/indy-vdr`. `getIndyNamespaceFromIndyDid` accepts only bare `did:indy` DIDs: paths, queries, and fragments cause it to throw.
+
+For AnonCreds object IDs, use the corresponding parser from `@credo-ts/indy-vdr/anoncreds` and read its `namespace` property:
+
+```ts showLineNumbers title="identifiers.ts" indy-vdr-anoncreds.ts section-2
+```
+
+The subpath also exports the `didIndySchemaIdRegex`, `didIndyCredentialDefinitionIdRegex`, and `didIndyRevocationRegistryIdRegex` regexes; the `isDidIndySchemaId`, `isDidIndyCredentialDefinitionId`, and `isDidIndyRevocationRegistryId` checks; and the `ParsedIndySchemaId`, `ParsedIndyCredentialDefinitionId`, and `ParsedIndyRevocationRegistryId` result types.

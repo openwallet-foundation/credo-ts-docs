@@ -47,7 +47,7 @@ Back up your storage before you update. Credo doesn't create backups for you.
 
 ### AnonCreds registries
 
-`@credo-ts/cheqd`, `@credo-ts/hedera` and `@credo-ts/webvh` no longer install `@credo-ts/anoncreds`. It's now an optional peer dependency, so you only need it if you use their AnonCreds registry. In that case, install it yourself. The Hedera registry also needs `@hiero-did-sdk/anoncreds`. Pin it to `^0.1.8`: the latest version on npm (0.2.x) doesn't match the range Credo supports.
+`@credo-ts/indy-vdr`, `@credo-ts/cheqd`, `@credo-ts/hedera` and `@credo-ts/webvh` no longer install `@credo-ts/anoncreds`. It's now an optional peer dependency, so you only need it if you use their AnonCreds registry. In that case, install it yourself. DID-only use of Indy VDR no longer brings in AnonCreds and its DIDComm dependency. The Hedera registry also needs `@hiero-did-sdk/anoncreds`. Pin it to `^0.1.8`: the latest version on npm (0.2.x) doesn't match the range Credo supports.
 
 <InstallTabs packages="@credo-ts/anoncreds @hiero-did-sdk/anoncreds@^0.1.8" />
 
@@ -132,21 +132,43 @@ import { AnonCredsDidCommProofFormatService } from '@credo-ts/anoncreds/didcomm'
 
 ### AnonCreds registry imports
 
-The cheqd, Hedera and did:webvh AnonCreds registries are only exported from the `/anoncreds` subpath of their package. Install `@credo-ts/anoncreds` as described in [AnonCreds registries](#anoncreds-registries).
+The Indy VDR, cheqd, Hedera and did:webvh AnonCreds registries are only exported from the `/anoncreds` subpath of their package. Install `@credo-ts/anoncreds` as described in [AnonCreds registries](#anoncreds-registries).
 
 ```ts
 // 0.7
+import { IndyVdrAnonCredsRegistry } from '@credo-ts/indy-vdr'
 import { CheqdAnonCredsRegistry } from '@credo-ts/cheqd'
 import { HederaAnonCredsRegistry } from '@credo-ts/hedera'
 import { WebVhAnonCredsRegistry } from '@credo-ts/webvh'
 
 // 0.8
+import { IndyVdrAnonCredsRegistry } from '@credo-ts/indy-vdr/anoncreds'
 import { CheqdAnonCredsRegistry } from '@credo-ts/cheqd/anoncreds'
 import { HederaAnonCredsRegistry } from '@credo-ts/hedera/anoncreds'
 import { WebVhAnonCredsRegistry } from '@credo-ts/webvh/anoncreds'
 ```
 
 For Hedera, the AnonCreds methods of `HederaLedgerService` are removed, and you still need to register `HederaModule` next to the registry.
+
+### Indy identifier utilities
+
+Indy identifier utilities are removed from `@credo-ts/anoncreds`, with no compatibility re-exports:
+
+| Utilities | Import from in 0.8 |
+| --- | --- |
+| `didIndyRegex`, `parseIndyDid`, `isIndyDid`, `getIndyNamespaceFromIndyDid` | `@credo-ts/indy-vdr` |
+| `didIndySchemaIdRegex`, `didIndyCredentialDefinitionIdRegex`, `didIndyRevocationRegistryIdRegex` | `@credo-ts/indy-vdr/anoncreds` |
+| `isDidIndySchemaId`, `isDidIndyCredentialDefinitionId`, `isDidIndyRevocationRegistryId` | `@credo-ts/indy-vdr/anoncreds` |
+| `parseIndySchemaId`, `parseIndyCredentialDefinitionId`, `parseIndyRevocationRegistryId` and their `ParsedIndy*Id` result types | `@credo-ts/indy-vdr/anoncreds` |
+
+Move the `IndyVdrRegisterSchema*`, `IndyVdrRegisterCredentialDefinition*`, `IndyVdrRegisterRevocationRegistryDefinition*`, and `IndyVdrRegisterRevocationStatusList*` registration types from the indy-vdr root to `@credo-ts/indy-vdr/anoncreds` too.
+
+`getIndyNamespaceFromIndyDid` now accepts only bare `did:indy` DIDs. In 0.7 it also accepted AnonCreds object IDs; those now throw, as do other DID URLs. Replace object-ID calls with the matching parser's `namespace` property:
+
+```ts showLineNumbers title="identifiers.ts" indy-vdr-anoncreds.ts section-2
+```
+
+The migration from storage version 0.4 to 0.5 keeps its own legacy identifier helpers. You don't need to install indy-vdr just to run that migration.
 
 ### AnonCreds Data Integrity aliases are removed
 
