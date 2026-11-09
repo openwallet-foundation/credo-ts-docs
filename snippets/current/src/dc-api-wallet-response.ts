@@ -36,10 +36,7 @@ export async function createIsoMdocResponse(
   origin: string
 ): Promise<IsoMdocResponseOptions> {
   const resolved = await agent.mdoc.resolveDcApiRequest({ request: data, origin })
-  if (!resolved.success) throw new Error('No matching mdoc')
-  if (resolved.useCasesSource !== 'allDocRequests') {
-    throw new Error('This example only supports requests that require every document')
-  }
+  if (!resolved.success || resolved.docRequestsAsAlternatives) throw new Error('No matching mdoc')
 
   const { response } = await agent.mdoc.createDcApiResponse({
     resolvedRequest: resolved,

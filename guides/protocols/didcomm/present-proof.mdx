@@ -15,6 +15,7 @@ The proofs module that `DidCommModule` enables by default runs Present Proof v2 
 | Format | Format service | Import from | Key | Presents |
 | --- | --- | --- | --- | --- |
 | AnonCreds | `AnonCredsDidCommProofFormatService` | `@credo-ts/anoncreds/didcomm` | `anoncreds` | AnonCreds credentials |
+| AnonCreds with Hyperledger Indy attachments | `LegacyIndyDidCommProofFormatService` | `@credo-ts/anoncreds/didcomm` | `indy` | AnonCreds credentials |
 | DIF Presentation Exchange ([RFC 0510](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0510-dif-pres-exch-attach)) | `DidCommDifPresentationExchangeProofFormatService` | `@credo-ts/didcomm` | `presentationExchange` | W3C VCDM 1.1 credentials as JSON-LD (`ldp_vp`) or JWT (`jwt_vp`) presentations, and AnonCreds credentials issued in W3C format |
 
 Use `anoncreds` for AnonCreds credentials and `presentationExchange` for W3C credentials. Present Proof doesn't support SD-JWT VC, mdoc or W3C VCDM 2.0 credentials, including the VCDM 2.0 credentials you can receive over DIDComm. Present SD-JWT VC, mdoc and VCDM 2.0 SD-JWT credentials with [OpenID4VC](../openid4vc/index.mdx) instead.

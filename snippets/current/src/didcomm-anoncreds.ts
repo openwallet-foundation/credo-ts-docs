@@ -9,6 +9,8 @@ import { AnonCredsModule } from '@credo-ts/anoncreds'
 import {
   AnonCredsDidCommCredentialFormatService,
   AnonCredsDidCommProofFormatService,
+  LegacyIndyDidCommCredentialFormatService,
+  LegacyIndyDidCommProofFormatService,
 } from '@credo-ts/anoncreds/didcomm'
 import { CheqdDidRegistrar, CheqdDidResolver, CheqdModule } from '@credo-ts/cheqd'
 import { CheqdAnonCredsRegistry } from '@credo-ts/cheqd/anoncreds'
@@ -50,7 +52,10 @@ function createAgent(port: number, storage: ExampleStorage) {
           autoAcceptCredentials: DidCommAutoAcceptCredential.ContentApproved,
           credentialProtocols: [
             new DidCommCredentialV2Protocol({
-              credentialFormats: [new AnonCredsDidCommCredentialFormatService()],
+              credentialFormats: [
+                new AnonCredsDidCommCredentialFormatService(),
+                new LegacyIndyDidCommCredentialFormatService(),
+              ],
             }),
           ],
         },
@@ -58,7 +63,7 @@ function createAgent(port: number, storage: ExampleStorage) {
           autoAcceptProofs: DidCommAutoAcceptProof.ContentApproved,
           proofProtocols: [
             new DidCommProofV2Protocol({
-              proofFormats: [new AnonCredsDidCommProofFormatService()],
+              proofFormats: [new AnonCredsDidCommProofFormatService(), new LegacyIndyDidCommProofFormatService()],
             }),
           ],
         },

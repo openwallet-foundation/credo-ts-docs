@@ -10,7 +10,12 @@ import {
   PeerDidResolver,
   WebDidResolver,
 } from '@credo-ts/core'
-import { IndyVdrIndyDidRegistrar, IndyVdrIndyDidResolver, IndyVdrModule } from '@credo-ts/indy-vdr'
+import {
+  IndyVdrIndyDidRegistrar,
+  IndyVdrIndyDidResolver,
+  IndyVdrModule,
+  IndyVdrSovDidResolver,
+} from '@credo-ts/indy-vdr'
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
 
 const indyVdrModules = {
@@ -33,6 +38,7 @@ const indyVdrModules = {
       new JwkDidResolver(),
       new WebDidResolver(),
       new IndyVdrIndyDidResolver(),
+      new IndyVdrSovDidResolver(),
     ],
   }),
 }

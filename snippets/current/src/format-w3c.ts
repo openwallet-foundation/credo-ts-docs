@@ -8,13 +8,13 @@ import {
   ClaimFormat,
   DidKey,
   defaultDocumentLoader,
-  JsonLdModule,
   JsonTransformer,
   type KeyDidCreateOptions,
   purposes,
   utils,
   W3cCredential,
   W3cCredentialRecord,
+  W3cCredentialsModule,
   W3cJsonLdVerifiablePresentation,
   w3cDate,
 } from '@credo-ts/core'
@@ -34,7 +34,7 @@ function createAgent(storage: ExampleStorage) {
     modules: {
       ...storage, // Storage and key management, see Agent setup
       // Serve your own JSON-LD contexts instead of fetching them from the network
-      jsonLd: new JsonLdModule({
+      w3cCredentials: new W3cCredentialsModule({
         documentLoader: (agentContext) =>
           defaultDocumentLoader(agentContext, { 'https://example.com/contexts/membership/v1': membershipContext }),
       }),
