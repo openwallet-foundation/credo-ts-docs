@@ -35,6 +35,14 @@ The wallet gets a credential offer URI from a QR code or a link. `resolveCredent
 
 Use the issuer metadata and `offeredCredentialConfigurations` to show the user who offers what. Display names, colors and claim labels are under `credential_metadata` of each configuration, or at its top level for issuers that implement draft 15. If `txCodeRequest` is defined, the issuer sent the user a code (by email, for example), and `description`, `length` and `input_mode` tell you what to ask for.
 
+If the issuer also serves signed metadata, Credo uses it, and fails when it doesn't trust the signer. Trust the signer like a credential issuer (see [Trusted issuers](../../dids-and-trust/trust.mdx)), or change the policy with `holder: { signedMetadata }` in the `OpenId4VcModule` options, or per call with the `signedMetadata` option of `resolveCredentialOffer` and `resolveIssuerMetadata`:
+
+| `signedMetadata` | Behavior |
+| --- | --- |
+| `preferred` (default) | Use signed metadata if the issuer serves it, else unsigned metadata. |
+| `required` | Only accept signed metadata. |
+| `disallowed` | Only fetch unsigned metadata. |
+
 ## Request an access token
 
 In the pre-authorized code flow, exchange the code from the offer for an access token, with the transaction code the user entered:

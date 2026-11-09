@@ -55,7 +55,7 @@ An agent that issues and verifies credentials:
 ```ts showLineNumbers title="agent.ts" openid4vc-setup.ts section-1
 ```
 
-Register the module under the key `openid4vc`, so it's available as `agent.openid4vc`. `issuer` and `verifier` are optional and turn on that role. The holder is always available, so a wallet registers the module without options:
+Register the module under the key `openid4vc`, so it's available as `agent.openid4vc`. `issuer` and `verifier` are optional and turn on that role. The holder is always available, so a wallet registers the module without options, or only with `holder` options (see [Receiving credentials](./receive.mdx#resolve-the-offer)):
 
 ```ts
 openid4vc: new OpenId4VcModule(),

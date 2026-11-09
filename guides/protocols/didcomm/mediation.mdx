@@ -102,7 +102,7 @@ Without a strategy, Credo asks the mediator which pickup protocols it supports a
 | --- | --- | --- |
 | `mediatorPollingInterval` | `5000` | Milliseconds between polls for `PickUpV1` and `PickUpV2`. |
 | `maximumMessagePickup` | `10` | Messages per batch when polling. |
-| `baseMediatorReconnectionIntervalMs` | `100` | First delay before reconnecting a closed WebSocket. It doubles after each attempt. |
+| `baseMediatorReconnectionIntervalMs` | `100` | First delay before reconnecting a closed WebSocket. It doubles after each failed attempt, with up to 50% random variation, and goes back to this value once pickup is set up again. |
 | `maximumMediatorReconnectionIntervalMs` | no limit | Longest delay between reconnection attempts. |
 
 ## Control message pickup
@@ -118,6 +118,8 @@ To fetch queued messages once, for example in a background task, use the message
 
 ```ts showLineNumbers title="wallet.ts" didcomm-mediation.ts section-6
 ```
+
+With `awaitCompletion`, `pickupMessages` only accepts the mediator's replies in its own thread. Against a mediator that doesn't thread its `status` and `batch` replies, it times out.
 
 ## Keylist updates
 

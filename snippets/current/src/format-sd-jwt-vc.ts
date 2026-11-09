@@ -91,12 +91,11 @@ const issuerKey = await issuer.kms.createKey({ type: { kty: 'EC', crv: 'P-256' }
 const issuerCertificate = await issuer.x509.createCertificate({
   authorityKey: PublicJwk.fromPublicJwk(issuerKey.publicJwk),
   issuer: { commonName: 'Example Issuer', countryName: 'NL' },
-  extensions: { subjectAlternativeName: { name: [{ type: 'dns', value: 'issuer.example.com' }] } },
 })
 
 const x509Credential = await issuer.sdJwtVc.sign({
   payload: { vct: 'https://credentials.example.com/identity', given_name: 'Jane' },
-  // `issuer` is optional. When set, it must match a SAN of the leaf certificate.
+  // `issuer` is optional and sets the `iss` claim
   issuer: { method: 'x5c', x5c: [issuerCertificate], issuer: 'https://issuer.example.com' },
   holder: { method: 'jwk', jwk: holderJwk },
   disclosureFrame: { _sd: ['given_name'] },

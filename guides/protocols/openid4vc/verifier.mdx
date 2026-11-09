@@ -84,6 +84,8 @@ Each request creates a verification session:
 | `ResponseVerified` | The wallet responded and all presentations passed verification. |
 | `Error` | Verification failed, or the user declined and the wallet sent an error response. `errorMessage` says why. |
 
+On `ResponseVerified`, the event also has the verified response as `verifiedAuthorizationResponse`, the same result as in [Read the verified result](#read-the-verified-result). Check `payload.state` to get it typed.
+
 A verifier website usually shows the QR code and polls its backend, which checks the session with `getVerificationSessionById`.
 
 ## Read the verified result

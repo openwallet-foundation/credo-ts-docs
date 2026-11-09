@@ -41,7 +41,7 @@ OpenID4VP can present the same mdoc, and the device response inside it has the s
 | Encoding | CBOR | JSON and JWT |
 | Request | A device request with document types and data element identifiers | An authorization request with a DCQL query |
 | Credential formats | mdoc | SD-JWT VC, mdoc and W3C VCs |
-| Alternatives | Can't be expressed. Several document requests can mean all of them or any one. | DCQL credential sets and claim sets |
+| Alternatives | Use cases and alternative elements, added by ISO/IEC TS 23220-4 and the second edition of ISO/IEC 18013-5. Without them, several document requests can mean all of them or any one. | DCQL credential sets and claim sets |
 | Verifier identity | Reader certificate, optional | Client identifier, usually with a signed request |
 | Credo API | `agent.mdoc` and `MdocDeviceResponse` in `@credo-ts/core` | `agent.openid4vc` in `@credo-ts/openid4vc` |
 
