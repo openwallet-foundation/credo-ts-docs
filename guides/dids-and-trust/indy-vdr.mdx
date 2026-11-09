@@ -1,9 +1,9 @@
 ---
 title: Indy VDR
-description: Connect to Hyperledger Indy networks with @credo-ts/indy-vdr to resolve did:indy and did:sov, register did:indy DIDs with an endorser, and use Indy as an AnonCreds registry.
+description: Connect to Hyperledger Indy networks with @credo-ts/indy-vdr to resolve and register did:indy DIDs with an endorser, and use Indy as an AnonCreds registry.
 ---
 
-Hyperledger Indy networks, such as BCovrin Test and Sovrin, store DIDs and AnonCreds objects. `@credo-ts/indy-vdr` connects to one or more Indy networks through [Indy VDR](https://github.com/hyperledger/indy-vdr). It resolves `did:indy` and `did:sov`, registers `did:indy` DIDs, and provides an AnonCreds registry.
+Hyperledger Indy networks, such as BCovrin Test and Sovrin, store DIDs and AnonCreds objects. `@credo-ts/indy-vdr` connects to one or more Indy networks through [Indy VDR](https://github.com/hyperledger/indy-vdr). It resolves and registers `did:indy` DIDs, and provides an AnonCreds registry.
 
 Use it when your ecosystem uses an Indy network, usually to issue or verify AnonCreds credentials.
 
@@ -28,7 +28,7 @@ This version of Credo needs version 0.3 of the native Indy VDR packages: `@credo
 
 ## Configure
 
-Register `IndyVdrModule` with the networks you use, and add the Indy registrar and resolvers to `DidsModule`:
+Register `IndyVdrModule` with the networks you use, and add the Indy registrar and resolver to `DidsModule`:
 
 ```ts showLineNumbers title="agent.ts" indy-vdr-setup.ts section-1
 ```
@@ -49,11 +49,11 @@ Pass the `indyVdr` object itself: unlike Askar and AnonCreds, Indy VDR has no `N
 | `connectOnStartup` | Connect when the agent starts instead of on first use. Defaults to `false`. |
 | `transactionAuthorAgreement` | `{ version, acceptanceMechanism }`, required to write to networks with a transaction author agreement. `acceptanceMechanism` is a label from the network's acceptance mechanism list. |
 
-`IndyVdrModule` doesn't register the DID registrar and resolvers itself, so list them in `DidsModule`. Your lists replace the default registrars and resolvers, see [Configure DID methods](./index.mdx#configure-did-methods).
+`IndyVdrModule` doesn't register the DID registrar and resolver itself, so list them in `DidsModule`. Your lists replace the default registrars and resolvers, see [Configure DID methods](./index.mdx#configure-did-methods).
 
-## Resolve did:indy and did:sov
+## Resolve did:indy
 
-With the resolvers registered, `agent.dids.resolve` handles both methods. For `did:indy`, Credo uses the network whose `indyNamespace` matches the DID. A `did:sov` or unqualified Indy identifier doesn't say which network it's on, so Credo queries all networks and prefers a production network when the DID exists on more than one.
+With the resolver registered, `agent.dids.resolve` handles `did:indy`. Credo uses the network whose `indyNamespace` matches the DID. `did:sov` and unqualified Indy identifiers aren't supported.
 
 ## Import an existing DID
 

@@ -152,6 +152,8 @@ For Hedera, the AnonCreds methods of `HederaLedgerService` are removed, and you 
 
 ### Indy identifier utilities
 
+`IndyVdrSovDidResolver` is removed. Remove it from `DidsModule.resolvers` and use `IndyVdrIndyDidResolver` with qualified `did:indy` identifiers for the configured network instead.
+
 Indy identifier utilities are removed from `@credo-ts/anoncreds`, with no compatibility re-exports:
 
 | Utilities | Import from in 0.8 |
@@ -169,6 +171,18 @@ Move the `IndyVdrRegisterSchema*`, `IndyVdrRegisterCredentialDefinition*`, `Indy
 ```
 
 The migration from storage version 0.4 to 0.5 keeps its own legacy identifier helpers. You don't need to install indy-vdr just to run that migration.
+
+### Shared JSON-LD configuration
+
+`W3cCredentialsModule` no longer takes document-loader options. Configure a standalone `JsonLdModule` under `jsonLd` instead; it supplies the shared loader for W3C data models 1.1 and 2.0:
+
+```ts
+import { defaultDocumentLoader, JsonLdModule } from '@credo-ts/core'
+
+const jsonLd = new JsonLdModule({
+  documentLoader: (agentContext) => defaultDocumentLoader(agentContext, customContexts),
+})
+```
 
 ### AnonCreds Data Integrity aliases are removed
 
