@@ -15,3 +15,23 @@ allowBuilds:
   koffi: false
   protobufjs: false
   secp256k1: false
+
+minimumReleaseAgeExclude:
+  - '@credo-ts/action-menu@0.8.0-alpha-20261109142258'
+  - '@credo-ts/anoncreds@0.8.0-alpha-20261109142258'
+  - '@credo-ts/askar-to-drizzle-storage-migration@0.8.0-alpha-20261109142258'
+  - '@credo-ts/askar@0.8.0-alpha-20261109142258'
+  - '@credo-ts/cheqd@0.8.0-alpha-20261109142258'
+  - '@credo-ts/core@0.8.0-alpha-20261109142258'
+  - '@credo-ts/didcomm@0.8.0-alpha-20261109142258'
+  - '@credo-ts/drizzle-storage@0.8.0-alpha-20261109142258'
+  - '@credo-ts/drpc@0.8.0-alpha-20261109142258'
+  - '@credo-ts/hedera@0.8.0-alpha-20261109142258'
+  - '@credo-ts/indy-vdr@0.8.0-alpha-20261109142258'
+  - '@credo-ts/node@0.8.0-alpha-20261109142258'
+  - '@credo-ts/openid4vc@0.8.0-alpha-20261109142258'
+  - '@credo-ts/question-answer@0.8.0-alpha-20261109142258'
+  - '@credo-ts/react-native@0.8.0-alpha-20261109142258'
+  - '@credo-ts/redis-cache@0.8.0-alpha-20261109142258'
+  - '@credo-ts/tenants@0.8.0-alpha-20261109142258'
+  - '@credo-ts/webvh@0.8.0-alpha-20261109142258'

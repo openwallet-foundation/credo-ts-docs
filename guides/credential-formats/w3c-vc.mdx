@@ -36,7 +36,7 @@ Everything on this page is in `@credo-ts/core`, and both modules are default mod
 
 ### JSON-LD contexts
 
-Every property of a JSON-LD credential must be defined in one of its `@context`s, and signing and verifying load those contexts through a document loader. The default loader has copies of the common contexts (credentials v1 and v2, the security suites, DIDs, ODRL, schema.org, Open Badges 3.0), resolves DIDs, and fetches every other URL from the network. Pass your own contexts to `defaultDocumentLoader` as shown above, or set your own `documentLoader` to control what is fetched. Register `W3cCredentialsModule` under the `w3cCredentials` key to replace the default module. Data model 2.0 uses the same document loader.
+Every property of a JSON-LD credential must be defined in one of its `@context`s, and signing and verifying load those contexts through a document loader. The default loader has copies of the common contexts (credentials v1 and v2, the security suites, DIDs, ODRL, schema.org, Open Badges 3.0), resolves DIDs, and fetches every other URL from the network. Pass your own contexts to `defaultDocumentLoader` as shown above, or set your own `documentLoader` on `JsonLdModule` to control what is fetched. Register it under the `jsonLd` key. Both data model 1.1 and 2.0 use this shared configuration.
 
 ## Data model 1.1
 

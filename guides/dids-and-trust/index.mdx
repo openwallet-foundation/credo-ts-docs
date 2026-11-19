@@ -39,7 +39,6 @@ As a rule of thumb: use X.509 certificates for OpenID4VC, and DIDs for DIDComm a
 | `did:webvh` | Yes | Yes | No | Yes | [`@credo-ts/webvh`](./webvh.mdx) |
 | `did:cheqd` | Yes | Yes | Yes | Yes | [`@credo-ts/cheqd`](./cheqd.mdx) |
 | `did:indy` | Yes | No | No | Yes | [`@credo-ts/indy-vdr`](./indy-vdr.mdx) |
-| `did:sov` | No | No | No | Yes | [`@credo-ts/indy-vdr`](./indy-vdr.mdx) |
 | `did:hedera` | Yes | Yes | Yes | Yes | [`@credo-ts/hedera`](./hedera.mdx) |
 
 ## Create a DID
@@ -69,7 +68,7 @@ To use a key that's already in the KMS, pass its `keyId` instead of `createKey`:
 
 Credo parses DID URLs strictly, as DID Core 1.0 defines them, and returns `invalidDid` for DIDs with matrix parameters (`;key=value`), unencoded characters or invalid percent escapes. For `did:web`, `notFound` means an HTTP 404 or a document whose `id` isn't the DID; network, HTTP and JSON failures return `resolutionError`.
 
-Credo caches resolved documents for 5 minutes for methods whose resolver allows it (`did:web`, `did:webvh`, `did:cheqd`, `did:indy`, `did:sov` and `did:hedera`). Pass `{ useCache: false }` to `resolve` to skip the cache, or `cacheDurationInSeconds` to change the duration. For DIDs that you created or imported, these resolvers (except `did:sov`) return the document from your `DidRecord` instead of fetching it.
+Credo caches resolved documents for 5 minutes for methods whose resolver allows it (`did:web`, `did:webvh`, `did:cheqd`, `did:indy` and `did:hedera`). Pass `{ useCache: false }` to `resolve` to skip the cache, or `cacheDurationInSeconds` to change the duration. For DIDs that you created or imported, these resolvers return the document from your `DidRecord` instead of fetching it.
 
 ## Import a DID
 
