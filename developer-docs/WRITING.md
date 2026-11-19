@@ -13,6 +13,12 @@ A change that applies to both versions goes into both trees. Each tree describes
 
 When a new version is released, snapshot it with `pnpm docusaurus docs:version <version>`, copy `snippets/current` to `snippets/<version>`, and update `lastVersion` and `versions` in `docusaurus.config.ts` and the npm ranges in `src/versions.ts`.
 
+## Markdown URLs
+
+Every documentation page has a Markdown copy at its URL without a trailing slash, followed by `.md`. For example, `/guides/protocols/openid4vc/` uses `/guides/protocols/openid4vc.md`. Copy page, View as Markdown and the AI actions all use this URL.
+
+The Markdown files are generated in `postBuild`, not by the development server.
+
 ## Snippets
 
 Code examples live in TypeScript files under `snippets/<version>/src/`, so they are type-checked (`pnpm types:check`) and can be run. A code block pulls a file, or a section of it, in at build time:
