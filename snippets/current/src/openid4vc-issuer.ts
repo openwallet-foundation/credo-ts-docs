@@ -139,3 +139,10 @@ issuer.events.on<OpenId4VcIssuanceSessionStateChangedEvent>(
   }
 )
 // end-section-6
+
+// start-section-7
+await issuer.openid4vc.issuer.rotateAccessTokenSigningKey(issuerRecord.issuerId)
+
+// Once the access tokens signed with the previous key have expired
+await issuer.openid4vc.issuer.deletePreviousAccessTokenSigningKeys(issuerRecord.issuerId)
+// end-section-7

@@ -99,4 +99,16 @@ console.log(`The multi-use invitation created ${multiUseConnections.length} conn
 
 for (const connection of multiUseConnections) await acme.didcomm.connections.returnWhenIsConnected(connection.id)
 
+// start-section-8
+// deleteAssociatedKeys requires deleteAfterHangup
+await bob.didcomm.connections.hangup({
+  connectionId: bobToAcme.id,
+  deleteAfterHangup: true,
+  deleteAssociatedKeys: true,
+})
+
+await acme.didcomm.connections.deleteById(acmeToBob.id, { deleteAssociatedKeys: true })
+await acme.didcomm.oob.deleteById(outOfBandRecord.id, { deleteAssociatedKeys: true })
+// end-section-8
+
 for (const agent of [acme, bob, carol, dave]) await agent.shutdown()
