@@ -150,14 +150,7 @@ const sidebars = {
         type: 'doc',
         id: 'dids-and-trust/index',
       },
-      items: [
-        'dids-and-trust/x509',
-        'dids-and-trust/trust',
-        'dids-and-trust/cheqd',
-        'dids-and-trust/indy-vdr',
-        'dids-and-trust/hedera',
-        'dids-and-trust/webvh',
-      ],
+      items: ['dids-and-trust/x509', 'dids-and-trust/trust', 'dids-and-trust/webvh'],
     },
     'supported-standards',
     {
@@ -187,7 +180,7 @@ const sidebars = {
         type: 'doc',
         id: 'extensions/index',
       },
-      items: ['extensions/rest', 'extensions/react-hooks', 'extensions/redux-store', 'extensions/push-notifications'],
+      items: ['extensions/cheqd', 'extensions/hedera', 'extensions/indy-vdr'],
     },
   ],
 }

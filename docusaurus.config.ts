@@ -40,14 +40,26 @@ const movedPages: Record<string, string> = {
   '/protocols/mdoc/dc-api': '/protocols/dc-api',
 }
 
+// Pages that moved or were removed in the 0.8 docs. The 0.7 docs keep them at their old paths.
+const nextMovedPages: Record<string, string> = {
+  '/dids-and-trust/cheqd': '/extensions/cheqd',
+  '/dids-and-trust/hedera': '/extensions/hedera',
+  '/dids-and-trust/indy-vdr': '/extensions/indy-vdr',
+  '/extensions/rest': '/extensions',
+  '/extensions/react-hooks': '/extensions',
+  '/extensions/redux-store': '/extensions',
+  '/extensions/push-notifications': '/extensions',
+}
+
 const redirects = [
   { from: '/guides/0.5', to: '/guides' },
   { from: '/guides/0.6', to: '/guides' },
   ...Object.entries(movedPages).flatMap(([from, to]) => [
     { from: `/guides${from}`, to: `/guides${to}` },
     { from: `/guides/0.5${from}`, to: `/guides${to}` },
-    { from: `/guides/next${from}`, to: `/guides/next${to}` },
+    { from: `/guides/next${from}`, to: `/guides/next${nextMovedPages[to] ?? to}` },
   ]),
+  ...Object.entries(nextMovedPages).map(([from, to]) => ({ from: `/guides/next${from}`, to: `/guides/next${to}` })),
 ]
 
 const config: Config = {

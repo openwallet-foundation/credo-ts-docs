@@ -96,7 +96,7 @@ if (resourceResult.resourceState.state !== 'finished') throw new Error('Creating
 // By resource id
 const byId = await agent.modules.cheqd.resolveResource(`${did}/resources/${resourceId}`)
 
-// By name and type: the latest version, or add &version=1.0 or &resourceVersionTime=<unix time>
+// By name and type: the latest version, or add &resourceVersion=1.0 or &resourceVersionTime=<unix time>
 const byName = await agent.modules.cheqd.resolveResource(`${did}?resourceName=issuer-logo&resourceType=Logo`)
 // end-section-6
 console.log(byId, byName)
