@@ -3,7 +3,7 @@ title: Indy VDR
 description: Connect to Hyperledger Indy networks with @credo-ts/indy-vdr to resolve and register did:indy DIDs with an endorser, and use Indy as an AnonCreds registry.
 ---
 
-Hyperledger Indy networks, such as BCovrin Test and Sovrin, store DIDs and AnonCreds objects. `@credo-ts/indy-vdr` connects to one or more Indy networks through [Indy VDR](https://github.com/hyperledger/indy-vdr). It resolves and registers `did:indy` DIDs, and provides an AnonCreds registry. The package is maintained in [credo-ts-ext](./index.md).
+Hyperledger Indy networks, such as BCovrin Test and CANdy, store DIDs and AnonCreds objects. `@credo-ts/indy-vdr` connects to one or more Indy networks through [Indy VDR](https://github.com/hyperledger/indy-vdr). It resolves and registers `did:indy` DIDs, and provides an AnonCreds registry. The package is maintained in [credo-ts-ext](./index.md).
 
 Use it when your ecosystem uses an Indy network, usually to issue or verify AnonCreds credentials.
 
@@ -88,7 +88,7 @@ Pass the `indyVdr` object itself: unlike Askar and AnonCreds, Indy VDR has no `N
 
 ## Resolve a did:indy
 
-With the resolver registered, `agent.dids.resolve` uses the network whose `indyNamespace` matches the DID. `did:sov` and unqualified Indy DIDs aren't supported: use the `did:indy` form, such as `did:indy:sovrin:<identifier>`.
+With the resolver registered, `agent.dids.resolve` uses the network whose `indyNamespace` matches the DID. `did:sov` and unqualified Indy DIDs aren't supported: use the `did:indy` form, such as `did:indy:bcovrin:test:<identifier>`.
 
 ## Import an existing DID
 
