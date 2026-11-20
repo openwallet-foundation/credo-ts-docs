@@ -82,6 +82,8 @@ An OpenID4VCI issuer keeps its access token signing key and its credential reque
 
 `rotateCredentialRequestEncryptionKey` and `deletePreviousCredentialRequestEncryptionKeys` do the same for the encryption keys. A previous key still verifies access tokens or decrypts requests until you delete it, but the issuer no longer advertises it. Pass `deleteFromKms: false` to remove the previous keys from the issuer and leave them in the KMS.
 
+Use these methods to replace or remove a key, not `updateIssuerMetadata`. `updateIssuerMetadata` replaces every field of the issuer, so pass all of them on each update, including the `keys` and `previousKeys` of `credentialRequestEncryption`. A key you leave out no longer decrypts requests and stays in the KMS.
+
 ## Keys you delete yourself
 
 Credo never deletes a key you created or configured, unless one of the options above covers it. Delete these with `agent.kms.deleteKey({ keyId })`:
@@ -91,7 +93,7 @@ Credo never deletes a key you created or configured, unless one of the options a
 | The holder DPoP key that an OpenID4VCI flow returns as `dpop` | After the last request of the flow |
 | [Wallet and key attestation](../protocols/openid4vc/authorization.mdx#wallet-and-key-attestations) keys | When you replace the attestation |
 | The `dpop.keyId` you configure for a chained authorization server | Once no open issuance session uses it |
-| Credential request encryption keys you remove from the issuer with `updateIssuerMetadata` | Once no wallet encrypts to them |
+| Credential request encryption keys you left out of an `updateIssuerMetadata` call, for example to turn request encryption off | Once no wallet encrypts to them |
 | Keys behind [X.509 certificates](../dids-and-trust/x509.mdx) | When the certificate is replaced and nothing signs with the key |
 | Keys of a [DID](../dids-and-trust/index.mdx) you created | With `agent.dids.deleteCreatedDid({ did, deleteAssociatedKeys: true })`, which deletes the DID record and its keys. It doesn't deactivate the DID, so do that first when the DID method supports it |
 | A tenant's keys on a backend other than Askar | Before you delete the tenant. `deleteTenantById` removes the tenant's keys on Askar only |
