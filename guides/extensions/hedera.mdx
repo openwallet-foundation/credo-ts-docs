@@ -3,7 +3,7 @@ title: Hedera
 description: Create, update, deactivate and resolve did:hedera DIDs, and use Hedera as an AnonCreds registry with @credo-ts/hedera.
 ---
 
-[Hedera](https://hedera.com) is a public network whose Consensus Service (HCS) stores `did:hedera` DID documents and AnonCreds objects. `@credo-ts/hedera` adds the `did:hedera` method and an AnonCreds registry, built on the [Hiero DID SDK](https://github.com/hiero-ledger/hiero-did-sdk-js). Writes cost HBAR, paid by an operator account that you configure.
+[Hedera](https://hedera.com) is a public network whose Consensus Service (HCS) stores `did:hedera` DID documents and AnonCreds objects. `@credo-ts/hedera` adds the `did:hedera` method and an AnonCreds registry, built on the [Hiero DID SDK](https://github.com/hiero-ledger/hiero-did-sdk-js). Writes cost HBAR, paid by an operator account that you configure. The package is maintained in [credo-ts-ext](./index.md).
 
 Use `did:hedera` when your ecosystem uses Hedera, for DIDs or as an AnonCreds registry.
 
@@ -30,7 +30,7 @@ Spread these modules into the `modules` of your agent. Each network takes:
 | `operatorId` | Account id of the operator account, such as `0.0.12345`. |
 | `operatorKey` | Private key of the operator account. |
 
-`HederaModule` doesn't register the DID registrar and resolver itself, so list them in `DidsModule`. Your lists replace the default registrars and resolvers, see [Configure DID methods](./index.mdx#configure-did-methods).
+`HederaModule` doesn't register the DID registrar and resolver itself, so list them in `DidsModule`. Your lists replace the default registrars and resolvers, see [Configure DID methods](../dids-and-trust/index.mdx#configure-did-methods).
 
 ## Create a did:hedera
 

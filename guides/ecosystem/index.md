@@ -9,7 +9,7 @@ Credo is a project of the [OpenWallet Foundation](https://openwallet.foundation)
 
 - [credo-ts](https://github.com/openwallet-foundation/credo-ts): the framework, published as the `@credo-ts/*` packages.
 - [credo-ts-docs](https://github.com/openwallet-foundation/credo-ts-docs): this documentation.
-- [credo-ts-ext](https://github.com/openwallet-foundation/credo-ts-ext): extension packages, such as a REST API, React hooks and push notifications. They haven't been updated for recent Credo versions. See [Extensions](../extensions/index.md).
+- [credo-ts-ext](https://github.com/openwallet-foundation/credo-ts-ext): the cheqd, Hedera and Indy VDR ledger packages. See [Extensions](../extensions/index.md).
 
 ## Libraries Credo builds on
 

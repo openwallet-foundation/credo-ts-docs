@@ -3,9 +3,9 @@ title: cheqd
 description: Create, update and deactivate did:cheqd DIDs, publish DID-linked resources, and use cheqd as an AnonCreds registry with @credo-ts/cheqd.
 ---
 
-[cheqd](https://cheqd.io) is a Cosmos-based network for DIDs and DID-linked resources: data such as logos, schemas or status lists, published under a DID and controlled with its keys. `@credo-ts/cheqd` adds the `did:cheqd` method, DID-linked resources and an AnonCreds registry. Ledger writes cost CHEQ tokens, paid by a Cosmos account that you configure.
+[cheqd](https://cheqd.io) is a Cosmos-based network for DIDs and DID-linked resources: data such as logos, schemas or status lists, published under a DID and controlled with its keys. `@credo-ts/cheqd` adds the `did:cheqd` method, DID-linked resources and an AnonCreds registry. Ledger writes cost CHEQ tokens, paid by a Cosmos account that you configure. The package is maintained in [credo-ts-ext](./index.md).
 
-Use `did:cheqd` when your ecosystem uses cheqd, for example to issue AnonCreds credentials on cheqd, or to publish resources under a DID on a public network. For a public issuer DID without a ledger, `did:web` is simpler, see [Choose a DID method](./index.mdx#choose-a-did-method).
+Use `did:cheqd` when your ecosystem uses cheqd, for example to issue AnonCreds credentials on cheqd, or to publish resources under a DID on a public network. For a public issuer DID without a ledger, `did:web` is simpler, see [Choose a DID method](../dids-and-trust/index.mdx#choose-a-did-method).
 
 ## Install
 
@@ -23,10 +23,10 @@ Spread these modules into the `modules` of your agent. Each network takes:
 | Option | Description |
 | --- | --- |
 | `network` | `'testnet'` or `'mainnet'`. |
-| `cosmosPayerSeed` | Mnemonic, or a 32-character seed, of the Cosmos account that pays for writes. Without it, Credo generates a new empty account on every start: you can resolve, but writes fail. |
+| `cosmosPayerSeed` | Mnemonic, or a 32-character seed, of the Cosmos account that pays for writes. Only writes need it: without it, you can resolve, and writes throw an error. On React Native, a mnemonic needs a full WebCrypto implementation, such as `react-native-quick-crypto`. |
 | `rpcUrl` | RPC endpoint. Defaults to `https://rpc.cheqd.network` for testnet and `https://rpc.cheqd.net` for mainnet. |
 
-The agent connects to the networks in the background when it starts. `CheqdModule` doesn't register the `did:cheqd` registrar and resolver itself, so list them in `DidsModule`. Your lists replace the default registrars and resolvers, see [Configure DID methods](./index.mdx#configure-did-methods).
+The agent connects to the networks in the background when it starts. `CheqdModule` doesn't register the `did:cheqd` registrar and resolver itself, so list them in `DidsModule`. Your lists replace the default registrars and resolvers, see [Configure DID methods](../dids-and-trust/index.mdx#configure-did-methods).
 
 ## Create a did:cheqd
 
@@ -69,7 +69,7 @@ Resolve a resource by its id, or by name and type:
 ```ts showLineNumbers title="issuer.ts" cheqd-did.ts section-6
 ```
 
-The result has `resource` and `resourceMetadata`, or `error` and `message` when the resource can't be resolved.
+Without a version, you get the latest version. Add `resourceVersion` to get a specific version, or `resourceVersionTime` to get the version at a point in time. The result has `resource` and `resourceMetadata`, or `error` and `message` when the resource can't be resolved.
 
 ## AnonCreds registry
 

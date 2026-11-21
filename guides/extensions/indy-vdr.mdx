@@ -1,9 +1,9 @@
 ---
 title: Indy VDR
-description: Connect to Hyperledger Indy networks with @credo-ts/indy-vdr to resolve did:indy and did:sov, register did:indy DIDs with an endorser, and use Indy as an AnonCreds registry.
+description: Connect to Hyperledger Indy networks with @credo-ts/indy-vdr to resolve and register did:indy DIDs with an endorser, and use Indy as an AnonCreds registry.
 ---
 
-Hyperledger Indy networks, such as BCovrin Test and Sovrin, store DIDs and AnonCreds objects. `@credo-ts/indy-vdr` connects to one or more Indy networks through [Indy VDR](https://github.com/hyperledger/indy-vdr). It resolves `did:indy` and `did:sov`, registers `did:indy` DIDs, and provides an AnonCreds registry.
+Hyperledger Indy networks, such as BCovrin Test and CANdy, store DIDs and AnonCreds objects. `@credo-ts/indy-vdr` connects to one or more Indy networks through [Indy VDR](https://github.com/hyperledger/indy-vdr). It resolves and registers `did:indy` DIDs, and provides an AnonCreds registry. The package is maintained in [credo-ts-ext](./index.md).
 
 Use it when your ecosystem uses an Indy network, usually to issue or verify AnonCreds credentials.
 
@@ -26,9 +26,46 @@ This version of Credo needs version 0.3 of the native Indy VDR packages: `@credo
 
 ## Configure
 
-Register `IndyVdrModule` with the networks you use, and add the Indy registrar and resolvers to `DidsModule`:
+Register `IndyVdrModule` with the networks you use, and add the Indy registrar and resolver to `DidsModule`:
 
-```ts showLineNumbers title="agent.ts" indy-vdr-setup.ts section-1
+```ts showLineNumbers title="agent.ts"
+import { readFile } from 'node:fs/promises'
+import {
+  DidsModule,
+  JwkDidRegistrar,
+  JwkDidResolver,
+  KeyDidRegistrar,
+  KeyDidResolver,
+  PeerDidRegistrar,
+  PeerDidResolver,
+  WebDidResolver,
+} from '@credo-ts/core'
+import { IndyVdrIndyDidRegistrar, IndyVdrIndyDidResolver, IndyVdrModule } from '@credo-ts/indy-vdr'
+import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
+
+const indyVdrModules = {
+  indyVdr: new IndyVdrModule({
+    indyVdr,
+    networks: [
+      {
+        indyNamespace: 'bcovrin:test',
+        isProduction: false,
+        genesisTransactions: await readFile('genesis/bcovrin-test.txn', 'utf8'),
+        connectOnStartup: true,
+      },
+    ],
+  }),
+  dids: new DidsModule({
+    registrars: [new KeyDidRegistrar(), new PeerDidRegistrar(), new JwkDidRegistrar(), new IndyVdrIndyDidRegistrar()],
+    resolvers: [
+      new KeyDidResolver(),
+      new PeerDidResolver(),
+      new JwkDidResolver(),
+      new WebDidResolver(),
+      new IndyVdrIndyDidResolver(),
+    ],
+  }),
+}
 ```
 
 On React Native, import `indyVdr` from the React Native package instead, and bundle the genesis transactions with your app:
@@ -47,11 +84,11 @@ Pass the `indyVdr` object itself: unlike Askar and AnonCreds, Indy VDR has no `N
 | `connectOnStartup` | Connect when the agent starts instead of on first use. Defaults to `false`. |
 | `transactionAuthorAgreement` | `{ version, acceptanceMechanism }`, required to write to networks with a transaction author agreement. `acceptanceMechanism` is a label from the network's acceptance mechanism list. |
 
-`IndyVdrModule` doesn't register the DID registrar and resolvers itself, so list them in `DidsModule`. Your lists replace the default registrars and resolvers, see [Configure DID methods](./index.mdx#configure-did-methods).
+`IndyVdrModule` doesn't register the DID registrar and resolver itself, so list them in `DidsModule`. Your lists replace the default registrars and resolvers, see [Configure DID methods](../dids-and-trust/index.mdx#configure-did-methods).
 
-## Resolve did:indy and did:sov
+## Resolve a did:indy
 
-With the resolvers registered, `agent.dids.resolve` handles both methods. For `did:indy`, Credo uses the network whose `indyNamespace` matches the DID. A `did:sov` or unqualified Indy identifier doesn't say which network it's on, so Credo queries all networks and prefers a production network when the DID exists on more than one.
+With the resolver registered, `agent.dids.resolve` uses the network whose `indyNamespace` matches the DID. `did:sov` and unqualified Indy DIDs aren't supported: use the `did:indy` form, such as `did:indy:bcovrin:test:<identifier>`.
 
 ## Import an existing DID
 
@@ -82,9 +119,19 @@ With `endorserMode: 'external'`, the registrar returns the state `action` with `
 
 ## AnonCreds registry
 
-`IndyVdrAnonCredsRegistry` registers and resolves AnonCreds schemas, credential definitions and revocation data on Indy. It's exported from the `@credo-ts/indy-vdr` root. Set up AnonCreds as described in [AnonCreds](../credential-formats/anoncreds.mdx), with the Indy registry:
+`IndyVdrAnonCredsRegistry` registers and resolves AnonCreds schemas, credential definitions and revocation data on Indy. It comes from the `@credo-ts/indy-vdr/anoncreds` subpath and needs `@credo-ts/anoncreds`, an optional peer dependency of `@credo-ts/indy-vdr` that you install yourself. Set up AnonCreds as described in [AnonCreds](../credential-formats/anoncreds.mdx), with the Indy registry:
 
-```ts showLineNumbers title="agent.ts" indy-vdr-anoncreds.ts section-1
+```ts showLineNumbers title="agent.ts"
+import { AnonCredsModule } from '@credo-ts/anoncreds'
+import { IndyVdrAnonCredsRegistry } from '@credo-ts/indy-vdr/anoncreds'
+import { NativeAnoncreds } from '@hyperledger/anoncreds-nodejs'
+
+const anoncreds = new AnonCredsModule({
+  anoncreds: NativeAnoncreds,
+  registries: [new IndyVdrAnonCredsRegistry()],
+})
 ```
 
 The registry needs `IndyVdrModule`. To register objects, the issuer needs a `did:indy` with write permission, and passes `endorserMode` and `endorserDid` in the registration options.
+
+The registry only handles `did:indy` identifiers. It accepts schema, credential definition and revocation registry identifiers with names and tags either as they are or percent-encoded. New identifiers aren't encoded by default, for agents that don't support encoded identifiers. To percent-encode schema names and tags in new identifiers, set `encodeAnonCredsIdentifiers: true` on `IndyVdrModule`.
