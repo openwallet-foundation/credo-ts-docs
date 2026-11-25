@@ -268,14 +268,16 @@ const service = new URLSearchParams(parsed.query).get('service')
 
 ### DID cache scope
 
-`publicDidMethods` on `DidsModule` is replaced by `cacheScope`. All methods whose resolver allows caching, including custom methods, now use the global cache that all agent contexts share. Before, only the methods in `publicDidMethods` did, and other methods were cached per agent context. Set `'context'` for methods that you left out of `publicDidMethods`, and for custom resolvers whose result depends on the tenant:
+`publicDidMethods` on `DidsModule` is replaced by `cacheScope`. All methods whose resolver allows caching, including custom methods, now use the global cache that all agent contexts share. Before, only the methods in `publicDidMethods` did, and other methods were cached per agent context.
+
+Most apps can remove `publicDidMethods` and set nothing: public methods such as `did:web`, `did:webvh`, `did:cheqd`, `did:indy` and `did:hedera` resolve the same for every tenant, so they belong in the global cache. Only set `'context'` for a method whose resolution depends on the tenant, such as a custom resolver that reads from tenant storage:
 
 ```ts
 // 0.7
 new DidsModule({ publicDidMethods: ['indy', 'cheqd'] })
 
-// 0.8
-new DidsModule({ cacheScope: { web: 'context', webvh: 'context', hedera: 'context' } })
+// 0.8, only if your custom did:example resolver depends on the tenant
+new DidsModule({ cacheScope: { example: 'context' } })
 ```
 
 ### did:sov is removed

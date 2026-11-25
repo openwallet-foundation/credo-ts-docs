@@ -100,10 +100,10 @@ To add a method, register `DidsModule` yourself. The packages for ledger and web
 Passing `registrars` or `resolvers` replaces the default list. Credo adds the `did:key` and `did:peer` registrar and resolver back, because DIDComm needs them, but not `did:web` and `did:jwk`. Include `WebDidResolver`, `JwkDidResolver` and `JwkDidRegistrar` yourself if you still need them.
 :::
 
-Credo caches resolved DID documents in the global cache, which all agent contexts share. If a method resolves differently per agent context, for example a custom resolver that depends on the tenant, set its `cacheScope` to `'context'` to cache its documents per agent context:
+Credo caches resolved DID documents in the global cache, which all agent contexts share. Public methods such as `did:web` resolve the same for every tenant, so keep them global. If a method resolves differently per agent context, for example a custom resolver that depends on the tenant, set its `cacheScope` to `'context'` to cache its documents per agent context:
 
 ```ts
-new DidsModule({ cacheScope: { web: 'context' } })
+new DidsModule({ cacheScope: { example: 'context' } })
 ```
 
 ## did:jwk

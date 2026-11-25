@@ -28,44 +28,7 @@ This version of Credo needs version 0.3 of the native Indy VDR packages: `@credo
 
 Register `IndyVdrModule` with the networks you use, and add the Indy registrar and resolver to `DidsModule`:
 
-```ts showLineNumbers title="agent.ts"
-import { readFile } from 'node:fs/promises'
-import {
-  DidsModule,
-  JwkDidRegistrar,
-  JwkDidResolver,
-  KeyDidRegistrar,
-  KeyDidResolver,
-  PeerDidRegistrar,
-  PeerDidResolver,
-  WebDidResolver,
-} from '@credo-ts/core'
-import { IndyVdrIndyDidRegistrar, IndyVdrIndyDidResolver, IndyVdrModule } from '@credo-ts/indy-vdr'
-import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
-
-const indyVdrModules = {
-  indyVdr: new IndyVdrModule({
-    indyVdr,
-    networks: [
-      {
-        indyNamespace: 'bcovrin:test',
-        isProduction: false,
-        genesisTransactions: await readFile('genesis/bcovrin-test.txn', 'utf8'),
-        connectOnStartup: true,
-      },
-    ],
-  }),
-  dids: new DidsModule({
-    registrars: [new KeyDidRegistrar(), new PeerDidRegistrar(), new JwkDidRegistrar(), new IndyVdrIndyDidRegistrar()],
-    resolvers: [
-      new KeyDidResolver(),
-      new PeerDidResolver(),
-      new JwkDidResolver(),
-      new WebDidResolver(),
-      new IndyVdrIndyDidResolver(),
-    ],
-  }),
-}
+```ts showLineNumbers title="agent.ts" indy-vdr-setup.ts section-1
 ```
 
 On React Native, import `indyVdr` from the React Native package instead, and bundle the genesis transactions with your app:
@@ -121,15 +84,7 @@ With `endorserMode: 'external'`, the registrar returns the state `action` with `
 
 `IndyVdrAnonCredsRegistry` registers and resolves AnonCreds schemas, credential definitions and revocation data on Indy. It comes from the `@credo-ts/indy-vdr/anoncreds` subpath and needs `@credo-ts/anoncreds`, an optional peer dependency of `@credo-ts/indy-vdr` that you install yourself. Set up AnonCreds as described in [AnonCreds](../credential-formats/anoncreds.mdx), with the Indy registry:
 
-```ts showLineNumbers title="agent.ts"
-import { AnonCredsModule } from '@credo-ts/anoncreds'
-import { IndyVdrAnonCredsRegistry } from '@credo-ts/indy-vdr/anoncreds'
-import { NativeAnoncreds } from '@hyperledger/anoncreds-nodejs'
-
-const anoncreds = new AnonCredsModule({
-  anoncreds: NativeAnoncreds,
-  registries: [new IndyVdrAnonCredsRegistry()],
-})
+```ts showLineNumbers title="agent.ts" indy-vdr-anoncreds.ts section-1
 ```
 
 The registry needs `IndyVdrModule`. To register objects, the issuer needs a `did:indy` with write permission, and passes `endorserMode` and `endorserDid` in the registration options.
