@@ -69,6 +69,10 @@ const config: Config = {
   baseUrl: '/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
+  headTags: [
+    { tagName: 'link', attributes: { rel: 'apple-touch-icon', href: '/img/apple-touch-icon.png' } },
+    { tagName: 'link', attributes: { rel: 'manifest', href: '/manifest.webmanifest' } },
+  ],
 
   organizationName: 'openwallet-foundation',
   projectName: 'credo-ts-docs',
@@ -177,6 +181,7 @@ const config: Config = {
 
   themeConfig: {
     image: 'img/credo-social-preview.png',
+    metadata: [{ name: 'theme-color', content: '#d90078' }],
     colorMode: {
       defaultMode: 'light',
       respectPrefersColorScheme: true,
