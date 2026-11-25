@@ -21,7 +21,7 @@ What happens when no source returns trusted issuers depends on how the object is
 | X.509 certificate chain | Verification fails. | The chain must lead to one of the trusted certificates. |
 | DID | Any DID is accepted. | The DID (without fragment) must be in the list. |
 
-So an agent without trust configuration accepts credentials signed with any DID, and rejects all X.509-signed credentials. Return an empty list (`{ trustedIssuers: [] }`) to reject every signer, including DIDs. OpenID4VC objects signed with a bare `jwk` header, without a DID or certificate, aren't checked against trusted issuers.
+So an agent without trust configuration accepts credentials signed with any DID, and rejects all X.509-signed credentials. Return an empty list (`{ trustedIssuers: [] }`) to reject every signer, including DIDs. OpenID4VC objects signed with a bare `jwk` header, without a DID or certificate, aren't checked against trusted issuers. Wallet and key attestations signed that way are rejected.
 
 This applies to SD-JWT VCs, mdocs, W3C credentials signed as JWT, SD-JWT or with JSON-LD proofs, and to the signed objects in OpenID4VC. AnonCreds and Data Integrity credentials don't use it.
 
@@ -53,7 +53,7 @@ All returned entries must use the same `method` as the signer, otherwise verific
 | --- | --- | --- |
 | `credential` | Verifying a credential, including credentials the holder receives over OpenID4VCI. | `@credo-ts/core` |
 | `mdocReaderAuth` | The holder checks the reader certificate of an mdoc request over the Digital Credentials API. | `@credo-ts/core` |
-| `openId4VpCredential` | A verifier checks a credential in an OpenID4VP response. Includes the `openId4VcVerificationSessionRecord`. | `@credo-ts/openid4vc` |
+| `openId4VpCredential` | A verifier checks a credential in an OpenID4VP response. Includes the `openId4VcVerificationSessionRecord`, the `credential`, and for DCQL the `query` and `credentialQueryId` in `dcql`. | `@credo-ts/openid4vc` |
 | `oauth2SecuredAuthorizationRequest` | The holder checks a signed OpenID4VP authorization request. | `@credo-ts/openid4vc` |
 | `openId4VciCredentialIssuerMetadata` | The holder checks signed credential issuer metadata. | `@credo-ts/openid4vc` |
 | `openId4VciKeyAttestation` | An issuer checks a key attestation. | `@credo-ts/openid4vc` |
@@ -93,6 +93,8 @@ Use the `openId4VpCredential` type to give each verifier its own trust list. The
 ```
 
 :::
+
+To trust different issuers per credential query, use `verification.dcql.credentialQueryId`. Decide on the query, not on the credential's `vct`: a query also matches an SD-JWT VC whose type metadata extends a requested `vct`, and any issuer can publish such type metadata.
 
 A credential from an issuer outside the verifier's list fails verification, and the verification session ends in the `Error` state. See [Verifying credentials](../protocols/openid4vc/verifier.mdx) for the flow.
 

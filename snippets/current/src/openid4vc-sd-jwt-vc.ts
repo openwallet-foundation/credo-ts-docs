@@ -123,11 +123,10 @@ await holder.initialize()
 const issuerServer = issuerApp.listen(4031)
 const verifierServer = verifierApp.listen(4032)
 
-// Self-signed certificate for the example. The SAN must match the host of `issuerUrl`.
+// Self-signed certificate for the example
 issuerCertificate = await issuer.x509.createCertificate({
   authorityKey: PublicJwk.fromPublicJwk((await issuer.kms.createKey({ type: { kty: 'EC', crv: 'P-256' } })).publicJwk),
   issuer: { commonName: 'Credo example issuer', countryName: 'NL' },
-  extensions: { subjectAlternativeName: { name: [{ type: 'dns', value: 'localhost' }] } },
 })
 
 // start-section-3

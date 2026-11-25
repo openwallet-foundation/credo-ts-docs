@@ -32,6 +32,7 @@ For tests, use Drizzle on an in-memory SQLite database and keep the keys in memo
 | `autoUpdateStorageOnStartup` | `false` | Update the storage during `initialize()` when it was written by an older version of Credo. See [Storage updates](#storage-updates). |
 | `allowInsecureHttpUrls` | `false` | Accept `http://` URLs where HTTPS is otherwise required, such as OpenID4VC endpoints. For local development only. The OpenID4VC module applies it to the whole process, so it also affects other agents in it. |
 | `validitySkewSeconds` | `30` | The clock skew, in seconds, allowed when checking the validity period of credentials, status lists and other signed objects. The OpenID4VC issuer also applies it to wallet attestations and DPoP proofs. Phones often run a little behind. |
+| `fetchLimits` | `{ maxResponseBytes: 10485760, timeoutMs: 30000 }` | The maximum response size (10 MiB) and timeout of HTTP requests that Credo and its libraries make with `dependencies.fetch`. A request over either limit fails. Some modules have their own size limit for specific requests, such as `maxStatusListBytes` on the `TokenStatusListModule`. |
 | `getTrustedIssuersForVerification` | none | A callback that returns the DIDs and X.509 certificates to trust for a verification. See [Trusted issuers](../dids-and-trust/trust.mdx). |
 
 ## Default modules

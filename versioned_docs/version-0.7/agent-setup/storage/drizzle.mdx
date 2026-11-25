@@ -152,9 +152,9 @@ The Node.js backend can't encrypt DIDComm messages, which need XSalsa20-Poly1305
 
 `@credo-ts/askar-to-drizzle-storage-migration` copies all records from an Askar store to an empty Drizzle database. Use it when a server that runs on Askar should move to Drizzle, for example to get SQL access to its records. It doesn't move keys: after the migration, Askar stays your key management backend with storage turned off.
 
-In 0.7 the migration package requires exactly version `0.6.0` of Askar, so install `0.6.0` of both the Askar platform package and `askar-shared` for the migration:
+<InstallTabs packages="@credo-ts/askar-to-drizzle-storage-migration" />
 
-<InstallTabs packages="@credo-ts/askar-to-drizzle-storage-migration @openwallet-foundation/askar-nodejs@0.6.0 @openwallet-foundation/askar-shared@0.6.0" />
+Use Credo 0.7.3 or later. Before, the migration package required exactly version `0.6.0` of `askar-shared`, so it needed Askar `0.6.0` instead of the `0.6.1` the other pages install.
 
 1. Stop the agent and back up the Askar store. The migrator doesn't make a backup.
 2. Create the Drizzle database and [run the migrations](#run-migrations) for every bundle you'll use. The database must be empty.

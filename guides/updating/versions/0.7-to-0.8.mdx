@@ -3,7 +3,7 @@ title: Updating from 0.7 to 0.8
 description: Dependency updates and breaking changes when you update Credo from 0.7 to the unreleased 0.8.
 ---
 
-{/* tracked-up-to: 38f03caa3c5293e020b75a4df5ad58556a6d367c */}
+{/* tracked-up-to: 8bd6914ddedf04a910d60756fb0fb0ba3bd6b9bc */}
 
 This guide lists what you need to change to update an agent from Credo 0.7 to 0.8: Node.js and dependency versions, removed APIs, and changed behavior. Read [Updating Credo](../index.md) first for the general steps.
 
@@ -11,11 +11,11 @@ This guide lists what you need to change to update an agent from Credo 0.7 to 0.
 
 Credo 0.8 isn't released yet. This guide describes the current alpha, published under the `alpha` tag on npm, and more changes can land before the release.
 
-It covers the changes on Credo's `main` branch up to commit [`38f03ca`](https://github.com/openwallet-foundation/credo-ts/commit/38f03caa3c5293e020b75a4df5ad58556a6d367c) (17 October 2026). See [what has landed since](https://github.com/openwallet-foundation/credo-ts/compare/38f03caa3c5293e020b75a4df5ad58556a6d367c...main).
+It covers the changes on Credo's `main` branch up to commit [`8bd6914`](https://github.com/openwallet-foundation/credo-ts/commit/8bd6914ddedf04a910d60756fb0fb0ba3bd6b9bc) (4 November 2026). See [what has landed since](https://github.com/openwallet-foundation/credo-ts/compare/8bd6914ddedf04a910d60756fb0fb0ba3bd6b9bc...main).
 
 :::
 
-Most removals in 0.8 were deprecated in 0.7. If you already replaced the deprecated APIs listed in [Updating from 0.6 to 0.7](./0.6-to-0.7.mdx#deprecations), most import changes below are already done.
+Most removals in 0.8 were deprecated in 0.7. If you already replaced the deprecated APIs listed in [Updating from 0.6 to 0.7](./0.6-to-0.7.mdx#deprecations), most import changes below are already done. Changes marked "also in 0.7.3" or "also in 0.7.4" were backported to that 0.7 patch release, so they don't affect you if you already run it.
 
 :::caution
 
@@ -28,9 +28,12 @@ Back up your storage before you update. Credo doesn't create backups for you.
 - Node.js 22 or later is required. Support for Node.js 20 is dropped, and Node.js 26 is supported.
 - Update every `@credo-ts/*` package to the same 0.8 version.
 - AnonCreds: update `@hyperledger/anoncreds-*` to `^0.4.1`.
-- Askar: `0.6.1` is recommended. `@credo-ts/askar` still accepts `^0.4.3 || ^0.5.0 || ^0.6.0`, but `@credo-ts/askar-to-drizzle-storage-migration` now requires exactly `@openwallet-foundation/askar-shared@0.6.1`.
+- Askar: `0.6.1` is recommended. `@credo-ts/askar` and `@credo-ts/askar-to-drizzle-storage-migration` accept `@openwallet-foundation/askar-shared` `^0.4.3 || ^0.5.0 || ^0.6.0`. Install a single Askar version: two copies of `askar-shared` make `initialize()` fail with `Native askar has not been registered yet`.
 - Indy VDR stays on `^0.3.0`.
 - Drizzle: `@credo-ts/drizzle-storage` now requires `drizzle-orm@^0.45.4`.
+- React Native 0.74 or later is required, as `@credo-ts/react-native` needs the `TextEncoder` that Hermes provides from 0.74. `expo-crypto` is no longer needed: uninstall it, and remove the `overrides` entry for `@credo-ts/react-native` from `package.json` if you added it. See [Installation](../../getting-started/installation.mdx).
+- The secure environment key management backend needs `@animo-id/expo-secure-environment` `^0.3.0`. See [Secure environment](#secure-environment-react-native).
+- `@credo-ts/core` uses `@owf/mdoc` `^0.9.2`. If your wallet decodes proximity device requests with `@owf/mdoc` itself, update it to the same version, so the app has one copy. See [Proximity (ISO 18013-5)](../../protocols/mdoc/proximity.mdx).
 
 <Tabs groupId="platform" queryString>
 <TabItem value="node" label="Node.js">
@@ -55,13 +58,74 @@ Back up your storage before you update. Credo doesn't create backups for you.
 
 Credo 0.8 doesn't change the storage format, so you don't need to run the update assistant.
 
-If you use [Drizzle](../../agent-setup/storage/drizzle.mdx) with the `tenants` bundle, apply the new `tenants` migration. It adds a `status` column to the tenant table and marks existing tenants as active.
+If you use [Drizzle](../../agent-setup/storage/drizzle.mdx), run the migrations of every bundle you use:
+
+- `anoncreds`: drops the `unqualified_schema_id` and `unqualified_credential_definition_id` columns. See [Unqualified AnonCreds identifiers are removed](#unqualified-anoncreds-identifiers-are-removed).
+- `openid4vc`: adds the OpenID4VCI and OpenID4VP version columns, and restores the `openId4VpVersion` of existing verification sessions from their tags. Before, a Drizzle verifier lost the version and failed to verify mdoc presentations over OpenID4VP 1.0. The migrations also add the `issuer_info`, `credential_request_encryption` and `credential_response_encryption` columns to the issuer table, and `failed_tx_code_attempts` to the issuance session table.
+- `tenants`: adds a `status` column to the tenant table and marks existing tenants as active.
+
+The Drizzle adapters now map records to columns with the record's `encodingSchema`. This fixes records that lost data when stored with Drizzle: OpenID4VC issuance sessions with holder binding keys in `transactions`, the `credentialDefinitionId` of AnonCreds private records, custom tags of SD-JWT VC records, and optional properties that were cleared on update.
+
+### Records are encoded with zod
+
+Credo now encodes, decodes and validates its records with zod schemas instead of class-transformer and class-validator. The stored format doesn't change. Your own records keep working without changes, with these differences:
+
+- A stored record that fails to decode throws a `RecordDecodingError`, with the `recordType` and `recordId`, caused by a `ZodValidationError`. Before, this was a `ClassValidationError`. Catch `CredoValidationError` to handle both.
+- If you subclass a Credo record and add properties with class-transformer decorators, the properties are still stored but no longer transformed: a `Date` is read back as a string. Define a static `encodingSchema` on the subclass, built with `createRecordEncodingSchema`, to transform them.
+- Drizzle encodes a record before it stores it, so saving an invalid record throws instead of storing it.
+- Custom Drizzle adapters: `getValues` and `toRecord` are no longer abstract in `BaseDrizzleRecordAdapter`. An adapter that leaves them out uses the default mapping, and is validated when the `DrizzleStorageModule` is created: the record needs an `encodingSchema`, every record property needs a column, and the SQLite and PostgreSQL tables need the same columns. Adapters that implement both methods keep working and aren't validated.
+
+```ts
+import { BaseRecord, createRecordEncodingSchema, zIsoDate } from '@credo-ts/core'
+import { z } from 'zod'
+
+const myRecordEncodingSchema = createRecordEncodingSchema({
+  name: z.string(),
+  expiresAt: zIsoDate.optional(),
+})
+
+export class MyRecord extends BaseRecord {
+  public static get encodingSchema() {
+    return myRecordEncodingSchema
+  }
+  // ...
+}
+```
+
+### Askar
+
+When a store gets opened while `openStore()` or `provisionStore()` is still running, the call now closes its own store and throws an `AskarStoreAlreadyRegisteredError`. Concurrent operations on a store that isn't open yet share one open. See [Askar](../../agent-setup/storage/askar.mdx#manage-the-store).
+
+## HTTP requests
+
+HTTP requests that Credo and its libraries make with `agentDependencies.fetch` now fail when the response is larger than 10 MiB or takes longer than 30 seconds. This covers DID resolution, status lists, type metadata, invitations from short URLs, DIDComm HTTP responses, and OpenID4VC and mdoc requests. Raise the limits for the whole agent with `fetchLimits`, or per request type with the module options:
+
+```ts
+new Agent({
+  config: { fetchLimits: { maxResponseBytes: 20 * 1024 * 1024, timeoutMs: 60_000 } },
+  modules: {
+    tokenStatusList: new TokenStatusListModule({ maxStatusListBytes: 50 * 1024 * 1024 }),
+    // ...
+  },
+  dependencies: agentDependencies,
+})
+```
+
+| Option | Applies to |
+| --- | --- |
+| `maxStatusListBytes` on `TokenStatusListModule` | Status lists of Token Status Lists, SD-JWT VCs and mdocs |
+| `maxTypeMetadataBytes` on `SdJwtVcModule` | SD-JWT VC type metadata |
+| `maxDidDocumentBytes` on `WebDidResolver` | `did:web` documents |
+| `maxResponseBytes` on `DidCommHttpOutboundTransport` | DIDComm messages in HTTP responses |
+| `maxInvitationBytes` on `DidCommModule` | Invitations fetched from a short URL |
+
+On React Native, the size limit only protects memory when `fetch` streams the response body. From Expo SDK 56 the global `fetch` is `expo/fetch`, which does. With React Native's built-in `fetch`, a large response is still downloaded in full before it's rejected. See [Agent setup](../../agent-setup/index.mdx#config).
 
 ## DIDComm
 
 ### DIDComm v1 protocols are removed
 
-The Connection protocol (RFC 0160), Issue Credential v1 (RFC 0036) and Present Proof v1 (RFC 0037) are removed. Use DID Exchange to create connections, and the v2 credential and proof protocols. The legacy Indy formats still work with the v2 protocols.
+The Connection protocol (RFC 0160), Issue Credential v1 (RFC 0036) and Present Proof v1 (RFC 0037) are removed. Use DID Exchange to create connections, and the v2 credential and proof protocols. The legacy Indy formats are removed too, so use the AnonCreds formats, see [Unqualified AnonCreds identifiers are removed](#unqualified-anoncreds-identifiers-are-removed).
 
 ```ts
 // 0.7
@@ -73,19 +137,19 @@ import {
 } from '@credo-ts/anoncreds/didcomm'
 
 credentialProtocols: [
-  new DidCommCredentialV1Protocol({ indyCredentialFormat: legacyIndyCredentialFormatService }),
-  new DidCommCredentialV2Protocol({ credentialFormats: [legacyIndyCredentialFormatService] }),
+  new DidCommCredentialV1Protocol({ indyCredentialFormat: new LegacyIndyDidCommCredentialFormatService() }),
+  new DidCommCredentialV2Protocol({ credentialFormats: [new LegacyIndyDidCommCredentialFormatService()] }),
 ],
 proofProtocols: [
-  new DidCommProofV1Protocol({ indyProofFormat: legacyIndyProofFormatService }),
-  new DidCommProofV2Protocol({ proofFormats: [legacyIndyProofFormatService] }),
+  new DidCommProofV1Protocol({ indyProofFormat: new LegacyIndyDidCommProofFormatService() }),
+  new DidCommProofV2Protocol({ proofFormats: [new LegacyIndyDidCommProofFormatService()] }),
 ],
 
 // 0.8
-import { LegacyIndyDidCommCredentialFormatService, LegacyIndyDidCommProofFormatService } from '@credo-ts/anoncreds/didcomm'
+import { AnonCredsDidCommCredentialFormatService, AnonCredsDidCommProofFormatService } from '@credo-ts/anoncreds/didcomm'
 
-credentialProtocols: [new DidCommCredentialV2Protocol({ credentialFormats: [legacyIndyCredentialFormatService] })],
-proofProtocols: [new DidCommProofV2Protocol({ proofFormats: [legacyIndyProofFormatService] })],
+credentialProtocols: [new DidCommCredentialV2Protocol({ credentialFormats: [new AnonCredsDidCommCredentialFormatService()] })],
+proofProtocols: [new DidCommProofV2Protocol({ proofFormats: [new AnonCredsDidCommProofFormatService()] })],
 ```
 
 `DidCommCredentialV1Protocol`, `DidCommProofV1Protocol`, their messages, and the `INDY_*_ATTACHMENT_ID` constants are removed too.
@@ -115,11 +179,64 @@ const { outOfBandInvitation } = await agent.didcomm.oob.createInvitation({ label
 await agent.didcomm.oob.receiveInvitationFromUrl(invitationUrl, { label: 'Holder' })
 ```
 
+### WebSocket message size
+
+`DidCommWsInboundTransport` created with a `port` now rejects messages over 5 MiB, the same limit as `DidCommHttpInboundTransport`. Before, it accepted 100 MiB. A larger message closes the socket. A mediator that receives `forward` messages with large attachments can raise the limit:
+
+```ts
+new DidCommWsInboundTransport({ port: 8081, maxPayloadBytes: 20 * 1024 * 1024 })
+```
+
+When you pass your own `server`, set `maxPayload` on the `WebSocketServer` yourself. See [DIDComm](../../protocols/didcomm/index.mdx#endpoints-and-transports).
+
+### Mediation
+
+- `messagePickup.pickupMessages` with `awaitCompletion` only completes on replies in its own thread, so it times out against a mediator that doesn't thread its `status` and `batch` replies. See [Mediation](../../protocols/didcomm/mediation.mdx#control-message-pickup).
+- The mediator reconnect loop now closes the socket and retries with a randomized backoff when setting up live mode fails. It calls the new optional `closeSocketByConnectionId` of an outbound transport. Implement it in a custom WebSocket outbound transport so the loop can recover.
+- With `QueueAndLiveModeDelivery`, a failed live delivery no longer fails the forward, as the message is already queued. The mediator ends the live session and closes the socket, so the recipient reconnects and picks up the message. A custom `DidCommQueueTransportRepository` can implement the new optional `start` hook, which `DidCommModule` calls on initialize.
+
+### W3C credentials over DIDComm
+
+- The JSON-LD credential format checks that the issuer can sign before it creates an offer or accepts a proposal, instead of when it accepts the request. The issuer DID must be created in the agent and resolve at that point, so a `did:web` is now resolved at offer time, and its key must fit the proof type. Otherwise the call throws a `W3cJsonLdCredentialSigningNotSupportedError`. Also in 0.7.3. See [W3C VCs with DIDComm](../../protocols/didcomm/w3c.mdx#json-ld-credentials).
+- The holder now verifies a received VCDM 1.1 Data Integrity credential without AnonCreds link secret binding before it stores it, including the issuer trust check. A holder with [trusted issuers](../../dids-and-trust/trust.mdx) configured rejects credentials from other issuers. Before, only VCDM 2.0 credentials were verified.
+
 ## AnonCreds
+
+### Unqualified AnonCreds identifiers are removed
+
+All AnonCreds identifiers must be fully qualified. Use the `did:indy` form for objects on an Indy ledger, for example `did:indy:sovrin:<did>/anoncreds/v0/SCHEMA/<name>/<version>` instead of `<did>:2:<name>:<version>`.
+
+- `LegacyIndyDidCommCredentialFormatService` and `LegacyIndyDidCommProofFormatService` (the `indy` format of RFC 0592) are removed, with the `LegacyIndyCredentialFormat` and `LegacyIndyDidCommProofFormat` types. Use `AnonCredsDidCommCredentialFormatService` and `AnonCredsDidCommProofFormatService`, and `anoncreds` instead of `indy` as the key in `credentialFormats` and `proofFormats`. Credo can no longer exchange AnonCreds credentials with agents that only support the `indy` format. See [AnonCreds with DIDComm](../../protocols/didcomm/anoncreds.mdx).
+- `IndyVdrAnonCredsRegistry` only resolves `did:indy` identifiers. See [Indy VDR](../../dids-and-trust/indy-vdr.mdx#anoncreds-registry).
+- Holder service: `createCredentialRequest` no longer takes `useLegacyProverDid` (a request always has `entropy`), `createProof` no longer takes `useUnqualifiedIdentifiers`, and `getCredential` no longer takes `useUnqualifiedIdentifiersIfPresent`.
+- The unqualified identifier helpers are removed, such as `getUnqualifiedSchemaId`, `isUnqualifiedCredentialDefinitionId`, `getQualifiedDidIndyDid` and `generateLegacyProverDidLikeString`. `parseIndySchemaId`, `parseIndyCredentialDefinitionId` and `parseIndyRevocationRegistryId` only accept `did:indy` identifiers, and always return `namespace`.
+- Records lose their unqualified tags: `unqualifiedSchemaId` and `unqualifiedCredentialDefinitionId` on `AnonCredsSchemaRecord` and `AnonCredsCredentialDefinitionRecord`, and the `anonCredsUnqualified*` tags on W3C credential records. Proof request `restrictions` only match qualified identifiers.
+- A revocation notification with an unqualified revocation registry id no longer matches a credential exchange record.
+- The 0.4 to 0.5 storage update still migrates credentials with unqualified identifiers. When the issuer's Indy namespace isn't in the cache, it resolves the issuer's `did:sov`, which needs `IndyVdrSovDidResolver` and an `IndyVdrModule` with the issuer's ledger.
+
+```ts
+// 0.7
+proofFormats: {
+  indy: {
+    requested_attributes: { name: { name: 'name', restrictions: [{ cred_def_id: 'Th7MpTaRZVRYnPiabds81Y:3:CL:12:tag' }] } },
+    // ...
+  },
+}
+
+// 0.8
+proofFormats: {
+  anoncreds: {
+    requested_attributes: {
+      name: { name: 'name', restrictions: [{ cred_def_id: 'did:indy:sovrin:Th7MpTaRZVRYnPiabds81Y/anoncreds/v0/CLAIM_DEF/12/tag' }] },
+    },
+    // ...
+  },
+}
+```
 
 ### AnonCreds DIDComm imports
 
-The AnonCreds DIDComm formats are only exported from `@credo-ts/anoncreds/didcomm`: `AnonCredsDidCommCredentialFormatService`, `AnonCredsDidCommProofFormatService`, `AnonCredsLinkSecretBindingProvider`, the legacy Indy formats and their types.
+The AnonCreds DIDComm formats are only exported from `@credo-ts/anoncreds/didcomm`: `AnonCredsDidCommCredentialFormatService`, `AnonCredsDidCommProofFormatService`, `AnonCredsLinkSecretBindingProvider` and their types.
 
 ```ts
 // 0.7
@@ -146,7 +263,7 @@ import { HederaAnonCredsRegistry } from '@credo-ts/hedera/anoncreds'
 import { WebVhAnonCredsRegistry } from '@credo-ts/webvh/anoncreds'
 ```
 
-For Hedera, the AnonCreds methods of `HederaLedgerService` are removed, and you still need to register `HederaModule` next to the registry.
+For Hedera, the AnonCreds methods of `HederaLedgerService` are removed, and you still need to register `HederaModule` next to the registry. The Hedera registry now returns revocation status list timestamps in seconds, as AnonCreds requires, instead of milliseconds. If you converted these timestamps yourself, remove that conversion.
 
 ### AnonCreds Data Integrity aliases are removed
 
@@ -170,15 +287,20 @@ credential.anonCredsW3cCredentialCryptosuites
 
 ## OpenID4VC
 
-### Issuer: PKCE is required by default
+### Issuer: PKCE and DPoP are required by default
 
-`pkceRequired` now defaults to `true`, so in the authorization code flow the issuer rejects authorization requests without a `code_challenge` with `invalid_request`. The pre-authorized code flow isn't affected. To keep the 0.7 behavior, turn it off globally or per issuance session:
+`pkceRequired` now defaults to `true`, so in the authorization code flow the issuer rejects authorization requests without a `code_challenge` with `invalid_request`. The pre-authorized code flow isn't affected.
+
+`dpopRequired` now defaults to `true` too, so the token endpoint rejects requests without a DPoP proof. The issuer advertises DPoP with all signature algorithms of the agent's KMS, where 0.7 only advertised it when `dpopSigningAlgValuesSupported` was set. Set `dpopSigningAlgValuesSupported` in the issuer module config or on the issuer record to limit them. The token, pushed authorization request and authorization challenge endpoints reject DPoP proofs signed with other algorithms. Credo holders already use DPoP when the issuer advertises it.
+
+To keep the 0.7 behavior, turn the requirements off globally or per issuance session. See [PKCE and DPoP](../../protocols/openid4vc/authorization.mdx#pkce-and-dpop).
 
 ```ts
 new OpenId4VcModule({
   issuer: {
     baseUrl: 'https://issuer.example.com/oid4vci',
     pkceRequired: false,
+    dpopRequired: false,
     credentialRequestToCredentialMapper,
   },
 })
@@ -186,7 +308,7 @@ new OpenId4VcModule({
 // or per session
 await agent.openid4vc.issuer.createCredentialOffer({
   // ...
-  authorization: { requirePkce: false },
+  authorization: { requirePkce: false, requireDpop: false },
 })
 ```
 
@@ -202,6 +324,46 @@ authorization: { requireDpop: false }
 authorization: {}
 ```
 
+### Issuer: refresh tokens require DPoP
+
+Refresh tokens are always bound to the wallet's DPoP key. Creating an issuance session with `generateRefreshTokens` throws when DPoP isn't required for it, and a refresh request with a DPoP-bound refresh token needs a DPoP proof for the same key. `generateRefreshTokens` can now also be set in the issuer module config for all sessions (default `false`). If you call `OpenId4VcIssuerService.verifyRefreshToken` yourself, drop the `dpop` option: the DPoP proof is verified with the token request.
+
+Refreshing an access token no longer emits an issuance session state changed event, and works before the first credential request.
+
+### Issuer: credential offers use OpenID4VCI 1.0
+
+`createCredentialOffer` now creates `v1` (OpenID4VCI 1.0) issuance sessions by default, instead of `v1.draft15`. For wallets that only implement draft 15, set the version. See [Create a credential offer](../../protocols/openid4vc/issuer.mdx#create-a-credential-offer).
+
+```ts
+await agent.openid4vc.issuer.createCredentialOffer({
+  // ...
+  version: 'v1.draft15',
+})
+```
+
+### Issuer: wallet attestations
+
+Wallet attestations (`oauth-client-attestation+jwt`) and key attestations (`key-attestation+jwt`) must be signed with `x5c` or a DID. Credo rejects attestations with a `jwk` header, which it can't check against the trusted issuers. In 0.7 it accepted them from anyone whose signature verified.
+
+The first request of an issuance session with a wallet attestation binds the session to the attestation's `cnf` key and its `sub` (as client id), also in the pre-authorized code flow. Every later request of the session, including refresh token requests, must include a wallet attestation for the same key and client id. A wallet that renews its attestation must keep the same key.
+
+As the client id is now known in the pre-authorized code flow, the `iss` of the credential request proof must be that client id. A Credo wallet that used a wallet attestation in the pre-authorized code flow must pass `clientId` to `requestCredentials`, or the issuer rejects the proof with `invalid_proof`. See [Wallet and key attestations](../../protocols/openid4vc/authorization.mdx#wallet-and-key-attestations).
+
+```ts
+// 0.7
+await agent.openid4vc.holder.requestCredentials({ resolvedCredentialOffer, ...token, credentialBindingResolver })
+
+// 0.8: clientId is the `sub` of the wallet attestation
+await agent.openid4vc.holder.requestCredentials({ resolvedCredentialOffer, ...token, clientId, credentialBindingResolver })
+```
+
+### Issuer: other changes
+
+- The issuer rejects a credential request with `invalid_proof` when the proof's key uses a binding method that the credential configuration doesn't list in `cryptographic_binding_methods_supported`. `jwk` and `cose_key` match a bare key, `did:<method>` a DID of that method, and `did` any DID. Configurations without the field accept any key, as before. See [Create the issuer](../../protocols/openid4vc/issuer.mdx#create-the-issuer).
+- After 5 invalid `tx_code` values the issuance session moves to `Error` and the offer can't be used anymore. Change the limit with `txCodeMaxAttempts`. The count is stored in `failedTxCodeAttempts` on the issuance session record.
+- A credential request that fails with `invalid_proof` or `invalid_nonce` no longer moves the issuance session to `Error`, so the wallet can retry. A request for an expired session is rejected without moving the session to `Error`. If you use the `Error` state to detect expired sessions, check the expiry yourself.
+- If you call `createCredentialResponse` yourself, for example from your own credential endpoint, pass the `parsedCredentialRequest` returned by the `parseCredentialRequest` of the `@openid4vc/openid4vci` issuer instead of the raw `credentialRequest`. `parseCredentialRequest` is now async and takes the request's `contentType`, so it can decrypt encrypted requests.
+
 ### Issuer: HTTP responses
 
 The issuer endpoints follow the specs more closely. Clients and tests that check status codes or error codes need updating:
@@ -214,16 +376,90 @@ The issuer endpoints follow the specs more closely. Clients and tests that check
 - On the credential and deferred credential endpoints, errors other than a rejected access token or DPoP proof, such as a misconfigured resource server, return `500 server_error` instead of `401`.
 - An invalid `credential_response_encryption` in a deferred credential request is rejected with `invalid_encryption_parameters`.
 - The authorization server metadata includes `response_types_supported: ["code"]`.
+- Requests to the base path or to an unknown issuer or verifier return `404` before the body is parsed.
+
+### Holder: signed issuer metadata
+
+The holder now requests signed credential issuer metadata by default (`preferred`). Signed metadata is only accepted if the holder trusts the signer, so resolving an offer or metadata from an issuer that signs its metadata with an untrusted certificate now fails. Trust the certificate, or turn signed metadata off. See [Resolve the offer](../../protocols/openid4vc/receive.mdx#resolve-the-offer).
+
+```ts
+new OpenId4VcModule({
+  holder: { signedMetadata: 'disallowed' },
+})
+
+// or per call
+await agent.openid4vc.holder.resolveCredentialOffer(credentialOffer, { signedMetadata: 'disallowed' })
+```
+
+If you construct `OpenId4VciHolderService` yourself, it now takes an `OpenId4VcHolderModuleConfig` as constructor argument.
 
 ### OpenID4VP
 
 - Creating a `v1.draft21` authorization request with the `x509_hash` client ID prefix throws. Use `x509_san_dns`, or version `v1`.
-- When the wallet sends an authorization error response, such as `access_denied`, the verifier's response endpoint returns `200`, with the `redirect_uri` if one is set, instead of a `500`. The verification session still moves to the error state.
+- When the wallet sends an authorization error response, such as `access_denied`, the verifier's response endpoint returns `200`, with the `redirect_uri` if one is set, instead of a `500`. The verification session still moves to the error state. A response to a session that already received one gets an `Invalid session` error without the `redirect_uri`.
 - The holder rejects transaction data that references credential IDs that aren't in the DCQL query, with `invalid_transaction_data`.
+- DCQL only reports cryptographic holder binding for credentials bound to a key or to their subject. A wallet no longer offers credentials without holder binding for a credential query, unless the query sets `require_cryptographic_holder_binding: false`. The Credo verifier still rejects such queries, so it can't request credentials without holder binding yet. Also in 0.7.4.
+
+### DCQL output marks undisclosed array elements
+
+`dcql` is updated to 4.0. In the `output` of a DCQL query result, an array element that isn't selected is now `DcqlNotDisclosed` instead of `null`, so a claim with a literal `null` value is kept. Code that reads arrays from the output must check for `DcqlNotDisclosed`:
+
+```ts
+// 0.7
+const disclosed = output.list.filter((element) => element !== null)
+
+// 0.8
+import { DcqlNotDisclosed } from '@credo-ts/core'
+
+const disclosed = output.list.filter((element) => element !== DcqlNotDisclosed)
+```
+
+### Decide trust on the DCQL query, not on `vct`
+
+The `openId4VpCredential` verification that `getTrustedIssuersForVerification` receives now has `dcql`, with the DCQL `query` and the `credentialQueryId` the credential was presented for. A credential query also matches an SD-JWT VC whose type metadata extends a requested `vct`, and any issuer can publish such type metadata. If your callback picks trusted issuers from the credential's `vct`, switch to the credential query id. See [Trusted issuers](../../dids-and-trust/trust.mdx).
+
+```ts
+if (verification.type === 'openId4VpCredential' && verification.dcql?.credentialQueryId === 'pid') {
+  return { trustedIssuers: [{ method: 'x509', issuance: pidIssuerRoots }] }
+}
+```
 
 ### Symmetric algorithms aren't advertised
 
 Symmetric (HMAC) signature algorithms are no longer advertised in OpenID4VC metadata (`vp_formats_supported`, `proof_signing_alg_values_supported`) and DIDComm `algsSupported`, and the holder no longer offers them for proof of possession.
+
+## mdoc and the Digital Credentials API
+
+The mdoc DC API supports the use cases and request information of ISO/IEC TS 23220-4. The resolved request of `agent.mdoc.resolveDcApiRequest`, and the `deviceRequestMatch` of `verifyDcApiResponse`, replace `docRequestsAsAlternatives` with `useCasesSource` and `useCases`:
+
+- Without use cases in the request, `useCasesSource` is `'allDocRequests'` (was `docRequestsAsAlternatives: false`), or `'eachDocRequest'` with `treatAmbiguousMultipleDocRequestsAsAlternatives` (was `true`).
+- With use cases, `useCasesSource` is `'deviceRequestInfo'`. A successful request can then have document requests without a valid credential. `useCases[].matchingDocumentSets` says which document requests to answer.
+
+The new `agent.mdoc.selectCredentialsForRequest` picks the credentials for you, taking the use cases into account, and its result can be passed to `createDcApiResponse` as is. See [Building a wallet](../../protocols/dc-api/wallet.mdx).
+
+```ts
+// 0.7
+const resolved = await agent.mdoc.resolveDcApiRequest({ request, origin })
+if (!resolved.success || resolved.docRequestsAsAlternatives) throw new Error('No matching mdoc')
+
+const { response } = await agent.mdoc.createDcApiResponse({
+  resolvedRequest: resolved,
+  credentials: resolved.docRequests.map(({ docRequestIndex, validCredentials }) => ({
+    docRequestIndex,
+    record: validCredentials[0].record,
+  })),
+})
+
+// 0.8
+const resolved = await agent.mdoc.resolveDcApiRequest({ request, origin })
+if (!resolved.success) throw new Error('No matching mdoc')
+
+const { response } = await agent.mdoc.createDcApiResponse(agent.mdoc.selectCredentialsForRequest(resolved))
+```
+
+To keep selecting credentials yourself, check `resolved.useCasesSource === 'allDocRequests'` where you checked `!resolved.docRequestsAsAlternatives`. Only then does every document request have a valid credential.
+
+The resolved request types drop `DcApi` from their name (`MdocResolvedDocRequest`, `MdocValidCredential`, `MdocFailedCredential`, `MdocCredentialMatch`). The `MdocDcApi*` names still work but are deprecated.
 
 ## DIDs
 
@@ -243,23 +479,56 @@ const service = new URLSearchParams(parsed.query).get('service')
 
 `did:web` resolution now validates the host, returns no document when the `id` of the hosted document isn't the DID, and reports network, HTTP and JSON errors as `resolutionError` instead of `notFound`. It uses the `fetch` of the agent dependencies, with a timeout.
 
+For every method, resolving a DID returns an `invalidDidDocument` error when the `id` of the resolved document isn't the DID. Also in 0.7.4.
+
 ### did:jwk
 
 - A `did:jwk` that contains private key material is rejected.
 - `DidJwk.fromDid` rejects DID URL fragments other than `#0`.
 - The JWK `use` value decides the verification relationships: with `use: 'sig'` the key isn't used for key agreement, and with `use: 'enc'` it's only used for key agreement.
 
-### `JsonWebKey2020` without `kid`
+### did:webvh
 
-`JsonWebKey2020` verification methods in new DID documents no longer include a `kid` in `publicKeyJwk`. Before, Credo put the key management key ID there, so it ended up in published DID documents. Credo finds the key through the keys on the `DidRecord`, so you don't need to change anything.
+`did:webvh` attested resources, such as AnonCreds objects, are only signed with an Ed25519 key, as the `eddsa-jcs-2022` cryptosuite requires. A P-256 key in `assertionMethod` is no longer picked, and an explicit non-Ed25519 `verificationMethod` is rejected. Resolving a resource whose proof uses another cryptosuite fails. See [did:webvh](../../dids-and-trust/webvh.mdx).
+
+### Other DID changes
+
+- `JsonWebKey2020` verification methods in new DID documents no longer include a `kid` in `publicKeyJwk`. Before, Credo put the key management key ID there, so it ended up in published DID documents. Credo finds the key through the keys on the `DidRecord`, so you don't need to change anything.
+- The services of a resolved `did:peer:2` document are now instances of their typed classes (`DidCommV1Service`, `DidCommV2Service` and others) and default to `priority: 0`.
+
+## W3C credentials
+
+All formats:
+
+- Verification rejects a signing key whose `controller` isn't the DID of the document it's listed in. Also in 0.7.4.
+- `trustedIssuers` can be a callback that returns the trusted issuers per credential. Also in 0.7.4.
+
+JSON-LD:
+
+- JSON-LD credentials use the upstream `jsonld`, `jsonld-signatures` and `@digitalbazaar/vc` libraries. The date checks now allow the agent's `validitySkewSeconds` (30 seconds by default). The `vcJs` validation result no longer has a `log` property, and its `credentialResults` no longer contain the `credential`.
+- Verifying an `ldp_vc` credential fails when its issuer isn't a DID, such as an `https` URL.
+- Verifying an `ldp_vp` presentation only counts the proofs that verify, and reads the subject ids from the expanded credential, when it checks that the holder controls each `credentialSubject`.
+- `new W3cCredential()` without `expirationDate` and `new W3cPresentation()` without `id` can now be signed. You no longer need a workaround.
+
+Data model 2.0:
+
+- Verifying a presentation checks that every credential bound with `cnf` is presented with that key. A KB-JWT on an SD-JWT credential is only accepted with a `domain`. A `cnf` DID URL must point to an `authentication` key, not an `assertionMethod` key. Also in 0.7.4.
+- `trustedIssuers` on `verifyPresentation` now applies to the credentials in it, and Data Integrity (`di_vc`) credentials are checked against the trusted issuers. Also in 0.7.4.
+- Signing a `vp+jwt` or `vp+sd-jwt` presentation picks the signer with the rules the verifier checks: the `holder`, else the shared `credentialSubject.id`, else the DID of `cnf.kid`, with the `cnf` key or else the only local `authentication` key. Signing throws when the rules can't be met, instead of creating a presentation the verifier rejects. A credential bound only with `cnf.jwk` needs a `holder` or `credentialSubject.id` DID to be presented. The presentation `kid` is always an absolute DID URL. See [W3C Verifiable Credentials](../../credential-formats/w3c-vc.mdx).
+- `vp+jwt` and `vp+sd-jwt` presentations include `iat` and the `undefined-terms/v2` context. A disclosure frame that makes `issuer`, `validFrom`, `validUntil` or `cnf` selectively disclosable throws.
 
 ## SD-JWT VC
 
+- An SD-JWT VC signed with an X.509 certificate no longer needs an `iss` that is an HTTPS URL matching a SAN URI or DNS name of the leaf certificate, when signing or verifying. Don't use `iss` for trust with X.509: trust comes from the certificate chain. See [SD-JWT VC](../../credential-formats/sd-jwt-vc.mdx).
+- Type metadata that describes another `vct` than the one it was resolved for is rejected.
 - The verifier rejects a status list JWT whose `typ` header isn't `statuslist+jwt`, with an `SLException`.
 - Errors from a failed SD-JWT VC verification carry a `code`, such as `JWT_EXPIRED` or `STATUS_INVALID`. A failed `iat`, `nbf` or `exp` check throws a `JwtTimeClaimException`.
 
 ## X.509
 
+- Chain validation checks revocation by default, in `SoftFail` mode for the full chain, so validation now downloads CRLs. Turn it off with `new X509Module({ revocationCheck: { mode: X509RevocationCheckMode.Disabled } })`. Options passed to `checkCertificateRevocation` or `fetchCertificateRevocationList` fall back to the module's `revocationCheck`. Also in 0.7.4. See [Revocation](../../dids-and-trust/x509.mdx#revocation).
+- `validateCertificateChain` requires the built chain to start with the presented chain, in order. A chain with certificates out of order, or one that skips a presented intermediate, is rejected. This applies to SD-JWT VC `x5c`, mdoc `x5chain` and JWS `x5c`. Put the signing certificate first, followed by each issuer certificate in order.
+- Name values in `issuer` and `subject` are escaped as RFC 4514 requires. A value with a comma no longer splits into another attribute, and a value can't end with a backslash.
 - `X509Service.parseCertificateSigningRequest` takes an `agentContext` as first argument, like the other `X509Service` methods. `agent.x509.parseCertificateSigningRequest` didn't change.
 - Credo always limits the work done when parsing ASN.1 (`maxDepth`, `maxNodes`, `maxContentLength`), using `defaultX509ParseOptions` unless you configure other limits. Set them with `new X509Module({ parseOptions })` or per call. See [Parse limits](../../dids-and-trust/x509.mdx#parse-limits).
 
@@ -271,17 +540,89 @@ X509Service.parseCertificateSigningRequest({ encodedCertificateSigningRequest })
 X509Service.parseCertificateSigningRequest(agentContext, { encodedCertificateSigningRequest })
 ```
 
-## Node.js key management
+## Key management
 
-These changes are also part of the upcoming 0.7.3 patch release:
+### ECDH encryption with `agent.kms`
 
-- `NodeKeyManagementService` returns `Uint8Array` instead of `Buffer` from `randomBytes`, `sign`, `encrypt` and `decrypt`.
-- ECDH-ES on P-384 and P-521 now derives keys with SHA-256, like other JOSE libraries. Data encrypted with the old Node.js key management on those curves can't be decrypted anymore.
+The KMS now creates the ephemeral key of `ECDH-ES`, `ECDH-ES+A*KW` and `ECDH-1PU+A256KW` itself, and returns its public key as `ephemeralPublicJwk`. You no longer create and delete it.
+
+- `ECDH-ES` and `ECDH-ES+KW` no longer take a `keyId` in `keyAgreement`. In `encrypt`, a `keyId` now always means the sender's key.
+- To put the `epk` in a JWE protected header, pass `encryption.aad` as a callback that gets the `ephemeralPublicJwk`.
+- With these algorithms, `encrypt` and `decrypt` only allow authenticated content encryption (`A*GCM`, `A*CBC-HS*`, `C20P`, `XC20P`), and `encrypt` no longer takes an `iv`.
+- `ECDH-ES+A128KW`, `ECDH-ES+A192KW` and `ECDH-ES+A256KW` take a `recipients` array instead of `externalPublicJwk`, and return `encryptedKeys` in the same order instead of `encryptedKey`.
+- In `decrypt`, the sender's ephemeral key moves from `externalPublicJwk` to `ephemeralPublicJwk` (`ECDH-ES`, `ECDH-ES+KW`), and the sender key of `ECDH-HSALSA20` from `externalPublicJwk` to `senderPublicJwk`.
+- `KmsEncryptedKey` no longer has `iv` and `tag`. `KmsKeyAgreementEcdhEs` is replaced by `KmsKeyAgreementEncryptEcdhEs` and `KmsKeyAgreementDecryptEcdhEs`.
+- Askar no longer supports `ECDH-ES` with `A256CBC-HS512`. Register the Node.js backend for it.
+
+```ts
+// 0.7
+const ephemeralKey = await agent.kms.createKey({ type: { kty: 'EC', crv: 'P-256' } })
+const header = JsonEncoder.toBase64Url({ alg: 'ECDH-ES', enc: 'A256GCM', epk: ephemeralKey.publicJwk })
+const { encrypted, iv, tag } = await agent.kms.encrypt({
+  key: { keyAgreement: { algorithm: 'ECDH-ES', keyId: ephemeralKey.keyId, externalPublicJwk: recipientJwk } },
+  encryption: { algorithm: 'A256GCM', aad: TypedArrayEncoder.fromUtf8String(header) },
+  data,
+})
+await agent.kms.deleteKey({ keyId: ephemeralKey.keyId })
+
+// 0.8
+let header: string | undefined
+const { encrypted, iv, tag } = await agent.kms.encrypt({
+  key: { keyAgreement: { algorithm: 'ECDH-ES', externalPublicJwk: recipientJwk } },
+  encryption: {
+    algorithm: 'A256GCM',
+    aad: ({ ephemeralPublicJwk }) => {
+      header = JsonEncoder.toBase64Url({ alg: 'ECDH-ES', enc: 'A256GCM', epk: ephemeralPublicJwk })
+      return TypedArrayEncoder.fromUtf8String(header)
+    },
+  },
+  data,
+})
+
+// decrypt, 0.7
+keyAgreement: { algorithm: 'ECDH-ES', keyId: recipientKeyId, externalPublicJwk: epk }
+// decrypt, 0.8
+keyAgreement: { algorithm: 'ECDH-ES', keyId: recipientKeyId, ephemeralPublicJwk: epk }
+```
+
+Custom backends that support ECDH encryption: `encrypt` must generate the ephemeral key, call `encryption.aad({ ephemeralPublicJwk })` once when it's a function and use the result as the AAD, and return `ephemeralPublicJwk` (and `encryptedKeys` for the key wrapping algorithms). See [Build your own backend](../../agent-setup/key-management.mdx#build-your-own-backend).
+
+### Secure environment (React Native)
+
+`SecureEnvironmentKeyManagementService` needs `@animo-id/expo-secure-environment` 0.3. Its key options are passed as `backendOptions` to `createKey`. Without options, a key needs biometrics for every signature and, on Android, StrongBox, so creating a key fails on phones without StrongBox. Set `minimumKeyStorage: 'trustedEnvironment'` to support phones without it. See [Key management](../../agent-setup/key-management.mdx#askar-and-the-secure-environment-on-react-native).
+
+```ts
+await agent.kms.createKey({
+  type: { kty: 'EC', crv: 'P-256' },
+  backend: 'secureEnvironment',
+  backendOptions: { minimumKeyStorage: 'trustedEnvironment' },
+})
+```
+
+### Other crypto changes
+
+- `agent.kms.getPublicKey({ keyId, backend })` returns the key from that backend. Before, it returned the key from the first backend that had one.
+- `JwsService` rejects a JWS with a `crit` or `b64` protected header.
+- AES-GCM decryption in the Node.js backend requires a 16-byte tag. Truncated tags are rejected.
+- `NodeKeyManagementService` returns `Uint8Array` instead of `Buffer` from `randomBytes`, `sign`, `encrypt` and `decrypt`. Also in 0.7.3.
+- ECDH-ES in the Node.js backend derives keys with SHA-256 on P-384 and P-521, like other JOSE libraries. Data encrypted with the old Node.js backend on those curves can't be decrypted anymore. Also in 0.7.3.
 
 ## New in 0.8
 
 - Tenants have a status. After `agent.modules.tenants.updateTenantStatus(tenantId, TenantStatus.Inactive)`, opening a session for the tenant throws a `TenantInactiveError`, so its inbound DIDComm messages and OpenID4VC requests fail. See [Tenant status](../../agent-setup/multi-tenancy.mdx#tenant-status).
+- The OpenID4VCI issuer supports credential request and response encryption. See [Encrypt credential requests and responses](../../protocols/openid4vc/issuer.mdx#encrypt-credential-requests-and-responses).
+- `issuerInfo` on `createIssuer` and `updateIssuerMetadata` publishes `issuer_info` (ETSI TS 119 472-3) in the issuer metadata. See [Create the issuer](../../protocols/openid4vc/issuer.mdx#create-the-issuer).
+- A chained authorization server uses DPoP towards the identity provider when the identity provider advertises support. Configure it with `dpop` on the chained authorization server config. See [Issuance authorization](../../protocols/openid4vc/authorization.mdx).
+- `agent.openid4vc.holder.declineOpenId4VpAuthorizationRequest` sends an OpenID4VP error response (`access_denied` by default) to the verifier, or returns it for a DC API request. See [Decline the request](../../protocols/openid4vc/present.mdx#decline-the-request).
+- The verification session state changed event has the new `state`, and on `ResponseVerified` the verified response as `verifiedAuthorizationResponse`, so you don't have to call `getVerifiedAuthorizationResponse`. See [Verifying credentials](../../protocols/openid4vc/verifier.mdx).
+- `agent.mdoc.createDcApiVerificationSession` takes `deviceRequestInfo.useCases` and per document request `requestInfo` with alternative elements and accepted issuers. `createDcApiResponse` takes several `docRequestIndex` values per credential, and `alternatives`. See [Building a verifier](../../protocols/dc-api/verifier.mdx).
+- `MdocDeviceResponse.verify` returns per document the `documentIndex`, the verified `mdoc` and the `trustedIssuanceChain` it was verified against. See [mdoc](../../credential-formats/mdoc.mdx).
 - `SdJwtVcModule` accepts a `customStatusListFetcher` to control how status lists are fetched. See [Status lists](../../credential-formats/status-lists.mdx#verify).
-- `agent.kms.supportedJwaSignatureAlgorithms()` lists the signature algorithms the configured backends support. See [Key management](../../agent-setup/key-management.mdx).
+- `agent.kms.supportedJwaSignatureAlgorithms()` lists the signature algorithms the configured backends support. `createKey` and `createKeyForSignatureAlgorithm` take `backendOptions` together with `backend`. See [Key management](../../agent-setup/key-management.mdx).
+- `SecureEnvironmentKeyManagementService` takes a `prompt` for the authentication prompt texts, and `withUserAuthentication(agentContext, callback, { keyIds, prompt })` lets the signatures in the callback share one user authentication on iOS.
+- KMS `encrypt` supports several recipients, and the Askar and Node.js backends support `ECDH-1PU+A256KW`. `JweService` in `@credo-ts/core` creates and decrypts compact and general JSON JWEs.
 - `validitySkewSeconds` also applies to the OpenID4VC issuer's checks of wallet attestations and DPoP proofs. See [Agent setup](../../agent-setup/index.mdx#config).
-- The `DidCommMessageProcessingFailed` event is emitted when an inbound DIDComm message can't be processed. See [DIDComm events](../../protocols/didcomm/index.mdx#events).
+- The `DidCommMessageProcessed` event has `handled`, which is `false` when no message handler ran, for example because a middleware didn't call `next`. See [DIDComm events](../../protocols/didcomm/index.mdx#events).
+- `proofs.requestProof()` and `proofs.createRequest()` take `expiresTime`, which adds a `~timing.expires_time` decorator to the request. See [Requesting proofs](../../protocols/didcomm/present-proof.mdx).
+- X.509 `issuer` and `subject` take `organizationName` and `organizationIdentifier`. See [X.509 certificates](../../dids-and-trust/x509.mdx).
+- The discover features, mediator and mediation recipient module config classes and option types are exported from `@credo-ts/didcomm`.

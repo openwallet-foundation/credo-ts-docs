@@ -11,6 +11,7 @@ import { agentDependencies } from '@credo-ts/node'
 import {
   type OpenId4VciCredentialBindingResolver,
   OpenId4VcModule,
+  Openid4vpAuthorizationRequestError,
   preAuthorizedCodeGrantIdentifier,
 } from '@credo-ts/openid4vc'
 import { issuerCertificate } from './openid4vc-issuer.js'
@@ -117,4 +118,26 @@ export async function presentCredential(authorizationRequest: string) {
 
   // If the verifier returns a redirect URI, open it to continue in the verifier's app or website
   return result.redirectUri
+}
+
+export async function declinePresentation(authorizationRequest: string) {
+  // start-section-9
+  try {
+    const resolvedRequest = await holder.openid4vc.holder.resolveOpenId4VpAuthorizationRequest(authorizationRequest)
+
+    // The user declined, or the wallet has no matching credentials
+    const { redirectUri } = await holder.openid4vc.holder.declineOpenId4VpAuthorizationRequest({
+      authorizationRequestPayload: resolvedRequest.authorizationRequestPayload,
+    })
+    return redirectUri
+  } catch (error) {
+    if (!(error instanceof Openid4vpAuthorizationRequestError)) throw error
+
+    // Tell the verifier its request is invalid. No redirectUri when the verifier wasn't authenticated.
+    const { redirectUri } = await holder.openid4vc.holder.declineOpenId4VpAuthorizationRequest({
+      authorizationRequestError: error,
+    })
+    return redirectUri
+  }
+  // end-section-9
 }

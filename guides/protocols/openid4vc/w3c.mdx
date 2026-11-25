@@ -48,7 +48,7 @@ The issuer signs with a DID that it created in its own agent, and the mapper put
 - `issuerDid` is a DID created with `agent.dids.create`, for example `did:key`, and `verificationMethod` is the id of its signing key. W3C credentials can't be signed with an X.509 certificate. See [DIDs](../../dids-and-trust/index.mdx).
 - `holderBinding.keys` has a `didUrl` for each holder key. Its DID becomes the credential subject.
 - For VCDM 1.1 (`ClaimFormat.JwtVc`), return a `W3cCredential` and the verification method. Credo picks the JWT algorithm from the key.
-- For VCDM 2.0 (`ClaimFormat.SdJwtW3cVc`), return a `W3cV2Credential`, the `alg`, the `holder` (written to `cnf`) and a `disclosureFrame`.
+- For VCDM 2.0 (`ClaimFormat.SdJwtW3cVc`), return a `W3cV2Credential`, the `alg`, the `holder` (written to `cnf`) and a `disclosureFrame`. The frame can't make `issuer`, `validFrom` or `validUntil` selectively disclosable.
 
 Don't add a `credentialStatus`: Credo can't check it, and a Credo verifier rejects VCDM 1.1 presentations of credentials that have one.
 

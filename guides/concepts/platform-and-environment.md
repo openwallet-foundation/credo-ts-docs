@@ -13,7 +13,7 @@ Some parts of Credo only run on Node.js: the DIDComm inbound transports from `@c
 
 ## React Native
 
-Use `@credo-ts/react-native` for mobile wallets. It needs `react-native-get-random-values`, `expo-crypto`, and a file system package (`@dr.pogodin/react-native-fs` or `react-native-fs`).
+Use `@credo-ts/react-native` for mobile wallets. It needs React Native 0.74 or later, `react-native-get-random-values`, and a file system package (`@dr.pogodin/react-native-fs` or `react-native-fs`).
 
 Askar, AnonCreds and Indy VDR are native modules. With Expo, that means you need a development build: Expo Go can't load them.
 

@@ -84,6 +84,8 @@ The Node.js example stores records with [Drizzle](../../agent-setup/storage/driz
 
 `DidCommHttpInboundTransport` takes a `port` and an optional `path`. Pass `app` instead of `port` to mount it on an Express app you start yourself. `DidCommWsInboundTransport` takes a `port`, or a `server` (a `WebSocketServer` from `ws`). To serve HTTP and WebSocket on one port, give the WebSocket server `noServer: true` and forward the HTTP server's `upgrade` events to it, as the [sample mediator](https://github.com/openwallet-foundation/credo-ts/blob/main/samples/mediator.ts) does.
 
+Both inbound transports reject messages over 5 MiB. A mediator that forwards messages with large attachments can raise the WebSocket limit with `maxPayloadBytes`. When you pass your own `server`, set `maxPayload` on it instead. `DidCommHttpOutboundTransport` limits responses with the agent's [`fetchLimits`](../../agent-setup/index.mdx#config), or with its own `maxResponseBytes`.
+
 ### Protocols
 
 The connection, out-of-band and discover features protocols are always on. The other protocols are on by default. Pass `false` to turn one off, which also removes its API from `agent.didcomm`, or pass an object to configure it.
@@ -110,6 +112,7 @@ By default, `credentials` and `proofs` register the 2.0 protocols without any cr
 | `queueTransportRepository` | in memory | Where messages for agents without an endpoint wait until they are picked up. Mediators need a persistent queue. |
 | `didCommMimeType` | `DidCommMimeType.V1` | Content type for sent messages. `DidCommMimeType.V0` (`application/ssi-agent-wire`) is for older agents. |
 | `useDidKeyInProtocols` | `true` | Encode keys as `did:key` in protocol messages (RFC 0360). |
+| `maxInvitationBytes` | `maxResponseBytes` of the agent's [`fetchLimits`](../../agent-setup/index.mdx#config) | Maximum size of an invitation fetched from a short URL. |
 | `useDidSovPrefixWhereAllowed` | `false` | Use the legacy `did:sov:BzCbsNYhMrjHiqZDTUASHg;spec` message type prefix for older agents. |
 
 ## Events
@@ -129,6 +132,7 @@ The event type enums and payload types are exported from `@credo-ts/didcomm`.
 | `DidCommProofEventTypes.ProofStateChanged` | `proofRecord`, `previousState` |
 | `DidCommBasicMessageEventTypes.DidCommBasicMessageStateChanged` | `basicMessageRecord`, `message` |
 | `DidCommRoutingEventTypes.MediationStateChanged` | `mediationRecord`, `previousState` |
+| `DidCommEventTypes.DidCommMessageProcessed` | `message`, `connection`, `handled` (`false` when no handler ran, for example because a middleware didn't call `next`) |
 | `DidCommEventTypes.DidCommMessageProcessingFailed` | `error`, `message`, `connection` |
 
 Each event also has `metadata.contextCorrelationId`, which tells you which tenant it belongs to when you use [multi-tenancy](../../agent-setup/multi-tenancy.mdx).

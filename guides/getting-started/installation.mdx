@@ -45,7 +45,7 @@ Create an Expo app, or use an existing one:
 npx create-expo-app@latest my-wallet
 ```
 
-Credo uses native modules, so it doesn't run in Expo Go. Build the app with [Continuous Native Generation](https://docs.expo.dev/workflow/continuous-native-generation/), for example with `npx expo run:android` and `npx expo run:ios` or with EAS Build. Expo's TypeScript and Metro defaults work with Credo's ES modules, so you don't need to change them.
+Credo needs React Native 0.74 or later. It uses native modules, so it doesn't run in Expo Go. Build the app with [Continuous Native Generation](https://docs.expo.dev/workflow/continuous-native-generation/), for example with `npx expo run:android` and `npx expo run:ios` or with EAS Build. Expo's TypeScript and Metro defaults work with Credo's ES modules, so you don't need to change them.
 
 </TabItem>
 </Tabs>
@@ -67,34 +67,21 @@ Keep all `@credo-ts/*` packages on the same version. They depend on each other w
 Install the peer dependencies of `@credo-ts/react-native` with `npx expo install`, so you get the versions that match your Expo SDK:
 
 ```bash
-npx expo install expo-crypto react-native-get-random-values @dr.pogodin/react-native-fs
+npx expo install react-native-get-random-values @dr.pogodin/react-native-fs
 ```
 
 | Package | Why Credo needs it |
 | --- | --- |
 | `react-native-get-random-values` | Secure random numbers. `@credo-ts/react-native` imports it for you, so you don't need a polyfill in your entry file. |
-| `expo-crypto` | Hashing in the JSON-LD libraries Credo uses. |
 | `@dr.pogodin/react-native-fs` | File system access. `react-native-fs` works too. Importing `@credo-ts/react-native` throws if neither is installed. |
-
-`@credo-ts/react-native` declares `expo-crypto@^15` as its peer range, which only matches Expo SDK 54. With a newer SDK, npm refuses to install Credo with an `ERESOLVE` error. Add an override to your `package.json` first:
-
-```json title="package.json"
-{
-  "overrides": {
-    "@credo-ts/react-native": {
-      "expo-crypto": "$expo-crypto"
-    }
-  }
-}
-```
-
-pnpm and Yarn print a peer dependency warning instead.
 
 Then install Credo:
 
 <InstallTabs packages="@credo-ts/core @credo-ts/react-native @credo-ts/askar @openwallet-foundation/askar-react-native@0.6.1" />
 
 `@openwallet-foundation/askar-react-native` is linked automatically and doesn't need a config plugin. Rebuild the native app after you install it.
+
+Credo uses the global `fetch` and limits the size of responses (see [`fetchLimits`](../agent-setup/index.mdx#config)). React Native's built-in `fetch` only returns a response after it downloaded the whole body, so a large response still fills memory before Credo rejects it. From Expo SDK 56, the global `fetch` is `expo/fetch`, which streams the body and doesn't have this problem. On older SDKs, or with `EXPO_PUBLIC_USE_RN_FETCH` set, use a fetch implementation that streams.
 
 </TabItem>
 </Tabs>

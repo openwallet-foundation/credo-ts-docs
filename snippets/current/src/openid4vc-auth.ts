@@ -99,8 +99,6 @@ const issuer = new Agent({
         credentialRequestToCredentialMapper,
         // Creates the OpenID4VP request for presentation during issuance
         getVerificationSession,
-        // Require DPoP for all issuance sessions. PKCE is required by default.
-        dpopRequired: true,
       },
       // Presentation during issuance uses the verifier of the same agent
       verifier: { baseUrl: `${issuerUrl}/oid4vp` },
@@ -122,7 +120,7 @@ await issuer.initialize()
 await holder.initialize()
 const server = app.listen(4030)
 
-// Self-signed certificate for the example. The SAN must match the host of `issuerUrl`.
+// Self-signed certificate for the example. It also signs the OpenID4VP request, so its SAN must match the host of `issuerUrl`.
 issuerCertificate = await issuer.x509.createCertificate({
   authorityKey: PublicJwk.fromPublicJwk((await issuer.kms.createKey({ type: { kty: 'EC', crv: 'P-256' } })).publicJwk),
   issuer: { commonName: 'Credo example issuer', countryName: 'NL' },
@@ -146,8 +144,6 @@ await holder.sdJwtVc.store({
 // start-section-4
 const issuerRecord = await issuer.openid4vc.issuer.createIssuer({
   issuerId: 'example-issuer',
-  // Advertise DPoP support in the authorization server metadata
-  dpopSigningAlgValuesSupported: [KnownJwaSignatureAlgorithms.ES256],
   credentialConfigurationsSupported: {
     diploma: {
       format: OpenId4VciCredentialFormatProfile.SdJwtDc,

@@ -20,7 +20,7 @@ Add the Node.js backend next to Askar to [verify RSA signatures](#verify-rsa-sig
 
 Keys in the [secure environment](#secure-environment-react-native) are created in the phone's secure hardware and never leave it, so a copy of the wallet's data can't sign with them. Use it for the keys that credentials are bound to when issuers ask for it. Under HAIP, an issuer can require a [key attestation](../protocols/openid4vc/authorization.mdx#wallet-and-key-attestations) that says how the keys are protected, and the EUDI Wallet requires hardware-protected keys for credentials such as the PID. When no issuer asks for it, keep the keys in Askar, because hardware keys come with trade-offs:
 
-- Every signature shows a biometric prompt, so a presentation or a batch issuance asks the user to authenticate for each key it signs with.
+- By default every signature shows a biometric prompt, so a presentation or a batch issuance asks the user to authenticate for each key it signs with. On iOS, [`withUserAuthentication`](#askar-and-the-secure-environment-on-react-native) reduces this to one prompt.
 - Only P-256 keys and ES256 signatures. DIDs and credentials that need Ed25519 stay in Askar.
 - The keys can't be backed up or moved, so on a new phone the user needs new credentials. Changing the enrolled biometrics also invalidates the keys.
 
@@ -49,9 +49,9 @@ It needs a key storage. For a test agent, keep the keys in memory:
 
 ### Secure environment (React Native)
 
-`SecureEnvironmentKeyManagementService` from `@credo-ts/react-native` (backend `secureEnvironment`) creates keys in the Secure Enclave on iOS and the Android Keystore, protected with biometrics. It needs `@animo-id/expo-secure-environment` 0.1 (version 0.2 doesn't match the peer dependency range). The package's README lists its platform requirements, such as Android API 30 or higher.
+`SecureEnvironmentKeyManagementService` from `@credo-ts/react-native` (backend `secureEnvironment`) creates keys in the Secure Enclave on iOS and the Android Keystore, protected with biometrics. It needs `@animo-id/expo-secure-environment` 0.3, which supports Android 11 (API 30) and iOS 16.4 and later.
 
-<InstallTabs packages="@animo-id/expo-secure-environment@^0.1.5" />
+<InstallTabs packages="@animo-id/expo-secure-environment@^0.3.0" />
 
 It only creates P-256 keys, signs with ES256 and deletes keys. It can't verify, encrypt, import keys or generate random bytes, so you always use it next to Askar. See [Askar and the secure environment](#askar-and-the-secure-environment-on-react-native).
 
@@ -65,8 +65,8 @@ It only creates P-256 keys, signs with ES256 and deletes keys. It can't verify, 
 | OKP curves | Ed25519, X25519 | Ed25519, X25519 | No |
 | RSA | No | Yes | No |
 | Symmetric keys | AES-128, AES-256, ChaCha20-Poly1305 | AES, HMAC | No |
-| Sign and verify | EdDSA, ES256, ES384, ES256K | EdDSA, ES256, ES384, ES512, ES256K, RS\*, PS\*, HS\* | ES256, sign only |
-| Encrypt and decrypt | AES-GCM, AES-CBC-HMAC, (X)ChaCha20, XSalsa20, AES key wrap, ECDH-ES, HPKE | AES-GCM, AES-CBC, AES-CBC-HMAC, ChaCha20, ECDH-ES, HPKE | No |
+| Sign and verify | EdDSA, ES256, ES384, ES256K, and verifying ES512 | EdDSA, ES256, ES384, ES512, ES256K, RS\*, PS\*, HS\* | ES256, sign only |
+| Encrypt and decrypt | AES-GCM, AES-CBC-HMAC, (X)ChaCha20, XSalsa20, AES key wrap, ECDH-ES, ECDH-1PU, HPKE | AES-GCM, AES-CBC, AES-CBC-HMAC, ChaCha20, ECDH-ES, ECDH-1PU, HPKE | No |
 | Import keys | EC and OKP keys | EC, OKP, RSA and symmetric keys | No |
 
 ## Multiple backends
@@ -101,6 +101,13 @@ Don't only list the secure environment in `backends` and let `AskarModule` add i
 Create a hardware key by passing `backend`. Signing finds the key by its key id:
 
 ```ts showLineNumbers title="hardware-key.ts" kms-secure-environment-rn.ts section-2
+```
+
+`backendOptions` are the `generateKeypair` options of `@animo-id/expo-secure-environment`. Without them, every signature needs biometrics, and on Android the key must be stored in StrongBox, so creating it fails on phones without StrongBox. Set `minimumKeyStorage: 'trustedEnvironment'` to also accept the TEE. `userAuthentication` sets the methods (`biometric`, `deviceCredential`), and on Android a `validitySeconds` during which the key signs without asking again.
+
+To sign with several keys after one prompt, for example to present several credentials, run the signing in `withUserAuthentication` on the backend instance. On iOS the first key that needs authentication asks the user, and the other keys reuse it. On Android each key asks as it would without it. `keyIds` limits it to the given keys:
+
+```ts showLineNumbers title="hardware-key.ts" kms-secure-environment-rn.ts section-3
 ```
 
 To verify a signature from a hardware key, pass the `publicJwk` instead of the key id, so another backend does it.
@@ -144,7 +151,7 @@ Credo uses these parts of the interface to route operations:
 | `isOperationSupported(agentContext, operation)` | `true` for each operation and algorithm the backend handles, such as `createKey` for P-256 keys or `sign` with ES256. Credo never sends this backend an operation it returns `false` for. A call that names this backend for such an operation throws. |
 | `getPublicKey(agentContext, keyId)` | The public JWK, with `kid`, or `null` when the backend doesn't hold the key. Credo asks each backend in turn to find the one that holds a key. |
 | `createKey`, `importKey`, `deleteKey` | Manage keys. Return the key id that Credo stores in DIDs and credential records, so keep it stable. Respect `options.keyId` when it's set. |
-| `sign`, `verify`, `encrypt`, `decrypt`, `randomBytes` | The cryptography. Throw `KeyManagementAlgorithmNotSupportedError` or `KeyManagementError` for what you don't support. |
+| `sign`, `verify`, `encrypt`, `decrypt`, `randomBytes` | The cryptography. Throw `KeyManagementAlgorithmNotSupportedError` or `KeyManagementError` for what you don't support. For ECDH key agreement, `encrypt` generates the ephemeral key itself and returns its `ephemeralPublicJwk`. When `encryption.aad` is a function, call it once with that key and use the result as the AAD. |
 
 This backend creates P-256 keys in a cloud KMS and signs with them. The `CloudKmsClient` interface stands in for your KMS SDK:
 

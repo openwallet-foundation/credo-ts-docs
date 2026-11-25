@@ -39,7 +39,7 @@ The mapper returns the SD-JWT VC sign options, one entry for each holder key:
 :::
 
 - `payload.vct` must be the `vct` of the configuration. Credo adds `iat`, and sets `iss` and `cnf` from `issuer` and `holder`.
-- `issuer` signs with an X.509 certificate chain (`x5c`, leaf first) or a DID (`{ method: 'did', didUrl }`, for a DID created in this agent). The optional `issuer` URL becomes the `iss` claim and must match a DNS or URI subject alternative name of the leaf certificate.
+- `issuer` signs with an X.509 certificate chain (`x5c`, leaf first) or a DID (`{ method: 'did', didUrl }`, for a DID created in this agent). The optional `issuer` URL becomes the `iss` claim. Credo doesn't check it against the certificate, so verifiers must not base trust on `iss` for X.509-signed credentials.
 - `disclosureFrame` lists in `_sd` the claims the holder can disclose one by one. Claims that aren't listed are always visible. [SD-JWT VC](../../credential-formats/sd-jwt-vc.mdx) explains nested frames and decoys.
 
 For revocation, add a `status` claim to the payload. See [Status lists](../../credential-formats/status-lists.mdx).

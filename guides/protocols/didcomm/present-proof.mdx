@@ -15,7 +15,6 @@ The proofs module that `DidCommModule` enables by default runs Present Proof v2 
 | Format | Format service | Import from | Key | Presents |
 | --- | --- | --- | --- | --- |
 | AnonCreds | `AnonCredsDidCommProofFormatService` | `@credo-ts/anoncreds/didcomm` | `anoncreds` | AnonCreds credentials |
-| AnonCreds with Hyperledger Indy attachments | `LegacyIndyDidCommProofFormatService` | `@credo-ts/anoncreds/didcomm` | `indy` | AnonCreds credentials |
 | DIF Presentation Exchange ([RFC 0510](https://github.com/decentralized-identity/aries-rfcs/tree/main/features/0510-dif-pres-exch-attach)) | `DidCommDifPresentationExchangeProofFormatService` | `@credo-ts/didcomm` | `presentationExchange` | W3C VCDM 1.1 credentials as JSON-LD (`ldp_vp`) or JWT (`jwt_vp`) presentations, and AnonCreds credentials issued in W3C format |
 
 Use `anoncreds` for AnonCreds credentials and `presentationExchange` for W3C credentials. Present Proof doesn't support SD-JWT VC, mdoc or W3C VCDM 2.0 credentials, including the VCDM 2.0 credentials you can receive over DIDComm. Present SD-JWT VC, mdoc and VCDM 2.0 SD-JWT credentials with [OpenID4VC](../openid4vc/index.mdx) instead.
@@ -50,6 +49,8 @@ The verifier usually starts with a request. The holder can also propose what it 
 :::
 
 Credo looks up candidate credentials by the `schema` URI, which matches a JSON-LD context or an expanded type of the credential. The `constraints` then filter on the credential's content with JSONPath and JSON Schema. Credo adds a random challenge to the request, which the holder signs, unless you set `options.challenge` yourself.
+
+`requestProof` and `createRequest` take an optional `expiresTime` (a `Date`), which adds the RFC 0032 `~timing.expires_time` decorator to the request. It only informs the holder: Credo doesn't act on it when it receives a request.
 
 To request a proof without a connection, create it with `createRequest` and attach the returned `message` to an out-of-band invitation, with `handshake: false` to skip creating a connection.
 

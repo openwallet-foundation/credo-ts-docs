@@ -35,12 +35,11 @@ const issuerCertificate = await issuer.x509.createCertificate({
   validity: { notBefore: new Date(), notAfter: new Date(Date.now() + oneYear) },
   extensions: {
     keyUsage: { usages: [X509KeyUsage.DigitalSignature], markAsCritical: true },
-    subjectAlternativeName: { name: [{ type: 'dns', value: 'issuer.example.com' }] },
   },
 })
 
 const x509SignedCredential = await issuer.sdJwtVc.sign({
-  issuer: { method: 'x5c', x5c: [issuerCertificate], issuer: 'https://issuer.example.com' },
+  issuer: { method: 'x5c', x5c: [issuerCertificate] },
   payload: { vct: 'https://example.com/membership', name: 'Jane Doe' },
 })
 

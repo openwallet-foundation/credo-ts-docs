@@ -32,7 +32,7 @@ Add the config plugin to `app.json` and run `npx expo prebuild`:
 }
 ```
 
-- The module needs Expo SDK 55 and React Native 0.83 or later. On these SDKs, npm only installs Credo with the `expo-crypto` override from [Installation](../../getting-started/installation.mdx). It works on Android devices whose Credential Manager has the registry API, and on iOS 26 and later. The app itself can still support older iOS versions.
+- The module needs Expo SDK 55 and React Native 0.83 or later. It works on Android devices whose Credential Manager has the registry API, and on iOS 26 and later. The app itself can still support older iOS versions.
 - `entry` is the file with the request UI, without extension.
 - `ios.documentTypes` are the mdoc document types the wallet can present on iOS, from the set Apple allows: `org.iso.18013.5.1.mDL`, `eu.europa.ec.eudi.pid.1`, `eu.europa.ec.av.1`, `org.iso.23220.photoid.1` and `org.iso.23220.1.jp.mnc`. Without it, the plugin doesn't add the iOS app extension. Android needs no options.
 
@@ -77,8 +77,10 @@ When the user picks a credential of the wallet, the operating system starts the 
 ```
 
 - `resolveDcApiRequest` rejects a request without an origin. It verifies reader authentication and matches the stored mdocs against each document request. `success` is `false` when they can't satisfy the request.
+- A request can have use cases, which say which document requests the wallet has to answer, for example an mDL, or a passport and a residence permit. `success` is then `true` when the stored mdocs can answer the use cases, and `useCases[].matchingDocumentSets` says with which document requests. A document request without a matching mdoc doesn't make the request fail.
 - A signed request from a reader you don't trust throws. Trust readers through the agent's trust configuration with verification type `mdocReaderAuth`, or pass `trustedReaderCertificates`. `readerAuth.certificateChain` on each document request has the verified chain, leaf first, to show the verifier to the user.
-- `createDcApiResponse` discloses every requested element. Pass `elements` per credential to disclose fewer, for example to leave out the ones the user declined. It sends nothing: hand the returned `response` back to the platform.
+- `selectCredentialsForRequest` picks the document requests to answer, and the first matching mdoc for each. Pass its result to `createDcApiResponse` as is.
+- `createDcApiResponse` discloses every requested element. Set `elements` on a credential to disclose fewer, for example to leave out the ones the user declined. Where the verifier allows alternative elements, `alternatives` picks one of them in place of an element. It sends nothing: hand the returned `response` back to the platform.
 
 </TabItem>
 </Tabs>

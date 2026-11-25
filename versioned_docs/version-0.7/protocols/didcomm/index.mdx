@@ -132,6 +132,7 @@ The event type enums and payload types are exported from `@credo-ts/didcomm`.
 | `DidCommProofEventTypes.ProofStateChanged` | `proofRecord`, `previousState` |
 | `DidCommBasicMessageEventTypes.DidCommBasicMessageStateChanged` | `basicMessageRecord`, `message` |
 | `DidCommRoutingEventTypes.MediationStateChanged` | `mediationRecord`, `previousState` |
+| `DidCommEventTypes.DidCommMessageProcessingFailed` (since 0.7.3) | `error`, `message`, `connection` |
 
 Each event also has `metadata.contextCorrelationId`, which tells you which tenant it belongs to when you use [multi-tenancy](../../agent-setup/multi-tenancy.mdx).
 

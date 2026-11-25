@@ -84,10 +84,12 @@ export async function createEmployeeBadgeRequest() {
 // start-section-4
 verifier.events.on<OpenId4VcVerificationSessionStateChangedEvent>(
   OpenId4VcVerifierEvents.VerificationSessionStateChanged,
-  ({ payload: { verificationSession } }) => {
-    if (verificationSession.state === OpenId4VcVerificationSessionState.ResponseVerified) {
-      console.log(`Verification session ${verificationSession.id} verified`)
-    } else if (verificationSession.state === OpenId4VcVerificationSessionState.Error) {
+  ({ payload }) => {
+    const { verificationSession } = payload
+    if (payload.state === OpenId4VcVerificationSessionState.ResponseVerified) {
+      const { dcql } = payload.verifiedAuthorizationResponse
+      console.log(`Verification session ${verificationSession.id} verified`, dcql?.presentations['employee-badge'])
+    } else if (payload.state === OpenId4VcVerificationSessionState.Error) {
       console.error(`Verification session ${verificationSession.id} failed: ${verificationSession.errorMessage}`)
     }
   }

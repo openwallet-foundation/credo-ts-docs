@@ -24,11 +24,11 @@ Every credential configuration you offer with the authorization code flow needs 
 | Feature | Protects against | HAIP | Credo issuer default |
 | --- | --- | --- | --- |
 | PKCE | Another app redeeming an intercepted authorization code | Required, with `S256` | Required |
-| DPoP | Someone else using a stolen access token. DPoP binds the token to a key of the holder. | Required | Off |
+| DPoP | Someone else using a stolen access token. DPoP binds the token to a key of the holder. | Required | Required |
 | Wallet attestation | Wallet apps you don't trust getting credentials. The wallet authenticates with an attestation from its wallet provider. | Issuers must authenticate wallets, usually with wallet attestations | Off |
 | Key attestation | Credentials bound to keys without the protection you need, for example outside a secure element | Wallets must support them | Off, set per credential configuration |
 
-For an issuer: keep PKCE on and turn on DPoP. Require wallet and key attestations only when the wallets you issue to get them from their wallet provider, as in the EU Digital Identity Wallet ecosystem. Wallets without them can't get your credentials.
+For an issuer: keep PKCE and DPoP on. Require wallet and key attestations only when the wallets you issue to get them from their wallet provider, as in the EU Digital Identity Wallet ecosystem. Wallets without them can't get your credentials.
 
 For a wallet: the Credo holder uses PKCE and DPoP automatically when the issuer supports them. Wallet and key attestations need a backend from your wallet provider, see [Wallet and key attestations](#wallet-and-key-attestations).
 
@@ -39,7 +39,7 @@ Each requirement has a module option that applies to all issuance sessions, and 
 | Module option | Per session | Default |
 | --- | --- | --- |
 | `pkceRequired` | `requirePkce` | `true` |
-| `dpopRequired` | `requireDpop` | `false` |
+| `dpopRequired` | `requireDpop` | `true` |
 | `walletAttestationsRequired` | `requireWalletAttestation` | `false` |
 
 If you leave the per-session option out, the module option applies. `false` turns the requirement off for that session, even when the module option requires it.
@@ -127,6 +127,7 @@ With a chained authorization server, holders talk to Credo's authorization serve
 - Credo exchanges the code at your identity provider with `clientAuthentication`. Register `<baseUrl>/<issuerId>/redirect` as the redirect URI of that client.
 - `scopesMapping` maps each credential scope to the scopes Credo requests from your identity provider. To decide per session instead, use the `getChainedAuthorizationRequestParameters` callback in the issuer module config.
 - Set `redirectUris` to the redirect URIs of the wallets you accept. Without it, Credo accepts any redirect URI.
+- Credo uses DPoP towards your identity provider when the provider advertises it. Configure it with `dpop`: `requireServerSupport: true` fails the authorization when the provider doesn't support DPoP, `keyId` selects the KMS key, and `signingAlgValuesSupported` limits the algorithms. Without `keyId`, Credo creates a key per session, and deletes it when you delete the session.
 
 In the mapper, the token response of your identity provider, including an `id_token`, is in `issuanceSession.chainedIdentity.externalAccessTokenResponse`. A chained flow can't be combined with presentation during issuance.
 
@@ -162,7 +163,9 @@ The authorization request goes through PAR when the authorization server support
 
 PKCE ties the authorization code to the holder that started the authorization. Credo's authorization server requires it by default (`pkceRequired`), and only supports the `S256` method. When a holder sends a code challenge, Credo always checks the code verifier, also for sessions that don't require PKCE.
 
-DPoP binds the access token to a key of the holder. Enable it on the issuer record with `dpopSigningAlgValuesSupported`, as in the [presentation during issuance](#presentation-during-issuance) example: Credo only advertises DPoP when it's set. Require it with `dpopRequired` or `requireDpop`. When a holder uses DPoP in its first request, Credo requires it for the rest of that session.
+DPoP binds the access token to a key of the holder. Credo requires it by default. Turn it off with `dpopRequired: false`, or `requireDpop: false` for one session. When a holder uses DPoP in its first request, Credo requires it for the rest of that session. Credo accepts DPoP proofs signed with any signature algorithm of the agent's KMS. To limit them, set `dpopSigningAlgValuesSupported` in the issuer module config, or on the issuer record for one issuer.
+
+Refresh tokens let a holder get a new access token without a new authorization. Enable them with `generateRefreshTokens` in the issuer module config, or per offer. Credo binds each refresh token to the holder's DPoP key, so creating a session with refresh tokens throws when DPoP isn't required.
 
 ### Holder
 
@@ -187,13 +190,7 @@ Trust the wallet provider, for example with `getTrustedIssuersForVerification` i
 
 :::
 
-Credo checks attestations signed with an X.509 certificate against your trust configuration, and accepts DID-signed attestations unless you return a list of trusted DIDs. See [Trusted issuers](../../dids-and-trust/trust.mdx).
-
-:::warning
-
-Your trust configuration only applies to attestations signed with an `x5c` certificate chain or a DID. Credo accepts an attestation signed with a bare JWK (a `jwk` header) from anyone whose signature verifies, so it proves nothing about the wallet provider.
-
-:::
+Credo checks attestations signed with an X.509 certificate against your trust configuration, and accepts DID-signed attestations unless you return a list of trusted DIDs. See [Trusted issuers](../../dids-and-trust/trust.mdx). Attestations must be signed with an `x5c` certificate chain or a DID. Credo rejects attestations signed with a bare JWK (a `jwk` header), as it can't check those against your trust configuration.
 
 Then require wallet attestations, advertise attestation-based client authentication (`clientAttestationSigningAlgValuesSupported` and `clientAttestationPopSigningAlgValuesSupported`), and set the key attestation requirements:
 
@@ -229,7 +226,9 @@ The mapper gets the attested keys in `holderBinding.keys`, and the verified key 
 
 :::
 
-Pass `walletAttestationJwt` to every call to the authorization server: `resolveOpenId4VciAuthorizationRequest`, `retrieveAuthorizationCodeUsingPresentation`, `requestToken` and `refreshToken`. Credo signs the proof of possession with the key in the attestation's `cnf`, so that key must be in the wallet's KMS.
+Pass `walletAttestationJwt` to every call to the authorization server: `resolveOpenId4VciAuthorizationRequest`, `retrieveAuthorizationCodeUsingPresentation`, `requestToken` and `refreshToken`. Credo signs the proof of possession with the key in the attestation's `cnf`, so that key must be in the wallet's KMS. Also pass the attestation's `sub` as `clientId` to `requestCredentials`, as in the example.
+
+A Credo issuer binds the session to the `cnf` key and `sub` of the first wallet attestation, and requires the same ones in every later request, including refresh token requests. If your wallet renews its attestation during a session, keep the same key.
 
 When the issuer requires key attestations, `proofTypes.jwt.keyAttestationsRequired` (or `proofTypes.attestation`) says so, and the binding resolver must return `{ method: 'attestation', keyAttestationJwt }`. Binding to a DID isn't possible then. The attested keys must be in the wallet's KMS, with their KMS key id as `kid`, and you get one credential instance per attested key. Without a `nonce` in the key attestation, Credo sends a `jwt` proof signed with the first attested key. With the issuer's `cNonce` (passed to the resolver) as `nonce`, it sends the key attestation as an `attestation` proof.
 

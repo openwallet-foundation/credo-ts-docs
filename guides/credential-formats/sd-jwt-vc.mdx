@@ -44,7 +44,7 @@ Each `_sd` lists the claims of one object that the holder can disclose separatel
 
 ### Sign with an X.509 certificate
 
-Sign with X.509 when your verifiers expect certificates, as HAIP and the EUDI Wallet do. Otherwise a DID is simpler. Put the certificate chain in `x5c`, leaf certificate first. Credo signs with the leaf certificate's key, so that key must be in the agent's KMS. A certificate you create with `agent.x509.createCertificate` from a KMS key is ready to use. For certificate chains and trust anchors, see [X.509 certificates](../dids-and-trust/x509.mdx).
+Sign with X.509 when your verifiers expect certificates, as HAIP and the EUDI Wallet do. Otherwise a DID is simpler. Put the certificate chain in `x5c`, leaf certificate first. Credo signs with the leaf certificate's key, so that key must be in the agent's KMS. A certificate you create with `agent.x509.createCertificate` from a KMS key is ready to use. The `iss` claim is optional with X.509 and doesn't have to match the certificate. When verifying, trust comes from the certificate chain, never from `iss`. For certificate chains and trust anchors, see [X.509 certificates](../dids-and-trust/x509.mdx).
 
 :::issuer
 
@@ -136,8 +136,9 @@ SD-JWT VC type metadata describes a `vct`: display names, claim labels and rende
 ```ts showLineNumbers title="sd-jwt-vc.ts" format-sd-jwt-vc.ts section-7
 ```
 
-- `customTypeMetadataResolver` is called for the `vct`, and for each `extends` value in the type metadata. Return the type metadata document, `undefined` for none, or call `defaultResolver` for the HTTPS fetch. If the credential has a `vct#integrity` claim, your resolver has to check it; `IntegrityVerifier` from `@credo-ts/core` does that. The default resolver checks integrity itself.
+- `customTypeMetadataResolver` is called for the `vct`, and for each `extends` value in the type metadata. Return the type metadata document, `undefined` for none, or call `defaultResolver` for the HTTPS fetch. If the credential has a `vct#integrity` claim, your resolver has to check it. `IntegrityVerifier` from `@credo-ts/core` does that. The default resolver checks integrity itself. Credo rejects type metadata whose `vct` isn't the one it was resolved for.
 - `customStatusListFetcher` replaces the HTTP request for the status list JWT, for example to allow only certain hosts or to cache lists. Credo verifies the returned JWT as usual.
+- `maxTypeMetadataBytes` limits the size of type metadata that the default resolver fetches. It defaults to the `maxResponseBytes` of the agent's [`fetchLimits`](../agent-setup/index.mdx#config).
 
 Pass the module under the `sdJwtVc` key, which replaces the default module. `agent.sdJwtVc.fetchTypeMetadata(sdJwtVc)` resolves type metadata outside of verification.
 

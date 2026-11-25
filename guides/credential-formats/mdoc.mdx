@@ -85,7 +85,7 @@ Only device signatures are supported. Device MAC authentication fails.
 
 :::
 
-`verify` resolves when the response is valid and throws an `MdocError` when it isn't. It checks the issuer signature and certificate chain, the element digests, the device signature over the session transcript, the validity period (with the agent's `validitySkewSeconds`) and the status. `issuerClaims` and `deviceClaims` hold the disclosed elements per document type and namespace.
+`verify` resolves when the response is valid and throws an `MdocError` when it isn't. It checks the issuer signature and certificate chain, the element digests, the device signature over the session transcript, the validity period (with the agent's `validitySkewSeconds`) and the status. `issuerClaims` and `deviceClaims` hold the disclosed elements per document type and namespace. The result lists per document the verified `mdoc` and the `trustedIssuanceChain`, the certificate chain it was verified against.
 
 :::warning[Pass the trusted certificates]
 `MdocDeviceResponse.verify` doesn't use the agent's trusted issuers configuration or the trusted certificates of the X.509 module. Without `trustedCertificates`, every response fails verification. The OpenID4VP verifier and the DC API flow resolve trust for you.

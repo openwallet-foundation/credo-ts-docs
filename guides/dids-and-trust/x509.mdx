@@ -19,7 +19,7 @@ A CA signs the certificates of issuers or verifiers, and whoever checks those ce
 
 Without `subjectPublicKey`, the `authorityKey` signs its own certificate and `issuer` is also the subject. Passing `subject` for a self-signed certificate throws. `pathLenConstraint: 0` lets this CA sign end-entity certificates, but no intermediate CAs.
 
-`issuer` and `subject` take `commonName`, `countryName`, `stateOrProvinceName` and `organizationalUnit`. For other name attributes, pass a distinguished name string such as `'CN=Example Root CA, O=Example, C=NL'`.
+`issuer` and `subject` take `commonName`, `countryName`, `stateOrProvinceName`, `organizationName`, `organizationalUnit` and `organizationIdentifier`. Credo escapes the values as RFC 4514 requires, so a value may contain a comma, but it can't end with a backslash. For other name attributes, pass a distinguished name string such as `'CN=Example Root CA, O=Example, C=NL'`.
 
 ## Issue a certificate
 
@@ -36,7 +36,7 @@ The extensions and subject alternative names (SANs) depend on what the certifica
 | --- | --- |
 | CA, or mdoc IACA | `basicConstraints` with `ca: true`, and a key usage with `KeyCertSign`, plus `CrlSign` if the CA signs CRLs. Credo rejects a CA certificate without `basicConstraints`, or with a key usage that lacks these. |
 | mdoc issuer (document signer) | A country (`countryName`) in the subject, `DigitalSignature` key usage, and the `MdlDs` extended key usage. Credo checks the country but not the extended key usage, which ISO 18013-5 requires. See [mdoc](../credential-formats/mdoc.mdx). |
-| SD-JWT VC issuer | When the credential has an `iss`, a SAN URI equal to it, or a SAN DNS name equal to its host. Without `iss`, no SAN is needed. See [SD-JWT VC](../credential-formats/sd-jwt-vc.mdx). |
+| SD-JWT VC issuer | No specific extensions or SANs. The `iss` of the credential doesn't have to match the certificate. See [SD-JWT VC](../credential-formats/sd-jwt-vc.mdx). |
 | OpenID4VP verifier (access certificate) | With the `x509_san_dns` client id prefix (the default), the host of the verifier's `baseUrl` as a SAN DNS name. With `x509_hash`, no SAN is needed. See [Verifying credentials](../protocols/openid4vc/verifier.mdx). |
 | mdoc reader (DC API reader authentication) | No specific extensions: the wallet checks that the chain leads to a reader certificate it trusts. See [Digital Credentials API](../protocols/dc-api/verifier.mdx#sign-the-requests). |
 
@@ -51,7 +51,7 @@ The extensions and subject alternative names (SANs) depend on what the certifica
 | --- | --- |
 | `trustedCertificates` | PEM or base64 DER strings, or `X509Certificate` instances. Credo uses them as trust anchors when nothing else decides trust, see [Trusted issuers](./trust.mdx). |
 | `getTrustedCertificatesForVerification` | Deprecated. Use the agent's `getTrustedIssuersForVerification` callback instead. |
-| `revocationCheck` | Enables CRL checking during chain validation. See [Revocation](#revocation). |
+| `revocationCheck` | CRL checking during chain validation, on by default. See [Revocation](#revocation). |
 | `parseOptions` | Limits for parsing certificates. See [Parse limits](#parse-limits). |
 
 To change the trusted certificates at runtime, use `agent.x509.config.addTrustedCertificate(certificate)` or `agent.x509.config.setTrustedCertificates(certificates)`.
@@ -79,7 +79,7 @@ Getters include `subject`, `issuer`, `sanDnsNames`, `sanUriNames`, `keyUsage`, `
 ```ts showLineNumbers title="verifier.ts" x509-certificates.ts section-7
 ```
 
-Pass the chain leaf first, as in an `x5c` header. The chain may leave out the root if it's in `trustedCertificates`. On success Credo returns the chain from the trust anchor to the leaf. On failure it throws an `X509ValidationError`, whose `validationResult.validations` shows which check failed.
+Pass the chain leaf first and in order, as in an `x5c` header. The chain may leave out the root and other certificates that are in `trustedCertificates`, but Credo rejects a chain whose certificates are out of order or that it can only build by skipping one of them. On success Credo returns the chain from the trust anchor to the leaf. On failure it throws an `X509ValidationError`, whose `validationResult.validations` shows which check failed.
 
 Credo checks the signatures and validity periods, basic constraints, the `keyCertSign` key usage of CA certificates, path length constraints, critical extensions, and revocation when enabled. It doesn't check OCSP, name constraints or certificate policies, and it doesn't enforce extended key usage.
 
@@ -91,11 +91,11 @@ Without `trustedCertificates`, Credo validates the chain but doesn't check that 
 
 ## Revocation
 
-Credo checks revocation with CRLs, from the URLs in a certificate's `crlDistributionPoints`. Revocation checking is off unless you set `revocationCheck` on the module:
+Credo checks revocation with CRLs, from the URLs in a certificate's `crlDistributionPoints`. It does so by default in `SoftFail` mode, so validation downloads the CRLs of the chain. Change the mode with `revocationCheck` on the module:
 
 | Mode | Behaviour |
 | --- | --- |
-| `X509RevocationCheckMode.SoftFail` | Default when `revocationCheck` is set. Rejects revoked certificates and invalid CRLs, and skips the check when the CRL can't be downloaded. |
+| `X509RevocationCheckMode.SoftFail` | Default. Rejects revoked certificates and invalid CRLs, and skips the check when the CRL can't be downloaded. |
 | `X509RevocationCheckMode.Require` | Also fails when the CRL can't be downloaded. |
 | `X509RevocationCheckMode.Disabled` | No revocation checks. |
 
