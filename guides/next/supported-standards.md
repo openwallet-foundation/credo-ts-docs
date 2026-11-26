@@ -68,7 +68,7 @@ See [DIDs](https://credo.js.org/guides/next/dids-and-trust.md).
 | `did:key`, `did:jwk`, `did:peer`, `did:web` | `@credo-ts/core` |
 | `did:webvh` | `@credo-ts/webvh` |
 | `did:cheqd` | `@credo-ts/cheqd` |
-| `did:indy`, `did:sov` | `@credo-ts/indy-vdr` |
+| `did:indy` | `@credo-ts/indy-vdr` |
 | `did:hedera` | `@credo-ts/hedera` |
 
 ## Platforms and infrastructure

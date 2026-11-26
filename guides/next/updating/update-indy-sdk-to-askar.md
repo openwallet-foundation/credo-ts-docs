@@ -100,7 +100,7 @@ To setup the new dependencies, follow the getting started guide for each package
 
 - [Aries Askar](https://credo.js.org/guides/next/agent-setup/storage/askar.md)
 - [AnonCreds](https://credo.js.org/guides/next/credential-formats/anoncreds.md)
-- [Indy VDR](https://credo.js.org/guides/next/dids-and-trust/indy-vdr.md)
+- [Indy VDR](https://credo.js.org/guides/next/extensions/indy-vdr.md)
 
 Once this has been set-up, make sure all code works on a **fresh environment** before continuing with the migration script.
 

@@ -91,12 +91,12 @@ Each registry handles the identifiers of one DID method, and Credo uses the firs
 
 | Registry | Import from | Identifiers | Network setup |
 | --- | --- | --- | --- |
-| `IndyVdrAnonCredsRegistry` | `@credo-ts/indy-vdr` | `did:indy`, and unqualified Indy identifiers for resolving | [Indy VDR](https://credo.js.org/guides/next/dids-and-trust/indy-vdr.md) |
-| `CheqdAnonCredsRegistry` | `@credo-ts/cheqd/anoncreds` | `did:cheqd` | [cheqd](https://credo.js.org/guides/next/dids-and-trust/cheqd.md) |
-| `HederaAnonCredsRegistry` | `@credo-ts/hedera/anoncreds` | `did:hedera` | [Hedera](https://credo.js.org/guides/next/dids-and-trust/hedera.md) |
+| `IndyVdrAnonCredsRegistry` | `@credo-ts/indy-vdr/anoncreds` | `did:indy` | [Indy VDR](https://credo.js.org/guides/next/extensions/indy-vdr.md) |
+| `CheqdAnonCredsRegistry` | `@credo-ts/cheqd/anoncreds` | `did:cheqd` | [cheqd](https://credo.js.org/guides/next/extensions/cheqd.md) |
+| `HederaAnonCredsRegistry` | `@credo-ts/hedera/anoncreds` | `did:hedera` | [Hedera](https://credo.js.org/guides/next/extensions/hedera.md) |
 | `WebVhAnonCredsRegistry` | `@credo-ts/webvh/anoncreds` | `did:webvh` | [did:webvh](https://credo.js.org/guides/next/dids-and-trust/webvh.md) |
 
-The cheqd, Hedera and did:webvh packages have `@credo-ts/anoncreds` as an optional peer dependency, so install it yourself. Hedera also needs `@hiero-did-sdk/anoncreds`. To register objects on Indy, the issuer needs a `did:indy`.
+The cheqd, Hedera, Indy VDR and did:webvh packages have `@credo-ts/anoncreds` as an optional peer dependency, so install it yourself. Hedera also needs `@hiero-did-sdk/anoncreds`. To register objects on Indy, the issuer needs a `did:indy`.
 
 ## Register a schema
 

@@ -25,7 +25,7 @@ As a rule of thumb: use X.509 certificates for OpenID4VC, and DIDs for DIDComm a
 | A holder DID, or a DID for tests | `did:key` (default) or `did:jwk`. The DID contains the public key, so there's nothing to publish. |
 | DIDComm connections | `did:peer`. DIDComm creates these for each connection. |
 | A public issuer DID without a ledger | `did:web` (default) to host a DID document under your domain. `did:webvh` adds a verifiable history of the document, and can hold AnonCreds objects. |
-| An AnonCreds issuer on a ledger | The method of the network your ecosystem uses: `did:indy` (Indy networks such as Sovrin), `did:cheqd` or `did:hedera`. |
+| An AnonCreds issuer on a ledger | The method of the network your ecosystem uses: `did:indy` (Indy networks such as CANdy), `did:cheqd` or `did:hedera`. |
 
 ## Supported DID methods
 
@@ -36,10 +36,9 @@ As a rule of thumb: use X.509 certificates for OpenID4VC, and DIDs for DIDComm a
 | `did:peer` | Yes | No | No | Yes | `@credo-ts/core` |
 | `did:web` | Import only | No | No | Yes | `@credo-ts/core` |
 | `did:webvh` | Yes | Yes | No | Yes | [`@credo-ts/webvh`](https://credo.js.org/guides/next/dids-and-trust/webvh.md) |
-| `did:cheqd` | Yes | Yes | Yes | Yes | [`@credo-ts/cheqd`](https://credo.js.org/guides/next/dids-and-trust/cheqd.md) |
-| `did:indy` | Yes | No | No | Yes | [`@credo-ts/indy-vdr`](https://credo.js.org/guides/next/dids-and-trust/indy-vdr.md) |
-| `did:sov` | No | No | No | Yes | [`@credo-ts/indy-vdr`](https://credo.js.org/guides/next/dids-and-trust/indy-vdr.md) |
-| `did:hedera` | Yes | Yes | Yes | Yes | [`@credo-ts/hedera`](https://credo.js.org/guides/next/dids-and-trust/hedera.md) |
+| `did:cheqd` | Yes | Yes | Yes | Yes | [`@credo-ts/cheqd`](https://credo.js.org/guides/next/extensions/cheqd.md) |
+| `did:indy` | Yes | No | No | Yes | [`@credo-ts/indy-vdr`](https://credo.js.org/guides/next/extensions/indy-vdr.md) |
+| `did:hedera` | Yes | Yes | Yes | Yes | [`@credo-ts/hedera`](https://credo.js.org/guides/next/extensions/hedera.md) |
 
 ## Create a DID
 
@@ -99,7 +98,7 @@ const verificationMethod = didDocument.dereferenceKey(verificationMethodId, ['as
 
 Credo parses DID URLs strictly, as DID Core 1.0 defines them, and returns `invalidDid` for DIDs with matrix parameters (`;key=value`), unencoded characters or invalid percent escapes. For `did:web`, `notFound` means an HTTP 404 or a document whose `id` isn't the DID; network, HTTP and JSON failures return `resolutionError`.
 
-Credo caches resolved documents for 5 minutes for methods whose resolver allows it (`did:web`, `did:webvh`, `did:cheqd`, `did:indy`, `did:sov` and `did:hedera`). Pass `{ useCache: false }` to `resolve` to skip the cache, or `cacheDurationInSeconds` to change the duration. For DIDs that you created or imported, these resolvers (except `did:sov`) return the document from your `DidRecord` instead of fetching it.
+Credo caches resolved documents for 5 minutes for methods whose resolver allows it (`did:web`, `did:webvh`, `did:cheqd`, `did:indy` and `did:hedera`). Pass `{ useCache: false }` to `resolve` to skip the cache, or `cacheDurationInSeconds` to change the duration. For DIDs that you created or imported, these resolvers return the document from your `DidRecord` instead of fetching it.
 
 ## Import a DID
 
@@ -185,7 +184,11 @@ const didModules = {
 Passing `registrars` or `resolvers` replaces the default list. Credo adds the `did:key` and `did:peer` registrar and resolver back, because DIDComm needs them, but not `did:web` and `did:jwk`. Include `WebDidResolver`, `JwkDidResolver` and `JwkDidRegistrar` yourself if you still need them.
 :::
 
-`publicDidMethods` lists the methods whose documents are the same for every agent context. With [multi-tenancy](https://credo.js.org/guides/next/agent-setup/multi-tenancy.md), their documents are cached once for all tenants instead of per tenant. The default is `['web', 'indy', 'sov', 'cheqd', 'hedera', 'webvh']`.
+Credo caches resolved DID documents in the global cache, which all agent contexts share. Public methods such as `did:web` resolve the same for every tenant, so keep them global. If a method resolves differently per agent context, for example a custom resolver that depends on the tenant, set its `cacheScope` to `'context'` to cache its documents per agent context:
+
+```ts
+new DidsModule({ cacheScope: { example: 'context' } })
+```
 
 ## did:jwk
 
@@ -195,7 +198,4 @@ The JWK `use` sets the verification relationships of a `did:jwk` document: `sig`
 
 - [X.509 certificates](https://credo.js.org/guides/next/dids-and-trust/x509.md): Create self-signed and CA-issued X.509 certificates and certificate signing requests with agent.x509, parse certificates, validate chains and check revocation.
 - [Trusted issuers](https://credo.js.org/guides/next/dids-and-trust/trust.md): How Credo decides whether to trust the issuer of a credential or the signer of a request, what it does by default, and how to configure trust with getTrustedIssuersForVerification and trusted X.509 certificates.
-- [cheqd](https://credo.js.org/guides/next/dids-and-trust/cheqd.md): Create, update and deactivate did:cheqd DIDs, publish DID-linked resources, and use cheqd as an AnonCreds registry with @credo-ts/cheqd.
-- [Indy VDR](https://credo.js.org/guides/next/dids-and-trust/indy-vdr.md): Connect to Hyperledger Indy networks with @credo-ts/indy-vdr to resolve did:indy and did:sov, register did:indy DIDs with an endorser, and use Indy as an AnonCreds registry.
-- [Hedera](https://credo.js.org/guides/next/dids-and-trust/hedera.md): Create, update, deactivate and resolve did:hedera DIDs, and use Hedera as an AnonCreds registry with @credo-ts/hedera.
 - [did:webvh](https://credo.js.org/guides/next/dids-and-trust/webvh.md): Create, update and resolve did:webvh DIDs with @credo-ts/webvh, host the DID log, and use did:webvh as an AnonCreds registry.

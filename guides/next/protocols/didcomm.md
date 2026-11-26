@@ -183,7 +183,6 @@ By default, `credentials` and `proofs` register the 2.0 protocols without any cr
 | `queueTransportRepository` | in memory | Where messages for agents without an endpoint wait until they are picked up. Mediators need a persistent queue. |
 | `didCommMimeType` | `DidCommMimeType.V1` | Content type for sent messages. `DidCommMimeType.V0` (`application/ssi-agent-wire`) is for older agents. |
 | `useDidKeyInProtocols` | `true` | Encode keys as `did:key` in protocol messages (RFC 0360). |
-| `useDidSovPrefixWhereAllowed` | `false` | Use the legacy `did:sov:BzCbsNYhMrjHiqZDTUASHg;spec` message type prefix for older agents. |
 
 ## Events
 

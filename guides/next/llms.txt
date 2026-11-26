@@ -57,9 +57,6 @@ These docs are for Credo 0.8 (next, unreleased). Every page is available as Mark
 - [DIDs](https://credo.js.org/guides/next/dids-and-trust.md): Choose between X.509 certificates and DIDs, pick a DID method, and create, resolve and import DIDs with agent.dids.
 - [X.509 certificates](https://credo.js.org/guides/next/dids-and-trust/x509.md): Create self-signed and CA-issued X.509 certificates and certificate signing requests with agent.x509, parse certificates, validate chains and check revocation.
 - [Trusted issuers](https://credo.js.org/guides/next/dids-and-trust/trust.md): How Credo decides whether to trust the issuer of a credential or the signer of a request, what it does by default, and how to configure trust with getTrustedIssuersForVerification and trusted X.509 certificates.
-- [cheqd](https://credo.js.org/guides/next/dids-and-trust/cheqd.md): Create, update and deactivate did:cheqd DIDs, publish DID-linked resources, and use cheqd as an AnonCreds registry with @credo-ts/cheqd.
-- [Indy VDR](https://credo.js.org/guides/next/dids-and-trust/indy-vdr.md): Connect to Hyperledger Indy networks with @credo-ts/indy-vdr to resolve did:indy and did:sov, register did:indy DIDs with an endorser, and use Indy as an AnonCreds registry.
-- [Hedera](https://credo.js.org/guides/next/dids-and-trust/hedera.md): Create, update, deactivate and resolve did:hedera DIDs, and use Hedera as an AnonCreds registry with @credo-ts/hedera.
 - [did:webvh](https://credo.js.org/guides/next/dids-and-trust/webvh.md): Create, update and resolve did:webvh DIDs with @credo-ts/webvh, host the DID log, and use did:webvh as an AnonCreds registry.
 - [Supported standards](https://credo.js.org/guides/next/supported-standards.md): The exchange protocols, credential formats, DID methods and platforms Credo supports.
 - [Updating Credo](https://credo.js.org/guides/next/updating.md): How Credo versions work, the steps to update an agent to a new version, and the migration guide for each version.
@@ -73,11 +70,10 @@ These docs are for Credo 0.8 (next, unreleased). Every page is available as Mark
 - [updating/update-assistant](https://credo.js.org/guides/next/updating/update-assistant.md)
 - [updating/update-indy-sdk-to-askar](https://credo.js.org/guides/next/updating/update-indy-sdk-to-askar.md)
 - [Ecosystem](https://credo.js.org/guides/next/ecosystem.md): The Credo repositories, the libraries Credo builds on, and open source projects built with Credo.
-- [Extensions](https://credo.js.org/guides/next/extensions.md): The Credo extension packages from credo-ts-ext, what each one does, and which Credo version they work with.
-- [REST API](https://credo.js.org/guides/next/extensions/rest.md): Run a Credo 0.5 agent behind a REST API with the @credo-ts/rest CLI.
-- [React hooks](https://credo.js.org/guides/next/extensions/react-hooks.md): Read the connections, credentials and proofs of a Credo 0.5 agent in React with @credo-ts/react-hooks.
-- [Redux store](https://credo.js.org/guides/next/extensions/redux-store.md): Keep the state of a Credo 0.5 agent in a Redux Toolkit store with @credo-ts/redux-store.
-- [Push notifications](https://credo.js.org/guides/next/extensions/push-notifications.md): Share an APNs or Firebase push notification token with another agent over DIDComm, with @credo-ts/push-notifications for Credo 0.5.
+- [Extensions](https://credo.js.org/guides/next/extensions.md): The cheqd, Hedera and Indy VDR ledger packages in credo-ts-ext, how they're versioned, and where the earlier extension packages moved.
+- [cheqd](https://credo.js.org/guides/next/extensions/cheqd.md): Create, update and deactivate did:cheqd DIDs, publish DID-linked resources, and use cheqd as an AnonCreds registry with @credo-ts/cheqd.
+- [Hedera](https://credo.js.org/guides/next/extensions/hedera.md): Create, update, deactivate and resolve did:hedera DIDs, and use Hedera as an AnonCreds registry with @credo-ts/hedera.
+- [Indy VDR](https://credo.js.org/guides/next/extensions/indy-vdr.md): Connect to Hyperledger Indy networks with @credo-ts/indy-vdr to resolve and register did:indy DIDs with an endorser, and use Indy as an AnonCreds registry.
 
 ## Optional
 
