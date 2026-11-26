@@ -98,7 +98,7 @@ To setup the new dependencies, follow the getting started guide for each package
 
 - [Aries Askar](../agent-setup/storage/askar.mdx)
 - [AnonCreds](../credential-formats/anoncreds.mdx)
-- [Indy VDR](../dids-and-trust/indy-vdr.mdx)
+- [Indy VDR](../extensions/indy-vdr.mdx)
 
 Once this has been set-up, make sure all code works on a **fresh environment** before continuing with the migration script.
 

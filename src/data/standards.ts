@@ -168,7 +168,6 @@ export const didMethods = [
   { method: 'did:webvh', package: '@credo-ts/webvh' },
   { method: 'did:cheqd', package: '@credo-ts/cheqd' },
   { method: 'did:indy', package: '@credo-ts/indy-vdr' },
-  { method: 'did:sov', package: '@credo-ts/indy-vdr' },
   { method: 'did:hedera', package: '@credo-ts/hedera' },
 ]
 

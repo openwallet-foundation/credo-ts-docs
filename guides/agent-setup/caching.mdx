@@ -50,13 +50,13 @@ Register a `CacheModule` under the key `cache` to replace the default:
 
 | Data | Cached for | Scope |
 | --- | --- | --- |
-| Resolved DID documents, for methods whose resolver allows caching (`did:web`, `did:webvh`, `did:cheqd`, `did:indy`, `did:sov`, `did:hedera`). `did:key`, `did:jwk` and `did:peer` aren't cached. | 5 minutes, change it with `cacheDurationInSeconds` when resolving | Global for methods in `DidsModule({ publicDidMethods })`, otherwise per agent context |
+| Resolved DID documents, for methods whose resolver allows caching (`did:web`, `did:webvh`, `did:cheqd`, `did:indy`, `did:hedera`). `did:key`, `did:jwk` and `did:peer` aren't cached. | 5 minutes, change it with `cacheDurationInSeconds` when resolving | Global, or per agent context for methods set to `'context'` in `DidsModule({ cacheScope })` |
 | AnonCreds schemas, credential definitions, revocation registry definitions and status lists | 5 minutes | Global |
 | Summaries of X.509 certificate revocation lists | Until the list's next update | Global |
 | Indy VDR: which ledger a DID is on | Until evicted | Global |
 | DIDComm connection, mediation and mediator routing records, with `useCachedStorageService: true` | Until evicted | Per agent context |
 
-Global entries are public data that all tenants share. `publicDidMethods` defaults to `web`, `indy`, `sov`, `cheqd`, `hedera` and `webvh`.
+Global entries are public data that all tenants share. To cache the DID documents of a method per agent context, see [Configure DID methods](../dids-and-trust/index.mdx#configure-did-methods).
 
 ## Custom cache
 
