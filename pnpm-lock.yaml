@@ -7857,8 +7857,8 @@ packages:
       encoding:
         optional: true
 
-  node-forge@1.3.3:
-    resolution: {integrity: sha512-rLvcdSyRCyouf6jcOIPe/BgwG/d7hKjzMKOas33/pHEr6gbq18IK9zV7DiPvzsz0oBJPme6qr6H6kGZuI9/DZg==}
+  node-forge@1.4.4:
+    resolution: {integrity: sha512-T6VRRpF3+czIGcXW/LOeoD7Ej28d8CF1UMEAbJyJRUtYMvyXAgxUPW2kbUibumvV9LiUQAznJOFyeYclzSJMMg==}
     engines: {node: '>= 6.13.0'}
 
   node-gyp-build-optional-packages@5.1.1:
@@ -13671,7 +13671,7 @@ snapshots:
       glob: 13.0.6
       lan-network: 0.2.1
       multitars: 1.0.2
-      node-forge: 1.3.3
+      node-forge: 1.4.4
       npm-package-arg: 11.0.3
       ora: 3.4.0
       picomatch: 4.0.7
@@ -13707,7 +13707,7 @@ snapshots:
 
   '@expo/code-signing-certificates@0.0.6':
     dependencies:
-      node-forge: 1.3.3
+      node-forge: 1.4.4
 
   '@expo/config-plugins@56.0.16(supports-color@8.1.1)(typescript@5.9.3)':
     dependencies:
@@ -19777,7 +19777,7 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
-  node-forge@1.3.3: {}
+  node-forge@1.4.4: {}
 
   node-gyp-build-optional-packages@5.1.1:
     dependencies:
@@ -21259,7 +21259,7 @@ snapshots:
   selfsigned@2.4.1:
     dependencies:
       '@types/node-forge': 1.3.14
-      node-forge: 1.3.3
+      node-forge: 1.4.4
 
   semver-diff@4.0.0:
     dependencies:
