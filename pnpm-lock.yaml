@@ -274,7 +274,7 @@ importers:
         version: 0.7.2(@openwallet-foundation/askar-shared@0.6.0)(supports-color@8.1.1)(typescript@5.9.3)
       '@credo-ts/askar-to-drizzle-storage-migration':
         specifier: ^0.7.2
-        version: 0.7.2(@hyperledger/anoncreds-shared@0.4.1)(@openwallet-foundation/askar-shared@0.6.0)(drizzle-orm@0.44.7(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1))(supports-color@8.1.1)(typescript@5.9.3)
+        version: 0.7.2(@hyperledger/anoncreds-shared@0.4.1)(@openwallet-foundation/askar-shared@0.6.0)(drizzle-orm@0.45.2(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1))(supports-color@8.1.1)(typescript@5.9.3)
       '@credo-ts/cheqd':
         specifier: ^0.7.2
         version: 0.7.2(@hyperledger/anoncreds-shared@0.4.1)(supports-color@8.1.1)(typescript@5.9.3)
@@ -286,7 +286,7 @@ importers:
         version: 0.7.2(supports-color@8.1.1)(typescript@5.9.3)
       '@credo-ts/drizzle-storage':
         specifier: ^0.7.2
-        version: 0.7.2(@hyperledger/anoncreds-shared@0.4.1)(drizzle-orm@0.44.7(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1))(supports-color@8.1.1)(typescript@5.9.3)
+        version: 0.7.2(@hyperledger/anoncreds-shared@0.4.1)(drizzle-orm@0.45.2(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1))(supports-color@8.1.1)(typescript@5.9.3)
       '@credo-ts/drpc':
         specifier: ^0.7.2
         version: 0.7.2(supports-color@8.1.1)(typescript@5.9.3)
@@ -351,8 +351,8 @@ importers:
         specifier: ^0.8.2
         version: 0.8.2
       drizzle-orm:
-        specifier: 0.44.7
-        version: 0.44.7(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1)
+        specifier: 0.45.2
+        version: 0.45.2(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1)
       expo:
         specifier: ~56.0.23
         version: 56.0.23(@babel/core@7.28.5(supports-color@8.1.1))(react-dom@18.3.1(react@18.3.1))(react-native@0.85.3(@babel/core@7.28.5(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1)(typescript@5.9.3)
@@ -5716,8 +5716,8 @@ packages:
     resolution: {integrity: sha512-YCYqxTLIB2OCqf6w9/Vef13baBVbwQIPcbT4Y56AfO6B9ajZhDhD8Jkveg/hJvT/iuMloKD/IYYkyMMNhr7Kqg==}
     hasBin: true
 
-  drizzle-orm@0.44.7:
-    resolution: {integrity: sha512-quIpnYznjU9lHshEOAYLoZ9s3jweleHlZIAWR/jX9gAWNg/JhQ1wj0KGRf7/Zm+obRrYd9GjPVJg790QY9N5AQ==}
+  drizzle-orm@0.45.2:
+    resolution: {integrity: sha512-kY0BSaTNYWnoDMVoyY8uxmyHjpJW1geOmBMdSSicKo9CIIWkSxMIj2rkeSR51b8KAPB7m+qysjuHme5nKP+E5Q==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=4'
@@ -11484,11 +11484,11 @@ snapshots:
       - supports-color
       - typescript
 
-  '@credo-ts/askar-to-drizzle-storage-migration@0.7.2(@hyperledger/anoncreds-shared@0.4.1)(@openwallet-foundation/askar-shared@0.6.0)(drizzle-orm@0.44.7(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1))(supports-color@8.1.1)(typescript@5.9.3)':
+  '@credo-ts/askar-to-drizzle-storage-migration@0.7.2(@hyperledger/anoncreds-shared@0.4.1)(@openwallet-foundation/askar-shared@0.6.0)(drizzle-orm@0.45.2(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1))(supports-color@8.1.1)(typescript@5.9.3)':
     dependencies:
       '@credo-ts/askar': 0.7.2(@openwallet-foundation/askar-shared@0.6.0)(supports-color@8.1.1)(typescript@5.9.3)
       '@credo-ts/core': 0.7.2(supports-color@8.1.1)(typescript@5.9.3)
-      '@credo-ts/drizzle-storage': 0.7.2(@hyperledger/anoncreds-shared@0.4.1)(drizzle-orm@0.44.7(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1))(supports-color@8.1.1)(typescript@5.9.3)
+      '@credo-ts/drizzle-storage': 0.7.2(@hyperledger/anoncreds-shared@0.4.1)(drizzle-orm@0.45.2(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1))(supports-color@8.1.1)(typescript@5.9.3)
       '@credo-ts/tenants': 0.7.2(supports-color@8.1.1)(typescript@5.9.3)
       '@openwallet-foundation/askar-shared': 0.6.0
     transitivePeerDependencies:
@@ -11706,7 +11706,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@credo-ts/drizzle-storage@0.7.2(@hyperledger/anoncreds-shared@0.4.1)(drizzle-orm@0.44.7(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1))(supports-color@8.1.1)(typescript@5.9.3)':
+  '@credo-ts/drizzle-storage@0.7.2(@hyperledger/anoncreds-shared@0.4.1)(drizzle-orm@0.45.2(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1))(supports-color@8.1.1)(typescript@5.9.3)':
     dependencies:
       '@credo-ts/action-menu': 0.7.2(supports-color@8.1.1)(typescript@5.9.3)
       '@credo-ts/anoncreds': 0.7.2(@hyperledger/anoncreds-shared@0.4.1)(supports-color@8.1.1)(typescript@5.9.3)
@@ -11719,7 +11719,7 @@ snapshots:
       class-transformer: 0.5.1
       class-validator: 0.14.4
       drizzle-kit: 0.31.11
-      drizzle-orm: 0.44.7(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1)
+      drizzle-orm: 0.45.2(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1)
       shell: 0.12.0
       tsyringe: 4.10.0
       zod: 4.6.7
@@ -17185,7 +17185,7 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.23.15
 
-  drizzle-orm@0.44.7(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1):
+  drizzle-orm@0.45.2(@libsql/client@0.17.4)(@types/pg@8.23.1)(pg@8.23.1):
     optionalDependencies:
       '@libsql/client': 0.17.4
       '@types/pg': 8.23.1
