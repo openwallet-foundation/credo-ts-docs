@@ -181,3 +181,30 @@ const anoncreds = new AnonCredsModule({
 The registry needs `IndyVdrModule`. To register objects, the issuer needs a `did:indy` with write permission, and passes `endorserMode` and `endorserDid` in the registration options.
 
 The registry only handles `did:indy` identifiers. It accepts schema, credential definition and revocation registry identifiers with names and tags either as they are or percent-encoded. New identifiers aren't encoded by default, for agents that don't support encoded identifiers. To percent-encode schema names and tags in new identifiers, set `encodeAnonCredsIdentifiers: true` on `IndyVdrModule`.
+
+## Indy identifiers
+
+To check and parse `did:indy` DIDs, import `didIndyRegex`, `isIndyDid`, `parseIndyDid` and `getIndyNamespaceFromIndyDid` from `@credo-ts/indy-vdr`. `getIndyNamespaceFromIndyDid` only accepts a DID without a path, query or fragment, and throws for anything else, including AnonCreds object IDs.
+
+For AnonCreds object IDs, `@credo-ts/indy-vdr/anoncreds` exports a regex, a check and a parser for each object type. Like the registry, this subpath needs `@credo-ts/anoncreds`.
+
+| Object | Regex | Check | Parser |
+| --- | --- | --- | --- |
+| Schema | `didIndySchemaIdRegex` | `isDidIndySchemaId` | `parseIndySchemaId` |
+| Credential definition | `didIndyCredentialDefinitionIdRegex` | `isDidIndyCredentialDefinitionId` | `parseIndyCredentialDefinitionId` |
+| Revocation registry definition | `didIndyRevocationRegistryIdRegex` | `isDidIndyRevocationRegistryId` | `parseIndyRevocationRegistryId` |
+
+The parsers return the DID, its `namespace` and `namespaceIdentifier`, and the parts of the object ID, with percent-encoded names and tags decoded. They throw for IDs that aren't `did:indy` object IDs. To get the namespace of an object ID, read it from the parser:
+
+```ts
+import { getIndyNamespaceFromIndyDid } from '@credo-ts/indy-vdr'
+import { parseIndyCredentialDefinitionId, parseIndySchemaId } from '@credo-ts/indy-vdr/anoncreds'
+
+const did = 'did:indy:bcovrin:test:SDqTzbVuCowusqGBNbNDjH'
+
+getIndyNamespaceFromIndyDid(did) // 'bcovrin:test'
+parseIndySchemaId(`${did}/anoncreds/v0/SCHEMA/example/1.0`).namespace // 'bcovrin:test'
+parseIndyCredentialDefinitionId(`${did}/anoncreds/v0/CLAIM_DEF/10/TAG`).namespace // 'bcovrin:test'
+```
+
+To build `did:indy` object IDs, use `getDidIndySchemaId`, `getDidIndyCredentialDefinitionId` and `getDidIndyRevocationRegistryDefinitionId`. Pass `true` as the last argument to percent-encode names and tags. The ledger uses unqualified IDs in its transactions, which `getIndyLedgerSchemaId`, `getIndyLedgerCredentialDefinitionId` and `getIndyLedgerRevocationRegistryDefinitionId` build.
