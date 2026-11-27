@@ -167,6 +167,10 @@ if (expiredResult.isValid === false && 'code' in expiredResult.error) {
 }
 // end-section-9
 
+// start-section-10
+await holder.sdJwtVc.deleteById(record.id, { deleteAssociatedKeys: true })
+// end-section-10
+
 await issuer.shutdown()
 await holder.shutdown()
 await verifier.shutdown()

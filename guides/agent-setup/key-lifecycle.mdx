@@ -1,0 +1,103 @@
+---
+title: Key lifecycle
+description: Which keys Credo creates for sessions, credentials, DIDComm connections and issuers, which of them it deletes for you, and which you delete yourself.
+---
+
+Credo creates keys in the [KMS](./key-management.mdx) for the sessions, credentials and connections it handles. A key that nothing deletes stays in the KMS, so an agent that runs for a long time collects one for every verification session or connection. Credo deletes some of these keys with the record they belong to and others when you ask. The rest are yours to delete.
+
+| Keys | Deleted |
+| --- | --- |
+| Keys of verification and issuance [sessions](#sessions) | With the session, unless you opt out |
+| Binding keys and DIDs of [credentials](#credentials) | With the credential, when you pass `deleteAssociatedKeys` |
+| DIDs and keys of [DIDComm connections and invitations](#didcomm-connections-and-invitations) | With the record, when you pass `deleteAssociatedKeys` |
+| [Issuer keys](#issuer-keys) | After a rotation, when you delete the previous keys |
+| [Keys you created or passed in](#keys-you-delete-yourself) | By you |
+
+Keys that exist for one operation only, such as the ephemeral key of an encrypted message, are never stored and need no cleanup.
+
+## Sessions
+
+Credo creates a key for these sessions and deletes it when you delete the session:
+
+| Session | Key | Deleted by |
+| --- | --- | --- |
+| OpenID4VP verification session | The key that decrypts an encrypted response (`direct_post.jwt` or `dc_api.jwt`) | `agent.openid4vc.verifier.deleteVerificationSessionById` |
+| mdoc DC API verification session | The session key | `agent.mdoc.deleteVerificationSessionById` |
+| OpenID4VCI issuance session | The DPoP key Credo generates for a [chained authorization server](../protocols/openid4vc/authorization.mdx#issuer-chained) that has no `dpop.keyId` | `agent.openid4vc.issuer.deleteIssuanceSessionById` |
+
+Pass `deleteAssociatedKey: false` to keep the key, or `deleteAssociatedDpopKey: false` for an issuance session.
+
+Credo doesn't delete sessions when they expire. Delete finished and expired sessions yourself, and their keys go with them.
+
+## Credentials
+
+A holder's credentials are bound to keys or DIDs that you create, for example in the `credentialBindingResolver`. Credo stores the key of every SD-JWT VC and mdoc instance on the credential record, and deletes those keys when you ask:
+
+```ts showLineNumbers title="holder.ts" format-sd-jwt-vc.ts section-10
+```
+
+`agent.mdoc`, `agent.w3cCredentials` and `agent.w3cV2Credentials` take the same option. So does `agent.didcomm.credentials.deleteById`, for the credentials of a DIDComm exchange.
+
+Credo only deletes a DID with the credential when you created it for that credential and said so:
+
+- OpenID4VCI: `createdForCredential: true` on the `did` binding your resolver returns.
+- DIDComm: `createdForCredential: true` on the `didCommSignedAttachment` binding, or `didCreatedForCredential` for a JSON-LD credential.
+
+Credo then stores the DID on the credential record, and `deleteAssociatedKeys` deletes the DID record and its keys. Any other DID is yours.
+
+`deleteAssociatedKeys` doesn't check whether another credential uses the same key or DID. Leave it off when you bind several credentials to one.
+
+## DIDComm connections and invitations
+
+Credo creates keys, and in most cases a did:peer DID, for an invitation or a connection, and new ones for every DID rotation. Pass `deleteAssociatedKeys` to delete them with the record. Here Bob hangs up, and Acme deletes its connection and then its invitation:
+
+```ts showLineNumbers title="connections.ts" didcomm-connections.ts section-8
+```
+
+Credo only deletes what it created for that record. It keeps:
+
+- DIDs and routing you passed in: `ourDid`, `toDid`, `invitationDid` and `routing`.
+- A DID or key that an invitation shares with its connections, such as the key a single-use invitation passes on to its connection. Whichever of these records you delete last also deletes what they share. Delete them one after the other. When you delete them in parallel, each one sees the other and keeps what they share.
+- A DID that another connection or invitation still uses, because you passed it on as `ourDid`, `toDid` or `invitationDid`. That DID is then yours. Delete it with `agent.dids.deleteCreatedDid` once nothing uses it.
+- Everything of records created before Credo 0.8, which didn't record what Credo created for them.
+
+Credo also removes a deleted DID or key from the [mediator](../protocols/didcomm/mediation.mdx) that routes it. In a [tenant](./multi-tenancy.mdx), it also deletes the record in the root agent that maps the key to the tenant.
+
+### Routing you create yourself
+
+Routing from `agent.didcomm.mediationRecipient.getRouting` is yours. Delete it with `mediationRecipient.deleteRouting(routing)` once no record uses it.
+
+To let Credo delete it with a connection or invitation, set `deleteWithRecord: true` on the routing you pass in. Only do this for routing you use for one record. Credo doesn't know which other records you gave the same routing, and deleting one of them deletes the keys the others use.
+
+### Connection-less exchanges
+
+A connection-less exchange needs its out-of-band record for as long as it runs. Deleting that record, with or without `deleteAssociatedKeys`, ends the exchange: Credo rejects later messages on it, such as a revocation notification or a problem report. Delete it once you expect no more messages.
+
+## Issuer keys
+
+An OpenID4VCI issuer keeps its access token signing key and its credential request encryption keys for as long as it exists. To replace one, rotate first and delete the previous key later:
+
+```ts showLineNumbers title="issuer.ts" openid4vc-issuer.ts section-7
+```
+
+`rotateCredentialRequestEncryptionKey` and `deletePreviousCredentialRequestEncryptionKeys` do the same for the encryption keys. A previous key still verifies access tokens or decrypts requests until you delete it, but the issuer no longer advertises it. Pass `deleteFromKms: false` to remove the previous keys from the issuer and leave them in the KMS.
+
+Use these methods to replace or remove a key, not `updateIssuerMetadata`. `updateIssuerMetadata` replaces every field of the issuer, so pass all of them on each update, including the `keys` and `previousKeys` of `credentialRequestEncryption`. A key you leave out no longer decrypts requests and stays in the KMS.
+
+## Keys you delete yourself
+
+Credo never deletes a key you created or configured, unless one of the options above covers it. Delete these with `agent.kms.deleteKey({ keyId })`:
+
+| Key | When to delete it |
+| --- | --- |
+| The holder DPoP key that an OpenID4VCI flow returns as `dpop` | After the last request of the flow |
+| [Wallet and key attestation](../protocols/openid4vc/authorization.mdx#wallet-and-key-attestations) keys | When you replace the attestation |
+| The `dpop.keyId` you configure for a chained authorization server | Once no open issuance session uses it |
+| Credential request encryption keys you left out of an `updateIssuerMetadata` call, for example to turn request encryption off | Once no wallet encrypts to them |
+| Keys behind [X.509 certificates](../dids-and-trust/x509.mdx) | When the certificate is replaced and nothing signs with the key |
+| Keys of a [DID](../dids-and-trust/index.mdx) you created | With `agent.dids.deleteCreatedDid({ did, deleteAssociatedKeys: true })`, which deletes the DID record and its keys. It doesn't deactivate the DID, so do that first when the DID method supports it |
+| A tenant's keys on a backend other than Askar | Before you delete the tenant. `deleteTenantById` removes the tenant's keys on Askar only |
+
+## When a key can't be deleted
+
+When `deleteAssociatedKeys`, or deleting the previous keys of an issuer, can't delete every key, it throws a `KeyManagementKeysNotDeletedError` that lists the `keys` it couldn't delete. The record, or the issuer's reference to the key, stays. Call the method again to retry. A key that is already gone counts as deleted.

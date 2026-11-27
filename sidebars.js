@@ -50,6 +50,7 @@ const sidebars = {
           items: ['agent-setup/storage/askar', 'agent-setup/storage/drizzle'],
         },
         'agent-setup/key-management',
+        'agent-setup/key-lifecycle',
         'agent-setup/caching',
         'agent-setup/multi-tenancy',
         'agent-setup/logging',

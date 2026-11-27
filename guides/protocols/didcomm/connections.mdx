@@ -169,7 +169,7 @@ If you know an agent's public DID, you can connect without an invitation. Credo 
 | `sendPing(connectionId)` | Send a trust ping to check that the other agent is reachable. |
 | `rotate({ connectionId })` | Switch to a new DID for this connection and tell the other agent (DID Rotate). |
 | `hangup({ connectionId, deleteAfterHangup })` | Tell the other agent the connection is over. With `deleteAfterHangup: true`, Credo also deletes the record. |
-| `deleteById(connectionId)` | Delete the connection record without notifying the other agent. |
+| `deleteById(connectionId)` | Delete the connection record without notifying the other agent. With `deleteAssociatedKeys: true`, Credo also deletes the DIDs and keys it created for the connection. See [Key lifecycle](../../agent-setup/key-lifecycle.mdx). |
 | `findAllByQuery(query)` | Find connections, for example by `state` or `theirDid`. |
 
 ## Next steps
